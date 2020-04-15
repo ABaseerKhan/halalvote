@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Comment from './Comment.js';
-import ItemShellComponent from './ItemShellComponent.js';
+import { ItemShellComponent } from './ItemShellComponent.js';
 import './index.css';
 
 const comments = [
