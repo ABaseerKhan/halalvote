@@ -1,0 +1,130 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: sans-serif;
+  background-color: #f0f0f0;
+  position: relative;
+}
+
+.item-shell {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.item-text {
+  width: 100%;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  font-size: 64px;
+  text-align: center;
+}
+
+.haram-text {
+  width: 50%;
+  margin-bottom: 25px;
+  font-size: 32px;
+  text-align: center;
+  float: left;
+}
+
+.halal-text {
+  width: 50%;
+  margin-bottom: 25px;
+  font-size: 32px;
+  text-align: center;
+  float: right;
+}
+
+.card-left {
+  width: 30%;
+  height: 50%;
+  margin-left: 10%;
+  overflow: scroll;
+  padding: 25px 25px 15px 25px;
+  background-color: #ffffff;
+  box-shadow: 4px 4px #c8c8c8;
+  border-radius: 25px 25px 25px 25px;
+  float: left;
+  background-color: #ffc8e6;
+}
+
+.card-right {
+  width: 30%;
+  height: 50%;
+  margin-right: 10%;
+  overflow: scroll;
+  padding: 25px 25px 15px 25px;
+  background-color: #ffffff;
+  box-shadow: 4px 4px #c8c8c8;
+  border-radius: 25px 25px 25px 25px;
+  float: right;
+  background-color: #c8ffe6;
+}
+
+.card-category {
+  width: 100%;
+  margin-bottom: 15px;
+  font-size: 32px;
+  text-align: center;
+}
+
+.comment {
+  width: 100%;
+  margin-bottom: 10px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  font-size: 18px;
+}
+
+.username {
+  width: 100%;
+  margin-bottom: 10px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  font-size: 14px;
+  color: #969696;
+}
+
+.replies {
+  margin-left: 50px;
+}
+
+.show-more-button {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.up-votes {
+  width: fit-content;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  float:right;
+  font-size: 14px;
+}
+
+.up-vote-button {
+  width: fit-content;
+  float:right;
+  margin-bottom: 10px;
+}
+
+.down-votes {
+  width: fit-content;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  float:right;
+  font-size: 14px;
+}
+
+.down-vote-button {
+  width: fit-content;
+  float:right;
+  margin-left: 5px;
+  margin-bottom: 10px;
+}
