@@ -1,17 +1,18 @@
 import React from 'react';
-import './index.css';
+import '../index.css';
 
 class CommentComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       username: this.props.comment.username,
-      post: this.props.comment.post,
+      comment: this.props.comment.comment,
       replies: this.props.comment.replies,
       upVotes: this.props.comment.upVotes,
       downVotes: this.props.comment.downVotes,
       repliesHidden: true
     }
+    console.log(props);
   }
 
   flipRepliesHidden() {
@@ -43,7 +44,7 @@ class CommentComponent extends React.Component {
     return(
       <div>
         <div className="username">{this.state.username}</div>
-        <div className="comment">{this.state.post}</div>
+        <div className="comment">{this.state.comment}</div>
         <div className="down-votes">{this.state.downVotes}</div>
         <button className="down-vote-button" onClick={() => {this.downVote();}}>-</button>
         <div className="up-votes">{this.state.upVotes}</div>
@@ -88,4 +89,4 @@ class CommentsCardComponent extends React.Component {
   }
 }
 
-export default CommentsCardComponent
+export {Comment, CommentsCardComponent}

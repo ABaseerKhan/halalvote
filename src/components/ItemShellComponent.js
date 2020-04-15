@@ -1,6 +1,6 @@
 import React from 'react';
-import CommentsCardComponent from './CommentsCardComponent.js';
-import './index.css';
+import {CommentsCardComponent} from './CommentsCardComponent.js';
+import '../index.css';
 
 class ItemShellComponent extends React.Component {
   constructor(props) {
@@ -39,4 +39,4 @@ class ItemShellComponent extends React.Component {
   }
 }
 
-export default ItemShellComponent
+export {ItemShellComponent}
