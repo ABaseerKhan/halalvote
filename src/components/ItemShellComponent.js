@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CommentsCardComponent } from './CommentsCardComponent.js';
-import './index.css';
+import '../index.css';
 
 export const ItemShellComponent = (props) => {
   const [state] = useState({
