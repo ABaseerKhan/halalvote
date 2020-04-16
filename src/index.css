@@ -41,30 +41,52 @@ html, body {
   float: right;
 }
 
-.card-left {
+.card-left, .card-right {
+  position: relative;
   width: 30%;
   height: 50%;
-  margin-left: 10%;
-  overflow: scroll;
   padding: 25px 25px 15px 25px;
+  overflow: scroll;
   background-color: #ffffff;
   box-shadow: 4px 4px #c8c8c8;
   border-radius: 25px 25px 25px 25px;
+}
+
+.card-left::-webkit-scrollbar, .card-right::-webkit-scrollbar {
+  display: none;
+}
+
+.card-left {
+  margin-left: 10%;
   float: left;
   background-color: #ffc8e6;
+  
 }
 
 .card-right {
-  width: 30%;
-  height: 50%;
   margin-right: 10%;
-  overflow: scroll;
-  padding: 25px 25px 15px 25px;
-  background-color: #ffffff;
-  box-shadow: 4px 4px #c8c8c8;
-  border-radius: 25px 25px 25px 25px;
   float: right;
   background-color: #c8ffe6;
+}
+
+.vote-prompt {
+  z-index: 10;
+  height: 100%;
+  width: 100%;
+  background: rgb(255, 255, 255, 0.8);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.vote-button {
+  border: none;
+  position: relative;
+  background: transparent;
+  margin: auto;
+  height: 100%;
+  width: 100%;
+  font-size: 80px;
 }
 
 .card-category {
