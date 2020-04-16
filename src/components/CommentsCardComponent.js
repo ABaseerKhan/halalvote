@@ -3,9 +3,6 @@ import '../index.css';
 
 const CommentComponent = (props) => {
   const [state, setState] = useState({
-    username: props.comment.username,
-    comment: props.comment.comment,
-    replies: props.comment.replies,
     upVotes: props.comment.upVotes,
     downVotes: props.comment.downVotes,
     repliesHidden: true
@@ -34,16 +31,16 @@ const CommentComponent = (props) => {
 
   return (
     <div>
-      <div className="username">{state.username}</div>
-      <div className="comment">{state.comment}</div>
-      <div className="down-votes">{state.downVotes}</div>
+      <div className="username">{props.comment.username}</div>
+      <div className="comment">{props.comment.comment}</div>
+      <div className="down-votes">{props.comment.downVotes}</div>
       <button className="down-vote-button" onClick={() => downVote()}>-</button>
       <div className="up-votes">{state.upVotes}</div>
       <button className="up-vote-button" onClick={() => upVote()}>+</button>
       <br />
       <div className="replies">
         {
-          state.replies.map((reply, i) => {
+          props.comment.replies.map((reply, i) => {
             if (!state.repliesHidden || i === 0) {
               return <CommentComponent comment={reply} key={i}/>
             } else {
@@ -53,7 +50,7 @@ const CommentComponent = (props) => {
         }
       </div>
       {
-        state.replies.length > 1 &&
+        props.comment.replies.length > 1 &&
           <button className="show-more-button" onClick={() => flipRepliesHidden()}>
             {
               state.repliesHidden ? "Show More" : "Show Less"
@@ -65,14 +62,19 @@ const CommentComponent = (props) => {
 }
 
 export const CommentsCardComponent = (props) => {
-  var comments = props.comments;
   return(
     <div className={"card-" + props.direction}>
-      {
-        comments.map((comment, i) => {
-          return <CommentComponent comment={comment} key={i}/>
-        })
-      }
+      {props.votePrompt && 
+        <div className={"vote-prompt"}>
+          <button className={"vote-button"} onClick={props.removeVotePrompt}>+</button>
+        </div>}
+        <div >
+          {
+            props.comments.map((comment, i) => {
+              return <CommentComponent comment={comment} key={i}/>
+            })
+          }
+        </div>
     </div>
   )
 }

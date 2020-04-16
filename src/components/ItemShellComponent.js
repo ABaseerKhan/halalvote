@@ -3,24 +3,23 @@ import { CommentsCardComponent } from './CommentsCardComponent.js';
 import '../index.css';
 
 export const ItemShellComponent = (props) => {
-  const [state] = useState({
-    halalVotes: props.halalVotes,
-    halalComments: props.halalComments,
-    haramVotes: props.haramVotes,
-    haramComments: props.haramComments
-  });
+  const [state, setState] = useState({ votePrompt: true });
 
   const getHalalVotePercentage = () => {
-    const decimal = state.halalVotes/(state.halalVotes + state.haramVotes);
+    const decimal = props.halalVotes/(props.halalVotes + props.haramVotes);
     const percentage = decimal * 100;
     return Math.round(percentage);
   }
 
   const getHaramVotePercentage = () => {
-    const decimal = state.haramVotes/(state.halalVotes + state.haramVotes);
+    const decimal = props.haramVotes/(props.halalVotes + props.haramVotes);
     const percentage = decimal * 100;
     return Math.round(percentage);
   }
+
+  const removeVotePrompt = () => {
+    setState({ votePrompt: false });
+  };
 
   return (
     <div className="item-shell">
@@ -28,8 +27,8 @@ export const ItemShellComponent = (props) => {
       <div className="haram-text">🔥 Haram - {getHaramVotePercentage()}% 🔥</div>
       <div className="halal-text">👼 Halal - {getHalalVotePercentage()}% 👼</div>
       <br />
-      <CommentsCardComponent direction="left" comments={state.haramComments}/>
-      <CommentsCardComponent direction="right" comments={state.halalComments}/>
+      <CommentsCardComponent direction="left" comments={props.haramComments} votePrompt={state.votePrompt} removeVotePrompt={removeVotePrompt}/>
+      <CommentsCardComponent direction="right" comments={props.halalComments} votePrompt={state.votePrompt} removeVotePrompt={removeVotePrompt}/>
     </div>
   )
 }
