@@ -19,15 +19,15 @@ html, body {
 
 .item-text {
   width: 100%;
-  margin-top: 25px;
-  margin-bottom: 25px;
+  margin-top: 10px;
+  margin-bottom: 20px;
   font-size: 64px;
   text-align: center;
 }
 
 .haram-text {
   width: 50%;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   font-size: 32px;
   text-align: center;
   float: left;
@@ -35,35 +35,35 @@ html, body {
 
 .halal-text {
   width: 50%;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   font-size: 32px;
   text-align: center;
   float: right;
 }
 
-.card-left, .card-right {
+.comments-card-haram, .comments-card-halal {
   position: relative;
   width: 30%;
   height: 50%;
+  margin-bottom: 20px;
   padding: 25px 25px 15px 25px;
   overflow: scroll;
-  background-color: #ffffff;
   box-shadow: 4px 4px #c8c8c8;
   border-radius: 25px 25px 25px 25px;
 }
 
-.card-left::-webkit-scrollbar, .card-right::-webkit-scrollbar {
+.comments-card-haram::-webkit-scrollbar, .comments-card-halal::-webkit-scrollbar {
   display: none;
 }
 
-.card-left {
+.comments-card-haram {
   margin-left: 10%;
   float: left;
   background-color: #ffc8e6;
-  
+
 }
 
-.card-right {
+.comments-card-halal {
   margin-right: 10%;
   float: right;
   background-color: #c8ffe6;
@@ -87,13 +87,6 @@ html, body {
   height: 100%;
   width: 100%;
   font-size: 80px;
-}
-
-.card-category {
-  width: 100%;
-  margin-bottom: 15px;
-  font-size: 32px;
-  text-align: center;
 }
 
 .comment {
@@ -149,4 +142,51 @@ html, body {
   float:right;
   margin-left: 5px;
   margin-bottom: 10px;
+}
+
+.comment-maker-card-haram {
+  width: 30%;
+  height: 20px;
+  margin-left: 10%;
+  overflow: scroll;
+  padding: 20px 20px 10px 20px;
+  box-shadow: 4px 4px #c8c8c8;
+  border-radius: 25px 25px 25px 25px;
+  float: left;
+  background-color: #ffc8e6;
+  display: table;
+}
+
+.comment-maker-card-halal {
+  width: 30%;
+  height: 20px;
+  margin-right: 10%;
+  overflow: scroll;
+  padding: 25px 25px 15px 25px;
+  box-shadow: 4px 4px #c8c8c8;
+  border-radius: 25px 25px 25px 25px;
+  float: right;
+  background-color: #c8ffe6;
+  display: table;
+}
+
+.comment-maker-input {
+  float: left;
+  width: 90%;
+  height: inherit;
+  font-size: 18px;
+  resize: vertical;
+}
+
+.comment-maker-button {
+  float: right;
+  width: fit-content;
+  height: inherit;
+  font-size: 18px;
+}
+
+.floor {
+  height: 10px;
+  width: 100%;
+  float: left;
 }

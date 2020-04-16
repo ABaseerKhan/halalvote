@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../index.css';
 
-const CommentComponent = (props) => {
+export const CommentComponent = (props) => {
   const [state, setState] = useState({
     upVotes: props.comment.upVotes,
     downVotes: props.comment.downVotes,
@@ -33,7 +33,7 @@ const CommentComponent = (props) => {
     <div>
       <div className="username">{props.comment.username}</div>
       <div className="comment">{props.comment.comment}</div>
-      <div className="down-votes">{props.comment.downVotes}</div>
+      <div className="down-votes">{state.downVotes}</div>
       <button className="down-vote-button" onClick={() => downVote()}>-</button>
       <div className="up-votes">{state.upVotes}</div>
       <button className="up-vote-button" onClick={() => upVote()}>+</button>
@@ -63,8 +63,8 @@ const CommentComponent = (props) => {
 
 export const CommentsCardComponent = (props) => {
   return(
-    <div className={"card-" + props.direction}>
-      {props.votePrompt && 
+    <div className={"comments-card-" + props.judgement}>
+      {props.votePrompt &&
         <div className={"vote-prompt"}>
           <button className={"vote-button"} onClick={props.removeVotePrompt}>+</button>
         </div>}

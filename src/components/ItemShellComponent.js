@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { CommentsCardComponent } from './CommentsCardComponent.js';
+import { CommentComponent } from './CommentsCardComponent.js';
+import { CommentMakerCardComponent } from './CommentMakerCardComponent.js';
 import '../index.css';
 
 export const ItemShellComponent = (props) => {
-  const [state, setState] = useState({ votePrompt: true });
+  const [state, setState] = useState({
+    username: "op",
+    halalComments: props.halalComments,
+    haramComments: props.haramComments,
+    votePrompt: true
+  });
 
   const getHalalVotePercentage = () => {
     const decimal = props.halalVotes/(props.halalVotes + props.haramVotes);
@@ -17,8 +24,38 @@ export const ItemShellComponent = (props) => {
     return Math.round(percentage);
   }
 
+  const haramCommentCallback = (comment) => {
+    const commentObject = {
+      username: state.username,
+      comment: comment,
+      replies: [],
+      upVotes: 0,
+      downVotes: 0
+    }
+
+    setState({
+      ...state,
+      haramComments: [commentObject, ...state.haramComments]
+    });
+  }
+
+  const halalCommentCallback = (comment) => {
+    const commentObject = {
+      username: state.username,
+      comment: comment,
+      replies: [],
+      upVotes: 0,
+      downVotes: 0
+    }
+
+    setState({
+      ...state,
+      halalComments: [commentObject, ...state.halalComments]
+    });
+  }
+
   const removeVotePrompt = () => {
-    setState({ votePrompt: false });
+    setState({ ...state, votePrompt: false });
   };
 
   return (
@@ -27,8 +64,13 @@ export const ItemShellComponent = (props) => {
       <div className="haram-text">🔥 Haram - {getHaramVotePercentage()}% 🔥</div>
       <div className="halal-text">👼 Halal - {getHalalVotePercentage()}% 👼</div>
       <br />
-      <CommentsCardComponent direction="left" comments={props.haramComments} votePrompt={state.votePrompt} removeVotePrompt={removeVotePrompt}/>
-      <CommentsCardComponent direction="right" comments={props.halalComments} votePrompt={state.votePrompt} removeVotePrompt={removeVotePrompt}/>
+      <CommentsCardComponent judgement="haram" comments={state.haramComments} votePrompt={state.votePrompt} removeVotePrompt={removeVotePrompt}/>
+      <CommentsCardComponent judgement="halal" comments={state.halalComments} votePrompt={state.votePrompt} removeVotePrompt={removeVotePrompt}/>
+      <br />
+      <CommentMakerCardComponent judgement="haram" callback={haramCommentCallback}/>
+      <CommentMakerCardComponent judgement="halal" callback={halalCommentCallback}/>
+      <br />
+      <div className="floor"/>
     </div>
   )
 }

@@ -9,7 +9,7 @@ const comments = [
     comment: "This sucks.",
     replies: [
       {
-        username: "op",
+        username: "thing-1",
         comment: "You suck!",
         replies: [
           {
