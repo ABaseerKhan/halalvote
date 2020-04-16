@@ -64,11 +64,17 @@ export const CommentComponent = (props) => {
 export const CommentsCardComponent = (props) => {
   return(
     <div className={"comments-card-" + props.judgement}>
-      {
-        props.comments.map((comment, i) => {
-          return <CommentComponent comment={comment} key={i}/>
-        })
-      }
+      {props.votePrompt &&
+        <div className={"vote-prompt"}>
+          <button className={"vote-button"} onClick={props.removeVotePrompt}>+</button>
+        </div>}
+        <div >
+          {
+            props.comments.map((comment, i) => {
+              return <CommentComponent comment={comment} key={i}/>
+            })
+          }
+        </div>
     </div>
   )
 }
