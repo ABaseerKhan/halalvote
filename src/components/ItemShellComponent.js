@@ -64,11 +64,15 @@ export const ItemShellComponent = (props) => {
       <div className="haram-text">🔥 Haram - {getHaramVotePercentage()}% 🔥</div>
       <div className="halal-text">👼 Halal - {getHalalVotePercentage()}% 👼</div>
       <br />
-      <CommentsCardComponent judgement="haram" comments={state.haramComments} votePrompt={state.votePrompt} removeVotePrompt={removeVotePrompt}/>
-      <CommentsCardComponent judgement="halal" comments={state.halalComments} votePrompt={state.votePrompt} removeVotePrompt={removeVotePrompt}/>
+      <CommentsCardComponent judgment="haram" comments={state.haramComments} votePrompt={state.votePrompt} removeVotePrompt={removeVotePrompt}/>
+      <CommentsCardComponent judgment="halal" comments={state.halalComments} votePrompt={state.votePrompt} removeVotePrompt={removeVotePrompt}/>
       <br />
-      <CommentMakerCardComponent judgement="haram" callback={haramCommentCallback}/>
-      <CommentMakerCardComponent judgement="halal" callback={halalCommentCallback}/>
+      {
+        !state.votePrompt && <CommentMakerCardComponent judgment="haram" callback={haramCommentCallback}/>
+      }
+      {
+        !state.votePrompt && <CommentMakerCardComponent judgment="halal" callback={halalCommentCallback}/>
+      }
       <br />
       <div className="floor"/>
     </div>

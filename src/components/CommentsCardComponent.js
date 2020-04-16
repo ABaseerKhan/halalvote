@@ -63,7 +63,7 @@ export const CommentComponent = (props) => {
 
 export const CommentsCardComponent = (props) => {
   return(
-    <div className={"comments-card-" + props.judgement}>
+    <div className={"comments-card-" + props.judgment}>
       {props.votePrompt &&
         <div className={"vote-prompt"}>
           <button className={"vote-button"} onClick={props.removeVotePrompt}>+</button>
