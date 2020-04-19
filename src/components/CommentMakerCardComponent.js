@@ -7,7 +7,7 @@ export const CommentMakerCardComponent = (props) => {
     holdingDownShift: false
   });
 
-  const textAreaId = props.judgement + "-comment";
+  const textAreaId = props.judgment + "-comment";
 
   const textAreaOnKeyDown = (event) => {
     switch (event.keyCode) {
@@ -36,14 +36,14 @@ export const CommentMakerCardComponent = (props) => {
   const invokeCallback = () => {
     const textValue = (document.getElementById(textAreaId).value).trim();
     if (textValue !== null && textValue !== '') {
-      event.preventDefault(); 
+      event.preventDefault();
       props.callback(document.getElementById(textAreaId).value);
       document.getElementById(textAreaId).value = '';
     }
   };
 
   return (
-    <div className={"comment-maker-card-" + props.judgement}>
+    <div className={"comment-maker-card-" + props.judgment}>
       <textarea id={textAreaId} className="comment-maker-input" placeholder={state.isReply ? "Reply" : "Comment"} onKeyDown={textAreaOnKeyDown} onKeyUp={textAreaOnKeyUp}/>
       <button className="comment-maker-button" onClick={invokeCallback}>^</button>
     </div>
