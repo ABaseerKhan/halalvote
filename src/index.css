@@ -41,7 +41,7 @@ html, body {
   float: right;
 }
 
-.comments-card-haram, .comments-card-halal {
+.comments-card-1, .comments-card-0 {
   position: relative;
   width: 30%;
   height: 50%;
@@ -52,18 +52,18 @@ html, body {
   border-radius: 25px 25px 25px 25px;
 }
 
-.comments-card-haram::-webkit-scrollbar, .comments-card-halal::-webkit-scrollbar {
+.comments-card-1::-webkit-scrollbar, .comments-card-0::-webkit-scrollbar {
   display: none;
 }
 
-.comments-card-haram {
+.comments-card-1 {
   margin-left: 10%;
   float: left;
   background-color: #ffc8e6;
 
 }
 
-.comments-card-halal {
+.comments-card-0 {
   margin-right: 10%;
   float: right;
   background-color: #c8ffe6;
@@ -144,7 +144,7 @@ html, body {
   margin-bottom: 10px;
 }
 
-.comment-maker-card-haram {
+.comment-maker-card-1 {
   width: 30%;
   height: 20px;
   margin-left: 10%;
@@ -157,7 +157,7 @@ html, body {
   display: table;
 }
 
-.comment-maker-card-halal {
+.comment-maker-card-0 {
   width: 30%;
   height: 20px;
   margin-right: 10%;
