@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import '../index.css';
+import { Judgment } from './ItemShellComponent';
 
 interface CommentMakerCardComponentProps {
-  judgment: string,
+  judgment: Judgment,
   callback: (comment: string) => void,
 };
 export const CommentMakerCardComponent = (props: CommentMakerCardComponentProps) => {
@@ -11,7 +12,7 @@ export const CommentMakerCardComponent = (props: CommentMakerCardComponentProps)
     holdingDownShift: false
   });
 
-  const textAreaId = props.judgment + "-comment";
+  const textAreaId = props.judgment.toString() + "-comment";
 
   const textAreaOnKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     switch (event.keyCode) {

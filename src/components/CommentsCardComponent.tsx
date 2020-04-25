@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { Comment } from '../index';
+import { Judgment } from './ItemShellComponent';
 import '../index.css';
 
 interface CommentsCardComponentProps {
-  judgment: string,
+  judgment: Judgment,
   comments: Comment[],
   votePrompt: boolean,
-  removeVotePrompt: () => void,
+  vote: (judgment: Judgment) => void,
 };
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
+  const { judgment, votePrompt } = props;
   return(
-    <div className={"comments-card-" + props.judgment}>
-      {props.votePrompt &&
+    <div className={"comments-card-" + judgment.toString()} style={votePrompt ? { overflow: 'hidden'} : undefined}>
+      {votePrompt &&
         <div className={"vote-prompt"}>
-          <button className={"vote-button"} onClick={props.removeVotePrompt}>+</button>
+          <button className={"vote-button"} onClick={() => props.vote(judgment)}>+</button>
         </div>}
         <div >
           {
