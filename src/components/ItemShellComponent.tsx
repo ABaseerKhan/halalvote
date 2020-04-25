@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
 import { CommentsCardComponent } from './CommentsCardComponent';
 import { CommentMakerCardComponent } from './CommentMakerCardComponent';
+import { Comment } from '../index';
 import '../index.css';
 
-export const ItemShellComponent = (props: any) => {
+interface ItemShellProps {
+  halalVotes: number,
+  halalComments: Comment[],
+  haramVotes: number,
+  haramComments: Comment[],
+};
+
+export const ItemShellComponent = (props: ItemShellProps) => {
   const [state, setState] = useState({
     username: "op",
     halalComments: props.halalComments,
@@ -11,19 +19,19 @@ export const ItemShellComponent = (props: any) => {
     votePrompt: true
   });
 
-  const getHalalVotePercentage = () => {
+  const getHalalVotePercentage = (): number => {
     const decimal = props.halalVotes/(props.halalVotes + props.haramVotes);
     const percentage = decimal * 100;
     return Math.round(percentage);
   }
 
-  const getHaramVotePercentage = () => {
+  const getHaramVotePercentage = (): number => {
     const decimal = props.haramVotes/(props.halalVotes + props.haramVotes);
     const percentage = decimal * 100;
     return Math.round(percentage);
   }
 
-  const haramCommentCallback = (comment: any) => {
+  const haramCommentCallback = (comment: string) => {
     const commentObject = {
       username: state.username,
       comment: comment,
@@ -38,7 +46,7 @@ export const ItemShellComponent = (props: any) => {
     });
   }
 
-  const halalCommentCallback = (comment: any) => {
+  const halalCommentCallback = (comment: string) => {
     const commentObject = {
       username: state.username,
       comment: comment,
