@@ -3,7 +3,15 @@ import ReactDOM from 'react-dom';
 import { ItemShellComponent } from './components/ItemShellComponent';
 import './index.css';
 
-const comments = [
+export interface Comment {
+  username: string,
+  comment: string,
+  replies: Comment[],
+  upVotes: number,
+  downVotes: number,
+};
+
+const comments: Comment[] = [
   {
     username: "pessimist",
     comment: "This sucks.",

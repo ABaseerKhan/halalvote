@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import '../index.css';
 
-export const CommentMakerCardComponent = (props: any) => {
+interface CommentMakerCardComponentProps {
+  judgment: string,
+  callback: (comment: string) => void,
+};
+export const CommentMakerCardComponent = (props: CommentMakerCardComponentProps) => {
   const [state, setState] = useState({
     isReply: false,
     holdingDownShift: false
@@ -9,11 +13,11 @@ export const CommentMakerCardComponent = (props: any) => {
 
   const textAreaId = props.judgment + "-comment";
 
-  const textAreaOnKeyDown = (event: any) => {
+  const textAreaOnKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     switch (event.keyCode) {
       case 13:
         if (!state.holdingDownShift) {
-          invokeCallback(event);
+          invokeCallback(event as any);
         }
         break;
       case 16:
@@ -24,7 +28,7 @@ export const CommentMakerCardComponent = (props: any) => {
     }
   }
 
-  const textAreaOnKeyUp = (event: any) => {
+  const textAreaOnKeyUp = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.keyCode === 16) {
       setState({
         ...state,
@@ -33,7 +37,7 @@ export const CommentMakerCardComponent = (props: any) => {
     }
   };
 
-  const invokeCallback = (event: any) => {
+  const invokeCallback = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const textValue = ((document.getElementById(textAreaId) as HTMLInputElement).value).trim();
     if (textValue !== null && textValue !== '') {
       event.preventDefault();

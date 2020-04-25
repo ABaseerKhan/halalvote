@@ -1,7 +1,36 @@
 import React, { useState } from 'react';
+import { Comment } from '../index';
 import '../index.css';
 
-export const CommentComponent = (props: any) => {
+interface CommentsCardComponentProps {
+  judgment: string,
+  comments: Comment[],
+  votePrompt: boolean,
+  removeVotePrompt: () => void,
+};
+export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
+  return(
+    <div className={"comments-card-" + props.judgment}>
+      {props.votePrompt &&
+        <div className={"vote-prompt"}>
+          <button className={"vote-button"} onClick={props.removeVotePrompt}>+</button>
+        </div>}
+        <div >
+          {
+            props.comments.map((comment: Comment, i: number) => {
+              return <CommentComponent comment={comment} key={i}/>
+            })
+          }
+        </div>
+    </div>
+  )
+}
+
+interface CommentComponentProps {
+  comment: Comment, 
+  key: number,
+}
+const CommentComponent = (props: CommentComponentProps) => {
   const [state, setState] = useState({
     upVotes: props.comment.upVotes,
     downVotes: props.comment.downVotes,
@@ -57,24 +86,6 @@ export const CommentComponent = (props: any) => {
             }
           </button>
       }
-    </div>
-  )
-}
-
-export const CommentsCardComponent = (props: any) => {
-  return(
-    <div className={"comments-card-" + props.judgment}>
-      {props.votePrompt &&
-        <div className={"vote-prompt"}>
-          <button className={"vote-button"} onClick={props.removeVotePrompt}>+</button>
-        </div>}
-        <div >
-          {
-            props.comments.map((comment: any, i: any) => {
-              return <CommentComponent comment={comment} key={i}/>
-            })
-          }
-        </div>
     </div>
   )
 }
