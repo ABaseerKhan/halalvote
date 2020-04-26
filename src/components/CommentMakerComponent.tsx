@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import '../index.css';
+import { Judgment } from './ItemShellComponent';
 
-interface CommentMakerCardComponentProps {
-    judgment: string,
+interface CommentMakerComponentProps {
+    judgment: Judgment,
     callback: (comment: string) => void,
 };
 
-export const CommentMakerCardComponent = (props: CommentMakerCardComponentProps) => {
+export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
     const [state, setState] = useState({
         isReply: false,
         holdingDownShift: false
     });
 
-    const textAreaId = props.judgment + "-comment";
+    const textAreaId = props.judgment.toString() + "-comment";
 
     const textAreaOnKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         switch (event.keyCode) {

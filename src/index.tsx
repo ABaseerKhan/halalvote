@@ -91,6 +91,6 @@ const comments: Comment[] = [
 ];
 
 ReactDOM.render(
-  <ItemShellComponent halalVotes={5} halalComments={comments} highlightedHalalComment={undefined} totalHalalComments={9} haramVotes={3} haramComments={comments} highlightedHaramComment={undefined} totalHaramComments={9}/>,
+  <ItemShellComponent halalComments={comments} highlightedHalalComment={undefined} totalHalalComments={9} haramComments={comments} highlightedHaramComment={undefined} totalHaramComments={9}/>,
   document.getElementById('root')
 );

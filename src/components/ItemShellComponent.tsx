@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import { CommentsCardComponent } from './CommentsCardComponent';
-import { CommentMakerCardComponent } from './CommentMakerCardComponent';
+import { CommentMakerComponent } from './CommentMakerComponent';
 import { Comment } from '../index';
 import '../index.css';
 
+export enum Judgment {
+  HALAL,
+  HARAM,
+};
+
 interface ItemShellProps {
-  halalVotes: number,
   halalComments: Comment[],
   highlightedHalalComment?: number[],
   totalHalalComments: number,
-  haramVotes: number,
   haramComments: Comment[],
+  highlightedHaramComment?: number[],
   totalHaramComments: number,
-  highlightedHaramComment?: number[]
 };
 
 export const ItemShellComponent = (props: ItemShellProps) => {
@@ -24,19 +27,23 @@ export const ItemShellComponent = (props: ItemShellProps) => {
     haramComments: props.haramComments,
     highlightedHaramComment: props.highlightedHaramComment,
     totalHaramComments: props.totalHaramComments,
-    votePrompt: true
+    votePrompt: true,
+    halalVotes: 0,
+    haramVotes: 0,
   });
 
   const getHalalVotePercentage = (): number => {
-    const decimal = props.halalVotes/(props.halalVotes + props.haramVotes);
+    const totalVotes = state.halalVotes + state.haramVotes;
+    const decimal = state.halalVotes/totalVotes;
     const percentage = decimal * 100;
-    return Math.round(percentage);
+    return totalVotes ? Math.round(percentage) : 0;
   }
 
   const getHaramVotePercentage = (): number => {
-    const decimal = props.haramVotes/(props.halalVotes + props.haramVotes);
+    const totalVotes = state.halalVotes + state.haramVotes;
+    const decimal = state.haramVotes/totalVotes;
     const percentage = decimal * 100;
-    return Math.round(percentage);
+    return totalVotes ? Math.round(percentage) : 0;
   }
 
   const haramCommentCallback = (comment: string) => {
@@ -49,7 +56,7 @@ export const ItemShellComponent = (props: ItemShellProps) => {
         downVotes: 0
     }
 
-    let haramCommentsCard = (document.getElementsByClassName('comments-card-haram')[0] as HTMLInputElement);
+    let haramCommentsCard = (document.getElementsByClassName(`comments-card-${Judgment.HARAM.toString()}`)[0] as HTMLInputElement);
     haramCommentsCard.scrollTop = 0;
 
     setState({
@@ -70,7 +77,7 @@ export const ItemShellComponent = (props: ItemShellProps) => {
         downVotes: 0
     }
 
-    let halalCommentsCard = (document.getElementsByClassName('comments-card-halal')[0] as HTMLInputElement);
+    let halalCommentsCard = (document.getElementsByClassName(`comments-card-${Judgment.HALAL.toString()}`)[0] as HTMLInputElement);
         halalCommentsCard.scrollTop = 0;
 
     setState({
@@ -81,24 +88,31 @@ export const ItemShellComponent = (props: ItemShellProps) => {
     });
   }
 
-  const removeVotePrompt = () => {
-    setState({ ...state, votePrompt: false });
+  const vote = (judgment: Judgment) => {
+    switch (judgment) {
+      case 0: 
+        setState({ ...state, halalVotes: state.halalVotes+1, votePrompt: false });
+        break;
+      case 1: 
+        setState({ ...state, haramVotes: state.haramVotes+1, votePrompt: false });
+        break;
+    }
   };
 
   return (
     <div className="item-shell">
       <div className="item-text">Penis</div>
-      <div className="haram-text">🔥 Haram - {getHaramVotePercentage()}% 🔥</div>
-      <div className="halal-text">👼 Halal - {getHalalVotePercentage()}% 👼</div>
+      <div className="haram-text">🔥 Haram - {state.haramVotes} ({getHaramVotePercentage()}%) 🔥</div>
+      <div className="halal-text">👼 Halal - {state.halalVotes} ({getHalalVotePercentage()}%) 👼</div>
       <br />
-      <CommentsCardComponent judgment="haram" comments={state.haramComments} votePrompt={state.votePrompt} removeVotePrompt={removeVotePrompt} highlightedComment={state.highlightedHaramComment}/>
-      <CommentsCardComponent judgment="halal" comments={state.halalComments} votePrompt={state.votePrompt} removeVotePrompt={removeVotePrompt} highlightedComment={state.highlightedHalalComment}/>
+      <CommentsCardComponent judgment={Judgment.HARAM} comments={state.haramComments} votePrompt={state.votePrompt} vote={vote} highlightedComment={state.highlightedHaramComment}/>
+      <CommentsCardComponent judgment={Judgment.HALAL} comments={state.halalComments} votePrompt={state.votePrompt} vote={vote} highlightedComment={state.highlightedHalalComment}/>
       <br />
       {
-        !state.votePrompt && <CommentMakerCardComponent judgment="haram" callback={haramCommentCallback}/>
+        !state.votePrompt && <CommentMakerComponent judgment={Judgment.HARAM} callback={haramCommentCallback}/>
       }
       {
-        !state.votePrompt && <CommentMakerCardComponent judgment="halal" callback={halalCommentCallback}/>
+        !state.votePrompt && <CommentMakerComponent judgment={Judgment.HALAL} callback={halalCommentCallback}/>
       }
       <br />
       <div className="floor"/>
