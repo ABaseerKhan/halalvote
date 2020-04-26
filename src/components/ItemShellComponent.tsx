@@ -78,7 +78,7 @@ export const ItemShellComponent = (props: ItemShellProps) => {
     }
 
     let halalCommentsCard = (document.getElementsByClassName(`comments-card-${Judgment.HALAL.toString()}`)[0] as HTMLInputElement);
-        halalCommentsCard.scrollTop = 0;
+    halalCommentsCard.scrollTop = 0;
 
     setState({
       ...state,
