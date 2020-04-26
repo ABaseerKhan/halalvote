@@ -89,6 +89,23 @@ html, body {
   font-size: 80px;
 }
 
+.comment-border-highlighted {
+  animation-name: highlighted-comment;
+  animation-duration: 2s;
+}
+
+@keyframes highlighted-comment {
+  from {
+    border-radius: 10px 10px 10px 10px;
+    background: #8fb4ff;
+  }
+  to {
+    border-radius: 10px 10px 10px 10px;
+  }
+}
+
+comment-border-unhighlighted {}
+
 .comment {
   width: 100%;
   margin-bottom: 10px;
@@ -162,7 +179,7 @@ html, body {
   height: 20px;
   margin-right: 10%;
   overflow: scroll;
-  padding: 25px 25px 15px 25px;
+  padding: 20px 20px 10px 20px;
   box-shadow: 4px 4px #c8c8c8;
   border-radius: 25px 25px 25px 25px;
   float: right;
