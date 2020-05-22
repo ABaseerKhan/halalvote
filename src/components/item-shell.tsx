@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { CommentsCardComponent } from './CommentsCardComponent';
-import { CommentMakerComponent } from './CommentMakerComponent';
+import { ItemCarouselComponent } from './item-carousel/item-carousel';
+import { CommentsCardComponent } from './comments-card';
+import { CommentMakerComponent } from './comment-maker';
 import { Comment } from '../index';
 import '../index.css';
 
@@ -101,7 +102,7 @@ export const ItemShellComponent = (props: ItemShellProps) => {
 
   return (
     <div className="item-shell">
-      <div className="item-text">Penis</div>
+      <ItemCarouselComponent />
       <div className="haram-text">🔥 Haram - {state.haramVotes} ({getHaramVotePercentage()}%) 🔥</div>
       <div className="halal-text">👼 Halal - {state.halalVotes} ({getHalalVotePercentage()}%) 👼</div>
       <br />

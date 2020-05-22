@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../index.css';
-import { Judgment } from './ItemShellComponent';
+import { Judgment } from './item-shell';
 
 interface CommentMakerComponentProps {
     judgment: Judgment,

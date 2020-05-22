@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ItemShellComponent } from './components/ItemShellComponent';
+import { ItemShellComponent } from './components/item-shell';
 import './index.css';
 
 export interface Comment {

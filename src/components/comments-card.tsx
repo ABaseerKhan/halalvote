@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Comment } from '../index';
-import { Judgment } from './ItemShellComponent';
+import { Judgment } from './item-shell';
 import '../index.css';
 
 interface CommentsCardComponentProps {

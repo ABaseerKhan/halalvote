@@ -1,0 +1,17 @@
+.item-carousel {
+    display: flex;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.item-text {
+    text-align: center;
+    margin: auto;
+    font-size: 64px;
+}
+
+.carousel-button {
+    width: 100px;
+    height: 25px;
+    margin: auto;
+}

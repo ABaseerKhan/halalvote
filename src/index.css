@@ -17,14 +17,6 @@ html, body {
   transform: translate(-50%, -50%);
 }
 
-.item-text {
-  width: 100%;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  font-size: 64px;
-  text-align: center;
-}
-
 .haram-text {
   width: 50%;
   margin-bottom: 20px;
