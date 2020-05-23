@@ -3,9 +3,11 @@ import { postData } from '../../https-client/post-data';
 
 // styles
 import './item-carousel.css';
+import { config } from '../../https-client/config';
 
 interface ItemCarouselComponentProps { };
 export const ItemCarouselComponent = (props: ItemCarouselComponentProps) => {
+    console.log(process.env.NODE_ENV);
     const [state, setState] = useState({
         items: [],
         itemIndex: 0
@@ -13,7 +15,7 @@ export const ItemCarouselComponent = (props: ItemCarouselComponentProps) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await postData("https://3qhzg4cerc.execute-api.us-east-1.amazonaws.com/qa/get-items", { "n": 3 });
+            const data = await postData({ baseUrl: config().itemsUrl, path: '/get-items', data: { }});
             setState({ ...state, items: data });
         };
         fetchData();
@@ -27,7 +29,6 @@ export const ItemCarouselComponent = (props: ItemCarouselComponentProps) => {
         }
     };
 
-    console.log(state);
     return (
         <div className='item-carousel'>
             <button onClick={iterateItem(-1)} className='carousel-button'>{"<"}</button>
