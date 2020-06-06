@@ -33,7 +33,8 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     useEffect(() => {
         const fetchData = async () => {
             const data = await postData({ baseUrl: config().commentsUrl, path: 'get-comments', data: { "commentType": "OTHER", "itemName": "Tesla", "depth": 2, "n": 55 } });
-            setState({ ...state, comments: data });
+            const transformedData = data.map((comment: Comment) => ({ replies: [], ...comment }));
+            setState({ ...state, comments: transformedData });
         };
         fetchData();
     }, [])
