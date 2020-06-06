@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
+import { postData } from '../../https-client/post-data';
+import { config } from '../../https-client/config';
 
 // type imports
 import { Judgment } from '../../types';
@@ -11,55 +13,34 @@ import './comments-card.css';
 
 interface CommentsCardComponentProps {
     judgment: Judgment,
-    comments: Comment[],
-    highlightedComment?: number[]
 };
 
 interface CommentsCardState {
-    halalComments: Comment[],
-    highlightedHalalComment?: number[],
-    totalHalalComments: number,
-    haramComments: Comment[],
-    highlightedHaramComment?: number[],
-    totalHaramComments: number,
+    comments: Comment[],
+    highlightedComment?: number[],
+    totalComments: number,
 };
 
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const { judgment } = props;
 
     const [state, setState] = useState<CommentsCardState>({
-        halalComments: [],
-        highlightedHalalComment: [],
-        totalHalalComments: 0,
-        haramComments: [],
-        highlightedHaramComment: [],
-        totalHaramComments: 0,
+        comments: [],
+        highlightedComment: [],
+        totalComments: 0,
     });
 
-    const makeHaramComment = (comment: string) => {
-        const commentObject = {
-            id: state.totalHaramComments,
-            username: "OP",
-            comment: comment,
-            replies: [],
-            upVotes: 0,
-            downVotes: 0
-        }
-    
-        let haramCommentsCard = (document.getElementsByClassName(`comments-card-${Judgment.HARAM.toString()}`)[0] as HTMLInputElement);
-        haramCommentsCard.scrollTop = 0;
-    
-        setState({
-            ...state,
-            haramComments: [commentObject, ...state.haramComments],
-            highlightedHaramComment: [0],
-            totalHaramComments: state.totalHaramComments + 1
-        });
-    }
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await postData({ baseUrl: config().commentsUrl, path: 'get-comments', data: { "commentType": "OTHER", "itemName": "Tesla", "depth": 2, "n": 55 } });
+            setState({ ...state, comments: data });
+        };
+        fetchData();
+    }, [])
 
-    const makeHalalComment = (comment: string) => {
+    const addComment = (comment: string) => {
         const commentObject = {
-            id: state.totalHalalComments,
+            id: state.totalComments,
             username: "OP",
             comment: comment,
             replies: [],
@@ -67,14 +48,14 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             downVotes: 0
         }
     
-        let halalCommentsCard = (document.getElementsByClassName(`comments-card-${Judgment.HALAL.toString()}`)[0] as HTMLInputElement);
-        halalCommentsCard.scrollTop = 0;
+        let commentsCard = (document.getElementsByClassName(`comments-card-${judgment.toString()}`)[0] as HTMLInputElement);
+        commentsCard.scrollTop = 0;
     
         setState({
             ...state,
-            halalComments: [commentObject, ...state.halalComments],
-            highlightedHalalComment: [0],
-            totalHalalComments: state.totalHalalComments + 1
+            comments: [commentObject, ...state.comments],
+            highlightedComment: [0],
+            totalComments: state.totalComments + 1
         });
     }
 
@@ -85,18 +66,18 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             <div className={"comments-card-" + judgment.toString()}>
                 <div >
                     {
-                        props.comments.map((comment: Comment, i: number) => {
+                        state.comments.map((comment: Comment, i: number) => {
                             let repliesHidden: boolean = true
-                            if (props.highlightedComment != undefined && props.highlightedComment.length > 1 && props.highlightedComment[0] === i && props.highlightedComment[1] > 0) {
+                            if (state.highlightedComment != undefined && state.highlightedComment.length > 1 && state.highlightedComment[0] === i && state.highlightedComment[1] > 0) {
                                 repliesHidden = false;
                             }
-                            return <CommentComponent key={comment.id} comment={comment} index={i} highlightedComment={props.highlightedComment} repliesHidden={repliesHidden}/>
+                            return <CommentComponent key={comment.id} comment={comment} index={i} highlightedComment={state.highlightedComment} repliesHidden={repliesHidden}/>
                         })
                     }
                 </div>
             </div>
             <br />
-            <CommentMakerComponent judgment={judgment} callback={judgment === Judgment.HARAM ? makeHaramComment : makeHalalComment}/>
+            <CommentMakerComponent judgment={judgment} callback={addComment}/>
             <br />
         </div>
     )
