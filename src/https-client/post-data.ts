@@ -33,6 +33,8 @@ const getApiKey = (baseUrl: string, envConfig: EnvConfig) => {
     switch(baseUrl) {
         case envConfig.itemsUrl:
             return envConfig.itemsApiKey;
+        case envConfig.commentsUrl:
+            return envConfig.commentsApiKey;
         default:
             return envConfig.itemsApiKey;
     }
