@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import '../index.css';
-import { Judgment } from './item-shell';
+
+//type imports
+import { Judgment } from '../../types';
+
+//style imports
+import './comments-card.css';
 
 interface CommentMakerComponentProps {
     judgment: Judgment,

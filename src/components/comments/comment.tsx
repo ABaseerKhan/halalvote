@@ -1,44 +1,11 @@
 import React, { useState } from 'react';
-import { Comment } from '../index';
-import { Judgment } from './item-shell';
-import '../index.css';
+import { Comment } from '../../types';
 
-interface CommentsCardComponentProps {
-    judgment: Judgment,
-    comments: Comment[],
-    votePrompt: boolean,
-    vote: (judgment: Judgment) => void,
-    highlightedComment?: number[]
-};
+// type imports
+import { Vote } from '../../types';
 
-export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
-    const { judgment, votePrompt } = props;
-    return(
-        <div className={"comments-card-" + judgment.toString()} style={votePrompt ? { overflow: 'hidden'} : undefined}>
-            {votePrompt &&
-                <div className={"vote-prompt"}>
-                  <button className={"vote-button"} onClick={() => {props.vote(judgment)}}>+</button>
-                </div>}
-            <div >
-                {
-                    props.comments.map((comment: Comment, i: number) => {
-                        let repliesHidden: boolean = true
-                        if (props.highlightedComment != undefined && props.highlightedComment.length > 1 && props.highlightedComment[0] === i && props.highlightedComment[1] > 0) {
-                            repliesHidden = false;
-                        }
-                        return <CommentComponent key={comment.id} comment={comment} index={i} highlightedComment={props.highlightedComment} repliesHidden={repliesHidden}/>
-                    })
-                }
-            </div>
-        </div>
-    )
-}
-
-enum Vote {
-    UPVOTE,
-    DOWNVOTE,
-    NONE
-}
+// style imports
+import './comments-card.css';
 
 interface CommentComponentProps {
     key: number,
@@ -48,7 +15,7 @@ interface CommentComponentProps {
     repliesHidden: boolean
 }
 
-const CommentComponent = (props: CommentComponentProps) => {
+export const CommentComponent = (props: CommentComponentProps) => {
     const [state, setState] = useState({
         vote: Vote.NONE,
         repliesHidden: props.repliesHidden

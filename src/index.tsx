@@ -1,16 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ItemShellComponent } from './components/item-shell';
-import './index.css';
 
-export interface Comment {
-    id: number,
-    username: string,
-    comment: string,
-    replies: Comment[],
-    upVotes: number,
-    downVotes: number,
-};
+// type imports
+import { Comment } from "./types";
+
+// style imports
+import './index.css';
 
 const comments: Comment[] = [
   {

@@ -1,0 +1,143 @@
+.container {
+    position: relative;
+    width: 50%;
+    display: inline-block;
+}
+
+.header-text {
+    text-align: center;
+    font-size: 32px;
+}
+
+.comments-card-1, .comments-card-0 {
+    width: 80%;
+    height: 60vh;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    padding: 25px 25px 15px 25px;
+    overflow: scroll;
+    box-shadow: 4px 4px #c8c8c8;
+    border-radius: 25px 25px 25px 25px;
+}
+
+.comments-card-1::-webkit-scrollbar, .comments-card-0::-webkit-scrollbar {
+    display: none;
+}
+
+.comments-card-1 {
+    background-color: #ffc8e6;
+
+}
+
+.comments-card-0 {
+    background-color: #c8ffe6;
+}
+
+@keyframes highlighted-comment {
+    from {
+        border-radius: 10px 10px 10px 10px;
+        background: #8fb4ff;
+    }
+    to {
+        border-radius: 10px 10px 10px 10px;
+    }
+}
+
+.comment-border-highlighted {
+    animation-name: highlighted-comment;
+    animation-duration: 2s;
+}
+
+comment-border-unhighlighted {}
+
+.comment {
+    width: 100%;
+    margin-bottom: 10px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    font-size: 18px;
+}
+
+.username {
+    width: 100%;
+    margin-bottom: 10px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    font-size: 14px;
+    color: #969696;
+}
+
+.replies {
+    margin-left: 50px;
+}
+
+.show-more-button {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.up-votes {
+    width: fit-content;
+    margin-left: 5px;
+    margin-bottom: 10px;
+    float:right;
+    font-size: 14px;
+}
+
+.up-vote-button {
+    width: fit-content;
+    float:right;
+    margin-bottom: 10px;
+}
+
+.down-votes {
+    width: fit-content;
+    margin-left: 5px;
+    margin-bottom: 10px;
+    float:right;
+    font-size: 14px;
+}
+
+.down-vote-button {
+    width: fit-content;
+    float:right;
+    margin-left: 5px;
+    margin-bottom: 10px;
+}
+
+
+.comment-maker-card-0, .comment-maker-card-1 {
+    width: 80%;
+    margin: auto;
+    height: 20px;
+    overflow: scroll;
+    padding: 20px 20px 10px 20px;
+    box-shadow: 4px 4px #c8c8c8;
+    border-radius: 25px 25px 25px 25px;
+    display: table;
+}
+
+.comment-maker-card-0 {
+    background-color: #c8ffe6;
+}
+
+.comment-maker-card-1 {
+    background-color: #ffc8e6;
+}
+
+.comment-maker-input {
+    float: left;
+    width: 90%;
+    height: inherit;
+    min-height: 20px;
+    font-size: 18px;
+    resize: vertical;
+}
+
+.comment-maker-button {
+    float: right;
+    width: fit-content;
+    height: inherit;
+    font-size: 18px;
+}
