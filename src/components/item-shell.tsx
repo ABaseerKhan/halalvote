@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ItemCarouselComponent } from './items-carousel/item-carousel';
 import { CommentsCardComponent } from './comments/comments-card';
-import { Comment } from '../types';
+import { Comment, Item } from '../types';
 import { postData } from '../https-client/post-data';
 import { config } from '../https-client/config';
 
@@ -11,19 +11,11 @@ import { Judgment } from '../types';
 // style imports
 import '../index.css';
 
-interface ItemShellProps {
-  halalComments: Comment[],
-  highlightedHalalComment?: number[],
-  totalHalalComments: number,
-  haramComments: Comment[],
-  highlightedHaramComment?: number[],
-  totalHaramComments: number,
-};
-
-export const ItemShellComponent = (props: ItemShellProps) => {
-  const [state, setState] = useState({
+export const ItemShellComponent = (props: any) => {
+  const [state, setState] = useState<{ username: string; items: Item[]; itemIndex: number; }>({
     username: "op",
     items: [],
+    itemIndex: 0,
   });
 
   useEffect(() => {
@@ -34,11 +26,21 @@ export const ItemShellComponent = (props: ItemShellProps) => {
     fetchData();
   }, [])
 
+  const iterateItem = (iteration: number) => () => {
+    if ((state.itemIndex + iteration) < state.items.length && (state.itemIndex + iteration) >= 0) {
+        setState({  ...state, itemIndex: state.itemIndex + iteration });
+    } else {
+        return undefined;
+    }
+  };
+
+  const itemName = state.items.length > 0 ? state.items[state.itemIndex].itemName : undefined;
+
   return (
     <div className="item-shell">
-      <ItemCarouselComponent items={state.items} />
-      <CommentsCardComponent judgment={Judgment.HARAM} />
-      <CommentsCardComponent judgment={Judgment.HALAL} />
+      <ItemCarouselComponent iterateItem={iterateItem} itemText={itemName} />
+      <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} />
+      <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} />
       <div className="floor"/>
     </div>
   )

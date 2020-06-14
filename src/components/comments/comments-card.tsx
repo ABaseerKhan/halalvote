@@ -13,6 +13,7 @@ import './comments-card.css';
 
 interface CommentsCardComponentProps {
     judgment: Judgment,
+    itemName: string | undefined,
 };
 
 interface CommentsCardState {
@@ -22,7 +23,7 @@ interface CommentsCardState {
 };
 
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
-    const { judgment } = props;
+    const { judgment, itemName } = props;
 
     const [state, setState] = useState<CommentsCardState>({
         comments: [],
@@ -32,12 +33,23 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await postData({ baseUrl: config().commentsUrl, path: 'get-comments', data: { "commentType": "OTHER", "itemName": "Tesla", "depth": 2, "n": 55 } });
-            const transformedData = data.map((comment: Comment) => ({ replies: [], ...comment }));
+            const data = await postData({ 
+                baseUrl: config().commentsUrl, 
+                path: 'get-comments', 
+                data: { 
+                    "commentType": judgementToTextMap[judgment].commentType, 
+                    "itemName": itemName, 
+                    "depth": 2, 
+                    "n": 55 
+                },
+            });
+            const transformedData = data.map((comment: Comment) => ({ replies: [], ...comment })); // Temporary, remove when comment data structure is available
             setState({ ...state, comments: transformedData });
         };
-        fetchData();
-    }, [])
+        if (itemName) {
+            fetchData();
+        }
+    }, [itemName])
 
     const addComment = (comment: string) => {
         const commentObject = {
@@ -68,11 +80,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 <div >
                     {
                         state.comments.map((comment: Comment, i: number) => {
-                            let repliesHidden: boolean = true
-                            if (state.highlightedComment != undefined && state.highlightedComment.length > 1 && state.highlightedComment[0] === i && state.highlightedComment[1] > 0) {
-                                repliesHidden = false;
-                            }
-                            return <CommentComponent key={comment.id} comment={comment} index={i} highlightedComment={state.highlightedComment} repliesHidden={repliesHidden}/>
+                            return <CommentComponent key={comment.id} comment={comment} index={i} highlightedComment={state.highlightedComment}/>
                         })
                     }
                 </div>
@@ -87,8 +95,10 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 const judgementToTextMap = {
     0: {
         text: "👼 Halal - {votes} ({%}) 👼",
+        commentType: "HALAL",
     },
     1: {
         text: "🔥 Haram - {votes} ({%}) 🔥",
+        commentType: "HARAM",
     }
 };

@@ -49,63 +49,75 @@
     animation-duration: 2s;
 }
 
-comment-border-unhighlighted {}
+.comment-border-unhighlighted, .comment-border-highlighted {
+    margin-bottom: 5px;
+}
+
+.comment-header {
+    display: flex;
+}
 
 .comment {
+    margin-left: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     width: 100%;
-    margin-bottom: 10px;
     overflow-wrap: break-word;
     word-wrap: break-word;
     font-size: 18px;
 }
 
 .username {
-    width: 100%;
-    margin-bottom: 10px;
+    float: left;
+    padding-top: 2px;
     overflow-wrap: break-word;
     word-wrap: break-word;
     font-size: 14px;
     color: #969696;
 }
 
+.vote-section {
+    margin-left: 5px;
+    padding-top: 1px;
+}
+
+.toggle-collapse {
+    cursor: pointer;
+    width: 15px;
+}
+
 .replies {
     margin-left: 50px;
 }
 
-.show-more-button {
-    width: 100%;
+.show-more-replies {
+    margin-left: 12px;
     margin-bottom: 10px;
+    color: cornflowerblue;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.show-more-replies:hover {
+    text-decoration: underline;
 }
 
 .up-votes {
+    cursor: pointer;
     width: fit-content;
     margin-left: 5px;
-    margin-bottom: 10px;
     float:right;
     font-size: 14px;
-}
-
-.up-vote-button {
-    width: fit-content;
-    float:right;
-    margin-bottom: 10px;
+    color: green;
 }
 
 .down-votes {
+    cursor: pointer;
     width: fit-content;
     margin-left: 5px;
-    margin-bottom: 10px;
     float:right;
     font-size: 14px;
 }
-
-.down-vote-button {
-    width: fit-content;
-    float:right;
-    margin-left: 5px;
-    margin-bottom: 10px;
-}
-
 
 .comment-maker-card-0, .comment-maker-card-1 {
     width: 80%;

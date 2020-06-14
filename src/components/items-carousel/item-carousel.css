@@ -5,6 +5,7 @@
 }
 
 .item-text {
+    width: 30%;
     text-align: center;
     margin: auto;
     font-size: 64px;

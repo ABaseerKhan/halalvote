@@ -12,21 +12,20 @@ interface CommentComponentProps {
     comment: Comment,
     index: number,
     highlightedComment?: number[],
-    repliesHidden: boolean
 }
-
 export const CommentComponent = (props: CommentComponentProps) => {
     const [state, setState] = useState({
         vote: Vote.NONE,
-        repliesHidden: props.repliesHidden
+        canShowMore: true,
+        collapsed: false,
     });
 
-    const flipRepliesHidden = () => {
+    const toggleCollapse = () => {
         setState({
             ...state,
-            repliesHidden: !state.repliesHidden
+            collapsed: !state.collapsed,
         });
-    }
+    };
 
     const upVote = () => {
         setState({
@@ -35,7 +34,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         });
     }
 
-    const downVote = () => {
+    const downVote =() => {
         setState({
             ...state,
             vote: (state.vote === Vote.DOWNVOTE ? Vote.NONE : Vote.DOWNVOTE)
@@ -59,33 +58,34 @@ export const CommentComponent = (props: CommentComponentProps) => {
 
     let commentBorderClass = isHighlighted ? "comment-border-highlighted" : "comment-border-unhighlighted";
 
-    return (
-        <div className={commentBorderClass}>
+    const CommentHeader = (
+        <div className={"comment-header"}>
+            <div className={"toggle-collapse"} onClick={toggleCollapse}>+</div>
             <div className="username">{props.comment.username}</div>
+            <div className={"vote-section"}>
+                <div className="down-votes" onClick={downVote} >{props.comment.downVotes + (state.vote == Vote.DOWNVOTE ? 1 : 0)}</div>
+                <div className="up-votes" onClick={upVote} >{props.comment.upVotes + (state.vote == Vote.UPVOTE ? 1 : 0)}</div>
+            </div>
+        </div>
+    );
+
+    return (
+        state.collapsed ? CommentHeader : 
+        <div className={commentBorderClass}>
+            {CommentHeader}
             <div className="comment">{props.comment.comment}</div>
-            <div className="down-votes">{props.comment.downVotes + (state.vote == Vote.DOWNVOTE ? 1 : 0)}</div>
-            <button className="down-vote-button" onClick={() => downVote()}>-</button>
-            <div className="up-votes">{props.comment.upVotes + (state.vote == Vote.UPVOTE ? 1 : 0)}</div>
-            <button className="up-vote-button" onClick={() => upVote()}>+</button>
-            <br />
             <div className="replies">
-            {
-                props.comment.replies.map((reply: Comment, i: number) => {
-                    if (!state.repliesHidden || i === 0) {
-                        return <CommentComponent key={reply.id} comment={reply} index={i} highlightedComment={newHighlightedComment} repliesHidden={showRepliesFor != i}/>
-                    } else {
-                        return null
-                    }
-                })
-            }
+                {
+                    props.comment.replies.map((reply: Comment, i: number) => {
+                        return <CommentComponent key={reply.id} comment={reply} index={i} highlightedComment={newHighlightedComment} />
+                    })
+                }
             </div>
             {
-            props.comment.replies.length > 1 &&
-                <button className="show-more-button" onClick={() => flipRepliesHidden()}>
-                    {
-                        state.repliesHidden ? "Show More" : "Show Less"
-                    }
-                </button>
+            state.canShowMore &&
+                <div className="show-more-replies" onClick={() => {}}>
+                    {"more replies"}
+                </div>
             }
         </div>
     )
