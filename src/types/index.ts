@@ -19,6 +19,7 @@ export interface Comment {
     replies: Comment[],
     upVotes: number,
     downVotes: number,
+    numReplies: number,
 };
 
 export enum Vote {

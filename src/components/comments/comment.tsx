@@ -6,15 +6,19 @@ import { Vote } from '../../types';
 
 // style imports
 import './comments-card.css';
+import { postData } from '../../https-client/post-data';
+import { config } from '../../https-client/config';
 
 interface CommentComponentProps {
     key: number,
     comment: Comment,
     index: number,
-    highlightedComment?: number[],
+    highlightedComment: Comment | undefined,
+    setHighlightedComment: (comment: Comment | undefined) => void,
 }
 export const CommentComponent = (props: CommentComponentProps) => {
     const [state, setState] = useState({
+        comment: props.comment,
         vote: Vote.NONE,
         canShowMore: true,
         collapsed: false,
@@ -41,50 +45,65 @@ export const CommentComponent = (props: CommentComponentProps) => {
         });
     }
 
-    let isHighlighted: boolean = false;
-    let newHighlightedComment: number[] | undefined = undefined;
-    let showRepliesFor: number = -1;
-    if (props.highlightedComment != undefined && props.highlightedComment.length > 0 && props.highlightedComment[0] === props.index) {
-        isHighlighted = props.highlightedComment.length === 1;
-
-        if (!isHighlighted) {
-                newHighlightedComment = props.highlightedComment.slice(1);
-
-            if (newHighlightedComment.length > 1 && newHighlightedComment[1] > 0) {
-                showRepliesFor = newHighlightedComment[0];
-            }
-        }
+    const fetchMoreReplies = () => {
+        const fetchData = async () => {
+            const data = await postData({ 
+                baseUrl: config().commentsUrl, 
+                path: 'get-comments', 
+                data: { 
+                    "parentId": state.comment.id,
+                    "depth": 2, 
+                    "n": 55,
+                    "excludedCommentIds": state.comment.replies,
+                },
+            });
+            setState({ ...state, comment: { ...state.comment, replies: [...state.comment.replies, ...data] } });
+        };
+        fetchData();
     }
+    const moreReplies = (state.comment.numReplies - state.comment.replies.length);
 
+    const isHighlighted = props.highlightedComment && props.highlightedComment.id === state.comment.id;
     let commentBorderClass = isHighlighted ? "comment-border-highlighted" : "comment-border-unhighlighted";
 
     const CommentHeader = (
         <div className={"comment-header"}>
-            <div className={"toggle-collapse"} onClick={toggleCollapse}>+</div>
-            <div className="username">{props.comment.username}</div>
+            <div className={"toggle-collapse"} onClick={toggleCollapse}>{state.collapsed ? "+" : "--"}</div>
+            <div className="username">{state.comment.username}</div>
             <div className={"vote-section"}>
-                <div className="down-votes" onClick={downVote} >{props.comment.downVotes + (state.vote == Vote.DOWNVOTE ? 1 : 0)}</div>
-                <div className="up-votes" onClick={upVote} >{props.comment.upVotes + (state.vote == Vote.UPVOTE ? 1 : 0)}</div>
+                <div className="down-votes" onClick={downVote} >{state.comment.downVotes + (state.vote == Vote.DOWNVOTE ? 1 : 0)}</div>
+                <div className="up-votes" onClick={upVote} >{state.comment.upVotes + (state.vote == Vote.UPVOTE ? 1 : 0)}</div>
             </div>
         </div>
     );
 
     return (
         state.collapsed ? CommentHeader : 
-        <div className={commentBorderClass}>
+        <div onClick={(e) => { if (isHighlighted) e.stopPropagation(); }} className={commentBorderClass}>
             {CommentHeader}
-            <div className="comment">{props.comment.comment}</div>
+            <div className="comment">{state.comment.comment}</div>
+            <div className="comment-actions">
+                <span 
+                    className={"reply-button"} 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        props.setHighlightedComment(state.comment);
+                    }}
+                >
+                    Reply
+                </span>
+            </div>
             <div className="replies">
                 {
-                    props.comment.replies.map((reply: Comment, i: number) => {
-                        return <CommentComponent key={reply.id} comment={reply} index={i} highlightedComment={newHighlightedComment} />
+                    state.comment.replies.map((reply: Comment, i: number) => {
+                        return <CommentComponent key={reply.id} comment={reply} index={i} highlightedComment={props.highlightedComment} setHighlightedComment={props.setHighlightedComment} />
                     })
                 }
             </div>
             {
-            state.canShowMore &&
-                <div className="show-more-replies" onClick={() => {}}>
-                    {"more replies"}
+                moreReplies > 0 &&
+                <div className="show-more-replies" onClick={(e) => { e.stopPropagation(); fetchMoreReplies();  }}>
+                    {moreReplies + " more replies"}
                 </div>
             }
         </div>

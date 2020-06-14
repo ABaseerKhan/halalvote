@@ -9,6 +9,7 @@ import './comments-card.css';
 interface CommentMakerComponentProps {
     judgment: Judgment,
     callback: (comment: string) => void,
+    replyToUsername?: string,
 };
 
 export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
@@ -23,7 +24,7 @@ export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
         switch (event.keyCode) {
             case 13:
                 if (!state.holdingDownShift) {
-                  invokeCallback(event as any);
+                    invokeCallback(event as any);
                 }
                 break;
             case 16:
@@ -52,9 +53,11 @@ export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
         }
     };
 
+    const placeholderText = (props.replyToUsername && "Reply to @" + props.replyToUsername) || "Top level comment";
+
     return (
         <div className={"comment-maker-card-" + props.judgment}>
-            <textarea id={textAreaId} className="comment-maker-input" placeholder={state.isReply ? "Reply" : "Comment"} onKeyDown={textAreaOnKeyDown} onKeyUp={textAreaOnKeyUp}/>
+            <textarea id={textAreaId} className="comment-maker-input" placeholder={placeholderText} onKeyDown={textAreaOnKeyDown} onKeyUp={textAreaOnKeyUp}/>
             <button className="comment-maker-button" onClick={invokeCallback}>^</button>
         </div>
     )

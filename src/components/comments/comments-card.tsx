@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
-import { postData } from '../../https-client/post-data';
+import { postData, postDataWithSession } from '../../https-client/post-data';
 import { config } from '../../https-client/config';
 
 // type imports
@@ -18,7 +18,7 @@ interface CommentsCardComponentProps {
 
 interface CommentsCardState {
     comments: Comment[],
-    highlightedComment?: number[],
+    highlightedComment?: Comment | undefined,
     totalComments: number,
 };
 
@@ -27,7 +27,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     const [state, setState] = useState<CommentsCardState>({
         comments: [],
-        highlightedComment: [],
+        highlightedComment: undefined,
         totalComments: 0,
     });
 
@@ -43,8 +43,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                     "n": 55 
                 },
             });
-            const transformedData = data.map((comment: Comment) => ({ replies: [], ...comment })); // Temporary, remove when comment data structure is available
-            setState({ ...state, comments: transformedData });
+            setState({ ...state, comments: data });
         };
         if (itemName) {
             fetchData();
@@ -52,23 +51,39 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     }, [itemName])
 
     const addComment = (comment: string) => {
-        const commentObject = {
-            id: state.totalComments,
-            username: "OP",
-            comment: comment,
-            replies: [],
-            upVotes: 0,
-            downVotes: 0
+        const fetchData = async () => {
+            const commentId = await postDataWithSession({ 
+                baseUrl: config().commentsUrl, 
+                path: 'add-comment', 
+                data: { 
+                    "parentId": state.highlightedComment, 
+                    "itemName": props.itemName, 
+                    "username": "OP",
+                    "comment": comment,
+                    "commentType": judgementToTextMap[judgment].commentType,
+                },
+            });
+            const commentObject: Comment = {
+                id: commentId,
+                username: "OP",
+                comment: comment,
+                replies: [],
+                upVotes: 0,
+                downVotes: 0,
+                numReplies: 0,
+            };
+            
+            setState({ ...state, comments: [...state.comments, commentObject] });
         }
-    
+        fetchData();
         let commentsCard = (document.getElementsByClassName(`comments-card-${judgment.toString()}`)[0] as HTMLInputElement);
         commentsCard.scrollTop = 0;
-    
+    }
+
+    const setHighlightedComment = (comment: Comment | undefined) => {
         setState({
             ...state,
-            comments: [commentObject, ...state.comments],
-            highlightedComment: [0],
-            totalComments: state.totalComments + 1
+            highlightedComment: comment,
         });
     }
 
@@ -76,23 +91,23 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         <div className={"container"}>
             <div className={'header-text'} >{judgementToTextMap[judgment].text}</div>
             <br />
-            <div className={"comments-card-" + judgment.toString()}>
+            <div onClick={() => setHighlightedComment(undefined)} className={"comments-card-" + judgment.toString()}>
                 <div >
                     {
                         state.comments.map((comment: Comment, i: number) => {
-                            return <CommentComponent key={comment.id} comment={comment} index={i} highlightedComment={state.highlightedComment}/>
+                            return <CommentComponent key={comment.id} comment={comment} index={i} highlightedComment={state.highlightedComment} setHighlightedComment={setHighlightedComment} />
                         })
                     }
                 </div>
             </div>
             <br />
-            <CommentMakerComponent judgment={judgment} callback={addComment}/>
+            <CommentMakerComponent judgment={judgment} callback={addComment} replyToUsername={state.highlightedComment?.username}/>
             <br />
         </div>
     )
 }
 
-const judgementToTextMap = {
+export const judgementToTextMap = {
     0: {
         text: "👼 Halal - {votes} ({%}) 👼",
         commentType: "HALAL",
