@@ -57,7 +57,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 baseUrl: commentsConfig.url,
                 path: 'add-comment', 
                 data: { 
-                    "parentId": state.highlightedComment, 
+                    "parentId": state.highlightedComment?.id, 
                     "itemName": props.itemName, 
                     "username": "OP",
                     "comment": comment,
