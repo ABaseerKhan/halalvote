@@ -17,9 +17,9 @@ interface CommentsCardComponentProps {
 };
 
 interface CommentsCardState {
-    comments: Comment[],
-    highlightedComment?: Comment | undefined,
-    totalComments: number,
+    comments: Comment[];
+    pathToHighlightedComment: number[] | undefined;
+    totalComments: number;
 };
 
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
@@ -27,7 +27,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     const [state, setState] = useState<CommentsCardState>({
         comments: [],
-        highlightedComment: undefined,
+        pathToHighlightedComment: undefined,
         totalComments: 0,
     });
 
@@ -36,11 +36,11 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             const data = await postData({ 
                 baseUrl: commentsConfig.url,
                 path: 'get-comments', 
-                data: { 
-                    "commentType": judgementToTextMap[judgment].commentType, 
-                    "itemName": itemName, 
-                    "depth": 2, 
-                    "n": 55 
+                data: {
+                    "commentType": judgementToTextMap[judgment].commentType,
+                    "itemName": itemName,
+                    "depth": 2,
+                    "n": 55
                 },
                 additionalHeaders: { },
             });
@@ -51,13 +51,34 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         }
     }, [itemName])
 
-    const addComment = (comment: string) => {
+    const fetchMoreReplies = (pathToParentComment: number[]) => {
+        const parentComment = getCommentByPath(state.comments, pathToParentComment);
         const fetchData = async () => {
+            const data: Comment[] = await postData({ 
+                baseUrl: commentsConfig.url,
+                path: 'get-comments', 
+                data: { 
+                    "parentId": parentComment?.id,
+                    "depth": 2, 
+                    "n": 55,
+                    "excludedCommentIds": parentComment?.replies,
+                },
+                additionalHeaders: { },
+            });
+            const updatedComments = addComments(state.comments, data, pathToParentComment);
+            setState({ ...state, comments: updatedComments });
+        };
+        fetchData();
+    }
+
+    const createComment = (comment: string) => {
+        const fetchData = async () => {
+            const highlightedComment = getCommentByPath(state.comments, state.pathToHighlightedComment);
             const commentId = await postData({
                 baseUrl: commentsConfig.url,
                 path: 'add-comment', 
                 data: { 
-                    "parentId": state.highlightedComment?.id, 
+                    "parentId": highlightedComment?.id,
                     "itemName": props.itemName, 
                     "username": "OP",
                     "comment": comment,
@@ -77,35 +98,42 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 numReplies: 0,
             };
             
-            setState({ ...state, comments: [...state.comments, commentObject] });
+            let updatedComments;
+            if (highlightedComment) {
+                updatedComments = addComments(state.comments, [commentObject], state.pathToHighlightedComment);
+            } else {
+                updatedComments = [...state.comments, commentObject];
+            }
+            setState({ ...state, comments: updatedComments });
         }
+
         fetchData();
-        let commentsCard = (document.getElementsByClassName(`comments-card-${judgment.toString()}`)[0] as HTMLInputElement);
-        commentsCard.scrollTop = 0;
     }
 
-    const setHighlightedComment = (comment: Comment | undefined) => {
+    const highlightComment = (path: number[] | undefined) => {
         setState({
             ...state,
-            highlightedComment: comment,
+            pathToHighlightedComment: path,
         });
     }
+
+    const highlightedComment = getCommentByPath(state.comments, state.pathToHighlightedComment);
 
     return(
         <div className={"container"}>
             <div className={'header-text'} >{judgementToTextMap[judgment].text}</div>
             <br />
-            <div onClick={() => setHighlightedComment(undefined)} className={"comments-card-" + judgment.toString()}>
+            <div onClick={() => highlightComment(undefined)} className={"comments-card-" + judgment.toString()}>
                 <div >
                     {
                         state.comments.map((comment: Comment, i: number) => {
-                            return <CommentComponent key={comment.id} comment={comment} index={i} highlightedComment={state.highlightedComment} setHighlightedComment={setHighlightedComment} />
+                            return <CommentComponent key={comment.id} comment={comment} path={[i]} pathToHighlightedComment={state.pathToHighlightedComment} highlightComment={highlightComment} fetchMoreReplies={fetchMoreReplies} />
                         })
                     }
                 </div>
             </div>
             <br />
-            <CommentMakerComponent judgment={judgment} callback={addComment} replyToUsername={state.highlightedComment?.username}/>
+            <CommentMakerComponent judgment={judgment} callback={createComment} replyToUsername={highlightedComment?.username}/>
             <br />
         </div>
     )
@@ -121,3 +149,28 @@ export const judgementToTextMap = {
         commentType: "HARAM",
     }
 };
+
+const getCommentByPath = (comments: Comment[], path: number[] | undefined): Comment | undefined => {
+    // base cases
+    if (!path || path.length < 1) {
+        return undefined;
+    }
+    if (path.length === 1) {
+        return comments[path![0]];
+    }
+
+    // recursive step
+    return getCommentByPath(comments[path[0]].replies, path.slice(1));
+}
+
+const addComments = (comments: Comment[], data: Comment[], pathToParentComment?: number[]): Comment[] => {
+    // base case or add top level comment
+    if (!pathToParentComment || pathToParentComment.length === 0) {
+        return [...comments, ...data];
+    }
+
+    // recursive step
+    const updatedReplies = addComments(comments[pathToParentComment[0]].replies, data, pathToParentComment.slice(1));
+    comments[pathToParentComment[0]].replies = updatedReplies;
+    return comments;
+}

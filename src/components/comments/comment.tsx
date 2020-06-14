@@ -6,15 +6,14 @@ import { Vote } from '../../types';
 
 // style imports
 import './comments-card.css';
-import { postData } from '../../https-client/post-data';
-import { commentsConfig } from '../../https-client/config';
 
 interface CommentComponentProps {
     key: number,
     comment: Comment,
-    index: number,
-    highlightedComment: Comment | undefined,
-    setHighlightedComment: (comment: Comment | undefined) => void,
+    path: number[],
+    pathToHighlightedComment: number[] | undefined,
+    highlightComment: (path: number[] | undefined) => void,
+    fetchMoreReplies: (path: number[]) => void,
 }
 export const CommentComponent = (props: CommentComponentProps) => {
     const [state, setState] = useState({
@@ -45,26 +44,13 @@ export const CommentComponent = (props: CommentComponentProps) => {
         });
     }
 
-    const fetchMoreReplies = () => {
-        const fetchData = async () => {
-            const data = await postData({ 
-                baseUrl: commentsConfig.url,
-                path: 'get-comments', 
-                data: { 
-                    "parentId": state.comment.id,
-                    "depth": 2, 
-                    "n": 55,
-                    "excludedCommentIds": state.comment.replies,
-                },
-                additionalHeaders: { },
-            });
-            setState({ ...state, comment: { ...state.comment, replies: [...state.comment.replies, ...data] } });
-        };
-        fetchData();
-    }
     const moreReplies = (state.comment.numReplies - state.comment.replies.length);
 
-    const isHighlighted = props.highlightedComment && props.highlightedComment.id === state.comment.id;
+    const isHighlighted = 
+    props.pathToHighlightedComment && 
+    props.pathToHighlightedComment.length === props.path.length && 
+    props.pathToHighlightedComment.every((value, index) => value === props.path[index]);
+    
     let commentBorderClass = isHighlighted ? "comment-border-highlighted" : "comment-border-unhighlighted";
 
     const CommentHeader = (
@@ -88,7 +74,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                     className={"reply-button"} 
                     onClick={(e) => {
                         e.stopPropagation();
-                        props.setHighlightedComment(state.comment);
+                        props.highlightComment(props.path);
                     }}
                 >
                     Reply
@@ -97,13 +83,13 @@ export const CommentComponent = (props: CommentComponentProps) => {
             <div className="replies">
                 {
                     state.comment.replies.map((reply: Comment, i: number) => {
-                        return <CommentComponent key={reply.id} comment={reply} index={i} highlightedComment={props.highlightedComment} setHighlightedComment={props.setHighlightedComment} />
+                        return <CommentComponent key={reply.id} comment={reply} path={props.path.concat([i])} pathToHighlightedComment={props.pathToHighlightedComment} highlightComment={props.highlightComment} fetchMoreReplies={props.fetchMoreReplies}/>
                     })
                 }
             </div>
             {
                 moreReplies > 0 &&
-                <div className="show-more-replies" onClick={(e) => { e.stopPropagation(); fetchMoreReplies();  }}>
+                <div className="show-more-replies" onClick={(e) => { e.stopPropagation(); props.fetchMoreReplies(props.path);  }}>
                     {moreReplies + " more replies"}
                 </div>
             }
