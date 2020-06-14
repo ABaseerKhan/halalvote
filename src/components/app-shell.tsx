@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ItemCarouselComponent } from './items-carousel/item-carousel';
+import { MenuComponent } from './menu/menu';
+import { ItemCarouselComponent } from './item-carousel/item-carousel';
 import { CommentsCardComponent } from './comments/comments-card';
 import { Comment, Item } from '../types';
 import { postData } from '../https-client/post-data';
@@ -9,9 +10,9 @@ import { itemsConfig } from '../https-client/config';
 import { Judgment } from '../types';
 
 // style imports
-import '../index.css';
+import './app-shell.css';
 
-export const ItemShellComponent = (props: any) => {
+export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<{ username: string; items: Item[]; itemIndex: number; }>({
     username: "op",
     items: [],
@@ -37,11 +38,11 @@ export const ItemShellComponent = (props: any) => {
   const itemName = state.items.length > 0 ? state.items[state.itemIndex].itemName : undefined;
 
   return (
-    <div className="item-shell">
+    <div className="app-shell">
+      <MenuComponent />
       <ItemCarouselComponent iterateItem={iterateItem} itemText={itemName} />
       <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} />
       <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} />
-      <div className="floor"/>
     </div>
   )
 }

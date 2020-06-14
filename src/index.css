@@ -6,19 +6,3 @@ html, body {
   background-color: #f0f0f0;
   position: relative;
 }
-
-.item-shell {
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-
-.floor {
-  height: 10px;
-  width: 100%;
-  float: left;
-}
