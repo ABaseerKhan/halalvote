@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MenuComponent } from './menu/menu';
+import { LoginComponent } from './login/login';
 import { ItemCarouselComponent } from './item-carousel/item-carousel';
 import { CommentsCardComponent } from './comments/comments-card';
 import { Comment, Item } from '../types';
@@ -13,10 +14,12 @@ import { Judgment } from '../types';
 import './app-shell.css';
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ username: string; items: Item[]; itemIndex: number; }>({
-    username: "op",
+  const [state, setState] = useState<{ username: string; sessiontoken: string; items: Item[]; itemIndex: number; loginDisplayed: boolean }>({
+    username: "",
+    sessiontoken: "",
     items: [],
     itemIndex: 0,
+    loginDisplayed: false,
   });
 
   useEffect(() => {
@@ -35,6 +38,10 @@ export const AppShellComponent = (props: any) => {
     }
   };
 
+  const displayLogin = (loginDisplayed: boolean) => {
+    setState({ ...state, loginDisplayed: loginDisplayed })
+  }
+
   const itemName = state.items.length > 0 ? state.items[state.itemIndex].itemName : undefined;
 
   return (
@@ -44,7 +51,10 @@ export const AppShellComponent = (props: any) => {
           <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} />
           <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} />
       </div>
-      <MenuComponent />
+      <MenuComponent displayLogin={displayLogin} />
+      {
+        state.loginDisplayed && <LoginComponent displayLogin={displayLogin} />
+      }
     </div>
   )
 }
