@@ -56,6 +56,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                     "n": 55,
                     "excludedCommentIds": state.comment.replies,
                 },
+                additionalHeaders: { },
             });
             setState({ ...state, comment: { ...state.comment, replies: [...state.comment.replies, ...data] } });
         };

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
-import { postData, postDataWithSession } from '../../https-client/post-data';
+import { postData } from '../../https-client/post-data';
 import { commentsConfig } from '../../https-client/config';
 
 // type imports
@@ -42,6 +42,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                     "depth": 2, 
                     "n": 55 
                 },
+                additionalHeaders: { },
             });
             setState({ ...state, comments: data });
         };
@@ -52,7 +53,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     const addComment = (comment: string) => {
         const fetchData = async () => {
-            const commentId = await postDataWithSession({ 
+            const commentId = await postData({
                 baseUrl: commentsConfig.url,
                 path: 'add-comment', 
                 data: { 
@@ -62,6 +63,9 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                     "comment": comment,
                     "commentType": judgementToTextMap[judgment].commentType,
                 },
+                additionalHeaders: {
+                    "sessiontoken": "7b22acc3266307cdf4ba"
+                }
             });
             const commentObject: Comment = {
                 id: commentId,

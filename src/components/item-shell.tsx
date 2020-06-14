@@ -20,7 +20,7 @@ export const ItemShellComponent = (props: any) => {
 
   useEffect(() => {
     const fetchData = async () => {
-        const data = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: { }});
+        const data = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: { }, additionalHeaders: { },});
         setState({ ...state, items: data });
     };
     fetchData();
