@@ -39,10 +39,12 @@ export const AppShellComponent = (props: any) => {
 
   return (
     <div className="app-shell">
+      <div className="body">
+          <ItemCarouselComponent iterateItem={iterateItem} itemText={itemName} />
+          <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} />
+          <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} />
+      </div>
       <MenuComponent />
-      <ItemCarouselComponent iterateItem={iterateItem} itemText={itemName} />
-      <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} />
-      <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} />
     </div>
   )
 }
