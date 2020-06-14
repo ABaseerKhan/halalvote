@@ -3,7 +3,7 @@ import { ItemCarouselComponent } from './items-carousel/item-carousel';
 import { CommentsCardComponent } from './comments/comments-card';
 import { Comment, Item } from '../types';
 import { postData } from '../https-client/post-data';
-import { config } from '../https-client/config';
+import { itemsConfig } from '../https-client/config';
 
 // type imports
 import { Judgment } from '../types';
@@ -20,7 +20,7 @@ export const ItemShellComponent = (props: any) => {
 
   useEffect(() => {
     const fetchData = async () => {
-        const data = await postData({ baseUrl: config().itemsUrl, path: 'get-items', data: { }});
+        const data = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: { }});
         setState({ ...state, items: data });
     };
     fetchData();

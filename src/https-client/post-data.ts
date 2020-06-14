@@ -46,11 +46,11 @@ export const getData = async (url = '', data = {}) => {
 
 const getApiKey = (baseUrl: string, envConfig: EnvConfig) => { 
     switch(baseUrl) {
-        case envConfig.itemsUrl:
-            return envConfig.itemsApiKey;
-        case envConfig.commentsUrl:
-            return envConfig.commentsApiKey;
+        case envConfig.items.url:
+            return envConfig.items.apiKey;
+        case envConfig.comments.url:
+            return envConfig.comments.apiKey;
         default:
-            return envConfig.itemsApiKey;
+            return envConfig.items.apiKey;
     }
 }

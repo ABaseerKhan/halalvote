@@ -3,7 +3,7 @@ import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
 import { postData, postDataWithSession } from '../../https-client/post-data';
-import { config } from '../../https-client/config';
+import { commentsConfig } from '../../https-client/config';
 
 // type imports
 import { Judgment } from '../../types';
@@ -34,7 +34,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     useEffect(() => {
         const fetchData = async () => {
             const data = await postData({ 
-                baseUrl: config().commentsUrl, 
+                baseUrl: commentsConfig.url,
                 path: 'get-comments', 
                 data: { 
                     "commentType": judgementToTextMap[judgment].commentType, 
@@ -53,7 +53,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const addComment = (comment: string) => {
         const fetchData = async () => {
             const commentId = await postDataWithSession({ 
-                baseUrl: config().commentsUrl, 
+                baseUrl: commentsConfig.url,
                 path: 'add-comment', 
                 data: { 
                     "parentId": state.highlightedComment, 

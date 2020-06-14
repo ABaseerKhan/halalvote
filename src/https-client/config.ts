@@ -1,22 +1,34 @@
 export interface EnvConfig {
-    itemsApiKey: string;
-    itemsUrl: string;
-    commentsApiKey: string;
-    commentsUrl: string;
+    items: {
+        apiKey: string,
+        url: string
+    };
+    comments: {
+        apiKey: string,
+        url: string
+    };
 }
 
 export const config = (): EnvConfig => {
     const qaConfig = {
-        itemsApiKey: '0idjsdWPR62EQoEPW8Wh46tw2TYNgpU36VLHGQpu',
-        itemsUrl: 'https://3qhzg4cerc.execute-api.us-east-1.amazonaws.com/qa/',
-        commentsApiKey: 'wQeeD3fsZ5yvo5E74WeW64pB0rPPOWm4AXdEF4zc',
-        commentsUrl: 'https://15v0695aui.execute-api.us-east-1.amazonaws.com/qa/',
+        items: {
+            apiKey: '0idjsdWPR62EQoEPW8Wh46tw2TYNgpU36VLHGQpu',
+            url: 'https://3qhzg4cerc.execute-api.us-east-1.amazonaws.com/qa/',
+        },
+        comments: {
+            apiKey: 'wQeeD3fsZ5yvo5E74WeW64pB0rPPOWm4AXdEF4zc',
+            url: 'https://15v0695aui.execute-api.us-east-1.amazonaws.com/qa/',
+        }
     };
     const prodConfig = {
-        itemsApiKey: '',
-        itemsUrl: '',
-        commentsApiKey: '',
-        commentsUrl: '',
+        items: {
+            apiKey: '',
+            url: '',
+        },
+        comments: {
+            apiKey: '',
+            url: '',
+        }
     };
 
     switch(process.env.NODE_ENV) {
@@ -28,3 +40,6 @@ export const config = (): EnvConfig => {
             return qaConfig;
     }
 };
+
+export const commentsConfig = config().comments
+export const itemsConfig = config().items

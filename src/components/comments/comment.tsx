@@ -7,7 +7,7 @@ import { Vote } from '../../types';
 // style imports
 import './comments-card.css';
 import { postData } from '../../https-client/post-data';
-import { config } from '../../https-client/config';
+import { commentsConfig } from '../../https-client/config';
 
 interface CommentComponentProps {
     key: number,
@@ -48,7 +48,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
     const fetchMoreReplies = () => {
         const fetchData = async () => {
             const data = await postData({ 
-                baseUrl: config().commentsUrl, 
+                baseUrl: commentsConfig.url,
                 path: 'get-comments', 
                 data: { 
                     "parentId": state.comment.id,
