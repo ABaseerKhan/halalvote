@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MenuComponent } from './menu/menu';
 import { ItemCarouselComponent } from './item-carousel/item-carousel';
 import { CommentsCardComponent } from './comments/comments-card';
-import { Comment, Item } from '../types';
+import { Item } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
 
@@ -22,7 +22,7 @@ export const AppShellComponent = (props: any) => {
   useEffect(() => {
     const fetchData = async () => {
         const data = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: { }, additionalHeaders: { },});
-        setState({ ...state, items: data });
+        setState(s => ({ ...s, items: data }));
     };
     fetchData();
   }, [])

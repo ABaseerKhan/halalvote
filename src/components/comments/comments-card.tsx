@@ -44,12 +44,12 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 },
                 additionalHeaders: { },
             });
-            setState({ ...state, comments: data });
+            setState(s => ({ ...s, comments: data }));
         };
         if (itemName) {
             fetchData();
         }
-    }, [itemName])
+    }, [itemName, judgment])
 
     const fetchMoreReplies = (pathToParentComment: number[]) => {
         const parentComment = getCommentByPath(state.comments, pathToParentComment);
@@ -127,13 +127,24 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 <div >
                     {
                         state.comments.map((comment: Comment, i: number) => {
-                            return <CommentComponent key={comment.id} comment={comment} path={[i]} pathToHighlightedComment={state.pathToHighlightedComment} highlightComment={highlightComment} fetchMoreReplies={fetchMoreReplies} />
+                            return <CommentComponent 
+                                        key={comment.id} 
+                                        comment={comment} 
+                                        path={[i]} 
+                                        pathToHighlightedComment={state.pathToHighlightedComment} 
+                                        highlightComment={highlightComment} 
+                                        fetchMoreReplies={fetchMoreReplies}
+                                    />
                         })
                     }
                 </div>
             </div>
             <br />
-            <CommentMakerComponent judgment={judgment} callback={createComment} replyToUsername={highlightedComment?.username}/>
+            <CommentMakerComponent 
+                judgment={judgment} 
+                callback={createComment} 
+                replyToUsername={highlightedComment?.username}
+            />
             <br />
         </div>
     )
