@@ -4,6 +4,7 @@ import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
 import { postData } from '../../https-client/post-data';
 import { commentsConfig } from '../../https-client/config';
+import { UserContext } from '../app-shell'
 
 // type imports
 import { Judgment } from '../../types';
@@ -24,6 +25,7 @@ interface CommentsCardState {
 
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const { judgment, itemName } = props;
+    let {username, sessiontoken} = React.useContext(UserContext)
 
     const [state, setState] = useState<CommentsCardState>({
         comments: [],
@@ -80,17 +82,17 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 data: { 
                     "parentId": highlightedComment?.id,
                     "itemName": props.itemName, 
-                    "username": "OP",
+                    "username": username,
                     "comment": comment,
                     "commentType": judgementToTextMap[judgment].commentType,
                 },
                 additionalHeaders: {
-                    "sessiontoken": "7b22acc3266307cdf4ba"
+                    "sessiontoken": sessiontoken
                 }
             });
             const commentObject: Comment = {
                 id: commentId,
-                username: "OP",
+                username: username,
                 comment: comment,
                 replies: [],
                 upVotes: 0,

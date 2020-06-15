@@ -19,3 +19,12 @@
 .login-button:hover {
     text-decoration: underline;
 }
+
+.username-text {
+    position: relative;
+    float:right;
+    font-size: 20px;
+    top: 50%;
+    margin-top: -10px;
+    margin-right: 10px;
+}

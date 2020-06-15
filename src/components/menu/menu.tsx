@@ -1,6 +1,5 @@
 import React from 'react';
-
-// type imports
+import { UserContext } from '../app-shell'
 
 // styles
 import './menu.css';
@@ -10,10 +9,15 @@ interface MenuComponentProps {
 };
 export const MenuComponent = (props: MenuComponentProps) => {
     const { displayLogin } = props;
+    let {username, sessiontoken} = React.useContext(UserContext)
 
     return (
         <div className='menu'>
-            <div className='login-button' onClick={ () => { displayLogin(true) } }>Log In</div>
+            {
+                username == "" ?
+                    <div className='login-button' onClick={ () => { displayLogin(true) } }>Log In</div> :
+                    <div className="username-text">{username}</div>
+            }
         </div>
     );
 }

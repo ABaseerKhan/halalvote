@@ -14,9 +14,11 @@ import { Judgment } from '../types';
 import './app-shell.css';
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ username: string; sessiontoken: string; items: Item[]; itemIndex: number; loginDisplayed: boolean }>({
-    username: "",
-    sessiontoken: "",
+  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean }>({
+    userDetails: {
+        username: "",
+        sessiontoken: "",
+    },
     items: [],
     itemIndex: 0,
     loginDisplayed: false,
@@ -38,6 +40,10 @@ export const AppShellComponent = (props: any) => {
     }
   };
 
+  const setUserDetails = (username: string, sessiontoken: string) => {
+    setState({ ...state, userDetails: { username: username, sessiontoken: sessiontoken }, loginDisplayed: false })
+  }
+
   const displayLogin = (loginDisplayed: boolean) => {
     setState({ ...state, loginDisplayed: loginDisplayed })
   }
@@ -45,16 +51,23 @@ export const AppShellComponent = (props: any) => {
   const itemName = state.items.length > 0 ? state.items[state.itemIndex].itemName : undefined;
 
   return (
-    <div className="app-shell">
-      <div className="body">
-          <ItemCarouselComponent iterateItem={iterateItem} itemText={itemName} />
-          <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} />
-          <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} />
-      </div>
-      <MenuComponent displayLogin={displayLogin} />
-      {
-        state.loginDisplayed && <LoginComponent displayLogin={displayLogin} />
-      }
-    </div>
+    <UserContext.Provider value={state.userDetails}>
+        <div className="app-shell">
+          <div className="body">
+                  <ItemCarouselComponent iterateItem={iterateItem} itemText={itemName} />
+                  <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} />
+                  <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} />
+          </div>
+          <MenuComponent displayLogin={displayLogin} />
+          {
+            state.loginDisplayed && <LoginComponent displayLogin={displayLogin} setUserDetails={setUserDetails} />
+          }
+        </div>
+    </UserContext.Provider>
   )
 }
+
+export const UserContext = React.createContext({
+    username: '',
+    sessiontoken: '',
+})

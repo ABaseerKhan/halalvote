@@ -1,4 +1,4 @@
-.login {
+.login-modal {
     height: 500px;
     width: 500px;
     position: fixed;
@@ -16,4 +16,16 @@
     position: fixed;
     background-color: #D3D3D3;
     opacity: 0.8;
+}
+
+.login-text {
+    width: 100%;
+    position: relative;
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.input-text-container {
+    text-align:center;
 }

@@ -36,6 +36,8 @@ const getApiKey = (baseUrl: string, envConfig: EnvConfig) => {
             return envConfig.items.apiKey;
         case envConfig.comments.url:
             return envConfig.comments.apiKey;
+        case envConfig.users.url:
+            return envConfig.users.apiKey;
         default:
             return envConfig.items.apiKey;
     }
