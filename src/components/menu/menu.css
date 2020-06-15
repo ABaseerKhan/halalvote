@@ -28,3 +28,21 @@
     margin-top: -10px;
     margin-right: 10px;
 }
+
+.logout-button {
+    position: relative;
+    float:right;
+    font-size: 20px;
+    top: 50%;
+    margin-top: -10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    text-decoration: underline;
+}
+
+.user-info-container {
+    height: 100%
+}

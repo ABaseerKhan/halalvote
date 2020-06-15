@@ -58,7 +58,7 @@ export const AppShellComponent = (props: any) => {
                   <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} />
                   <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} />
           </div>
-          <MenuComponent displayLogin={displayLogin} />
+          <MenuComponent displayLogin={displayLogin} setUserDetails={setUserDetails} />
           {
             state.loginDisplayed && <LoginComponent displayLogin={displayLogin} setUserDetails={setUserDetails} />
           }
