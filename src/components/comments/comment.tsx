@@ -50,7 +50,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
     props.pathToHighlightedComment && 
     props.pathToHighlightedComment.length === props.path.length && 
     props.pathToHighlightedComment.every((value, index) => value === props.path[index]);
-    
+
     let commentBorderClass = isHighlighted ? "comment-border-highlighted" : "comment-border-unhighlighted";
 
     const CommentHeader = (
@@ -58,8 +58,8 @@ export const CommentComponent = (props: CommentComponentProps) => {
             <div className={"toggle-collapse"} onClick={toggleCollapse}>{state.collapsed ? "+" : "--"}</div>
             <div className="username">{state.comment.username}</div>
             <div className={"vote-section"}>
-                <div className="down-votes" onClick={downVote} >{state.comment.downVotes + (state.vote == Vote.DOWNVOTE ? 1 : 0)}</div>
-                <div className="up-votes" onClick={upVote} >{state.comment.upVotes + (state.vote == Vote.UPVOTE ? 1 : 0)}</div>
+                <div className="down-votes" onClick={downVote} >{state.comment.downVotes + (state.vote === Vote.DOWNVOTE ? 1 : 0)}</div>
+                <div className="up-votes" onClick={upVote} >{state.comment.upVotes + (state.vote === Vote.UPVOTE ? 1 : 0)}</div>
             </div>
         </div>
     );
