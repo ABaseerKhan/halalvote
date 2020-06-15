@@ -71,6 +71,14 @@
     cursor: pointer;
 }
 
+.delete-button {
+    margin-left: 15px;
+}
+
+.delete-button:hover {
+    cursor: pointer;
+}
+
 .username {
     float: left;
     padding-top: 2px;

@@ -14,10 +14,10 @@ interface CommentComponentProps {
     pathToHighlightedComment: number[] | undefined,
     highlightComment: (path: number[] | undefined) => void,
     fetchMoreReplies: (path: number[]) => void,
+    deleteComment: (path: number[]) => void,
 }
 export const CommentComponent = (props: CommentComponentProps) => {
     const [state, setState] = useState({
-        comment: props.comment,
         vote: Vote.NONE,
         canShowMore: true,
         collapsed: false,
@@ -44,7 +44,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         });
     }
 
-    const moreReplies = (state.comment.numReplies - state.comment.replies.length);
+    const moreReplies = (props.comment.numReplies - props.comment.replies.length);
 
     const isHighlighted = 
     props.pathToHighlightedComment && 
@@ -56,10 +56,10 @@ export const CommentComponent = (props: CommentComponentProps) => {
     const CommentHeader = (
         <div className={"comment-header"}>
             <div className={"toggle-collapse"} onClick={toggleCollapse}>{state.collapsed ? "+" : "--"}</div>
-            <div className="username">{state.comment.username}</div>
+            <div className="username">{props.comment.username}</div>
             <div className={"vote-section"}>
-                <div className="down-votes" onClick={downVote} >{state.comment.downVotes + (state.vote === Vote.DOWNVOTE ? 1 : 0)}</div>
-                <div className="up-votes" onClick={upVote} >{state.comment.upVotes + (state.vote === Vote.UPVOTE ? 1 : 0)}</div>
+                <div className="down-votes" onClick={downVote} >{props.comment.downVotes + (state.vote === Vote.DOWNVOTE ? 1 : 0)}</div>
+                <div className="up-votes" onClick={upVote} >{props.comment.upVotes + (state.vote === Vote.UPVOTE ? 1 : 0)}</div>
             </div>
         </div>
     );
@@ -68,7 +68,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         state.collapsed ? CommentHeader : 
         <div onClick={(e) => { if (isHighlighted) e.stopPropagation(); }} className={commentBorderClass}>
             {CommentHeader}
-            <div className="comment">{state.comment.comment}</div>
+            <div className="comment">{props.comment.comment}</div>
             <div className="comment-actions">
                 <span 
                     className={"reply-button"} 
@@ -79,11 +79,29 @@ export const CommentComponent = (props: CommentComponentProps) => {
                 >
                     Reply
                 </span>
+                {
+                    props.comment.username === "OP" && // TODO replace with real username
+                    //!(props.comment.comment === "__deleted__" && props.comment.numReplies > 0) &&
+                    <span
+                        className={"delete-button"}
+                        onClick={() => props.deleteComment(props.path)}
+                    >
+                        🗑️
+                    </span>
+                }
             </div>
             <div className="replies">
                 {
-                    state.comment.replies.map((reply: Comment, i: number) => {
-                        return <CommentComponent key={reply.id} comment={reply} path={props.path.concat([i])} pathToHighlightedComment={props.pathToHighlightedComment} highlightComment={props.highlightComment} fetchMoreReplies={props.fetchMoreReplies}/>
+                    props.comment.replies.map((reply: Comment, i: number) => {
+                        return <CommentComponent 
+                                    key={reply.id} 
+                                    comment={reply} 
+                                    path={props.path.concat([i])} 
+                                    pathToHighlightedComment={props.pathToHighlightedComment} 
+                                    highlightComment={props.highlightComment} 
+                                    fetchMoreReplies={props.fetchMoreReplies}
+                                    deleteComment={props.deleteComment}
+                                />
                     })
                 }
             </div>

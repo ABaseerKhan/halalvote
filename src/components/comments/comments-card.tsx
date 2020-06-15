@@ -54,7 +54,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     }, [itemName, judgment])
 
     const fetchMoreReplies = (pathToParentComment: number[]) => {
-        const parentComment = getCommentByPath(state.comments, pathToParentComment);
+        const parentComment = getCommentFromPath(state.comments, pathToParentComment);
         const fetchData = async () => {
             const data: Comment[] = await postData({ 
                 baseUrl: commentsConfig.url,
@@ -67,7 +67,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 },
                 additionalHeaders: { },
             });
-            const updatedComments = addComments(state.comments, data, pathToParentComment);
+            const updatedComments = addCommentsLocally(state.comments, data, pathToParentComment);
             setState({ ...state, comments: updatedComments });
         };
         fetchData();
@@ -75,7 +75,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     const createComment = (comment: string) => {
         const fetchData = async () => {
-            const highlightedComment = getCommentByPath(state.comments, state.pathToHighlightedComment);
+            const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
             const commentId = await postData({
                 baseUrl: commentsConfig.url,
                 path: 'add-comment', 
@@ -102,13 +102,35 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             
             let updatedComments;
             if (highlightedComment) {
-                updatedComments = addComments(state.comments, [commentObject], state.pathToHighlightedComment);
+                updatedComments = addCommentsLocally(state.comments, [commentObject], state.pathToHighlightedComment);
             } else {
-                updatedComments = [...state.comments, commentObject];
+                updatedComments = addCommentsLocally(state.comments, [commentObject]);
             }
             setState({ ...state, comments: updatedComments });
         }
 
+        fetchData();
+    }
+
+    const deleteComment = (pathToComment: number[]) => {
+        const fetchData = async () => {
+            const commentToDelete = getCommentFromPath(state.comments, pathToComment);
+            const response = await postData({
+                baseUrl: commentsConfig.url,
+                path: 'delete-comment', 
+                data: { 
+                    "id": commentToDelete?.id,
+                    "username": "OP",
+                },
+                additionalHeaders: {
+                    "sessiontoken": "7b22acc3266307cdf4ba"
+                }
+            });
+            
+            const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.psuedoDelete);
+
+            setState({ ...state, comments: updatedComments });
+        }
         fetchData();
     }
 
@@ -119,7 +141,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         });
     }
 
-    const highlightedComment = getCommentByPath(state.comments, state.pathToHighlightedComment);
+    const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
 
     return(
         <div className={"container"}>
@@ -136,6 +158,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                                         pathToHighlightedComment={state.pathToHighlightedComment} 
                                         highlightComment={highlightComment} 
                                         fetchMoreReplies={fetchMoreReplies}
+                                        deleteComment={deleteComment}
                                     />
                         })
                     }
@@ -163,7 +186,7 @@ export const judgementToTextMap = {
     }
 };
 
-const getCommentByPath = (comments: Comment[], path: number[] | undefined): Comment | undefined => {
+const getCommentFromPath = (comments: Comment[], path: number[] | undefined): Comment | undefined => {
     // base cases
     if (!path || path.length < 1) {
         return undefined;
@@ -173,17 +196,38 @@ const getCommentByPath = (comments: Comment[], path: number[] | undefined): Comm
     }
 
     // recursive step
-    return getCommentByPath(comments[path[0]].replies, path.slice(1));
+    return getCommentFromPath(comments[path[0]].replies, path.slice(1));
 }
 
-const addComments = (comments: Comment[], data: Comment[], pathToParentComment?: number[]): Comment[] => {
-    // base case or add top level comment
+const addCommentsLocally = (comments: Comment[], data: Comment[], pathToParentComment?: number[]): Comment[] => {
+    // base case/add top level comment
     if (!pathToParentComment || pathToParentComment.length === 0) {
         return [...comments, ...data];
     }
 
     // recursive step
-    const updatedReplies = addComments(comments[pathToParentComment[0]].replies, data, pathToParentComment.slice(1));
+    const updatedReplies = addCommentsLocally(comments[pathToParentComment[0]].replies, data, pathToParentComment.slice(1));
     comments[pathToParentComment[0]].replies = updatedReplies;
+    return comments;
+}
+
+const deleteCommentLocally = (comments: Comment[], pathToComment: number[], psuedoDelete: boolean = true): Comment[] => {
+    // base case/remove top level comment
+    if (pathToComment.length === 1) {
+        if (psuedoDelete) {
+            comments[pathToComment[0]].comment = "__deleted__";
+            return comments;
+        }
+        return [...comments.slice(0, pathToComment[0]), ...comments.slice(pathToComment[0] + 1)];
+    };
+
+    // decrement numReplies for parent comment
+    if (pathToComment.length === 2) {
+        comments[pathToComment[0]].numReplies -= 1;
+    }
+
+    // recursive step
+    const updatedReplies = deleteCommentLocally(comments[pathToComment[0]].replies, pathToComment.splice(1), psuedoDelete);
+    comments[pathToComment[0]].replies = updatedReplies;
     return comments;
 }
