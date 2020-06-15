@@ -120,10 +120,10 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 path: 'delete-comment', 
                 data: { 
                     "id": commentToDelete?.id,
-                    "username": "OP",
+                    "username": username,
                 },
                 additionalHeaders: {
-                    "sessiontoken": "7b22acc3266307cdf4ba"
+                    "sessiontoken": sessiontoken
                 }
             });
             

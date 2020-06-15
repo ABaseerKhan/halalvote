@@ -6,6 +6,7 @@ import { Vote } from '../../types';
 
 // style imports
 import './comments-card.css';
+import { UserContext } from '../app-shell';
 
 interface CommentComponentProps {
     key: number,
@@ -17,6 +18,7 @@ interface CommentComponentProps {
     deleteComment: (path: number[]) => void,
 }
 export const CommentComponent = (props: CommentComponentProps) => {
+    let { username } = React.useContext(UserContext);
     const [state, setState] = useState({
         vote: Vote.NONE,
         canShowMore: true,
@@ -80,8 +82,8 @@ export const CommentComponent = (props: CommentComponentProps) => {
                     Reply
                 </span>
                 {
-                    props.comment.username === "OP" && // TODO replace with real username
-                    //!(props.comment.comment === "__deleted__" && props.comment.numReplies > 0) &&
+                    props.comment.username === username && // TODO replace with real username
+                    !(props.comment.comment === "__deleted__" && props.comment.numReplies > 0) &&
                     <span
                         className={"delete-button"}
                         onClick={() => props.deleteComment(props.path)}
