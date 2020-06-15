@@ -82,7 +82,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                     Reply
                 </span>
                 {
-                    props.comment.username === username && // TODO replace with real username
+                    props.comment.username === username &&
                     !(props.comment.comment === "__deleted__" && props.comment.numReplies > 0) &&
                     <span
                         className={"delete-button"}
