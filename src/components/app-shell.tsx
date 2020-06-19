@@ -6,6 +6,7 @@ import { CommentsCardComponent } from './comments/comments-card';
 import { Item } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
+import Cookies from 'universal-cookie';
 
 // type imports
 import { Judgment } from '../types';
@@ -16,8 +17,8 @@ import './app-shell.css';
 export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean }>({
     userDetails: {
-        username: "",
-        sessiontoken: "",
+        username: cookies.get('username'),
+        sessiontoken: cookies.get('sessiontoken'),
     },
     items: [],
     itemIndex: 0,
@@ -41,11 +42,13 @@ export const AppShellComponent = (props: any) => {
   };
 
   const setUserDetails = (username: string, sessiontoken: string) => {
-    setState({ ...state, userDetails: { username: username, sessiontoken: sessiontoken }, loginDisplayed: false })
+    cookies.set('username', username);
+    cookies.set('sessiontoken', sessiontoken);
+    setState({ ...state, userDetails: { username: username, sessiontoken: sessiontoken }, loginDisplayed: false });
   }
 
   const displayLogin = (loginDisplayed: boolean) => {
-    setState({ ...state, loginDisplayed: loginDisplayed })
+    setState({ ...state, loginDisplayed: loginDisplayed });
   }
 
   const itemName = state.items.length > 0 ? state.items[state.itemIndex].itemName : undefined;
@@ -67,7 +70,9 @@ export const AppShellComponent = (props: any) => {
   )
 }
 
+const cookies = new Cookies();
+
 export const UserContext = React.createContext({
-    username: '',
-    sessiontoken: '',
-})
+    username: cookies.get('username'),
+    sessiontoken: cookies.get('sessiontoken'),
+});
