@@ -38,91 +38,80 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         }
     }, [item])
 
-    const fetchComments = (pathToParentComment: number[]) => {
+    const fetchComments = async (pathToParentComment: number[]) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
-        const fetchData = async () => {
-            const comments: Comment[] = await postData({ 
-                baseUrl: commentsConfig.url,
-                path: 'get-comments', 
-                data: { 
-                    "commentType": judgementToTextMap[judgment],
-                    "itemName": item?.itemName,
-                    "parentId": parentComment?.id,
-                    "depth": 2, 
-                    "n": 2,
-                    "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : state.comments?.map((r) => r.id),
-                },
-                additionalHeaders: { },
-            });
-            const updatedComments = addCommentsLocally(state.comments, comments, pathToParentComment);
-            setState({ ...state, comments: updatedComments });
-        };
-        fetchData();
+        const comments: Comment[] = await postData({ 
+            baseUrl: commentsConfig.url,
+            path: 'get-comments', 
+            data: { 
+                "commentType": judgementToTextMap[judgment],
+                "itemName": item?.itemName,
+                "parentId": parentComment?.id,
+                "depth": 2, 
+                "n": 2,
+                "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : state.comments?.map((r) => r.id),
+            },
+            additionalHeaders: { },
+        });
+        const updatedComments = addCommentsLocally(state.comments, comments, pathToParentComment);
+        setState({ ...state, comments: updatedComments });
     }
 
-    const createComment = (commentText: string) => {
-        const fetchData = async () => {
-            const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
-            const comment: Comment = await postData({
-                baseUrl: commentsConfig.url,
-                path: 'add-comment', 
-                data: { 
-                    "parentId": highlightedComment?.id,
-                    "itemName": props.item?.itemName, 
-                    "username": username,
-                    "comment": commentText,
-                    "commentType": judgementToTextMap[judgment],
-                },
-                additionalHeaders: {
-                    "sessiontoken": sessiontoken
-                }
-            });
-            const commentObject: Comment = {
-                id: comment.id,
-                commentType: judgementToTextMap[judgment],
-                username: username,
-                comment: commentText,
-                replies: [],
-                upVotes: 0,
-                downVotes: 0,
-                numReplies: 0,
-                timeStamp: comment.timeStamp
-            };
-            
-            let updatedComments;
-            if (highlightedComment) {
-                updatedComments = addCommentsLocally(state.comments, [commentObject], state.pathToHighlightedComment);
-            } else {
-                updatedComments = addCommentsLocally(state.comments, [commentObject]);
+    const createComment = async (commentText: string) => {
+        const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
+        const comment: Comment = await postData({
+            baseUrl: commentsConfig.url,
+            path: 'add-comment', 
+            data: { 
+                "parentId": highlightedComment?.id,
+                "itemName": props.item?.itemName, 
+                "username": username,
+                "comment": commentText,
+                "commentType": judgementToTextMap[judgment],
+            },
+            additionalHeaders: {
+                "sessiontoken": sessiontoken
             }
-            setState({ ...state, comments: updatedComments });
+        });
+        const commentObject: Comment = {
+            id: comment.id,
+            commentType: judgementToTextMap[judgment],
+            username: username,
+            comment: commentText,
+            replies: [],
+            upVotes: 0,
+            downVotes: 0,
+            numReplies: 0,
+            timeStamp: comment.timeStamp
+        };
+        
+        let updatedComments;
+        if (highlightedComment) {
+            updatedComments = addCommentsLocally(state.comments, [commentObject], state.pathToHighlightedComment);
+        } else {
+            updatedComments = addCommentsLocally(state.comments, [commentObject]);
         }
-
-        fetchData();
+        setState({ ...state, comments: updatedComments });
     }
 
-    const deleteComment = (pathToComment: number[]) => {
-        const fetchData = async () => {
-            const commentToDelete = getCommentFromPath(state.comments, pathToComment);
-            const response = await postData({
-                baseUrl: commentsConfig.url,
-                path: 'delete-comment', 
-                data: { 
-                    "itemName": item?.itemName,
-                    "id": commentToDelete?.id,
-                    "username": username,
-                    "commentType": commentToDelete?.commentType,
-                },
-                additionalHeaders: {
-                    "sessiontoken": sessiontoken
-                }
-            });
-            
-            const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.psuedoDelete);
-
-            setState({ ...state, comments: updatedComments });
-        }
-        fetchData();
+    const deleteComment = async (pathToComment: number[]) => {
+        const commentToDelete = getCommentFromPath(state.comments, pathToComment);
+        const response = await postData({
+            baseUrl: commentsConfig.url,
+            path: 'delete-comment', 
+            data: { 
+                "itemName": item?.itemName,
+                "id": commentToDelete?.id,
+                "username": username,
+                "commentType": commentToDelete?.commentType,
+            },
+            additionalHeaders: {
+                "sessiontoken": sessiontoken
+            }
+        });
+        
+        const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.psuedoDelete);
+        setState({ ...state, comments: updatedComments });
     }
 
     const highlightComment = (path: number[] | undefined) => {
