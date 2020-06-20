@@ -33,26 +33,12 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     });
 
     useEffect(() => {
-        const fetchData = async () => {
-            const data = await postData({ 
-                baseUrl: commentsConfig.url,
-                path: 'get-comments', 
-                data: {
-                    "commentType": judgementToTextMap[judgment],
-                    "itemName": item?.itemName,
-                    "depth": 2,
-                    "n": 2
-                },
-                additionalHeaders: { },
-            });
-            setState(s => ({ ...s, comments: data }));
-        };
         if (item?.itemName) {
-            fetchData();
+            fetchComments([]);
         }
-    }, [item?.itemName, judgment])
+    }, [item])
 
-    const fetchMoreReplies = (pathToParentComment: number[]) => {
+    const fetchComments = (pathToParentComment: number[]) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
         const fetchData = async () => {
             const comments: Comment[] = await postData({ 
@@ -64,7 +50,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                     "parentId": parentComment?.id,
                     "depth": 2, 
                     "n": 2,
-                    "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : state.comments.map((r) => r.id),
+                    "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : state.comments?.map((r) => r.id),
                 },
                 additionalHeaders: { },
             });
@@ -163,14 +149,14 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                                         path={[i]} 
                                         pathToHighlightedComment={state.pathToHighlightedComment} 
                                         highlightComment={highlightComment} 
-                                        fetchMoreReplies={fetchMoreReplies}
+                                        fetchMoreReplies={fetchComments}
                                         deleteComment={deleteComment}
                                     />
                         })
                     }
                     {
                         moreComments > 0 &&
-                        <div className="show-more-comments" onClick={(e) => { e.stopPropagation(); fetchMoreReplies([]);  }}>
+                        <div className="show-more-comments" onClick={(e) => { e.stopPropagation(); fetchComments([]);  }}>
                             {moreComments + (moreComments > 1 ? " more comments" : " more comment")}
                         </div>
                     }
