@@ -7,14 +7,14 @@ import './item-carousel.css';
 
 interface ItemCarouselComponentProps {
     iterateItem: any;
-    itemText: string | undefined;
+    itemName: string | undefined;
 };
 export const ItemCarouselComponent = (props: ItemCarouselComponentProps) => {
-    const { iterateItem, itemText } = props;
+    const { iterateItem, itemName } = props;
     return (
         <div className='item-carousel'>
             <button onClick={iterateItem(-1)} className='carousel-button'>{"<"}</button>
-            <div className='item-text'>{itemText || ""}</div>
+            <div className='item-text'>{itemName || ""}</div>
             <button onClick={iterateItem(1)} className='carousel-button'>{">"}</button>
         </div>
     );

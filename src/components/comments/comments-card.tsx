@@ -12,9 +12,18 @@ import { Judgment } from '../../types';
 // style imports
 import './comments-card.css';
 
+interface Item {
+    "itemName": string,
+    "username": string,
+    "halalVotes": number,
+    "haramVotes": number,
+    "numComments": number,
+    "timeStamp": string
+}
+
 interface CommentsCardComponentProps {
     judgment: Judgment,
-    itemName: string | undefined,
+    item: Item | undefined,
 };
 
 interface CommentsCardState {
@@ -24,7 +33,7 @@ interface CommentsCardState {
 };
 
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
-    const { judgment, itemName } = props;
+    const { judgment, item } = props;
     let {username, sessiontoken} = React.useContext(UserContext)
 
     const [state, setState] = useState<CommentsCardState>({
@@ -39,8 +48,8 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 baseUrl: commentsConfig.url,
                 path: 'get-comments', 
                 data: {
-                    "commentType": judgementToTextMap[judgment].commentType,
-                    "itemName": itemName,
+                    "commentType": judgementToTextMap[judgment],
+                    "itemName": item?.itemName,
                     "depth": 2,
                     "n": 55
                 },
@@ -48,10 +57,10 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             });
             setState(s => ({ ...s, comments: data }));
         };
-        if (itemName) {
+        if (item?.itemName) {
             fetchData();
         }
-    }, [itemName, judgment])
+    }, [item?.itemName, judgment])
 
     const fetchMoreReplies = (pathToParentComment: number[]) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
@@ -81,10 +90,10 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 path: 'add-comment', 
                 data: { 
                     "parentId": highlightedComment?.id,
-                    "itemName": props.itemName, 
+                    "itemName": props.item?.itemName, 
                     "username": username,
                     "comment": commentText,
-                    "commentType": judgementToTextMap[judgment].commentType,
+                    "commentType": judgementToTextMap[judgment],
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken
@@ -146,7 +155,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     return(
         <div className={"container"}>
-            <div className={'header-text'} >{judgementToTextMap[judgment].text}</div>
+            <div className={'header-text'} >{judgementToVoteText(judgment, item)}</div>
             <br />
             <div onClick={() => highlightComment(undefined)} className={"comments-card-" + judgment.toString()}>
                 <div >
@@ -176,15 +185,39 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     )
 }
 
-export const judgementToTextMap = {
-    0: {
-        text: "👼 Halal - {votes} ({%}) 👼",
-        commentType: "HALAL",
-    },
-    1: {
-        text: "🔥 Haram - {votes} ({%}) 🔥",
-        commentType: "HARAM",
+export const judgementToVoteText = (judgement: Judgment, item: Item | undefined) => {
+    const halalVotes = item?.halalVotes
+    const haramVotes = item?.haramVotes
+    
+    switch (judgement) {
+        case Judgment.HALAL:
+            if (halalVotes != undefined && haramVotes != undefined) {
+                if (halalVotes > 0 || haramVotes > 0) {
+                    return `👼 Halal - ${ halalVotes + "(" + halalVotes / (halalVotes + haramVotes) + ")"} 👼`
+                } else {
+                    return `👼 Halal - ${halalVotes} 👼`
+                }
+            } else {
+                return "👼 Halal 👼"
+            }
+        case Judgment.HARAM:
+            if (halalVotes != undefined && haramVotes != undefined) {
+                if (halalVotes > 0 || haramVotes > 0) {
+                    return `🔥 Haram - ${ haramVotes + "(" + haramVotes / (halalVotes + haramVotes) + ")"} 🔥`
+                } else {
+                    return `🔥 Haram - ${haramVotes} 🔥`
+                }
+            } else {
+                return "🔥 Haram 🔥"
+            }
+        default:
+            return ""
     }
+};
+
+export const judgementToTextMap = {
+    0: "HALAL",
+    1: "HARAM"
 };
 
 const getCommentFromPath = (comments: Comment[], path: number[] | undefined): Comment | undefined => {
