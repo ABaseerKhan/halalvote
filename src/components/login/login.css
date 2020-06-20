@@ -7,7 +7,9 @@
     margin-top: -250px;
     margin-left: -250px;
     border-radius: 25px 25px 25px 25px;
+    padding: 15px 15px 15px 15px;
     background-color: #75acff;
+    overflow: scroll;
 }
 
 .login-cover {
@@ -26,6 +28,26 @@
     text-align: center;
 }
 
-.input-text-container {
-    text-align:center;
+.register-text {
+    width: 100%;
+    position: relative;
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: center;
+}
+
+input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.login-submit-button {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    box-sizing: border-box;
 }
