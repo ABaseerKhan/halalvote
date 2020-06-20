@@ -171,7 +171,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                     {
                         moreComments > 0 &&
                         <div className="show-more-comments" onClick={(e) => { e.stopPropagation(); fetchMoreReplies([]);  }}>
-                            {moreComments + " more comments"}
+                            {moreComments + (moreComments > 1 ? " more comments" : " more comment")}
                         </div>
                     }
                 </div>
