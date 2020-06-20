@@ -51,15 +51,21 @@ export const AppShellComponent = (props: any) => {
     setState({ ...state, loginDisplayed: loginDisplayed });
   }
 
+
   const item = state.items.length > 0 ? state.items[state.itemIndex] : undefined;
+  let numHalalComments, numHaramComments;
+  if (state.items.length > 0) {
+    numHalalComments = state.items[state.itemIndex].numHalalComments;
+    numHaramComments = state.items[state.itemIndex].numHaramComments;
+  }
 
   return (
     <UserContext.Provider value={state.userDetails}>
         <div className="app-shell">
           <div className="body">
                   <ItemCarouselComponent iterateItem={iterateItem} itemName={item?.itemName} />
-                  <CommentsCardComponent judgment={Judgment.HARAM} item={item} />
-                  <CommentsCardComponent judgment={Judgment.HALAL} item={item} />
+                  <CommentsCardComponent judgment={Judgment.HARAM} item={item} totalTopLevelComments={numHaramComments || 0} />
+                  <CommentsCardComponent judgment={Judgment.HALAL} item={item} totalTopLevelComments={numHalalComments || 0} />
           </div>
           <MenuComponent displayLogin={displayLogin} setUserDetails={setUserDetails} />
           {

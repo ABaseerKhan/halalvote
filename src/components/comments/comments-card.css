@@ -110,6 +110,13 @@
     font-size: 12px;
 }
 
+.show-more-comments {
+    margin-bottom: 10px;
+    color: cornflowerblue;
+    cursor: pointer;
+    font-size: 12px;
+}
+
 .show-more-replies:hover {
     text-decoration: underline;
 }

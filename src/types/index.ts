@@ -8,12 +8,14 @@ export interface Item {
     username: string;
     haramVotes: number;
     halalVotes: number;
-    numComments: number;
+    numHalalComments: number;
+    numHaramComments: number;
     timeStamp: string;
 }
 
 export interface Comment {
     id: number,
+    commentType: string,
     username: string,
     comment: string,
     replies: Comment[],

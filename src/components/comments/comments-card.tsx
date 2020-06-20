@@ -7,29 +7,20 @@ import { commentsConfig } from '../../https-client/config';
 import { UserContext } from '../app-shell'
 
 // type imports
-import { Judgment } from '../../types';
+import { Item, Judgment } from '../../types';
 
 // style imports
 import './comments-card.css';
 
-interface Item {
-    "itemName": string,
-    "username": string,
-    "halalVotes": number,
-    "haramVotes": number,
-    "numComments": number,
-    "timeStamp": string
-}
-
 interface CommentsCardComponentProps {
     judgment: Judgment,
     item: Item | undefined,
+    totalTopLevelComments: number,
 };
 
 interface CommentsCardState {
     comments: Comment[];
     pathToHighlightedComment: number[] | undefined;
-    totalComments: number;
 };
 
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
@@ -39,7 +30,6 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const [state, setState] = useState<CommentsCardState>({
         comments: [],
         pathToHighlightedComment: undefined,
-        totalComments: 0,
     });
 
     useEffect(() => {
@@ -51,7 +41,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                     "commentType": judgementToTextMap[judgment],
                     "itemName": item?.itemName,
                     "depth": 2,
-                    "n": 55
+                    "n": 2
                 },
                 additionalHeaders: { },
             });
@@ -69,10 +59,12 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 baseUrl: commentsConfig.url,
                 path: 'get-comments', 
                 data: { 
+                    "commentType": judgementToTextMap[judgment],
+                    "itemName": item?.itemName,
                     "parentId": parentComment?.id,
                     "depth": 2, 
-                    "n": 55,
-                    "excludedCommentIds": parentComment?.replies,
+                    "n": 2,
+                    "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : state.comments.map((r) => r.id),
                 },
                 additionalHeaders: { },
             });
@@ -101,6 +93,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             });
             const commentObject: Comment = {
                 id: comment.id,
+                commentType: judgementToTextMap[judgment],
                 username: username,
                 comment: commentText,
                 replies: [],
@@ -129,8 +122,10 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 baseUrl: commentsConfig.url,
                 path: 'delete-comment', 
                 data: { 
+                    "itemName": item?.itemName,
                     "id": commentToDelete?.id,
                     "username": username,
+                    "commentType": commentToDelete?.commentType,
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken
@@ -151,6 +146,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         });
     }
 
+    const moreComments = props.totalTopLevelComments - state.comments.length;
     const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
 
     return(
@@ -171,6 +167,12 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                                         deleteComment={deleteComment}
                                     />
                         })
+                    }
+                    {
+                        moreComments > 0 &&
+                        <div className="show-more-comments" onClick={(e) => { e.stopPropagation(); fetchMoreReplies([]);  }}>
+                            {moreComments + " more comments"}
+                        </div>
                     }
                 </div>
             </div>
@@ -217,7 +219,7 @@ export const judgementToVoteText = (judgement: Judgment, item: Item | undefined)
 
 export const judgementToTextMap = {
     0: "HALAL",
-    1: "HARAM"
+    1: "HARAM",
 };
 
 const getCommentFromPath = (comments: Comment[], path: number[] | undefined): Comment | undefined => {
