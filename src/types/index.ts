@@ -20,6 +20,7 @@ export interface Comment {
     upVotes: number,
     downVotes: number,
     numReplies: number,
+    timeStamp: string,
 };
 
 export enum Vote {

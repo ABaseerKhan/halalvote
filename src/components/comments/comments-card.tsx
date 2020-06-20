@@ -56,7 +56,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const fetchMoreReplies = (pathToParentComment: number[]) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
         const fetchData = async () => {
-            const data: Comment[] = await postData({ 
+            const comments: Comment[] = await postData({ 
                 baseUrl: commentsConfig.url,
                 path: 'get-comments', 
                 data: { 
@@ -67,23 +67,23 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 },
                 additionalHeaders: { },
             });
-            const updatedComments = addCommentsLocally(state.comments, data, pathToParentComment);
+            const updatedComments = addCommentsLocally(state.comments, comments, pathToParentComment);
             setState({ ...state, comments: updatedComments });
         };
         fetchData();
     }
 
-    const createComment = (comment: string) => {
+    const createComment = (commentText: string) => {
         const fetchData = async () => {
             const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
-            const commentId = await postData({
+            const comment: Comment = await postData({
                 baseUrl: commentsConfig.url,
                 path: 'add-comment', 
                 data: { 
                     "parentId": highlightedComment?.id,
                     "itemName": props.itemName, 
                     "username": username,
-                    "comment": comment,
+                    "comment": commentText,
                     "commentType": judgementToTextMap[judgment].commentType,
                 },
                 additionalHeaders: {
@@ -91,13 +91,14 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 }
             });
             const commentObject: Comment = {
-                id: commentId,
+                id: comment.id,
                 username: username,
-                comment: comment,
+                comment: commentText,
                 replies: [],
                 upVotes: 0,
                 downVotes: 0,
                 numReplies: 0,
+                timeStamp: comment.timeStamp
             };
             
             let updatedComments;

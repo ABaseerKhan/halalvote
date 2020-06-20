@@ -89,7 +89,7 @@
 }
 
 .vote-section {
-    margin-left: 5px;
+    margin-left: 10px;
     padding-top: 1px;
 }
 
@@ -117,7 +117,6 @@
 .up-votes {
     cursor: pointer;
     width: fit-content;
-    margin-left: 5px;
     float:right;
     font-size: 14px;
     color: green;
@@ -129,6 +128,13 @@
     margin-left: 5px;
     float:right;
     font-size: 14px;
+}
+
+.time-stamp {
+    padding-top: 1px;
+    margin-left: 10px;
+    font-size: 14px;
+    color: gray;
 }
 
 .comment-maker-card-0, .comment-maker-card-1 {

@@ -63,6 +63,9 @@ export const CommentComponent = (props: CommentComponentProps) => {
                 <div className="down-votes" onClick={downVote} >{props.comment.downVotes + (state.vote === Vote.DOWNVOTE ? 1 : 0)}</div>
                 <div className="up-votes" onClick={upVote} >{props.comment.upVotes + (state.vote === Vote.UPVOTE ? 1 : 0)}</div>
             </div>
+            <div className={"time-stamp"}>
+                <span>{props.comment.timeStamp}</span>
+            </div>
         </div>
     );
 
