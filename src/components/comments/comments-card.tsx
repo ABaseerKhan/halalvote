@@ -15,22 +15,24 @@ import './comments-card.css';
 interface CommentsCardComponentProps {
     judgment: Judgment,
     item: Item | undefined,
-    totalTopLevelComments: number,
 };
 
 interface CommentsCardState {
     comments: Comment[];
     pathToHighlightedComment: number[] | undefined;
+    totalTopLevelComments: number;
 };
 
+const initialState = {
+    comments: [],
+    pathToHighlightedComment: undefined,
+    totalTopLevelComments: 0,
+}
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const { judgment, item } = props;
     let {username, sessiontoken} = React.useContext(UserContext)
 
-    const [state, setState] = useState<CommentsCardState>({
-        comments: [],
-        pathToHighlightedComment: undefined,
-    });
+    const [state, setState] = useState<CommentsCardState>(initialState);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,7 +47,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 },
                 additionalHeaders: { },
             });
-            setState(s => ({ ...s, comments: data }));
+            setState(s => ({ ...s, comments: data, totalTopLevelComments: (judgment === Judgment.HALAL ? item?.numHalalComments : item?.numHaramComments) || 0 }));
         };
         if (item?.itemName) {
             fetchData();
@@ -125,7 +127,12 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         });
         
         const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.psuedoDelete);
-        setState({ ...state, comments: updatedComments });
+        if (pathToComment.length === 1) {
+            setState({ ...state, comments: updatedComments, totalTopLevelComments: state.totalTopLevelComments - 1 });
+        }
+        else {
+            setState({ ...state, comments: updatedComments });
+        }
     }
 
     const highlightComment = (path: number[] | undefined) => {
@@ -135,7 +142,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         });
     }
 
-    const moreComments = props.totalTopLevelComments - state.comments.length;
+    const moreComments = state.totalTopLevelComments - state.comments.length;
     const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
 
     return(
