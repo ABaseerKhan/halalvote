@@ -33,10 +33,24 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     });
 
     useEffect(() => {
+        const fetchData = async () => {
+            const data = await postData({ 
+                baseUrl: commentsConfig.url,
+                path: 'get-comments', 
+                data: {
+                    "commentType": judgementToTextMap[judgment],
+                    "itemName": item?.itemName,
+                    "depth": 2,
+                    "n": 2
+                },
+                additionalHeaders: { },
+            });
+            setState(s => ({ ...s, comments: data }));
+        };
         if (item?.itemName) {
-            fetchComments([]);
+            fetchData();
         }
-    }, [item])
+    }, [item?.itemName, judgment])
 
     const fetchComments = async (pathToParentComment: number[]) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
