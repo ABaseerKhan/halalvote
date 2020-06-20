@@ -15,12 +15,12 @@ export const MenuComponent = (props: MenuComponentProps) => {
     return (
         <div className='menu'>
             {
-                username == "" ?
-                    <div className='login-button' onClick={ () => { displayLogin(true) } }>Log In</div> :
+                username && username != "" ?
                     <div className="user-info-container">
                         <div className="logout-button" onClick={ () => { setUserDetails("", "") } }>Logout</div>
                         <div className="username-text">{username}</div>
-                    </div>
+                    </div> :
+                    <div className='login-button' onClick={ () => { displayLogin(true) } }>Log In</div>
             }
         </div>
     );
