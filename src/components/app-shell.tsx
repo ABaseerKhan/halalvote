@@ -68,30 +68,21 @@ export const AppShellComponent = (props: any) => {
       const item = items[x];
 
       if (item.itemName == itemName) {
-        let newVote = item.vote;
-        let newHalalVotes = item.halalVotes;
-        let newHaramVotes = item.haramVotes;
-
         if (itemVote != item.vote) {
-          newVote = itemVote;
-          
-          if (itemVote == 0) {
-            newHalalVotes += 1;
-            newHaramVotes -= 1;
-          } else {
-            newHalalVotes -= 1;
-            newHaramVotes += 1;
-          }
-        } else {
-          newVote = null;
-          if (itemVote == 0) {
-            newHalalVotes -= 1;
-          } else {
-            newHaramVotes -= 1;
-          }
+          updatedItems.push({
+            ...item, 
+            vote: itemVote,
+            halalVotes: itemVote == 0 ? item.halalVotes + 1 : (item.vote == 0 ? item.halalVotes - 1 : item.halalVotes), 
+            haramVotes: itemVote == 1 ? item.haramVotes + 1 : (item.vote == 1 ? item.haramVotes - 1 : item.haramVotes)
+          });
+        } else if (item.vote != undefined) {
+          updatedItems.push({
+            ...item, 
+            vote: undefined,
+            halalVotes: itemVote == 0 ? item.halalVotes - 1 : item.halalVotes, 
+            haramVotes: itemVote == 1 ? item.haramVotes - 1 : item.haramVotes
+          });
         }
-
-        updatedItems.push({...item, vote: newVote, halalVotes: newHalalVotes, haramVotes: newHaramVotes});
       } else {
         updatedItems.push({...item});
       }
