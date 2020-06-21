@@ -160,7 +160,6 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                     }
                 </div>
             </div>
-            <br />
             <CommentMakerComponent 
                 judgment={judgment} 
                 callback={createComment} 
