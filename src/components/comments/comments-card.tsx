@@ -5,6 +5,7 @@ import { Comment } from '../../types';
 import { postData } from '../../https-client/post-data';
 import { commentsConfig } from '../../https-client/config';
 import { UserContext } from '../app-shell'
+import { ItemVoterComponent } from './item-voter';
 
 // type imports
 import { Item, Judgment } from '../../types';
@@ -15,6 +16,7 @@ import './comments-card.css';
 interface CommentsCardComponentProps {
     judgment: Judgment,
     item: Item | undefined,
+    addItemVoteLocally: (itemName: string, itemVote: number) => void
 };
 
 interface CommentsCardState {
@@ -29,7 +31,7 @@ const initialState = {
     totalTopLevelComments: 0,
 }
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
-    const { judgment, item } = props;
+    const { judgment, item, addItemVoteLocally } = props;
     const { username, sessiontoken } = React.useContext(UserContext)
 
     const [state, setState] = useState<CommentsCardState>(initialState);
@@ -137,6 +139,12 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         <div className={"container"}>
             <div className={'header-text'} >{judgementToVoteText(judgment, item)}</div>
             <br />
+            <ItemVoterComponent 
+                judgment={judgment}
+                userVote={item?.vote}
+                itemName={item?.itemName}
+                addItemVoteLocally={addItemVoteLocally}
+            />
             <div onClick={() => highlightComment(undefined)} className={"comments-card-" + judgment.toString()}>
                 <div >
                     {
@@ -179,7 +187,7 @@ export const judgementToVoteText = (judgement: Judgment, item: Item | undefined)
         case Judgment.HALAL:
             if (halalVotes != undefined && haramVotes != undefined) {
                 if (halalVotes > 0 || haramVotes > 0) {
-                    return `👼 Halal - ${ halalVotes + "(" + halalVotes / (halalVotes + haramVotes) + ")"} 👼`
+                    return `👼 Halal - ${ halalVotes + " (" + Math.round((halalVotes / (halalVotes + haramVotes) ) * 100) + "%)"} 👼`
                 } else {
                     return `👼 Halal - ${halalVotes} 👼`
                 }
@@ -189,7 +197,7 @@ export const judgementToVoteText = (judgement: Judgment, item: Item | undefined)
         case Judgment.HARAM:
             if (halalVotes != undefined && haramVotes != undefined) {
                 if (halalVotes > 0 || haramVotes > 0) {
-                    return `🔥 Haram - ${ haramVotes + "(" + haramVotes / (halalVotes + haramVotes) + ")"} 🔥`
+                    return `🔥 Haram - ${ haramVotes + " (" + Math.round((haramVotes / (halalVotes + haramVotes) ) * 100) + "%)"} 🔥`
                 } else {
                     return `🔥 Haram - ${haramVotes} 🔥`
                 }

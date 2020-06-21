@@ -27,11 +27,19 @@ export const AppShellComponent = (props: any) => {
 
   useEffect(() => {
     const fetchData = async () => {
-        const data = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: { }, additionalHeaders: { },});
+        let body = {};
+        let additionalHeaders = {};
+
+        if (state.userDetails.username && state.userDetails.sessiontoken && state.userDetails.username != "") {
+          body = {...body, "username": state.userDetails.username};
+          additionalHeaders = {...additionalHeaders, "sessiontoken": state.userDetails.sessiontoken};
+        }
+
+        const data = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders,});
         setState(s => ({ ...s, items: data }));
     };
     fetchData();
-  }, [])
+  }, [state.userDetails])
 
   const iterateItem = (iteration: number) => () => {
     if ((state.itemIndex + iteration) < state.items.length && (state.itemIndex + iteration) >= 0) {
@@ -51,6 +59,22 @@ export const AppShellComponent = (props: any) => {
     setState({ ...state, loginDisplayed: loginDisplayed });
   }
 
+  const addItemVoteLocally = (itemName: string, itemVote: number) => {
+    const items = state.items;
+    let updatedItems = [];
+
+    for (let x in items) {
+      const item = items[x];
+
+      if (item.itemName == itemName) {
+        updatedItems.push({ ...item, vote: itemVote == item.vote ? null : itemVote });
+      } else {
+        updatedItems.push({...item});
+      }
+
+      setState({ ...state, items: updatedItems });
+    }
+  }
 
   const item = state.items.length > 0 ? state.items[state.itemIndex] : undefined;
 
@@ -59,8 +83,8 @@ export const AppShellComponent = (props: any) => {
         <div className="app-shell">
           <div className="body">
                   <ItemCarouselComponent iterateItem={iterateItem} itemName={item?.itemName} />
-                  <CommentsCardComponent judgment={Judgment.HARAM} item={item} />
-                  <CommentsCardComponent judgment={Judgment.HALAL} item={item} />
+                  <CommentsCardComponent judgment={Judgment.HARAM} item={item} addItemVoteLocally={addItemVoteLocally} />
+                  <CommentsCardComponent judgment={Judgment.HALAL} item={item} addItemVoteLocally={addItemVoteLocally} />
           </div>
           <MenuComponent displayLogin={displayLogin} setUserDetails={setUserDetails} />
           {
