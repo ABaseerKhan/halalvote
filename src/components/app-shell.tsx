@@ -72,37 +72,31 @@ export const AppShellComponent = (props: any) => {
   }
 
   const addItemVoteLocally = (itemName: string, itemVote: number) => {
-    const items = state.items;
-    let updatedItems = [];
-
-    for (let x in items) {
-      const item = items[x];
+    for (let x in state.items) {
+      const item = state.items[x];
 
       if (item.itemName == itemName) {
         if (itemVote != item.vote) {
-          updatedItems.push({
-            ...item, 
-            vote: itemVote,
-            halalVotes: itemVote == 0 ? item.halalVotes + 1 : (item.vote == 0 ? item.halalVotes - 1 : item.halalVotes), 
-            haramVotes: itemVote == 1 ? item.haramVotes + 1 : (item.vote == 1 ? item.haramVotes - 1 : item.haramVotes)
-          });
+          item.vote = itemVote;
+          item.halalVotes = itemVote == 0 ? item.halalVotes + 1 : (item.vote == 0 ? item.halalVotes - 1 : item.halalVotes);
+          item.haramVotes = itemVote == 1 ? item.haramVotes + 1 : (item.vote == 1 ? item.haramVotes - 1 : item.haramVotes);
         } else if (item.vote != undefined) {
-          updatedItems.push({
-            ...item, 
-            vote: undefined,
-            halalVotes: itemVote == 0 ? item.halalVotes - 1 : item.halalVotes, 
-            haramVotes: itemVote == 1 ? item.haramVotes - 1 : item.haramVotes
-          });
+          item.vote = undefined;
+          item.halalVotes = itemVote == 0 ? item.halalVotes - 1 : item.halalVotes;
+          item.haramVotes = itemVote == 1 ? item.haramVotes - 1 : item.haramVotes
         }
-      } else {
-        updatedItems.push({...item});
       }
 
-      setState({ ...state, items: updatedItems });
+      setState({ ...state, items: state.items });
     }
   }
 
   const item = state.items.length > 0 ? state.items[state.itemIndex] : undefined;
+  const itemName = item?.itemName != undefined ? item.itemName : "";
+  const halalVotes = item?.halalVotes != undefined ? item.halalVotes : 0;
+  const haramVotes = item?.haramVotes != undefined ? item.haramVotes : 0;
+  const numHalalComments = item?.numHalalComments != undefined ? item.numHalalComments : 0;
+  const numHaramComments = item?.numHaramComments != undefined ? item.numHaramComments : 0;
 
   return (
     <UserContext.Provider value={state.userDetails}>
@@ -112,18 +106,18 @@ export const AppShellComponent = (props: any) => {
                   <table className="body-table">
                     <tr>
                       <td className="body-table-column">
-                        <ItemVotesComponent judgment={Judgment.HARAM} item={item} addItemVoteLocally={addItemVoteLocally} />
+                        <ItemVotesComponent judgment={Judgment.HARAM} itemName={itemName} vote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
                       </td>
                       <td className="body-table-column">
-                        <ItemVotesComponent judgment={Judgment.HALAL} item={item} addItemVoteLocally={addItemVoteLocally} />
+                        <ItemVotesComponent judgment={Judgment.HALAL} itemName={itemName} vote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
                       </td>
                     </tr>
                     <tr>
                       <td className="body-table-column">
-                        <CommentsCardComponent judgment={Judgment.HARAM} item={item} refreshItem={fetchItems} />
+                        <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
                       </td>
                       <td className="body-table-column">
-                        <CommentsCardComponent judgment={Judgment.HALAL} item={item} refreshItem={fetchItems} />
+                        <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
                       </td>
                     </tr>
                   </table>

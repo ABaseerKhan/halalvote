@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import { ItemVoterComponent } from './item-voter';
 
 //type imports
@@ -7,30 +7,33 @@ import { Judgment, Item } from '../../types';
 //style imports
 import './item-votes.css';
 
-interface ItemVoterComponentProps {
+interface ItemVotesComponentProps {
     judgment: Judgment,
-    item: Item | undefined
+    itemName: string,
+    vote: number | undefined | null,
+    halalVotes: number,
+    haramVotes: number,
     addItemVoteLocally: (itemName: string, itemVote: number) => void
 };
 
-export const ItemVotesComponent = (props: ItemVoterComponentProps) => {
-    const { judgment, item, addItemVoteLocally } = props;
+const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
+    const { judgment, itemName, vote, halalVotes, haramVotes, addItemVoteLocally } = props;
 
     return (
         <div>
-            <div className={'header-text'} >{judgementToVoteText(judgment, item?.halalVotes, item?.haramVotes)}</div>
+            <div className={'header-text'} >{judgementToVoteText(judgment, halalVotes, haramVotes)}</div>
             <br />
             <ItemVoterComponent 
                 judgment={judgment}
-                userVote={item?.vote}
-                itemName={item?.itemName}
+                userVote={vote}
+                itemName={itemName}
                 addItemVoteLocally={addItemVoteLocally}
             />
         </div>
     )
-}
+};
 
-export const judgementToVoteText = (judgement: Judgment, halalVotes: number | undefined, haramVotes: number | undefined) => {
+const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes: number) => {
     switch (judgement) {
         case Judgment.HALAL:
             if (halalVotes != undefined && haramVotes != undefined) {
@@ -56,3 +59,12 @@ export const judgementToVoteText = (judgement: Judgment, halalVotes: number | un
             return ""
     }
 };
+
+const areItemVotesPropsEqual = (prevProps: ItemVotesComponentProps, nextProps: ItemVotesComponentProps) => {
+    return prevProps.itemName === nextProps.itemName &&
+        prevProps.vote === nextProps.vote && 
+        prevProps.halalVotes === nextProps.halalVotes &&
+        prevProps.haramVotes === nextProps.haramVotes
+}
+
+export const ItemVotesComponent = memo(ItemVotesImplementation, areItemVotesPropsEqual);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
@@ -14,7 +14,9 @@ import './comments-card.css';
 
 interface CommentsCardComponentProps {
     judgment: Judgment,
-    item: Item | undefined,
+    itemName: string, 
+    numHalalComments: number,
+    numHaramComments: number,
     refreshItem: (itemsTofetch: string[]) => any,
 };
 
@@ -27,20 +29,20 @@ const initialState = {
     comments: [],
     pathToHighlightedComment: undefined,
 }
-export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
-    const { judgment, item, refreshItem } = props;
-    const totalTopLevelComments = (judgment === Judgment.HALAL ? item?.numHalalComments : item?.numHaramComments) || 0;
+const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
+    const { judgment, itemName, numHalalComments, numHaramComments, refreshItem } = props;
+    const totalTopLevelComments = (judgment === Judgment.HALAL ? numHalalComments : numHaramComments) || 0;
     const { username, sessiontoken } = React.useContext(UserContext)
 
     const [state, setState] = useState<CommentsCardState>(initialState);
 
     useEffect(() => {
-        if (item?.itemName) {
+        if (itemName) {
             state.comments = [];
             state.pathToHighlightedComment = undefined;
             fetchComments([]);
         }
-    }, [item?.itemName, judgment])
+    }, [itemName, judgment])
 
     const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
@@ -49,7 +51,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             path: 'get-comments', 
             data: { 
                 "commentType": judgementToTextMap[judgment],
-                "itemName": item?.itemName,
+                "itemName": itemName,
                 "parentId": parentComment?.id,
                 "depth": 2, 
                 "n": 2,
@@ -72,7 +74,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             path: 'add-comment', 
             data: { 
                 "parentId": highlightedComment?.id,
-                "itemName": item?.itemName, 
+                "itemName": itemName, 
                 "username": username,
                 "comment": commentText,
                 "commentType": judgementToTextMap[judgment],
@@ -94,7 +96,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         };
 
         if (!highlightedComment) {
-            refreshItem([item!.itemName]);
+            refreshItem([itemName]);
         }
         
         const updatedComments = addCommentsLocally(state.comments, [commentObject], highlightedComment && state.pathToHighlightedComment);
@@ -107,7 +109,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             baseUrl: commentsConfig.url,
             path: 'delete-comment', 
             data: { 
-                "itemName": item?.itemName,
+                "itemName": itemName,
                 "id": commentToDelete?.id,
                 "username": username,
                 "commentType": commentToDelete?.commentType,
@@ -118,7 +120,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         });
         
         if (pathToComment.length === 1) {
-            await refreshItem([item!.itemName]);
+            await refreshItem([itemName]);
         }
 
         const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.psuedoDelete);
@@ -215,3 +217,11 @@ const deleteCommentLocally = (comments: Comment[], pathToComment: number[], psue
     comments[pathToComment[0]].replies = updatedReplies;
     return comments;
 }
+
+const areCommentsCardPropsEqual = (prevProps: CommentsCardComponentProps, nextProps: CommentsCardComponentProps) => {
+    return prevProps.itemName === nextProps.itemName && 
+        prevProps.numHalalComments === nextProps.numHalalComments && 
+        prevProps.numHaramComments === nextProps.numHaramComments
+}
+
+export const CommentsCardComponent = memo(CommentsCardImplementation, areCommentsCardPropsEqual);
