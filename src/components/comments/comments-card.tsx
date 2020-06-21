@@ -30,31 +30,20 @@ const initialState = {
 }
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const { judgment, item } = props;
-    let {username, sessiontoken} = React.useContext(UserContext)
+    const { username, sessiontoken } = React.useContext(UserContext)
 
     const [state, setState] = useState<CommentsCardState>(initialState);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const data = await postData({ 
-                baseUrl: commentsConfig.url,
-                path: 'get-comments', 
-                data: {
-                    "commentType": judgementToTextMap[judgment],
-                    "itemName": item?.itemName,
-                    "depth": 2,
-                    "n": 2
-                },
-                additionalHeaders: { },
-            });
-            setState(s => ({ ...s, comments: data, totalTopLevelComments: (judgment === Judgment.HALAL ? item?.numHalalComments : item?.numHaramComments) || 0 }));
-        };
         if (item?.itemName) {
-            fetchData();
+            state.comments = [];
+            state.pathToHighlightedComment = undefined;
+            state.totalTopLevelComments = 0;
+            fetchComments([], (judgment === Judgment.HALAL ? item?.numHalalComments : item?.numHaramComments) || 0);
         }
     }, [item?.itemName, judgment])
 
-    const fetchComments = async (pathToParentComment: number[]) => {
+    const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
         const comments: Comment[] = await postData({ 
             baseUrl: commentsConfig.url,
@@ -70,7 +59,11 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             additionalHeaders: { },
         });
         const updatedComments = addCommentsLocally(state.comments, comments, pathToParentComment);
-        setState({ ...state, comments: updatedComments });
+        if (totalTopLevelComments !== undefined) {
+            setState(prevState => ({ ...prevState, comments: updatedComments, totalTopLevelComments: totalTopLevelComments }));
+        } else {
+            setState(prevState => ({ ...prevState, comments: updatedComments }));
+        }
     }
 
     const createComment = async (commentText: string) => {
@@ -101,13 +94,8 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             timeStamp: comment.timeStamp
         };
         
-        let updatedComments;
-        if (highlightedComment) {
-            updatedComments = addCommentsLocally(state.comments, [commentObject], state.pathToHighlightedComment);
-        } else {
-            updatedComments = addCommentsLocally(state.comments, [commentObject]);
-        }
-        setState({ ...state, comments: updatedComments });
+        const updatedComments = addCommentsLocally(state.comments, [commentObject], highlightedComment && state.pathToHighlightedComment);
+        setState(prevState => ({ ...prevState, comments: updatedComments }));
     }
 
     const deleteComment = async (pathToComment: number[]) => {
@@ -128,18 +116,18 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         
         const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.psuedoDelete);
         if (pathToComment.length === 1) {
-            setState({ ...state, comments: updatedComments, totalTopLevelComments: state.totalTopLevelComments - 1 });
+            setState(prevState => ({ ...prevState, comments: updatedComments, totalTopLevelComments: state.totalTopLevelComments - 1 }));
         }
         else {
-            setState({ ...state, comments: updatedComments });
+            setState(prevState => ({ ...prevState, comments: updatedComments }));
         }
     }
 
     const highlightComment = (path: number[] | undefined) => {
-        setState({
-            ...state,
+        setState(prevState => ({
+            ...prevState,
             pathToHighlightedComment: path,
-        });
+        }));
     }
 
     const moreComments = state.totalTopLevelComments - state.comments.length;
