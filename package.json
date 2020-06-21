@@ -7,9 +7,11 @@
     "@types/node": "^13.13.2",
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.6",
+    "@types/react-linkify": "^1.0.0",
     "react": "^16.13.1",
     "react-cookie": "^4.0.3",
     "react-dom": "^16.13.1",
+    "react-linkify": "^1.0.0-alpha",
     "react-scripts": "3.4.1",
     "typescript": "^3.8.3"
   },

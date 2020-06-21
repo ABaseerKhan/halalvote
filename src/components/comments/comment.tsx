@@ -8,6 +8,7 @@ import { Vote } from '../../types';
 import './comments-card.css';
 import { UserContext } from '../app-shell';
 import { convertUTCDateToLocalDate } from '../../utils';
+import Linkify from 'react-linkify'; 
 
 interface CommentComponentProps {
     key: number,
@@ -75,7 +76,9 @@ export const CommentComponent = (props: CommentComponentProps) => {
         <div onClick={(e) => { if (isHighlighted) e.stopPropagation(); }} className={commentBorderClass}>
             {CommentHeader}
             {!isHighlighted && <div className="comment-tail" onClick={toggleCollapse}></div>}
-            <div className="comment">{props.comment.comment}</div>
+            <div className="comment">
+                <Linkify>{props.comment.comment}</Linkify>
+            </div>
             <div className="comment-actions">
                 <span 
                     className={"reply-button"} 
