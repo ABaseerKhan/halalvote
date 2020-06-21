@@ -7,6 +7,7 @@ import { Vote } from '../../types';
 // style imports
 import './comments-card.css';
 import { UserContext } from '../app-shell';
+import { convertUTCDateToLocalDate } from '../../utils';
 
 interface CommentComponentProps {
     key: number,
@@ -64,7 +65,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                 <div className="up-votes" onClick={upVote} >{props.comment.upVotes + (state.vote === Vote.UPVOTE ? 1 : 0)}</div>
             </div>
             <div className={"time-stamp"}>
-                <span>{props.comment.timeStamp}</span>
+                <span>{convertUTCDateToLocalDate(props.comment.timeStamp)}</span>
             </div>
         </div>
     );
