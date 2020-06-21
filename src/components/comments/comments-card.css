@@ -48,10 +48,13 @@
     float: left;
     top: 27px;
     bottom: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-clip: content-box;
     background-color: rgb(170, 170, 170);
-    width: 3px;
+    width: 2px;
     position: absolute;
-    border-radius: 10px;
+    border-radius: 7px;
 }
 
 .comment-tail:hover {
@@ -93,6 +96,8 @@
 
 .delete-button:hover {
     cursor: pointer;
+    color: transparent;  
+    text-shadow: 0 0 0 red;
 }
 
 .username {
