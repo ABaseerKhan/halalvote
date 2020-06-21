@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { UserContext } from '../app-shell'
 import { postData } from '../../https-client/post-data';
 import { itemsConfig } from '../../https-client/config';
 
 //type imports
-import { Judgment } from '../../types';
+import { Judgment, judgementToTextMap } from '../../types';
 
 //style imports
-import './comments-card.css';
+import './item-votes.css';
 
 interface ItemVoterComponentProps {
     judgment: Judgment,
@@ -47,8 +47,3 @@ export const ItemVoterComponent = (props: ItemVoterComponentProps) => {
         <div onClick={ vote } className={classNames}>VOTE {judgementToTextMap[judgment]}</div>
     )
 }
-
-export const judgementToTextMap = {
-    0: "HALAL",
-    1: "HARAM"
-};

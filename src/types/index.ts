@@ -3,6 +3,11 @@ export enum Judgment {
     HARAM,
 };
 
+export const judgementToTextMap = {
+    0: "HALAL",
+    1: "HARAM"
+};
+
 export interface Item {
     itemName: string;
     username: string;

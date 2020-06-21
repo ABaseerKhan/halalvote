@@ -11,3 +11,11 @@
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
+
+.body-table {
+  width: 100%;
+}
+
+.body-table-column {
+  width: 50%;
+}

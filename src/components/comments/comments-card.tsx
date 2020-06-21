@@ -5,10 +5,9 @@ import { Comment } from '../../types';
 import { postData } from '../../https-client/post-data';
 import { commentsConfig } from '../../https-client/config';
 import { UserContext } from '../app-shell'
-import { ItemVoterComponent } from './item-voter';
 
 // type imports
-import { Item, Judgment } from '../../types';
+import { Item, Judgment, judgementToTextMap } from '../../types';
 
 // style imports
 import './comments-card.css';
@@ -16,7 +15,6 @@ import './comments-card.css';
 interface CommentsCardComponentProps {
     judgment: Judgment,
     item: Item | undefined,
-    addItemVoteLocally: (itemName: string, itemVote: number) => void
 };
 
 interface CommentsCardState {
@@ -31,7 +29,7 @@ const initialState = {
     totalTopLevelComments: 0,
 }
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
-    const { judgment, item, addItemVoteLocally } = props;
+    const { judgment, item } = props;
     const { username, sessiontoken } = React.useContext(UserContext)
 
     const [state, setState] = useState<CommentsCardState>(initialState);
@@ -136,15 +134,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
 
     return(
-        <div className={"container"}>
-            <div className={'header-text'} >{judgementToVoteText(judgment, item)}</div>
-            <br />
-            <ItemVoterComponent 
-                judgment={judgment}
-                userVote={item?.vote}
-                itemName={item?.itemName}
-                addItemVoteLocally={addItemVoteLocally}
-            />
+        <div>
             <div onClick={() => highlightComment(undefined)} className={"comments-card-" + judgment.toString()}>
                 <div >
                     {
@@ -178,41 +168,6 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         </div>
     )
 }
-
-export const judgementToVoteText = (judgement: Judgment, item: Item | undefined) => {
-    const halalVotes = item?.halalVotes
-    const haramVotes = item?.haramVotes
-    
-    switch (judgement) {
-        case Judgment.HALAL:
-            if (halalVotes != undefined && haramVotes != undefined) {
-                if (halalVotes > 0 || haramVotes > 0) {
-                    return `👼 Halal - ${ halalVotes + " (" + Math.round((halalVotes / (halalVotes + haramVotes) ) * 100) + "%)"} 👼`
-                } else {
-                    return `👼 Halal - ${halalVotes} 👼`
-                }
-            } else {
-                return "👼 Halal 👼"
-            }
-        case Judgment.HARAM:
-            if (halalVotes != undefined && haramVotes != undefined) {
-                if (halalVotes > 0 || haramVotes > 0) {
-                    return `🔥 Haram - ${ haramVotes + " (" + Math.round((haramVotes / (halalVotes + haramVotes) ) * 100) + "%)"} 🔥`
-                } else {
-                    return `🔥 Haram - ${haramVotes} 🔥`
-                }
-            } else {
-                return "🔥 Haram 🔥"
-            }
-        default:
-            return ""
-    }
-};
-
-export const judgementToTextMap = {
-    0: "HALAL",
-    1: "HARAM",
-};
 
 const getCommentFromPath = (comments: Comment[], path: number[] | undefined): Comment | undefined => {
     // base cases

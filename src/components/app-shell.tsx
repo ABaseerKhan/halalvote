@@ -13,6 +13,7 @@ import { Judgment } from '../types';
 
 // style imports
 import './app-shell.css';
+import { ItemVotesComponent } from './item-votes/item-votes';
 
 export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean }>({
@@ -67,7 +68,30 @@ export const AppShellComponent = (props: any) => {
       const item = items[x];
 
       if (item.itemName == itemName) {
-        updatedItems.push({ ...item, vote: itemVote == item.vote ? null : itemVote });
+        let newVote = item.vote;
+        let newHalalVotes = item.halalVotes;
+        let newHaramVotes = item.haramVotes;
+
+        if (itemVote != item.vote) {
+          newVote = itemVote;
+          
+          if (itemVote == 0) {
+            newHalalVotes += 1;
+            newHaramVotes -= 1;
+          } else {
+            newHalalVotes -= 1;
+            newHaramVotes += 1;
+          }
+        } else {
+          newVote = null;
+          if (itemVote == 0) {
+            newHalalVotes -= 1;
+          } else {
+            newHaramVotes -= 1;
+          }
+        }
+
+        updatedItems.push({...item, vote: newVote, halalVotes: newHalalVotes, haramVotes: newHaramVotes});
       } else {
         updatedItems.push({...item});
       }
@@ -83,8 +107,24 @@ export const AppShellComponent = (props: any) => {
         <div className="app-shell">
           <div className="body">
                   <ItemCarouselComponent iterateItem={iterateItem} itemName={item?.itemName} />
-                  <CommentsCardComponent judgment={Judgment.HARAM} item={item} addItemVoteLocally={addItemVoteLocally} />
-                  <CommentsCardComponent judgment={Judgment.HALAL} item={item} addItemVoteLocally={addItemVoteLocally} />
+                  <table className="body-table">
+                    <tr>
+                      <td className="body-table-column">
+                        <ItemVotesComponent judgment={Judgment.HARAM} item={item} addItemVoteLocally={addItemVoteLocally} />
+                      </td>
+                      <td className="body-table-column">
+                        <ItemVotesComponent judgment={Judgment.HALAL} item={item} addItemVoteLocally={addItemVoteLocally} />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="body-table-column">
+                        <CommentsCardComponent judgment={Judgment.HARAM} item={item} />
+                      </td>
+                      <td className="body-table-column">
+                        <CommentsCardComponent judgment={Judgment.HALAL} item={item} />
+                      </td>
+                    </tr>
+                  </table>
           </div>
           <MenuComponent displayLogin={displayLogin} setUserDetails={setUserDetails} />
           {

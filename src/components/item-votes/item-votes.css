@@ -1,0 +1,27 @@
+.item-voter-0, .item-voter-1 {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 20px;
+    height: 20px;
+    padding: 20px 20px 20px 20px;
+    box-shadow: 4px 4px #c8c8c8;
+    border-radius: 25px 25px 25px 25px;
+    border: none;
+    display: table;
+    background-color: lightgray;
+    font-size: 18px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.item-voter-0:focus, .item-voter-1:focus {
+    outline: none;
+}
+
+.item-voter-0-selected {
+    background-color: #c8ffe6;
+}
+
+.item-voter-1-selected {
+    background-color: #ffc8e6;
+}
