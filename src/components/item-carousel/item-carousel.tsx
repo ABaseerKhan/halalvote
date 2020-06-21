@@ -1,4 +1,5 @@
 import React from 'react';
+import Linkify from 'react-linkify';
 
 // type imports
 
@@ -14,7 +15,9 @@ export const ItemCarouselComponent = (props: ItemCarouselComponentProps) => {
     return (
         <div className='item-carousel'>
             <button onClick={iterateItem(-1)} className='carousel-button'>{"<"}</button>
-            <div className='item-text'>{itemName || ""}</div>
+            <div className='item-text'>
+                <Linkify>{itemName || ""}</Linkify>
+            </div>
             <button onClick={iterateItem(1)} className='carousel-button'>{">"}</button>
         </div>
     );
