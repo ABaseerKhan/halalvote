@@ -27,20 +27,31 @@ export const AppShellComponent = (props: any) => {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-        let body = {};
-        let additionalHeaders = {};
-
-        if (state.userDetails.username && state.userDetails.sessiontoken && state.userDetails.username != "") {
-          body = {...body, "username": state.userDetails.username};
-          additionalHeaders = {...additionalHeaders, "sessiontoken": state.userDetails.sessiontoken};
-        }
-
-        const data = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders,});
-        setState(s => ({ ...s, items: data }));
-    };
-    fetchData();
+    fetchItems();
   }, [state.userDetails])
+
+  const fetchItems = async (itemsTofetch?: string[]) => {
+    let body: any = { "itemNames": itemsTofetch };
+    let additionalHeaders = {};
+
+    if (state.userDetails.username && state.userDetails.sessiontoken && state.userDetails.username != "") {
+      body = { ...body, "username": state.userDetails.username };
+      additionalHeaders = { ...additionalHeaders, "sessiontoken": state.userDetails.sessiontoken };
+    }
+
+    const data = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders,});
+
+    for(let i = 0; i < state.items.length; i++) {
+      for(let j = data.length - 1; j >= 0; j--) {
+          if(state.items[i].itemName === data[j].itemName) {
+              state.items.splice(i, 1, data[j]);
+              data.splice(j, 1);
+              break;
+          }
+      }
+    }
+    setState(s => ({ ...s, items: [...s.items, ...data] }));
+  }
 
   const iterateItem = (iteration: number) => () => {
     if ((state.itemIndex + iteration) < state.items.length && (state.itemIndex + iteration) >= 0) {
@@ -118,10 +129,10 @@ export const AppShellComponent = (props: any) => {
                     </tr>
                     <tr>
                       <td className="body-table-column">
-                        <CommentsCardComponent judgment={Judgment.HARAM} item={item} />
+                        <CommentsCardComponent judgment={Judgment.HARAM} item={item} refreshItem={fetchItems} />
                       </td>
                       <td className="body-table-column">
-                        <CommentsCardComponent judgment={Judgment.HALAL} item={item} />
+                        <CommentsCardComponent judgment={Judgment.HALAL} item={item} refreshItem={fetchItems} />
                       </td>
                     </tr>
                   </table>
