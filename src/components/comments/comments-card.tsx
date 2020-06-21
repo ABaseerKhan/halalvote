@@ -38,12 +38,12 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         if (item?.itemName) {
             state.comments = [];
             state.pathToHighlightedComment = undefined;
-            state.totalTopLevelComments = (judgment === Judgment.HALAL ? item?.numHalalComments : item?.numHaramComments) || 0;
-            fetchComments([]);
+            state.totalTopLevelComments = 0;
+            fetchComments([], (judgment === Judgment.HALAL ? item?.numHalalComments : item?.numHaramComments) || 0);
         }
     }, [item?.itemName, judgment])
 
-    const fetchComments = async (pathToParentComment: number[]) => {
+    const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
         const comments: Comment[] = await postData({ 
             baseUrl: commentsConfig.url,
@@ -59,7 +59,11 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             additionalHeaders: { },
         });
         const updatedComments = addCommentsLocally(state.comments, comments, pathToParentComment);
-        setState(prevState => ({ ...prevState, comments: updatedComments }));
+        if (totalTopLevelComments !== undefined) {
+            setState(prevState => ({ ...prevState, comments: updatedComments, totalTopLevelComments: totalTopLevelComments }));
+        } else {
+            setState(prevState => ({ ...prevState, comments: updatedComments }));
+        }
     }
 
     const createComment = async (commentText: string) => {

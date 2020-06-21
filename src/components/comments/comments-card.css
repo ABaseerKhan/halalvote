@@ -27,7 +27,6 @@
 
 .comments-card-1 {
     background-color: #ffc8e6;
-
 }
 
 .comments-card-0 {
@@ -42,6 +41,23 @@
 
 .comment-border-unhighlighted, .comment-border-highlighted {
     margin-bottom: 5px;
+    position: relative;
+}
+
+.comment-tail {
+    float: left;
+    top: 27px;
+    bottom: 0px;
+    background-color: rgb(170, 170, 170);
+    width: 3px;
+    position: absolute;
+    border-radius: 10px;
+}
+
+.comment-tail:hover {
+    cursor: pointer;
+    background-color: darkcyan;
+    width: 5px;
 }
 
 .comment-header {
