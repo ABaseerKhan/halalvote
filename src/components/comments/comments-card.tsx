@@ -15,21 +15,21 @@ import './comments-card.css';
 interface CommentsCardComponentProps {
     judgment: Judgment,
     item: Item | undefined,
+    refreshItem: (itemsTofetch: string[]) => any,
 };
 
 interface CommentsCardState {
     comments: Comment[];
     pathToHighlightedComment: number[] | undefined;
-    totalTopLevelComments: number;
 };
 
 const initialState = {
     comments: [],
     pathToHighlightedComment: undefined,
-    totalTopLevelComments: 0,
 }
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
-    const { judgment, item } = props;
+    const { judgment, item, refreshItem } = props;
+    const totalTopLevelComments = (judgment === Judgment.HALAL ? item?.numHalalComments : item?.numHaramComments) || 0;
     const { username, sessiontoken } = React.useContext(UserContext)
 
     const [state, setState] = useState<CommentsCardState>(initialState);
@@ -38,8 +38,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         if (item?.itemName) {
             state.comments = [];
             state.pathToHighlightedComment = undefined;
-            state.totalTopLevelComments = 0;
-            fetchComments([], (judgment === Judgment.HALAL ? item?.numHalalComments : item?.numHaramComments) || 0);
+            fetchComments([]);
         }
     }, [item?.itemName, judgment])
 
@@ -73,7 +72,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             path: 'add-comment', 
             data: { 
                 "parentId": highlightedComment?.id,
-                "itemName": props.item?.itemName, 
+                "itemName": item?.itemName, 
                 "username": username,
                 "comment": commentText,
                 "commentType": judgementToTextMap[judgment],
@@ -93,6 +92,10 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             numReplies: 0,
             timeStamp: comment.timeStamp
         };
+
+        if (!highlightedComment) {
+            refreshItem([item!.itemName]);
+        }
         
         const updatedComments = addCommentsLocally(state.comments, [commentObject], highlightedComment && state.pathToHighlightedComment);
         setState(prevState => ({ ...prevState, comments: updatedComments }));
@@ -114,13 +117,12 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             }
         });
         
-        const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.psuedoDelete);
         if (pathToComment.length === 1) {
-            setState(prevState => ({ ...prevState, comments: updatedComments, totalTopLevelComments: state.totalTopLevelComments - 1 }));
+            refreshItem([item!.itemName]);
         }
-        else {
-            setState(prevState => ({ ...prevState, comments: updatedComments }));
-        }
+
+        const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.psuedoDelete);
+        setState(prevState => ({ ...prevState, comments: updatedComments }));
     }
 
     const highlightComment = (path: number[] | undefined) => {
@@ -130,7 +132,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         }));
     }
 
-    const moreComments = state.totalTopLevelComments - state.comments.length;
+    const moreComments = totalTopLevelComments - state.comments.length;
     const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
 
     return(
