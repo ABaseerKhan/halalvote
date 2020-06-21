@@ -118,7 +118,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         });
         
         if (pathToComment.length === 1) {
-            refreshItem([item!.itemName]);
+            await refreshItem([item!.itemName]);
         }
 
         const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.psuedoDelete);
