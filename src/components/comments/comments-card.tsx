@@ -1,4 +1,5 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, memo } from 'react';
+import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
@@ -7,7 +8,7 @@ import { commentsConfig } from '../../https-client/config';
 import { UserContext } from '../app-shell'
 
 // type imports
-import { Item, Judgment, judgementToTextMap } from '../../types';
+import { Judgment, judgementToTextMap } from '../../types';
 
 // style imports
 import './comments-card.css';
@@ -36,13 +37,13 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
     const [state, setState] = useState<CommentsCardState>(initialState);
 
-    useEffect(() => {
+    useDebouncedEffect(() => {
         if (itemName) {
             state.comments = [];
             state.pathToHighlightedComment = undefined;
             fetchComments([]);
         }
-    }, [itemName, judgment])
+    }, 500, [itemName, judgment])
 
     const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
