@@ -39,7 +39,7 @@ export const AppShellComponent = (props: any) => {
       additionalHeaders = { ...additionalHeaders, "sessiontoken": state.userDetails.sessiontoken };
     }
 
-    const data = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders,});
+    const { data } = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders,});
 
     for(let i = 0; i < state.items.length; i++) {
       for(let j = data.length - 1; j >= 0; j--) {

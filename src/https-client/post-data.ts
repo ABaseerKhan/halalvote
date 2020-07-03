@@ -2,7 +2,7 @@ import { config, EnvConfig } from './config';
 
 const envConfig = config();
 
-export const postData = async ({ baseUrl, path, data, additionalHeaders}: { baseUrl: string, path: string, data: Object, additionalHeaders: any }) => {
+export const postData = async ({ baseUrl, path, data, additionalHeaders }: { baseUrl: string, path: string, data: Object, additionalHeaders: any }) => {
     const response = await fetch(baseUrl + path, {
         method: 'POST',
         mode: 'cors',
@@ -14,7 +14,7 @@ export const postData = async ({ baseUrl, path, data, additionalHeaders}: { base
         },
         body: JSON.stringify(data),
     });
-    return await response.json();
+    return { status: response.status, data: await response.json() };
 }
 
 export const getData = async (url = '', data = {}) => {

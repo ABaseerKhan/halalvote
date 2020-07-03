@@ -47,7 +47,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
     const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
-        const comments: Comment[] = await postData({ 
+        const { data: comments }: { data: Comment[]} = await postData({ 
             baseUrl: commentsConfig.url,
             path: 'get-comments', 
             data: { 
@@ -70,7 +70,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
     const createComment = async (commentText: string) => {
         const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
-        const comment: Comment = await postData({
+        const { data: comment }: { data: Comment } = await postData({
             baseUrl: commentsConfig.url,
             path: 'add-comment', 
             data: { 
@@ -124,7 +124,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             await refreshItem([itemName]);
         }
 
-        const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.psuedoDelete);
+        const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.data?.psuedoDelete);
         setState(prevState => ({ ...prevState, comments: updatedComments }));
     }
 

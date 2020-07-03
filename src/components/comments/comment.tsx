@@ -3,16 +3,17 @@ import ReactTooltip from 'react-tooltip';
 import { ReactComponent as UpArrowSVG } from '../../icons/upArrow.svg';
 import { ReactComponent as DownArrowSVG } from '../../icons/downArrow.svg';
 import { Comment } from '../../types';
+import { UserContext } from '../app-shell';
+import { convertUTCDateToLocalDate, timeSince } from '../../utils';
+import Linkify from 'react-linkify'; 
+import { commentsConfig } from '../../https-client/config';
+import { postData } from '../../https-client/post-data';
 
 // type imports
 import { Vote } from '../../types';
 
 // style imports
 import './comments-card.css';
-import { UserContext } from '../app-shell';
-import { convertUTCDateToLocalDate, timeSince } from '../../utils';
-import Linkify from 'react-linkify'; 
-import { SSL_OP_ALL } from 'constants';
 
 interface CommentComponentProps {
     key: number,
@@ -24,7 +25,7 @@ interface CommentComponentProps {
     deleteComment: (path: number[]) => void,
 }
 export const CommentComponent = (props: CommentComponentProps) => {
-    let { username } = React.useContext(UserContext);
+    let { username, sessiontoken } = React.useContext(UserContext);
     const [state, setState] = useState({
         comment: props.comment,
         vote: Vote.NONE,
@@ -43,26 +44,56 @@ export const CommentComponent = (props: CommentComponentProps) => {
         });
     };
 
-    const upVote = () => {
-        const upVotes = (state.vote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes + 1;
-        const downVotes = (state.vote === Vote.DOWNVOTE) ? state.comment.downVotes - 1 : state.comment.downVotes;
-        const vote = (state.vote === Vote.UPVOTE) ? Vote.NONE : Vote.UPVOTE;
-        setState(prevState => ({
-            ...prevState,
-            comment: { ...prevState.comment, upVotes: upVotes, downVotes: downVotes },
-            vote: vote,
-        }));
+    const upVote = async () => {
+        const { status } = await postData({
+            baseUrl: commentsConfig.url,
+            path: 'vote-comment', 
+            data: {
+                "username": username,
+                "commentId": state.comment.id,
+                "vote": 1,
+            },
+            additionalHeaders: {
+                "sessiontoken": sessiontoken
+            }
+        });
+
+        if (status === 200){
+            const upVotes = (state.vote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes + 1;
+            const downVotes = (state.vote === Vote.DOWNVOTE) ? state.comment.downVotes - 1 : state.comment.downVotes;
+            const vote = (state.vote === Vote.UPVOTE) ? Vote.NONE : Vote.UPVOTE;
+            setState(prevState => ({
+                ...prevState,
+                comment: { ...prevState.comment, upVotes: upVotes, downVotes: downVotes },
+                vote: vote,
+            }));
+        }
     }
 
-    const downVote =() => {
-        const downVotes = (state.vote === Vote.DOWNVOTE) ? state.comment.downVotes - 1 : state.comment.downVotes + 1;
-        const upVotes = (state.vote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes;
-        const vote = (state.vote === Vote.DOWNVOTE) ? Vote.NONE : Vote.DOWNVOTE;
-        setState(prevState => ({
-            ...prevState,
-            comment: { ...prevState.comment, downVotes: downVotes, upVotes: upVotes },
-            vote: vote,
-        }));
+    const downVote = async () => {
+        const { status } = await postData({
+            baseUrl: commentsConfig.url,
+            path: 'vote-comment', 
+            data: { 
+                "username": username,
+                "commentId": state.comment.id,
+                "vote": 0,
+            },
+            additionalHeaders: {
+                "sessiontoken": sessiontoken
+            }
+        });
+
+        if (status === 200) {
+            const downVotes = (state.vote === Vote.DOWNVOTE) ? state.comment.downVotes - 1 : state.comment.downVotes + 1;
+            const upVotes = (state.vote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes;
+            const vote = (state.vote === Vote.DOWNVOTE) ? Vote.NONE : Vote.DOWNVOTE;
+            setState(prevState => ({
+                ...prevState,
+                comment: { ...prevState.comment, downVotes: downVotes, upVotes: upVotes },
+                vote: vote,
+            }));
+        }
     }
 
     const moreReplies = (props.comment.numReplies - props.comment.replies.length);
