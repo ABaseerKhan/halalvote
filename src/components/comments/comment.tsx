@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { ReactComponent as UpArrowSVG } from '../../icons/upArrow.svg';
+import { ReactComponent as DownArrowSVG } from '../../icons/downArrow.svg';
 import { Comment } from '../../types';
 
 // type imports
@@ -59,12 +61,23 @@ export const CommentComponent = (props: CommentComponentProps) => {
 
     const CommentHeader = (
         <div className={"comment-header"}>
-            <div className={"toggle-collapse"} onClick={toggleCollapse}>{state.collapsed ? "+" : ""}</div>
-            <div className="username">{props.comment.username}</div>
-            <div className={"vote-section"}>
-                <div className="down-votes" onClick={downVote} >{props.comment.downVotes + (state.vote === Vote.DOWNVOTE ? 1 : 0)}</div>
-                <div className="up-votes" onClick={upVote} >{props.comment.upVotes + (state.vote === Vote.UPVOTE ? 1 : 0)}</div>
+            {
+                state.collapsed ? 
+                    <div className={"toggle-collapse"} onClick={toggleCollapse}>{"+"}</div> :
+                    <div className={"vote-buttons"}>
+                        <UpArrowSVG onClick={upVote} className={"up-arrow-svg"}/>
+                        <DownArrowSVG onClick={downVote} className={"down-arrow-svg"} />
+                    </div>
+            }
+            <div className={"vote-counts"}>
+                <>
+                    <div className="up-votes" >{2}</div>
+                    <div className="down-votes" >{5}</div>
+                </>
             </div>
+            <span className={"bullet-separator"}>&bull;</span>
+            <div className="username">{props.comment.username}</div>
+            <span className={"bullet-separator"}>&bull;</span>
             <div className={"time-stamp"}>
                 <span>{convertUTCDateToLocalDate(props.comment.timeStamp)}</span>
             </div>
