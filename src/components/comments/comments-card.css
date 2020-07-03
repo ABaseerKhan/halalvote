@@ -59,6 +59,74 @@
 .comment-header {
     display: flex;
     font-size: 14px;
+    color: gray;
+}
+
+.comment-header .bullet-separator {
+    color: gray;
+    margin-top: 5px;
+    font-size: xx-small;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.comment-header .vote-buttons {
+    display: grid;
+}
+
+.comment-header .vote-buttons .up-arrow-svg {
+    height: 12px;
+    width: 12px;
+    fill: #3E3E3E;
+}
+
+.comment-header .vote-buttons .down-arrow-svg {
+    height: 12px;
+    width: 12px;
+    fill: #3E3E3E;
+}
+
+.comment-header .vote-buttons .up-arrow-svg:hover {
+    fill: green;
+    cursor: pointer;
+}
+
+.comment-header .vote-buttons .down-arrow-svg:hover {
+    fill: rgb(173, 0, 0);
+    cursor: pointer;
+}
+
+.comment-header .vote-counts {
+    display: grid;
+    font-size: 10px;
+    margin-left: 5px;
+}
+
+.comment-header .vote-counts .up-votes {
+    width: fit-content;
+    float:right;
+    color: green;
+}
+
+.comment-header .vote-counts .down-votes {
+    width: fit-content;
+    float: right;
+    color: rgb(173, 0, 0);
+}
+
+.comment-header .username {
+    float: left;
+    padding-top: 2px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    font-size: 14px;
+    color: #969696;
+}
+
+.comment-header .time-stamp {
+    padding-top: 1px;
+    font-size: 14px;
+    color: gray;
 }
 
 .comment {
@@ -94,20 +162,6 @@
     text-shadow: 0 0 0 red;
 }
 
-.username {
-    float: left;
-    padding-top: 2px;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    font-size: 14px;
-    color: #969696;
-}
-
-.vote-section {
-    margin-left: 10px;
-    padding-top: 1px;
-}
-
 .toggle-collapse {
     cursor: pointer;
     width: 15px;
@@ -134,29 +188,6 @@
 
 .show-more-replies:hover, .show-more-comments:hover {
     text-decoration: underline;
-}
-
-.up-votes {
-    cursor: pointer;
-    width: fit-content;
-    float:right;
-    font-size: 14px;
-    color: green;
-}
-
-.down-votes {
-    cursor: pointer;
-    width: fit-content;
-    margin-left: 5px;
-    float:right;
-    font-size: 14px;
-}
-
-.time-stamp {
-    padding-top: 1px;
-    margin-left: 10px;
-    font-size: 14px;
-    color: gray;
 }
 
 .comment-maker-card-0, .comment-maker-card-1 {
