@@ -139,36 +139,33 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
 
     return(
-        <div>
-            <div onClick={() => highlightComment(undefined)} className={"comments-card-" + judgment.toString()}>
-                <div >
-                    {
-                        state.comments.map((comment: Comment, i: number) => {
-                            return <CommentComponent 
-                                        key={comment.id} 
-                                        comment={comment} 
-                                        path={[i]} 
-                                        pathToHighlightedComment={state.pathToHighlightedComment} 
-                                        highlightComment={highlightComment} 
-                                        fetchMoreReplies={fetchComments}
-                                        deleteComment={deleteComment}
-                                    />
-                        })
-                    }
-                    {
-                        moreComments > 0 &&
-                        <div className="show-more-comments" onClick={(e) => { e.stopPropagation(); fetchComments([]);  }}>
-                            {moreComments + (moreComments > 1 ? " more comments" : " more comment")}
-                        </div>
-                    }
-                </div>
+        <div className={"comments-card-" + judgment.toString()} onClick={() => highlightComment(undefined)}>
+            <div className="comments-container">
+                {
+                    state.comments.map((comment: Comment, i: number) => {
+                        return <CommentComponent 
+                                    key={comment.id} 
+                                    comment={comment} 
+                                    path={[i]} 
+                                    pathToHighlightedComment={state.pathToHighlightedComment} 
+                                    highlightComment={highlightComment} 
+                                    fetchMoreReplies={fetchComments}
+                                    deleteComment={deleteComment}
+                                />
+                    })
+                }
+                {
+                    moreComments > 0 &&
+                    <div className="show-more-comments" onClick={(e) => { e.stopPropagation(); fetchComments([]);  }}>
+                        {moreComments + (moreComments > 1 ? " more comments" : " more comment")}
+                    </div>
+                }
             </div>
             <CommentMakerComponent 
                 judgment={judgment} 
                 callback={createComment} 
                 replyToUsername={highlightedComment?.username}
             />
-            <br />
         </div>
     )
 }
