@@ -110,17 +110,17 @@ export const CommentComponent = (props: CommentComponentProps) => {
             {
                 state.collapsed ? 
                     <div className={"toggle-collapse"} onClick={toggleCollapse}>{"+"}</div> :
-                    <div className={"vote-buttons"}>
-                        <UpArrowSVG onClick={upVote} className={state.vote === Vote.UPVOTE ? "up-vote-button-clicked" : "up-vote-button"}/>
-                        <DownArrowSVG onClick={downVote} className={state.vote === Vote.DOWNVOTE ? "down-vote-button-clicked" : "down-vote-button"} />
-                    </div>
+                    <>
+                        <div className={"vote-buttons"}>
+                            <UpArrowSVG onClick={upVote} className={state.vote === Vote.UPVOTE ? "up-vote-button-clicked" : "up-vote-button"}/>
+                            <DownArrowSVG onClick={downVote} className={state.vote === Vote.DOWNVOTE ? "down-vote-button-clicked" : "down-vote-button"} />
+                        </div>
+                        <div className={"vote-counts"}>
+                            <div className="up-votes" >{state.comment.upVotes}</div>
+                            <div className="down-votes" >{state.comment.downVotes}</div>
+                        </div>
+                    </>
             }
-            <div className={"vote-counts"}>
-                <>
-                    <div className="up-votes" >{state.comment.upVotes}</div>
-                    <div className="down-votes" >{state.comment.downVotes}</div>
-                </>
-            </div>
             <span className={"bullet-separator"}>&bull;</span>
             <div className="username">{props.comment.username}</div>
             <span className={"bullet-separator"}>&bull;</span>

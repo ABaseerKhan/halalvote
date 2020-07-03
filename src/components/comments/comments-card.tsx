@@ -155,10 +155,10 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                     })
                 }
                 {
-                    moreComments > 0 &&
+                    moreComments > 0 && state.comments.length &&
                     <div className="show-more-comments" onClick={(e) => { e.stopPropagation(); fetchComments([]);  }}>
                         {moreComments + (moreComments > 1 ? " more comments" : " more comment")}
-                    </div>
+                    </div> || null
                 }
             </div>
             <CommentMakerComponent 
