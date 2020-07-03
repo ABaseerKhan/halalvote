@@ -14,7 +14,6 @@ interface CommentMakerComponentProps {
 
 export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
     const [state, setState] = useState({
-        isReply: false,
         holdingDownShift: false
     });
 
@@ -53,11 +52,11 @@ export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
         }
     };
 
-    const placeholderText = (props.replyToUsername && "Reply to @" + props.replyToUsername) || "Top level comment";
+    const placeholderText = (props.replyToUsername && "Reply to " + props.replyToUsername) || "Comment";
 
     return (
-        <div className={"comment-maker-card-" + props.judgment}>
-            <textarea id={textAreaId} className="comment-maker-input" placeholder={placeholderText} onKeyDown={textAreaOnKeyDown} onKeyUp={textAreaOnKeyUp}/>
+        <div className={"comment-maker-card-" + props.judgment} onClick={(e) => { e.stopPropagation()}}>
+            <textarea className="comment-maker-input" id={textAreaId} placeholder={placeholderText} onKeyDown={textAreaOnKeyDown} onKeyUp={textAreaOnKeyUp}/>
             <button className="comment-maker-button" onClick={invokeCallback}>^</button>
         </div>
     )

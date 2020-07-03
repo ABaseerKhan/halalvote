@@ -110,22 +110,24 @@ export const AppShellComponent = (props: any) => {
           <div className="body">
                   <ItemCarouselComponent iterateItem={iterateItem} itemName={item?.itemName} />
                   <table className="body-table">
-                    <tr>
-                      <td className="body-table-column">
-                        <ItemVotesComponent judgment={Judgment.HARAM} itemName={itemName} vote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
-                      </td>
-                      <td className="body-table-column">
-                        <ItemVotesComponent judgment={Judgment.HALAL} itemName={itemName} vote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="body-table-column">
-                        <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
-                      </td>
-                      <td className="body-table-column">
-                        <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
-                      </td>
-                    </tr>
+                    <tbody>
+                      <tr>
+                        <td className="body-table-column">
+                          <ItemVotesComponent judgment={Judgment.HARAM} itemName={itemName} vote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
+                        </td>
+                        <td className="body-table-column">
+                          <ItemVotesComponent judgment={Judgment.HALAL} itemName={itemName} vote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="body-table-column">
+                          <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
+                        </td>
+                        <td className="body-table-column">
+                          <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
+                        </td>
+                      </tr>
+                    </tbody>
                   </table>
           </div>
           <MenuComponent displayLogin={displayLogin} setUserDetails={setUserDetails} />
