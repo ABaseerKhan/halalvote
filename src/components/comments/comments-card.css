@@ -78,24 +78,37 @@
     display: grid;
 }
 
-.comment-header .vote-buttons .up-arrow-svg {
+.comment-header .vote-buttons .up-vote-button {
     height: 12px;
     width: 12px;
     fill: #3E3E3E;
 }
 
-.comment-header .vote-buttons .down-arrow-svg {
+.comment-header .vote-buttons .up-vote-button-clicked {
     height: 12px;
     width: 12px;
-    fill: #3E3E3E;
+    fill: green;
 }
 
-.comment-header .vote-buttons .up-arrow-svg:hover {
+.comment-header .vote-buttons .up-vote-button:hover {
     fill: green;
     cursor: pointer;
 }
 
-.comment-header .vote-buttons .down-arrow-svg:hover {
+
+.comment-header .vote-buttons .down-vote-button {
+    height: 12px;
+    width: 12px;
+    fill: #3E3E3E;
+}
+
+.comment-header .vote-buttons .down-vote-button-clicked {
+    height: 12px;
+    width: 12px;
+    fill: rgb(173, 0, 0);
+}
+
+.comment-header .vote-buttons .down-vote-button:hover {
     fill: rgb(173, 0, 0);
     cursor: pointer;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { ReactComponent as UpArrowSVG } from '../../icons/upArrow.svg';
 import { ReactComponent as DownArrowSVG } from '../../icons/downArrow.svg';
@@ -12,6 +12,7 @@ import './comments-card.css';
 import { UserContext } from '../app-shell';
 import { convertUTCDateToLocalDate, timeSince } from '../../utils';
 import Linkify from 'react-linkify'; 
+import { SSL_OP_ALL } from 'constants';
 
 interface CommentComponentProps {
     key: number,
@@ -25,10 +26,15 @@ interface CommentComponentProps {
 export const CommentComponent = (props: CommentComponentProps) => {
     let { username } = React.useContext(UserContext);
     const [state, setState] = useState({
+        comment: props.comment,
         vote: Vote.NONE,
         canShowMore: true,
         collapsed: false,
     });
+
+    useEffect(() => {
+        setState(prevState => ({ ...prevState, comment: props.comment }));
+    }, [props.comment]);
 
     const toggleCollapse = () => {
         setState({
@@ -38,17 +44,25 @@ export const CommentComponent = (props: CommentComponentProps) => {
     };
 
     const upVote = () => {
-        setState({
-            ...state,
-            vote: (state.vote === Vote.UPVOTE ? Vote.NONE : Vote.UPVOTE)
-        });
+        const upVotes = (state.vote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes + 1;
+        const downVotes = (state.vote === Vote.DOWNVOTE) ? state.comment.downVotes - 1 : state.comment.downVotes;
+        const vote = (state.vote === Vote.UPVOTE) ? Vote.NONE : Vote.UPVOTE;
+        setState(prevState => ({
+            ...prevState,
+            comment: { ...prevState.comment, upVotes: upVotes, downVotes: downVotes },
+            vote: vote,
+        }));
     }
 
     const downVote =() => {
-        setState({
-            ...state,
-            vote: (state.vote === Vote.DOWNVOTE ? Vote.NONE : Vote.DOWNVOTE)
-        });
+        const downVotes = (state.vote === Vote.DOWNVOTE) ? state.comment.downVotes - 1 : state.comment.downVotes + 1;
+        const upVotes = (state.vote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes;
+        const vote = (state.vote === Vote.DOWNVOTE) ? Vote.NONE : Vote.DOWNVOTE;
+        setState(prevState => ({
+            ...prevState,
+            comment: { ...prevState.comment, downVotes: downVotes, upVotes: upVotes },
+            vote: vote,
+        }));
     }
 
     const moreReplies = (props.comment.numReplies - props.comment.replies.length);
@@ -66,14 +80,14 @@ export const CommentComponent = (props: CommentComponentProps) => {
                 state.collapsed ? 
                     <div className={"toggle-collapse"} onClick={toggleCollapse}>{"+"}</div> :
                     <div className={"vote-buttons"}>
-                        <UpArrowSVG onClick={upVote} className={"up-arrow-svg"}/>
-                        <DownArrowSVG onClick={downVote} className={"down-arrow-svg"} />
+                        <UpArrowSVG onClick={upVote} className={state.vote === Vote.UPVOTE ? "up-vote-button-clicked" : "up-vote-button"}/>
+                        <DownArrowSVG onClick={downVote} className={state.vote === Vote.DOWNVOTE ? "down-vote-button-clicked" : "down-vote-button"} />
                     </div>
             }
             <div className={"vote-counts"}>
                 <>
-                    <div className="up-votes" >{2}</div>
-                    <div className="down-votes" >{5}</div>
+                    <div className="up-votes" >{state.comment.upVotes}</div>
+                    <div className="down-votes" >{state.comment.downVotes}</div>
                 </>
             </div>
             <span className={"bullet-separator"}>&bull;</span>
