@@ -187,7 +187,7 @@ const getCommentFromPath = (comments: Comment[], path: number[] | undefined): Co
 const addCommentsLocally = (comments: Comment[], data: Comment[], pathToParentComment?: number[]): Comment[] => {
     // base case/add top level comment
     if (!pathToParentComment || pathToParentComment.length === 0) {
-        return [...comments, ...data];
+        return [...data, ...comments];
     }
 
     // recursive step
