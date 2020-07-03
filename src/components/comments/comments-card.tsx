@@ -166,6 +166,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                 callback={createComment} 
                 replyToUsername={highlightedComment?.username}
             />
+            <br/>
         </div>
     )
 }

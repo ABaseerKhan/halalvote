@@ -202,6 +202,7 @@
     height: 20px;
     overflow: scroll;
     border-radius: 0px 0px 25px 25px;
+    box-shadow: 4px 4px #c8c8c8;
 }
 
 .comment-maker-card-0 {
@@ -214,7 +215,7 @@
 
 .comment-maker-input {
     height: 100%;
-    min-height: 20px;
+    min-height: 45px;
     width: calc(98% - 20px);
     font-size: 18px;
     resize: vertical;
