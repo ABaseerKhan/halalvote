@@ -82,7 +82,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
             <div className={"time-stamp"} data-tip={convertUTCDateToLocalDate(props.comment.timeStamp)} >
                 <span >{timeSince(props.comment.timeStamp)}</span>
             </div>
-            <ReactTooltip delayShow={200} effect={"solid"}/>
+            <ReactTooltip delayShow={400} effect={"solid"}/>
         </div>
     );
 
