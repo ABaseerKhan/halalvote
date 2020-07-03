@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactTooltip from 'react-tooltip';
 import { ReactComponent as UpArrowSVG } from '../../icons/upArrow.svg';
 import { ReactComponent as DownArrowSVG } from '../../icons/downArrow.svg';
 import { Comment } from '../../types';
@@ -9,7 +10,7 @@ import { Vote } from '../../types';
 // style imports
 import './comments-card.css';
 import { UserContext } from '../app-shell';
-import { convertUTCDateToLocalDate } from '../../utils';
+import { convertUTCDateToLocalDate, timeSince } from '../../utils';
 import Linkify from 'react-linkify'; 
 
 interface CommentComponentProps {
@@ -78,9 +79,10 @@ export const CommentComponent = (props: CommentComponentProps) => {
             <span className={"bullet-separator"}>&bull;</span>
             <div className="username">{props.comment.username}</div>
             <span className={"bullet-separator"}>&bull;</span>
-            <div className={"time-stamp"}>
-                <span>{convertUTCDateToLocalDate(props.comment.timeStamp)}</span>
+            <div className={"time-stamp"} data-tip={convertUTCDateToLocalDate(props.comment.timeStamp)} >
+                <span >{timeSince(props.comment.timeStamp)}</span>
             </div>
+            <ReactTooltip delayShow={200} effect={"solid"}/>
         </div>
     );
 

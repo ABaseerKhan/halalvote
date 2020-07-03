@@ -133,6 +133,11 @@
     color: gray;
 }
 
+.comment-header .time-stamp:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .comment {
     margin-left: 15px;
     margin-top: 5px;
