@@ -60,7 +60,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             },
             additionalHeaders: { },
         });
-        const updatedComments = addCommentsLocally(state.comments, comments, pathToParentComment);
+        const updatedComments = addCommentsLocally(state.comments, comments, pathToParentComment, true);
         if (totalTopLevelComments !== undefined) {
             setState(prevState => ({ ...prevState, comments: updatedComments, totalTopLevelComments: totalTopLevelComments }));
         } else {
@@ -184,14 +184,14 @@ const getCommentFromPath = (comments: Comment[], path: number[] | undefined): Co
     return getCommentFromPath(comments[path[0]].replies, path.slice(1));
 }
 
-const addCommentsLocally = (comments: Comment[], data: Comment[], pathToParentComment?: number[]): Comment[] => {
+const addCommentsLocally = (comments: Comment[], data: Comment[], pathToParentComment?: number[], appendToEnd: Boolean = false): Comment[] => {
     // base case/add top level comment
     if (!pathToParentComment || pathToParentComment.length === 0) {
-        return [...data, ...comments];
+        return appendToEnd ? [...comments, ...data] : [...data, ...comments];
     }
 
     // recursive step
-    const updatedReplies = addCommentsLocally(comments[pathToParentComment[0]].replies, data, pathToParentComment.slice(1));
+    const updatedReplies = addCommentsLocally(comments[pathToParentComment[0]].replies, data, pathToParentComment.slice(1), appendToEnd);
     comments[pathToParentComment[0]].replies = updatedReplies;
     return comments;
 }
