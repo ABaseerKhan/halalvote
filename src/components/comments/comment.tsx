@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
-import { ReactComponent as UpArrowSVG } from '../../icons/upArrow.svg';
-import { ReactComponent as DownArrowSVG } from '../../icons/downArrow.svg';
+import { ReactComponent as UpArrowSVG } from '../../icons/up-arrow.svg';
+import { ReactComponent as DownArrowSVG } from '../../icons/down-arrow.svg';
+import { ReactComponent as ExpandSVG } from '../../icons/expand-button.svg';
 import { Comment } from '../../types';
 import { UserContext } from '../app-shell';
 import { convertUTCDateToLocalDate, timeSince } from '../../utils';
@@ -109,7 +110,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         <div className={"comment-header"}>
             {
                 state.collapsed ? 
-                    <div className={"toggle-collapse"} onClick={toggleCollapse}>{"+"}</div> :
+                    <div className={"toggle-collapse"} onClick={toggleCollapse}><ExpandSVG className={"expand-button"}/></div> :
                     <>
                         <div className={"vote-buttons"}>
                             <UpArrowSVG onClick={upVote} className={state.vote === Vote.UPVOTE ? "up-vote-button-clicked" : "up-vote-button"}/>
@@ -126,7 +127,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
             <span className={"bullet-separator"}>&bull;</span>
             <div className={"time-stamp"} >
                 <span data-tip={convertUTCDateToLocalDate(props.comment.timeStamp)}>{timeSince(props.comment.timeStamp)}</span>
-                <ReactTooltip delayShow={400} effect={"solid"}  />
+                <ReactTooltip delayShow={400} effect={"solid"} />
             </div>
         </div>
     );

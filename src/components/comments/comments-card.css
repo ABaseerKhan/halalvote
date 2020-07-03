@@ -66,6 +66,16 @@
     color: gray;
 }
 
+.comment-header .expand-button {
+    height: 100%;
+    width: 100%;
+    color: darkcyan;
+}
+
+.comment-header .expand-button:hover {
+    color: rgb(0, 175, 175);
+}
+
 .comment-header .bullet-separator {
     color: gray;
     margin-top: 5px;
