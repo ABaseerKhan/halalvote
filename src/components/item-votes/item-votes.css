@@ -1,3 +1,8 @@
+.header-text {
+    text-align: center;
+    font-size: 32px;
+}
+
 .item-voter-0, .item-voter-1 {
     width: 80%;
     margin: auto;

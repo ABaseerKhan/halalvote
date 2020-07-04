@@ -7,13 +7,14 @@ import Linkify from 'react-linkify';
 import './item-carousel.css';
 
 interface ItemCarouselComponentProps {
+    id: string,
     iterateItem: any;
     itemName: string | undefined;
 };
 export const ItemCarouselComponent = (props: ItemCarouselComponentProps) => {
-    const { iterateItem, itemName } = props;
+    const { id, iterateItem, itemName } = props;
     return (
-        <div className='item-carousel'>
+        <div id={id} className='item-carousel'>
             <button onClick={iterateItem(-1)} className='carousel-button'>{"<"}</button>
             <div className='item-text'>
                 <Linkify>{itemName || ""}</Linkify>

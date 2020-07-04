@@ -104,37 +104,99 @@ export const AppShellComponent = (props: any) => {
   const numHalalComments = item?.numHalalComments != undefined ? item.numHalalComments : 0;
   const numHaramComments = item?.numHaramComments != undefined ? item.numHaramComments : 0;
 
+  const menuId = "menu";
+  const itemCarouselId = "itemCarousel";
+  const descriptionId = "description";
+  const commentsTableId = "commentsTableId";
+  const analyticsId = "analytics";
+
+  window.onwheel = function(event: any) {
+    let menu = document.getElementById(menuId);
+    let itemCarousel = document.getElementById(itemCarouselId);
+    let description = document.getElementById(descriptionId);
+    let commentsTable = document.getElementById(commentsTableId);
+    let analytics = document.getElementById(analyticsId);
+
+    if (menu && itemCarousel && description && commentsTable && analytics) {
+      if (event.deltaY < 0) {
+        if (menu.style.top) {
+          menu.style.top = Math.min(parseInt(menu.style.top) - event.deltaY, 0) + "px";
+          itemCarousel.style.top = Math.min(parseInt(itemCarousel.style.top) - event.deltaY, 60) + "px";
+          description.style.paddingTop = Math.min(parseInt(description.style.paddingTop) - event.deltaY, 120) + "px";
+          commentsTable.style.paddingTop = Math.min(parseInt(commentsTable.style.paddingTop) - event.deltaY, 120) + "px";
+          analytics.style.paddingTop = Math.min(parseInt(analytics.style.paddingTop) - event.deltaY, 120) + "px";
+
+          description.style.paddingBottom = 120 - parseInt(description.style.paddingTop) + "px";
+          commentsTable.style.paddingBottom = 120 - parseInt(commentsTable.style.paddingTop) + "px";
+          analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
+        } else {
+          menu.style.top = "0px";
+          itemCarousel.style.top = "60px";
+          description.style.paddingTop = "120px";
+          commentsTable.style.paddingTop = "120px";
+          analytics.style.paddingTop = "120px";
+          description.style.paddingBottom = "0px";
+          commentsTable.style.paddingBottom = "0px";
+          analytics.style.paddingBottom = "0px";
+        }
+      } else if (event.deltaY > 0) {
+        if (menu.style.top) {
+          menu.style.top = Math.max(parseInt(menu.style.top) - event.deltaY, -60) + "px";
+          itemCarousel.style.top = Math.max(parseInt(itemCarousel.style.top) - event.deltaY, 0) + "px";
+          description.style.paddingTop = Math.max(parseInt(description.style.paddingTop) - event.deltaY, 60) + "px";
+          commentsTable.style.paddingTop = Math.max(parseInt(commentsTable.style.paddingTop) - event.deltaY, 60) + "px";
+          analytics.style.paddingTop = Math.max(parseInt(analytics.style.paddingTop) - event.deltaY, 60) + "px";
+
+          description.style.paddingBottom = 120 - parseInt(description.style.paddingTop) + "px";
+          commentsTable.style.paddingBottom = 120 - parseInt(commentsTable.style.paddingTop) + "px";
+          analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
+        } else {
+          menu.style.top = "-60px";
+          itemCarousel.style.top = "0px";
+          description.style.paddingTop = "60px";
+          commentsTable.style.paddingTop = "60px";
+          analytics.style.paddingTop = "60px";
+          description.style.paddingBottom = "60px";
+          commentsTable.style.paddingBottom = "60px";
+          analytics.style.paddingBottom = "60px";
+        }
+      }
+    }
+  }
+
   return (
     <UserContext.Provider value={state.userDetails}>
-        <div className="app-shell">
-          <div className="body">
-                  <ItemCarouselComponent iterateItem={iterateItem} itemName={item?.itemName} />
-                  <table className="body-table">
-                    <tbody>
-                      <tr>
-                        <td className="body-table-column">
-                          <ItemVotesComponent judgment={Judgment.HARAM} itemName={itemName} vote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
-                        </td>
-                        <td className="body-table-column">
-                          <ItemVotesComponent judgment={Judgment.HALAL} itemName={itemName} vote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="body-table-column">
-                          <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
-                        </td>
-                        <td className="body-table-column">
-                          <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-          </div>
-          <MenuComponent displayLogin={displayLogin} setUserDetails={setUserDetails} />
+      <div className="app-shell">
+        <table id={commentsTableId} className="comments-table">
+          <tbody>
+            <tr>
+              <td className="comments-table-column">
+                <ItemVotesComponent judgment={Judgment.HARAM} itemName={itemName} vote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
+              </td>
+              <td className="comments-table-column">
+                <ItemVotesComponent judgment={Judgment.HALAL} itemName={itemName} vote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
+              </td>
+            </tr>
+            <tr>
+              <td className="comments-table-column">
+                <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
+              </td>
+              <td className="comments-table-column">
+                <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div id={descriptionId} className="other-page">Description</div>
+        <div id={analyticsId} className="other-page">Analytics</div>
+        <div className="header">
+          <MenuComponent id={menuId} displayLogin={displayLogin} setUserDetails={setUserDetails} />
+          <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={item?.itemName} />
           {
             state.loginDisplayed && <LoginComponent displayLogin={displayLogin} setUserDetails={setUserDetails} />
           }
         </div>
+      </div>
     </UserContext.Provider>
   )
 }

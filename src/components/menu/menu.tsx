@@ -5,15 +5,16 @@ import { UserContext } from '../app-shell'
 import './menu.css';
 
 interface MenuComponentProps {
+    id: string,
     displayLogin: any;
     setUserDetails: any;
 };
 export const MenuComponent = (props: MenuComponentProps) => {
-    const { displayLogin, setUserDetails } = props;
+    const { id, displayLogin, setUserDetails } = props;
     let {username, sessiontoken} = React.useContext(UserContext)
 
     return (
-        <div className='menu'>
+        <div id={id} className='menu'>
             {
                 username && username != "" ?
                     <div className="user-info-container">

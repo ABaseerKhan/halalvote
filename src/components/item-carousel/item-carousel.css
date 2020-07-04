@@ -1,13 +1,17 @@
 .item-carousel {
+    position: fixed;
+    height: 60px;
+    width: 100%;
     display: flex;
-    margin-top: 10px;
+    background: rgb(0, 0, 0, 0.2);
+    top: 60px;
 }
 
 .item-text {
     width: 50%;
     text-align: center;
     margin: auto;
-    font-size: 64px;
+    font-size: 32px;
 }
 
 .carousel-button {
