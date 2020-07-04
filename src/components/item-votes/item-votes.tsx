@@ -78,7 +78,7 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
                     return <span>{`👼 Halal - ${halalVotes} 👼`}</span>
                 }
             } else {
-                <span>{"🔥 Haram 🔥"}</span>
+                return <span>{"🔥 Haram 🔥"}</span>
             }
         default:
             return <span></span>
