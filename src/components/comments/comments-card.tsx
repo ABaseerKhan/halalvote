@@ -47,12 +47,13 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
     const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
-        const comments: Comment[] = await postData({ 
+        const { data: comments }: { data: Comment[]} = await postData({ 
             baseUrl: commentsConfig.url,
             path: 'get-comments', 
             data: { 
                 "commentType": judgementToTextMap[judgment],
                 "itemName": itemName,
+                "username": username,
                 "parentId": parentComment?.id,
                 "depth": 2, 
                 "n": 2,
@@ -70,7 +71,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
     const createComment = async (commentText: string) => {
         const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
-        const comment: Comment = await postData({
+        const { data: comment }: { data: Comment } = await postData({
             baseUrl: commentsConfig.url,
             path: 'add-comment', 
             data: { 
@@ -124,7 +125,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             await refreshItem([itemName]);
         }
 
-        const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.psuedoDelete);
+        const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.data?.psuedoDelete);
         setState(prevState => ({ ...prevState, comments: updatedComments }));
     }
 
@@ -151,14 +152,15 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                                     highlightComment={highlightComment} 
                                     fetchMoreReplies={fetchComments}
                                     deleteComment={deleteComment}
+                                    judgment={judgment}
                                 />
                     })
                 }
                 {
-                    moreComments > 0 &&
+                    moreComments > 0 && state.comments.length &&
                     <div className="show-more-comments" onClick={(e) => { e.stopPropagation(); fetchComments([]);  }}>
                         {moreComments + (moreComments > 1 ? " more comments" : " more comment")}
-                    </div>
+                    </div> || null
                 }
             </div>
             <CommentMakerComponent 

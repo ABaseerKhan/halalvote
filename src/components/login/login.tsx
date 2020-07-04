@@ -19,7 +19,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
             const username = (document.getElementById("username-input") as HTMLInputElement).value
             const password = (document.getElementById("password-input") as HTMLInputElement).value
 
-            const sessiontoken = await postData({
+            const { data } = await postData({
                 baseUrl: usersConfig.url,
                 path: 'login',
                 data: {
@@ -28,8 +28,9 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 },
                 additionalHeaders: { }
             });
-
-            setUserDetails(username, sessiontoken);
+            const sessionToken = data;
+            
+            setUserDetails(username, sessionToken);
         }
 
         fetchData();
@@ -41,7 +42,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
             const username = (document.getElementById("register-username-input") as HTMLInputElement).value
             const password = (document.getElementById("register-password-input") as HTMLInputElement).value
 
-            const fetchedUsername = await postData({
+            const { data } = await postData({
                 baseUrl: usersConfig.url,
                 path: 'register-user',
                 data: {
@@ -52,7 +53,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 additionalHeaders: { }
             });
 
-            if (username == fetchedUsername) {
+            if (username == data) {
                 displayLogin(false);
             }
         }

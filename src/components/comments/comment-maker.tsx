@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
+import { ReactComponent as SendButtonSVG } from '../../icons/send-button.svg';
 
 //type imports
 import { Judgment } from '../../types';
@@ -23,7 +25,7 @@ export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
         switch (event.keyCode) {
             case 13:
                 if (!state.holdingDownShift) {
-                    invokeCallback(event as any);
+                    submitComment(event as any);
                 }
                 break;
             case 16:
@@ -43,7 +45,7 @@ export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
         }
     };
 
-    const invokeCallback = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const submitComment = (event: any) => {
         const textValue = ((document.getElementById(textAreaId) as HTMLInputElement).value).trim();
         if (textValue !== null && textValue !== '') {
             event.preventDefault();
@@ -56,8 +58,8 @@ export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
 
     return (
         <div className={"comment-maker-card-" + props.judgment} onClick={(e) => { e.stopPropagation()}}>
-            <textarea className="comment-maker-input" id={textAreaId} placeholder={placeholderText} onKeyDown={textAreaOnKeyDown} onKeyUp={textAreaOnKeyUp}/>
-            <button className="comment-maker-button" onClick={invokeCallback}>^</button>
+            <TextareaAutosize className="comment-maker-input" id={textAreaId} placeholder={placeholderText} onKeyDown={textAreaOnKeyDown} onKeyUp={textAreaOnKeyUp}/>
+            <SendButtonSVG className={"comment-maker-button-" + props.judgment} onClick={submitComment}/>
         </div>
     )
 }

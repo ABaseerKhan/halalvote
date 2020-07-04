@@ -6,3 +6,14 @@ html, body {
   background-color: #f0f0f0;
   position: relative;
 }
+
+:root {
+  --haram-color: #ffc8e6;
+  --halal-color: #c8ffe6;
+
+  --haram-compliment-color: rgb(173, 0, 0);
+  --halal-compliment-color: #008b8b;
+
+  --link-color: #6495ed;
+  --gray: #969696;
+}
