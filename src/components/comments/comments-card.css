@@ -16,6 +16,7 @@
 }
 
 .comments-container {
+    position: relative;
     height: calc(100% - 60px);
     padding: 25px 25px 0px 25px;
     border-radius: 25px 25px 25px 25px;

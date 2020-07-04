@@ -134,14 +134,35 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             ...prevState,
             pathToHighlightedComment: path,
         }));
+        let highlightedComment = getCommentFromPath(state.comments, path);
+        scrollToHighlightedComment(highlightedComment);
+    }
+
+    const scrollToHighlightedComment = (highlightedComment: Comment | undefined) => {
+        if (highlightedComment) {
+            const highlightedCommentElement = document.getElementById("comment-" + highlightedComment.id);
+            const commentsContainerElement = document.getElementById(commentsContainerId);
+            
+            if (highlightedCommentElement && commentsContainerElement) {
+                let topPos = highlightedCommentElement.offsetTop;
+                let offsetParent = highlightedCommentElement.offsetParent;
+    
+                while (offsetParent && offsetParent.className != "comments-container") {
+                    topPos += (offsetParent as HTMLElement).offsetTop;
+                    offsetParent = (offsetParent as HTMLElement).offsetParent;
+                }
+                commentsContainerElement.scrollTop =  topPos;
+            }
+        }
     }
 
     const moreComments = totalTopLevelComments - state.comments.length;
     const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
+    const commentsContainerId = `comments-container-${judgment.toString()}`;
 
     return(
         <div className={"comments-card-" + judgment.toString()} onClick={() => highlightComment(undefined)}>
-            <div className="comments-container">
+            <div id={commentsContainerId} className="comments-container">
                 {
                     state.comments.map((comment: Comment, i: number) => {
                         return <CommentComponent 
