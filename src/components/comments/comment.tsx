@@ -30,7 +30,6 @@ export const CommentComponent = (props: CommentComponentProps) => {
     let { username, sessiontoken } = React.useContext(UserContext);
     const [state, setState] = useState({
         comment: props.comment,
-        vote: Vote.NONE,
         canShowMore: true,
         collapsed: false,
     });
@@ -61,13 +60,12 @@ export const CommentComponent = (props: CommentComponentProps) => {
         });
 
         if (status === 200){
-            const upVotes = (state.vote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes + 1;
-            const downVotes = (state.vote === Vote.DOWNVOTE) ? state.comment.downVotes - 1 : state.comment.downVotes;
-            const vote = (state.vote === Vote.UPVOTE) ? Vote.NONE : Vote.UPVOTE;
+            const upVotes = (state.comment.userVote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes + 1;
+            const downVotes = (state.comment.userVote === Vote.DOWNVOTE) ? state.comment.downVotes - 1 : state.comment.downVotes;
+            const userVote = (state.comment.userVote === Vote.UPVOTE) ? undefined : Vote.UPVOTE;
             setState(prevState => ({
                 ...prevState,
-                comment: { ...prevState.comment, upVotes: upVotes, downVotes: downVotes },
-                vote: vote,
+                comment: { ...prevState.comment, upVotes: upVotes, downVotes: downVotes, userVote: userVote },
             }));
         }
     }
@@ -87,13 +85,12 @@ export const CommentComponent = (props: CommentComponentProps) => {
         });
 
         if (status === 200) {
-            const downVotes = (state.vote === Vote.DOWNVOTE) ? state.comment.downVotes - 1 : state.comment.downVotes + 1;
-            const upVotes = (state.vote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes;
-            const vote = (state.vote === Vote.DOWNVOTE) ? Vote.NONE : Vote.DOWNVOTE;
+            const downVotes = (state.comment.userVote === Vote.DOWNVOTE) ? state.comment.downVotes - 1 : state.comment.downVotes + 1;
+            const upVotes = (state.comment.userVote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes;
+            const userVote = (state.comment.userVote === Vote.DOWNVOTE) ? undefined : Vote.DOWNVOTE;
             setState(prevState => ({
                 ...prevState,
-                comment: { ...prevState.comment, downVotes: downVotes, upVotes: upVotes },
-                vote: vote,
+                comment: { ...prevState.comment, downVotes: downVotes, upVotes: upVotes, userVote: userVote },
             }));
         }
     }
@@ -115,8 +112,8 @@ export const CommentComponent = (props: CommentComponentProps) => {
                     <div className={"toggle-collapse"} onClick={toggleCollapse}><ExpandSVG className={"expand-button-" + judgment}/></div> :
                     <>
                         <div className={"vote-buttons"}>
-                            <UpArrowSVG onClick={upVote} className={state.vote === Vote.UPVOTE ? "up-vote-button-clicked" : "up-vote-button"}/>
-                            <DownArrowSVG onClick={downVote} className={state.vote === Vote.DOWNVOTE ? "down-vote-button-clicked" : "down-vote-button"} />
+                            <UpArrowSVG onClick={upVote} className={state.comment.userVote === Vote.UPVOTE ? "up-vote-button-clicked" : "up-vote-button"}/>
+                            <DownArrowSVG onClick={downVote} className={state.comment.userVote === Vote.DOWNVOTE ? "down-vote-button-clicked" : "down-vote-button"} />
                         </div>
                         <div className={"vote-counts"}>
                             <div className="up-votes" >{state.comment.upVotes}</div>

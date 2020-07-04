@@ -29,10 +29,10 @@ export interface Comment {
     downVotes: number,
     numReplies: number,
     timeStamp: string,
+    userVote?: number,
 };
 
 export enum Vote {
-    UPVOTE,
     DOWNVOTE,
-    NONE
+    UPVOTE,
 }

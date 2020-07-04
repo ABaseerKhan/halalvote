@@ -53,6 +53,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             data: { 
                 "commentType": judgementToTextMap[judgment],
                 "itemName": itemName,
+                "username": username,
                 "parentId": parentComment?.id,
                 "depth": 2, 
                 "n": 2,

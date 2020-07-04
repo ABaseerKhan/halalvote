@@ -144,13 +144,14 @@
 .comment-header .vote-counts {
     display: grid;
     font-size: 10px;
+    font-weight: 600;
     margin-left: 5px;
 }
 
 .comment-header .vote-counts .up-votes {
     width: fit-content;
     float:right;
-    color: green;
+    color: var(--halal-compliment-color);
 }
 
 .comment-header .vote-counts .down-votes {
