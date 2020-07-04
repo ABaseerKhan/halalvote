@@ -41,16 +41,10 @@ export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
 
 const modules = {
     toolbar: [
-        [{ 'header': [1, 2, false] }],
-        ['bold', 'italic', 'underline','strike', 'blockquote'],
-        ['code-block'],
-        ['link'],
+        [{'header': 1}, 'bold', 'italic', 'underline','strike', 'blockquote', 'code-block', 'link', 'image'],
     ],
 };
 
 const formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'code-block',
-    'link'
+    'header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block', 'link', 'image',
 ];

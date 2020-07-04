@@ -263,14 +263,13 @@
     width: 98%;
     margin-left: 5px;
     font-size: 18px;
-    border: 2px solid var(--gray);
-    border-radius: 20px;
+    border-top: 2px solid var(--gray);
     background-color: transparent;
     resize: none;
 }
 
 .comment-maker-input .ql-toolbar {
-    padding: 5px;
+    padding: 5px 5px 0 5px;
     border: none;
 }
 
@@ -279,7 +278,7 @@
 }
 
 .comment-maker-input .ql-editor {
-    padding: 5px 15px;
+    padding: 0 15px 5px 15px;
 }
 
 .comment-maker-button-0, .comment-maker-button-1 {
