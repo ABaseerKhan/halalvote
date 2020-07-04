@@ -151,6 +151,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                                     highlightComment={highlightComment} 
                                     fetchMoreReplies={fetchComments}
                                     deleteComment={deleteComment}
+                                    judgment={judgment}
                                 />
                     })
                 }

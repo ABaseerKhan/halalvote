@@ -72,15 +72,26 @@
     color: var(--gray);
 }
 
-.comment-header .expand-button {
+.comment-header .expand-button-0 {
     height: 100%;
     width: 100%;
     color: var(--halal-compliment-color);
 }
 
-.comment-header .expand-button:hover {
+.comment-header .expand-button-0:hover {
     color: var(--halal-color);
     fill: var(--halal-compliment-color);
+}
+
+.comment-header .expand-button-1 {
+    height: 100%;
+    width: 100%;
+    color: var(--haram-compliment-color);
+}
+
+.comment-header .expand-button-1:hover {
+    color: var(--haram-color);
+    fill: var(--haram-compliment-color);
 }
 
 .comment-header .bullet-separator {

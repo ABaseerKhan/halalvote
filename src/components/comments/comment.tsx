@@ -3,7 +3,7 @@ import ReactTooltip from 'react-tooltip';
 import { ReactComponent as UpArrowSVG } from '../../icons/up-arrow.svg';
 import { ReactComponent as DownArrowSVG } from '../../icons/down-arrow.svg';
 import { ReactComponent as ExpandSVG } from '../../icons/expand-button.svg';
-import { Comment } from '../../types';
+import { Comment, Judgment } from '../../types';
 import { UserContext } from '../app-shell';
 import { convertUTCDateToLocalDate, timeSince } from '../../utils';
 import Linkify from 'react-linkify'; 
@@ -24,6 +24,7 @@ interface CommentComponentProps {
     highlightComment: (path: number[] | undefined) => void,
     fetchMoreReplies: (path: number[]) => void,
     deleteComment: (path: number[]) => void,
+    judgment: Judgment;
 }
 export const CommentComponent = (props: CommentComponentProps) => {
     let { username, sessiontoken } = React.useContext(UserContext);
@@ -97,6 +98,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         }
     }
 
+    const { judgment } = props;
     const moreReplies = (props.comment.numReplies - props.comment.replies.length);
 
     const isHighlighted = 
@@ -110,7 +112,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         <div className={"comment-header"}>
             {
                 state.collapsed ? 
-                    <div className={"toggle-collapse"} onClick={toggleCollapse}><ExpandSVG className={"expand-button"}/></div> :
+                    <div className={"toggle-collapse"} onClick={toggleCollapse}><ExpandSVG className={"expand-button-" + judgment}/></div> :
                     <>
                         <div className={"vote-buttons"}>
                             <UpArrowSVG onClick={upVote} className={state.vote === Vote.UPVOTE ? "up-vote-button-clicked" : "up-vote-button"}/>
@@ -136,7 +138,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         state.collapsed ? CommentHeader : 
         <div onClick={(e) => { if (isHighlighted) e.stopPropagation(); }} className={commentBorderClass}>
             {CommentHeader}
-            {!isHighlighted && <div className={"comment-tail-" + ((state?.comment?.commentType === "HALAL") ? "0" : "1")} onClick={toggleCollapse}></div>}
+            {!isHighlighted && <div className={"comment-tail-" + judgment} onClick={toggleCollapse}></div>}
             <div className="comment">
                 <Linkify>{props.comment.comment}</Linkify>
             </div>
@@ -172,6 +174,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                                     highlightComment={props.highlightComment} 
                                     fetchMoreReplies={props.fetchMoreReplies}
                                     deleteComment={props.deleteComment}
+                                    judgment={judgment}
                                 />
                     })
                 }
