@@ -42,21 +42,27 @@
     position: relative;
 }
 
-.comment-tail {
+.comment-tail-0, .comment-tail-1 {
     float: left;
     top: 27px;
     bottom: 0px;
     padding-left: 5px;
     padding-right: 5px;
     background-clip: content-box;
-    background-color: rgb(170, 170, 170);
+    background-color: var(--gray);
     width: 2px;
     position: absolute;
 }
 
-.comment-tail:hover {
+.comment-tail-0:hover {
     cursor: pointer;
     background-color: var(--halal-compliment-color);
+    width: 5px;
+}
+
+.comment-tail-1:hover {
+    cursor: pointer;
+    background-color: var(--haram-compliment-color);
     width: 5px;
 }
 

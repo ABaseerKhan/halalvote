@@ -136,7 +136,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         state.collapsed ? CommentHeader : 
         <div onClick={(e) => { if (isHighlighted) e.stopPropagation(); }} className={commentBorderClass}>
             {CommentHeader}
-            {!isHighlighted && <div className="comment-tail" onClick={toggleCollapse}></div>}
+            {!isHighlighted && <div className={"comment-tail-" + ((state?.comment?.commentType === "HALAL") ? "0" : "1")} onClick={toggleCollapse}></div>}
             <div className="comment">
                 <Linkify>{props.comment.comment}</Linkify>
             </div>
