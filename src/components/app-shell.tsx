@@ -171,10 +171,10 @@ export const AppShellComponent = (props: any) => {
           <tbody>
             <tr>
               <td className="comments-table-column">
-                <ItemVotesComponent judgment={Judgment.HARAM} itemName={itemName} vote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
+                <ItemVotesComponent judgment={Judgment.HARAM} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
               </td>
               <td className="comments-table-column">
-                <ItemVotesComponent judgment={Judgment.HALAL} itemName={itemName} vote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
+                <ItemVotesComponent judgment={Judgment.HALAL} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
               </td>
             </tr>
             <tr>

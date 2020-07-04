@@ -1,12 +1,6 @@
-.header-text {
-    text-align: center;
-    font-size: 32px;
-}
-
 .item-voter-0, .item-voter-1 {
     width: 80%;
     margin: auto;
-    margin-bottom: 20px;
     height: 20px;
     padding: 20px 0px 20px 0px;
     box-shadow: 4px 4px lightgray;
@@ -14,7 +8,7 @@
     border: none;
     display: table;
     background-color: var(--gray);
-    font-size: 18px;
+    font-size: 32px;
     text-align: center;
     cursor: pointer;
 }
@@ -37,4 +31,11 @@
 
 .item-voter-1-selected {
     background-color: var(--haram-compliment-color);
+}
+
+.votes-bullet-separator {
+    display: inline-block;
+    font-size: medium;
+    vertical-align: middle;
+    margin-bottom: 5px;
 }
