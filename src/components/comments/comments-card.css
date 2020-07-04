@@ -270,16 +270,16 @@
     margin-left: 5px;
     font-size: 18px;
     border: 2px solid var(--gray);
-    border-radius: 15px 15px 15px 15px;
+    border-radius: 20px;
     background-color: transparent;
     resize: none;
 }
 
 .comment-maker-button-0, .comment-maker-button-1 {
     position: absolute;
-    bottom: 8px;
-    right: 3%;
-    width: 30px;
+    bottom: 5px;
+    right: 1.75%;
+    width: 34.5px;
     padding: 0px;
     border-radius: 100px 100px 100px 100px;
     border-style: none;
