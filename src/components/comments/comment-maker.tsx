@@ -26,9 +26,11 @@ export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
     const textAreaId = props.judgment.toString() + "-comment";
 
     const submitComment = (event: any) => {
-        event.preventDefault();
-        props.callback(value);
-        setValue('');
+        if (value !== "") {
+            event.preventDefault();
+            props.callback(value);
+            setValue('');
+        }
     };
 
     return (
