@@ -119,8 +119,8 @@ export const AppShellComponent = (props: any) => {
     let analytics = document.getElementById(analyticsId);
 
     if (canMove && menu && itemCarousel && description && commentsTable && analytics) {
-      if (event.deltaY < 0) {
-        if (menu.style.top) {
+      if (menu.style.top) {
+        if (event.deltaY < 0) {
           menu.style.top = Math.min(parseInt(menu.style.top) - event.deltaY, 0) + "px";
           itemCarousel.style.top = Math.min(parseInt(itemCarousel.style.top) - event.deltaY, 60) + "px";
           description.style.paddingTop = Math.min(parseInt(description.style.paddingTop) - event.deltaY, 120) + "px";
@@ -130,37 +130,26 @@ export const AppShellComponent = (props: any) => {
           description.style.paddingBottom = 120 - parseInt(description.style.paddingTop) + "px";
           commentsTable.style.paddingBottom = 120 - parseInt(commentsTable.style.paddingTop) + "px";
           analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
-        } else {
-          menu.style.top = "0px";
-          itemCarousel.style.top = "60px";
-          description.style.paddingTop = "120px";
-          commentsTable.style.paddingTop = "120px";
-          analytics.style.paddingTop = "120px";
-          description.style.paddingBottom = "0px";
-          commentsTable.style.paddingBottom = "0px";
-          analytics.style.paddingBottom = "0px";
-        }
-      } else if (event.deltaY > 0) {
-        if (menu.style.top) {
-          menu.style.top = Math.max(parseInt(menu.style.top) - event.deltaY, -60) + "px";
-          itemCarousel.style.top = Math.max(parseInt(itemCarousel.style.top) - event.deltaY, 0) + "px";
-          description.style.paddingTop = Math.max(parseInt(description.style.paddingTop) - event.deltaY, 60) + "px";
-          commentsTable.style.paddingTop = Math.max(parseInt(commentsTable.style.paddingTop) - event.deltaY, 60) + "px";
-          analytics.style.paddingTop = Math.max(parseInt(analytics.style.paddingTop) - event.deltaY, 60) + "px";
+        } else if (event.deltaY > 0) {
+            menu.style.top = Math.max(parseInt(menu.style.top) - event.deltaY, -60) + "px";
+            itemCarousel.style.top = Math.max(parseInt(itemCarousel.style.top) - event.deltaY, 0) + "px";
+            description.style.paddingTop = Math.max(parseInt(description.style.paddingTop) - event.deltaY, 60) + "px";
+            commentsTable.style.paddingTop = Math.max(parseInt(commentsTable.style.paddingTop) - event.deltaY, 60) + "px";
+            analytics.style.paddingTop = Math.max(parseInt(analytics.style.paddingTop) - event.deltaY, 60) + "px";
 
-          description.style.paddingBottom = 120 - parseInt(description.style.paddingTop) + "px";
-          commentsTable.style.paddingBottom = 120 - parseInt(commentsTable.style.paddingTop) + "px";
-          analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
-        } else {
-          menu.style.top = "0px";
-          itemCarousel.style.top = "60px";
-          description.style.paddingTop = "120px";
-          commentsTable.style.paddingTop = "120px";
-          analytics.style.paddingTop = "120px";
-          description.style.paddingBottom = "0px";
-          commentsTable.style.paddingBottom = "0px";
-          analytics.style.paddingBottom = "0px";
+            description.style.paddingBottom = 120 - parseInt(description.style.paddingTop) + "px";
+            commentsTable.style.paddingBottom = 120 - parseInt(commentsTable.style.paddingTop) + "px";
+            analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
         }
+      } else {
+        menu.style.top = "0px";
+        itemCarousel.style.top = "60px";
+        description.style.paddingTop = "120px";
+        commentsTable.style.paddingTop = "120px";
+        analytics.style.paddingTop = "120px";
+        description.style.paddingBottom = "0px";
+        commentsTable.style.paddingBottom = "0px";
+        analytics.style.paddingBottom = "0px";
       }
     }
   }
