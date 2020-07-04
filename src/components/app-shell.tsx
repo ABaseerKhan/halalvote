@@ -18,8 +18,8 @@ import { ItemVotesComponent } from './item-votes/item-votes';
 export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean }>({
     userDetails: {
-        username: cookies.get('username'),
-        sessiontoken: cookies.get('sessiontoken'),
+      username: cookies.get('username'),
+      sessiontoken: cookies.get('sessiontoken'),
     },
     items: [],
     itemIndex: 0,
@@ -39,15 +39,15 @@ export const AppShellComponent = (props: any) => {
       additionalHeaders = { ...additionalHeaders, "sessiontoken": state.userDetails.sessiontoken };
     }
 
-    const { data } = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders,});
+    const { data } = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders, });
 
-    for(let i = 0; i < state.items.length; i++) {
-      for(let j = data.length - 1; j >= 0; j--) {
-          if(state.items[i].itemName === data[j].itemName) {
-              state.items.splice(i, 1, data[j]);
-              data.splice(j, 1);
-              break;
-          }
+    for (let i = 0; i < state.items.length; i++) {
+      for (let j = data.length - 1; j >= 0; j--) {
+        if (state.items[i].itemName === data[j].itemName) {
+          state.items.splice(i, 1, data[j]);
+          data.splice(j, 1);
+          break;
+        }
       }
     }
     setState(s => ({ ...s, items: [...s.items, ...data] }));
@@ -55,9 +55,9 @@ export const AppShellComponent = (props: any) => {
 
   const iterateItem = (iteration: number) => () => {
     if ((state.itemIndex + iteration) < state.items.length && (state.itemIndex + iteration) >= 0) {
-        setState({  ...state, itemIndex: state.itemIndex + iteration });
+      setState({ ...state, itemIndex: state.itemIndex + iteration });
     } else {
-        return undefined;
+      return undefined;
     }
   };
 
@@ -110,14 +110,15 @@ export const AppShellComponent = (props: any) => {
   const commentsTableId = "commentsTableId";
   const analyticsId = "analytics";
 
-  window.onwheel = function(event: any) {
+  window.onwheel = function (event: any) {
+    let canMove = canMoveMenu(event);
     let menu = document.getElementById(menuId);
     let itemCarousel = document.getElementById(itemCarouselId);
     let description = document.getElementById(descriptionId);
     let commentsTable = document.getElementById(commentsTableId);
     let analytics = document.getElementById(analyticsId);
 
-    if (menu && itemCarousel && description && commentsTable && analytics) {
+    if (canMove && menu && itemCarousel && description && commentsTable && analytics) {
       if (event.deltaY < 0) {
         if (menu.style.top) {
           menu.style.top = Math.min(parseInt(menu.style.top) - event.deltaY, 0) + "px";
@@ -151,17 +152,31 @@ export const AppShellComponent = (props: any) => {
           commentsTable.style.paddingBottom = 120 - parseInt(commentsTable.style.paddingTop) + "px";
           analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
         } else {
-          menu.style.top = "-60px";
-          itemCarousel.style.top = "0px";
-          description.style.paddingTop = "60px";
-          commentsTable.style.paddingTop = "60px";
-          analytics.style.paddingTop = "60px";
-          description.style.paddingBottom = "60px";
-          commentsTable.style.paddingBottom = "60px";
-          analytics.style.paddingBottom = "60px";
+          menu.style.top = "0px";
+          itemCarousel.style.top = "60px";
+          description.style.paddingTop = "120px";
+          commentsTable.style.paddingTop = "120px";
+          analytics.style.paddingTop = "120px";
+          description.style.paddingBottom = "0px";
+          commentsTable.style.paddingBottom = "0px";
+          analytics.style.paddingBottom = "0px";
         }
       }
     }
+  }
+
+  const canMoveMenu = (scrollEvent: any): Boolean => {
+    let path = scrollEvent.path;
+    for (let index in path) {
+      let element = path[index];
+
+      if (element.className === "comments-container") {
+        return (element.scrollTop === 0 && scrollEvent.deltaY < 0) ||
+          (element.scrollTop === (element.scrollHeight - element.offsetHeight) && scrollEvent.deltaY > 0);
+      }
+    }
+
+    return true;
   }
 
   return (
@@ -204,6 +219,6 @@ export const AppShellComponent = (props: any) => {
 const cookies = new Cookies();
 
 export const UserContext = React.createContext({
-    username: cookies.get('username'),
-    sessiontoken: cookies.get('sessiontoken'),
+  username: cookies.get('username'),
+  sessiontoken: cookies.get('sessiontoken'),
 });
