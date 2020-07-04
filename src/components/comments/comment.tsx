@@ -137,7 +137,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
             {CommentHeader}
             {!isHighlighted && <div className={"comment-tail-" + judgment} onClick={toggleCollapse}></div>}
             <div className="comment">
-                <Linkify>{props.comment.comment}</Linkify>
+                <Linkify><div dangerouslySetInnerHTML={{__html: props.comment.comment}}/></Linkify>
             </div>
             <div className="comment-actions">
                 <span 

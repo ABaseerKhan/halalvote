@@ -260,15 +260,26 @@
 }
 
 .comment-maker-input {
-    height: 1.5em;
-    min-height: 1.5em;
-    width: 96%;
+    width: 98%;
     margin-left: 5px;
     font-size: 18px;
     border: 2px solid var(--gray);
     border-radius: 20px;
     background-color: transparent;
     resize: none;
+}
+
+.comment-maker-input .ql-toolbar {
+    padding: 5px;
+    border: none;
+}
+
+.comment-maker-input .ql-container {
+    border: none;
+}
+
+.comment-maker-input .ql-editor {
+    padding: 5px 15px;
 }
 
 .comment-maker-button-0, .comment-maker-button-1 {
