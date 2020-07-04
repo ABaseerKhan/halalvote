@@ -8,20 +8,20 @@
     height: 60vh;
     margin-left: auto;
     margin-right: auto;
-    box-shadow: 4px 4px #c8c8c8;
+    box-shadow: 4px 4px lightgray;
     border-radius: 25px 25px 25px 25px;
 }
 
 .comments-card-1 {
-    background-color: #ffc8e6;
+    background-color: var(--haram-color);
 }
 
 .comments-card-0 {
-    background-color: #c8ffe6;
+    background-color: var(--halal-color);
 }
 
 .comments-container {
-    height: calc(100% - 80px);
+    height: calc(100% - 60px);
     padding: 25px 25px 0px 25px;
     border-radius: 25px 25px 25px 25px;
     overflow: scroll;
@@ -56,28 +56,29 @@
 
 .comment-tail:hover {
     cursor: pointer;
-    background-color: darkcyan;
+    background-color: var(--halal-compliment-color);
     width: 5px;
 }
 
 .comment-header {
     display: flex;
     font-size: 14px;
-    color: gray;
+    color: var(--gray);
 }
 
 .comment-header .expand-button {
     height: 100%;
     width: 100%;
-    color: darkcyan;
+    color: var(--halal-compliment-color);
 }
 
 .comment-header .expand-button:hover {
-    color: rgb(0, 175, 175);
+    color: var(--halal-color);
+    fill: var(--halal-compliment-color);
 }
 
 .comment-header .bullet-separator {
-    color: gray;
+    color: var(--gray);
     margin-top: 5px;
     font-size: xx-small;
     margin-left: 5px;
@@ -91,7 +92,7 @@
 .comment-header .vote-buttons .up-vote-button {
     height: 12px;
     width: 12px;
-    fill: #3E3E3E;
+    fill: var(--gray);
 }
 
 .comment-header .vote-buttons .up-vote-button-clicked {
@@ -109,17 +110,17 @@
 .comment-header .vote-buttons .down-vote-button {
     height: 12px;
     width: 12px;
-    fill: #3E3E3E;
+    fill: var(--gray);
 }
 
 .comment-header .vote-buttons .down-vote-button-clicked {
     height: 12px;
     width: 12px;
-    fill: rgb(173, 0, 0);
+    fill: var(--haram-compliment-color);
 }
 
 .comment-header .vote-buttons .down-vote-button:hover {
-    fill: rgb(173, 0, 0);
+    fill: var(--haram-compliment-color);
     cursor: pointer;
 }
 
@@ -138,7 +139,7 @@
 .comment-header .vote-counts .down-votes {
     width: fit-content;
     float: right;
-    color: rgb(173, 0, 0);
+    color: var(--haram-compliment-color);
 }
 
 .comment-header .username {
@@ -147,13 +148,13 @@
     overflow-wrap: break-word;
     word-wrap: break-word;
     font-size: 14px;
-    color: #969696;
+    color: var(--var(--gray));
 }
 
 .comment-header .time-stamp {
     padding-top: 1px;
     font-size: 14px;
-    color: gray;
+    color: var(--gray);
 }
 
 .comment-header .time-stamp:hover {
@@ -174,9 +175,13 @@
 .comment-actions {
     margin-left: 20px;
     margin-bottom: 10px;
-    color: #969696;
+    color: var(--var(--gray));
     font-size: 12px;
     font-weight: 700;
+}
+
+.reply-button {
+    color: var(--gray);
 }
 
 .reply-button:hover {
@@ -206,14 +211,14 @@
 .show-more-replies {
     margin-left: 12px;
     margin-bottom: 10px;
-    color: cornflowerblue;
+    color: var(--link-color);
     cursor: pointer;
     font-size: 12px;
 }
 
 .show-more-comments {
     margin-bottom: 10px;
-    color: cornflowerblue;
+    color: var(--link-color);
     cursor: pointer;
     font-size: 12px;
 }
@@ -227,37 +232,58 @@
     position: relative;
     bottom: 0px;
     width: 100%;
-    height: 20px;
+    height: 1.5em;
     border-radius: 0px 0px 25px 25px;
-    box-shadow: 4px 4px #c8c8c8;
+    box-shadow: 4px 4px lightgray;
 }
 
 .comment-maker-card-0 {
-    background-color: #c8ffe6;
+    background-color: var(--halal-color);
 }
 
 .comment-maker-card-1 {
-    background-color: #ffc8e6;
+    background-color: var(--haram-color);
 }
 
 .comment-maker-input {
-    height: 100%;
-    min-height: 45px;
-    width: calc(98% - 20px);
+    height: 1.5em;
+    min-height: 1.5em;
+    width: 96%;
+    margin-left: 5px;
     font-size: 18px;
-    resize: vertical;
-    border-radius: 0px 0px 0px 25px;
+    border: 2px solid var(--gray);
+    border-radius: 15px 15px 15px 15px;
+    background-color: transparent;
+    resize: none;
 }
 
-.comment-maker-button {
-    float: right;
-    width: 20px;
-    height: 100%;
-    font-size: 18px;
+.comment-maker-button-0, .comment-maker-button-1 {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    width: 30px;
     padding: 0px;
-    border-radius: 0px 0px 25px 0px;
+    border-radius: 100px 100px 100px 100px;
     border-style: none;
     cursor: pointer;
+}
+
+.comment-maker-button-0 {
+    color: var(--halal-compliment-color);
+}
+
+.comment-maker-button-0:hover {
+    color: var(--halal-color);
+    fill: var(--halal-compliment-color);
+}
+
+.comment-maker-button-1 {
+    color: var(--haram-compliment-color);
+}
+
+.comment-maker-button-1:hover {
+    color: var(--haram-color);
+    fill: var(--haram-compliment-color);
 }
 
 .comment-maker-input:focus, .comment-maker-button:focus {

@@ -44,6 +44,6 @@ export const ItemVoterComponent = (props: ItemVoterComponentProps) => {
     const classNames = "item-voter-" + judgment + " " + (isSelected ? "item-voter-" + judgment + "-selected" : "");
 
     return (
-        <div onClick={ vote } className={classNames}>VOTE {judgementToTextMap[judgment]}</div>
+        <div onClick={ vote } className={classNames}>{isSelected ? "VOTED " : "VOTE "}{judgementToTextMap[judgment]}</div>
     )
 }

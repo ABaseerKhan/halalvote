@@ -179,7 +179,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
             {
                 moreReplies > 0 &&
                 <div className="show-more-replies" onClick={(e) => { e.stopPropagation(); props.fetchMoreReplies(props.path);  }}>
-                    {moreReplies + (moreReplies > 1 ? " more replies" : "more reply")}
+                    {moreReplies + (moreReplies > 1 ? " more replies" : " more reply")}
                 </div>
             }
         </div>

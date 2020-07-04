@@ -4,11 +4,11 @@
     margin-bottom: 20px;
     height: 20px;
     padding: 20px 0px 20px 0px;
-    box-shadow: 4px 4px #c8c8c8;
+    box-shadow: 4px 4px lightgray;
     border-radius: 25px 25px 25px 25px;
     border: none;
     display: table;
-    background-color: lightgray;
+    background-color: var(--gray);
     font-size: 18px;
     text-align: center;
     cursor: pointer;
@@ -18,10 +18,18 @@
     outline: none;
 }
 
+.item-voter-0 {
+    background-color: var(--halal-color);
+}
+
+.item-voter-1 {
+    background-color: var(--haram-color);
+}
+
 .item-voter-0-selected {
-    background-color: #c8ffe6;
+    background-color: var(--halal-compliment-color);
 }
 
 .item-voter-1-selected {
-    background-color: #ffc8e6;
+    background-color: var(--haram-compliment-color);
 }
