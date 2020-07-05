@@ -176,7 +176,7 @@ export const AppShellComponent = (props: any) => {
   return (
     <UserContext.Provider value={state.userDetails}>
       <div className="app-shell">
-        {<SearchComponent id={searchId} />}
+        <SearchComponent id={searchId} />
         <table id={commentsTableId} className="comments-table">
           <tbody>
             <tr>
