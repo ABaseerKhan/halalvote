@@ -14,9 +14,10 @@ import { Judgment } from '../types';
 // style imports
 import './app-shell.css';
 import { ItemVotesComponent } from './item-votes/item-votes';
+import { SearchComponent } from './search/search';
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean }>({
+  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean; }>({
     userDetails: {
       username: cookies.get('username'),
       sessiontoken: cookies.get('sessiontoken'),
@@ -104,6 +105,7 @@ export const AppShellComponent = (props: any) => {
   const numHalalComments = item?.numHalalComments != undefined ? item.numHalalComments : 0;
   const numHaramComments = item?.numHaramComments != undefined ? item.numHaramComments : 0;
 
+  const searchId = "search";
   const menuId = "menu";
   const itemCarouselId = "itemCarousel";
   const descriptionId = "description";
@@ -111,22 +113,25 @@ export const AppShellComponent = (props: any) => {
   const analyticsId = "analytics";
 
   window.onwheel = function (event: any) {
-    let canMove = canMoveMenu(event);
-    let menu = document.getElementById(menuId);
-    let itemCarousel = document.getElementById(itemCarouselId);
-    let description = document.getElementById(descriptionId);
-    let commentsTable = document.getElementById(commentsTableId);
-    let analytics = document.getElementById(analyticsId);
+    const canMove = canMoveMenu(event);
+    const menu = document.getElementById(menuId);
+    const search = document.getElementById(searchId);
+    const itemCarousel = document.getElementById(itemCarouselId);
+    const description = document.getElementById(descriptionId);
+    const commentsTable = document.getElementById(commentsTableId);
+    const analytics = document.getElementById(analyticsId);
 
     if (canMove && menu && itemCarousel && description && commentsTable && analytics) {
       if (menu.style.top) {
         if (event.deltaY < 0) {
           menu.style.top = Math.min(parseInt(menu.style.top) - event.deltaY, 0) + "px";
           itemCarousel.style.top = Math.min(parseInt(itemCarousel.style.top) - event.deltaY, 60) + "px";
+          if (search) search.style.paddingTop = Math.min(parseInt(search.style.paddingTop) - event.deltaY, 120) + "px";
           description.style.paddingTop = Math.min(parseInt(description.style.paddingTop) - event.deltaY, 120) + "px";
           commentsTable.style.paddingTop = Math.min(parseInt(commentsTable.style.paddingTop) - event.deltaY, 120) + "px";
           analytics.style.paddingTop = Math.min(parseInt(analytics.style.paddingTop) - event.deltaY, 120) + "px";
 
+          if (search) search.style.paddingBottom = 120 - parseInt(search.style.paddingTop) + "px";
           description.style.paddingBottom = 120 - parseInt(description.style.paddingTop) + "px";
           commentsTable.style.paddingBottom = 120 - parseInt(commentsTable.style.paddingTop) + "px";
           analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
@@ -171,6 +176,7 @@ export const AppShellComponent = (props: any) => {
   return (
     <UserContext.Provider value={state.userDetails}>
       <div className="app-shell">
+        {<SearchComponent id={searchId} />}
         <table id={commentsTableId} className="comments-table">
           <tbody>
             <tr>
