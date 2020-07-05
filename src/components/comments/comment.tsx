@@ -133,34 +133,32 @@ export const CommentComponent = (props: CommentComponentProps) => {
 
     return (
         state.collapsed ? CommentHeader : 
-        <div>
-            <div id={`comment-${state.comment.id}`} onClick={(e) => { if (isHighlighted) e.stopPropagation(); }} className={commentBorderClass}>
-                {CommentHeader}
-                {!isHighlighted && <div className={"comment-tail-" + judgment} onClick={toggleCollapse}></div>}
-                <div className="comment">
-                    <Linkify><div dangerouslySetInnerHTML={{__html: props.comment.comment}}/></Linkify>
-                </div>
-                <div className="comment-actions">
-                    <span 
-                        className={"reply-button"} 
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            props.highlightComment(props.path);
-                        }}
+        <div id={`comment-${state.comment.id}`} onClick={(e) => { if (isHighlighted) e.stopPropagation(); }} className={commentBorderClass}>
+            {CommentHeader}
+            {!isHighlighted && <div className={"comment-tail-" + judgment} onClick={toggleCollapse}></div>}
+            <div className="comment">
+                <Linkify><div dangerouslySetInnerHTML={{__html: props.comment.comment}}/></Linkify>
+            </div>
+            <div className="comment-actions">
+                <span 
+                    className={"reply-button"} 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        props.highlightComment(props.path);
+                    }}
+                >
+                    Reply
+                </span>
+                {
+                    props.comment.username === username &&
+                    !(props.comment.comment === "__deleted__" && props.comment.numReplies > 0) &&
+                    <span
+                        className={"delete-button"}
+                        onClick={() => props.deleteComment(props.path)}
                     >
-                        Reply
+                        🗑️
                     </span>
-                    {
-                        props.comment.username === username &&
-                        !(props.comment.comment === "__deleted__" && props.comment.numReplies > 0) &&
-                        <span
-                            className={"delete-button"}
-                            onClick={() => props.deleteComment(props.path)}
-                        >
-                            🗑️
-                        </span>
-                    }
-                </div>
+                }
             </div>
             <div className="replies">
                 {
