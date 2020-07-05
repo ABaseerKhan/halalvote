@@ -17,7 +17,7 @@ import { ItemVotesComponent } from './item-votes/item-votes';
 import { SearchComponent } from './search/search';
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean; }>({
+  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean; scrollPosition: number }>({
     userDetails: {
       username: cookies.get('username'),
       sessiontoken: cookies.get('sessiontoken'),
@@ -25,10 +25,14 @@ export const AppShellComponent = (props: any) => {
     items: [],
     itemIndex: 0,
     loginDisplayed: false,
+    scrollPosition: 934,
   });
 
   useEffect(() => {
     fetchItems();
+    setTimeout(() => {
+      document.getElementById('app-shell')?.scrollTo(0, 934);
+    }, 500)
   }, [state.userDetails])
 
   const fetchItems = async (itemsTofetch?: string[]) => {
@@ -180,7 +184,7 @@ export const AppShellComponent = (props: any) => {
 
   return (
     <UserContext.Provider value={state.userDetails}>
-      <div className="app-shell">
+      <div id="app-shell" className="app-shell" >
         <SearchComponent id={searchId} />
         <table id={commentsTableId} className="comments-table">
           <tbody>
