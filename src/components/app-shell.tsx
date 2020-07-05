@@ -109,7 +109,7 @@ export const AppShellComponent = (props: any) => {
   const menuId = "menu";
   const itemCarouselId = "itemCarousel";
   const descriptionId = "description";
-  const commentsTableId = "commentsTableId";
+  const commentsTableId = "commentsTable";
   const analyticsId = "analytics";
 
   window.onwheel = function (event: any) {
@@ -121,34 +121,39 @@ export const AppShellComponent = (props: any) => {
     const commentsTable = document.getElementById(commentsTableId);
     const analytics = document.getElementById(analyticsId);
 
-    if (canMove && menu && itemCarousel && description && commentsTable && analytics) {
+    if (canMove && menu && search && itemCarousel && description && commentsTable && analytics) {
       if (menu.style.top) {
         if (event.deltaY < 0) {
           menu.style.top = Math.min(parseInt(menu.style.top) - event.deltaY, 0) + "px";
           itemCarousel.style.top = Math.min(parseInt(itemCarousel.style.top) - event.deltaY, 60) + "px";
-          if (search) search.style.paddingTop = Math.min(parseInt(search.style.paddingTop) - event.deltaY, 120) + "px";
+          search.style.paddingTop = Math.min(parseInt(search.style.paddingTop) - event.deltaY, 120) + "px";
           description.style.paddingTop = Math.min(parseInt(description.style.paddingTop) - event.deltaY, 120) + "px";
           commentsTable.style.paddingTop = Math.min(parseInt(commentsTable.style.paddingTop) - event.deltaY, 120) + "px";
           analytics.style.paddingTop = Math.min(parseInt(analytics.style.paddingTop) - event.deltaY, 120) + "px";
 
-          if (search) search.style.paddingBottom = 120 - parseInt(search.style.paddingTop) + "px";
+          search.style.paddingBottom = 120 - parseInt(search.style.paddingTop) + "px";
           description.style.paddingBottom = 120 - parseInt(description.style.paddingTop) + "px";
           commentsTable.style.paddingBottom = 120 - parseInt(commentsTable.style.paddingTop) + "px";
           analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
-        } else if (event.deltaY > 0) {
-            menu.style.top = Math.max(parseInt(menu.style.top) - event.deltaY, -60) + "px";
-            itemCarousel.style.top = Math.max(parseInt(itemCarousel.style.top) - event.deltaY, 0) + "px";
-            description.style.paddingTop = Math.max(parseInt(description.style.paddingTop) - event.deltaY, 60) + "px";
-            commentsTable.style.paddingTop = Math.max(parseInt(commentsTable.style.paddingTop) - event.deltaY, 60) + "px";
-            analytics.style.paddingTop = Math.max(parseInt(analytics.style.paddingTop) - event.deltaY, 60) + "px";
 
-            description.style.paddingBottom = 120 - parseInt(description.style.paddingTop) + "px";
-            commentsTable.style.paddingBottom = 120 - parseInt(commentsTable.style.paddingTop) + "px";
-            analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
+        } else if (event.deltaY > 0) {
+          menu.style.top = Math.max(parseInt(menu.style.top) - event.deltaY, -60) + "px";
+          itemCarousel.style.top = Math.max(parseInt(itemCarousel.style.top) - event.deltaY, 0) + "px";
+          search.style.paddingTop = Math.max(parseInt(search.style.paddingTop) - event.deltaY, 60) + "px";
+          description.style.paddingTop = Math.max(parseInt(description.style.paddingTop) - event.deltaY, 60) + "px";
+          commentsTable.style.paddingTop = Math.max(parseInt(commentsTable.style.paddingTop) - event.deltaY, 60) + "px";
+          analytics.style.paddingTop = Math.max(parseInt(analytics.style.paddingTop) - event.deltaY, 60) + "px";
+
+          search.style.paddingBottom = 120 - parseInt(search.style.paddingTop) + "px";
+          description.style.paddingBottom = 120 - parseInt(description.style.paddingTop) + "px";
+          commentsTable.style.paddingBottom = 120 - parseInt(commentsTable.style.paddingTop) + "px";
+          analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
         }
+
       } else {
         menu.style.top = "0px";
         itemCarousel.style.top = "60px";
+        search.style.paddingTop = "120px";
         description.style.paddingTop = "120px";
         commentsTable.style.paddingTop = "120px";
         analytics.style.paddingTop = "120px";
