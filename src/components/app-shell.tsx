@@ -114,6 +114,8 @@ export const AppShellComponent = (props: any) => {
   const itemCarouselId = "itemCarousel";
   const descriptionId = "description";
   const commentsTableId = "commentsTable";
+  const commentsCardZeroId = "comments-card-0";
+  const commentsCardOneId = "comments-card-1";
   const analyticsId = "analytics";
 
   window.onwheel = function (event: any) {
@@ -123,9 +125,11 @@ export const AppShellComponent = (props: any) => {
     const itemCarousel = document.getElementById(itemCarouselId);
     const description = document.getElementById(descriptionId);
     const commentsTable = document.getElementById(commentsTableId);
+    const commentsCardZero = document.getElementById(commentsCardZeroId);
+    const commentsCardOne = document.getElementById(commentsCardOneId);
     const analytics = document.getElementById(analyticsId);
 
-    if (canMove && menu && search && itemCarousel && description && commentsTable && analytics) {
+    if (canMove && menu && search && itemCarousel && description && commentsTable && commentsCardZero && commentsCardOne && analytics) {
       if (menu.style.top) {
         if (event.deltaY < 0) {
           menu.style.top = Math.min(parseInt(menu.style.top) - event.deltaY, 0) + "px";
@@ -154,12 +158,17 @@ export const AppShellComponent = (props: any) => {
           analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
         }
 
+        commentsCardZero.style.height = `calc(60vh - ${commentsTable.style.paddingTop} + 120px)`;
+        commentsCardOne.style.height = `calc(60vh - ${commentsTable.style.paddingTop} + 120px)`;
+
       } else {
         menu.style.top = "0px";
         itemCarousel.style.top = "60px";
         search.style.paddingTop = "120px";
         description.style.paddingTop = "120px";
         commentsTable.style.paddingTop = "120px";
+        commentsCardZero.style.height = "60vh";
+        commentsCardOne.style.height = "60vh";
         analytics.style.paddingTop = "120px";
         description.style.paddingBottom = "0px";
         commentsTable.style.paddingBottom = "0px";
@@ -188,6 +197,7 @@ export const AppShellComponent = (props: any) => {
         <SearchComponent id={searchId} />
         <table id={commentsTableId} className="comments-table">
           <tbody>
+            <tr className="comments-table-empty-row"/>
             <tr>
               <td className="comments-table-column">
                 <ItemVotesComponent judgment={Judgment.HARAM} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
@@ -196,6 +206,7 @@ export const AppShellComponent = (props: any) => {
                 <ItemVotesComponent judgment={Judgment.HALAL} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
               </td>
             </tr>
+            <tr className="comments-table-empty-row"/>
             <tr>
               <td className="comments-table-column">
                 <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />

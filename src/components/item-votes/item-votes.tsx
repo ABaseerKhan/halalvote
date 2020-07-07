@@ -70,15 +70,15 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
             if (halalVotes != undefined && haramVotes != undefined) {
                 if (halalVotes > 0 || haramVotes > 0) {
                     return <span>
-                        <span>{`🔥 Haram - ${haramVotes} `}</span>
+                        <span>{`😈 Haram - ${haramVotes} `}</span>
                         <span className={"votes-bullet-separator"}>&bull;</span>
-                        <span>{` ${Math.round((haramVotes / (halalVotes + haramVotes) ) * 100)}% 🔥`}</span>
+                        <span>{` ${Math.round((haramVotes / (halalVotes + haramVotes) ) * 100)}% 😈`}</span>
                     </span>
                 } else {
-                    return <span>{`🔥 Haram - ${halalVotes} 🔥`}</span>
+                    return <span>{`😈 Haram - ${halalVotes} 😈`}</span>
                 }
             } else {
-                return <span>{"🔥 Haram 🔥"}</span>
+                return <span>{"😈 Haram 😈"}</span>
             }
         default:
             return <span></span>

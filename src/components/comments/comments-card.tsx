@@ -159,9 +159,10 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const moreComments = totalTopLevelComments - state.comments.length;
     const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
     const commentsContainerId = `comments-container-${judgment.toString()}`;
+    const commentsCardId = "comments-card-" + judgment.toString();
 
     return(
-        <div className={"comments-card-" + judgment.toString()} onClick={() => highlightComment(undefined)}>
+        <div id={commentsCardId} className={commentsCardId} onClick={() => highlightComment(undefined)}>
             <div id={commentsContainerId} className="comments-container">
                 {
                     state.comments.map((comment: Comment, i: number) => {

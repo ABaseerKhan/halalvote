@@ -13,15 +13,19 @@
 }
 
 .comments-table {
-  height: 90%;
+  display: block;
+  height: 100%;
   width: 100%;
   padding-top: 120px;
-  margin-bottom: 10%;
   scroll-snap-align: start;
 }
 
 .comments-table-column {
   width: 50%;
+}
+
+.comments-table-empty-row {
+  height: 10px;
 }
 
 .other-page {

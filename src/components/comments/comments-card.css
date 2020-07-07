@@ -17,7 +17,7 @@
 
 .comments-container {
     position: relative;
-    height: calc(100% - 60px);
+    height: calc(100% - 25px - 1.5em);
     padding: 25px 25px 0px 25px;
     border-radius: 25px 25px 25px 25px;
     overflow: scroll;
