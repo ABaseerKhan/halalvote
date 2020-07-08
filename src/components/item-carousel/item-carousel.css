@@ -5,6 +5,8 @@
     display: flex;
     background: rgb(0, 0, 0, 0.2);
     top: 60px;
+    opacity: 0.0;
+    visibility: hidden;
 }
 
 .item-text {
