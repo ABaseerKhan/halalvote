@@ -103,6 +103,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         
         const updatedComments = addCommentsLocally(state.comments, [commentObject], highlightedComment && state.pathToHighlightedComment);
         setState(prevState => ({ ...prevState, comments: updatedComments }));
+        highlightComment(state.pathToHighlightedComment ? state.pathToHighlightedComment.concat(0) : [0]);
     }
 
     const deleteComment = async (pathToComment: number[]) => {
