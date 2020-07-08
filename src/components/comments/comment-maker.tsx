@@ -23,7 +23,9 @@ export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
         if (quillEditor.current) {
             const placeholderText = (props.replyToUsername && "Reply to " + props.replyToUsername) || "Comment";
             quillEditor.current.getEditor().root.dataset.placeholder = placeholderText;
-            quillEditor.current.focus();
+            if (props.replyToUsername) {
+                quillEditor.current.focus();
+            }
         }
     }, [props.replyToUsername])
     const submitComment = (event: any) => {
