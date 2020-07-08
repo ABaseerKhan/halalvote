@@ -158,8 +158,8 @@ export const AppShellComponent = (props: any) => {
           analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
         }
 
-        commentsCardZero.style.height = `calc(60vh - ${commentsTable.style.paddingTop} + 120px)`;
-        commentsCardOne.style.height = `calc(60vh - ${commentsTable.style.paddingTop} + 120px)`;
+        commentsCardZero.style.height = `calc(80% - ${commentsTable.style.paddingTop} + 120px)`;
+        commentsCardOne.style.height = `calc(80% - ${commentsTable.style.paddingTop} + 120px)`;
 
       } else {
         menu.style.top = "0px";
@@ -167,8 +167,8 @@ export const AppShellComponent = (props: any) => {
         search.style.paddingTop = "120px";
         description.style.paddingTop = "120px";
         commentsTable.style.paddingTop = "120px";
-        commentsCardZero.style.height = "60vh";
-        commentsCardOne.style.height = "60vh";
+        commentsCardZero.style.height = "80%";
+        commentsCardOne.style.height = "80%";
         analytics.style.paddingTop = "120px";
         description.style.paddingBottom = "0px";
         commentsTable.style.paddingBottom = "0px";
@@ -199,10 +199,10 @@ export const AppShellComponent = (props: any) => {
           <tbody>
             <tr className="comments-table-empty-row"/>
             <tr>
-              <td className="comments-table-column">
+              <td className="comments-table-column vote-column">
                 <ItemVotesComponent judgment={Judgment.HARAM} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
               </td>
-              <td className="comments-table-column">
+              <td className="comments-table-column vote-column">
                 <ItemVotesComponent judgment={Judgment.HALAL} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
               </td>
             </tr>

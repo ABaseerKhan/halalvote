@@ -13,7 +13,6 @@
 }
 
 .comments-table {
-  display: block;
   height: 100%;
   width: 100%;
   padding-top: 120px;
@@ -22,6 +21,11 @@
 
 .comments-table-column {
   width: 50%;
+  vertical-align: top;
+}
+
+.vote-column {
+  height: 20px;
 }
 
 .comments-table-empty-row {
