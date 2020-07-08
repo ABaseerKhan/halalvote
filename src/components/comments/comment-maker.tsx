@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import TextareaAutosize from 'react-textarea-autosize';
+import React, { useState, useEffect, useRef, ReactElement } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import { ReactComponent as SendButtonSVG } from '../../icons/send-button.svg';
 
@@ -17,14 +16,16 @@ interface CommentMakerComponentProps {
 };
 
 export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
-    const [state, setState] = useState({
-        holdingDownShift: false
-    });
-
     const [value, setValue] = useState('');
+    const quillEditor = useRef<ReactQuill>(null);
 
-    const textAreaId = props.judgment.toString() + "-comment";
-
+    useEffect(() => {
+        if (quillEditor.current) {
+            const placeholderText = (props.replyToUsername && "Reply to " + props.replyToUsername) || "Comment";
+            quillEditor.current.getEditor().root.dataset.placeholder = placeholderText;
+            quillEditor.current.focus();
+        }
+    }, [props.replyToUsername])
     const submitComment = (event: any) => {
         if (value !== "") {
             event.preventDefault();
@@ -32,10 +33,9 @@ export const CommentMakerComponent = (props: CommentMakerComponentProps) => {
             setValue('');
         }
     };
-
     return (
         <div className={"comment-maker-card-" + props.judgment} onClick={(e) => { e.stopPropagation()}}>
-            <ReactQuill className={"comment-maker-input"} theme="snow" value={value} onChange={setValue} modules={modules} formats={formats}/>
+            <ReactQuill ref={quillEditor} className={"comment-maker-input"} theme="snow" value={value} onChange={setValue} modules={modules} formats={formats} />
             <SendButtonSVG className={"comment-maker-button-" + props.judgment} onClick={submitComment}/>
         </div>
     )
