@@ -21,6 +21,7 @@
     padding: 25px 25px 0px 25px;
     border-radius: 25px 25px 25px 25px;
     overflow: scroll;
+    scroll-behavior: smooth;
 }
 
 .comments-container::-webkit-scrollbar {

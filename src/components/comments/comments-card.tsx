@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useRef } from 'react';
 import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
@@ -33,9 +33,12 @@ const initialState = {
 const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const { judgment, itemName, numHalalComments, numHaramComments, refreshItem } = props;
     const totalTopLevelComments = (judgment === Judgment.HALAL ? numHalalComments : numHaramComments) || 0;
+
     const { username, sessiontoken } = React.useContext(UserContext)
 
     const [state, setState] = useState<CommentsCardState>(initialState);
+
+    const commentMakerRef = useRef<any>(null);
 
     useDebouncedEffect(() => {
         if (itemName) {
@@ -131,28 +134,33 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     }
 
     const highlightComment = (path: number[] | undefined) => {
+        const commentsContainerElement = document.getElementById(commentsContainerId);
         setState(prevState => ({
             ...prevState,
             pathToHighlightedComment: path,
         }));
-        let highlightedComment = getCommentFromPath(state.comments, path);
-        scrollToHighlightedComment(highlightedComment);
+        if (path?.length === 1 && path[0] === 0) {
+            if (commentsContainerElement) {
+                document.getElementById(commentsContainerId)!.scrollTop = 0;
+            };
+            if (commentMakerRef.current) {
+                commentMakerRef.current.focus();
+            };
+        } else {
+            let highlightedComment = getCommentFromPath(state.comments, path);
+            scrollToHighlightedComment(highlightedComment);
+            if (commentMakerRef.current) {
+                commentMakerRef.current.focus();
+            };
+        }
     }
 
     const scrollToHighlightedComment = (highlightedComment: Comment | undefined) => {
         if (highlightedComment) {
             const highlightedCommentElement = document.getElementById("comment-" + highlightedComment.id);
-            const commentsContainerElement = document.getElementById(commentsContainerId);
             
-            if (highlightedCommentElement && commentsContainerElement) {
-                let topPos = highlightedCommentElement.offsetTop;
-                let offsetParent = highlightedCommentElement.offsetParent;
-    
-                while (offsetParent && offsetParent.className != "comments-container") {
-                    topPos += (offsetParent as HTMLElement).offsetTop;
-                    offsetParent = (offsetParent as HTMLElement).offsetParent;
-                }
-                commentsContainerElement.scrollTop =  topPos;
+            if (highlightedCommentElement) {
+                highlightedCommentElement.scrollIntoView({ behavior: "smooth", block: 'nearest' }); 
             }
         }
     }
@@ -187,8 +195,9 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                 }
             </div>
             <CommentMakerComponent 
+                ref={commentMakerRef}
                 judgment={judgment} 
-                callback={createComment} 
+                submitComment={createComment} 
                 replyToUsername={highlightedComment?.username}
             />
             <br/>
