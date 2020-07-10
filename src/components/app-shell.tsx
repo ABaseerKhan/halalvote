@@ -179,8 +179,8 @@ export const AppShellComponent = (props: any) => {
             analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
           }
 
-          commentsCardZero.style.height = `calc(60vh - ${commentsTable.style.paddingTop} + 120px)`;
-          commentsCardOne.style.height = `calc(60vh - ${commentsTable.style.paddingTop} + 120px)`;
+          commentsCardZero.style.height = `calc(70vh - ${commentsTable.style.paddingTop} + 120px)`;
+          commentsCardOne.style.height = `calc(70vh - ${commentsTable.style.paddingTop} + 120px)`;
 
         } else {
           menu.style.top = "0px";
@@ -188,8 +188,8 @@ export const AppShellComponent = (props: any) => {
           search.style.paddingTop = "60px";
           description.style.paddingTop = "120px";
           commentsTable.style.paddingTop = "120px";
-          commentsCardZero.style.height = "60vh";
-          commentsCardOne.style.height = "60vh";
+          commentsCardZero.style.height = "70vh";
+          commentsCardOne.style.height = "70vh";
           analytics.style.paddingTop = "120px";
           description.style.paddingBottom = "0px";
           commentsTable.style.paddingBottom = "0px";

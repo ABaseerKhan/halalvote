@@ -55,13 +55,23 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
         case Judgment.HALAL:
             if (halalVotes != undefined && haramVotes != undefined) {
                 if (halalVotes > 0 || haramVotes > 0) {
-                    return <span>
-                        <span>{`👼 Halal - ${halalVotes} `}</span>
-                        <span className={"votes-bullet-separator"}>&bull;</span>
-                        <span>{` ${Math.round((halalVotes / (halalVotes + haramVotes) ) * 100)}% 👼`}</span>
-                    </span>
+                    return (
+                        <span>
+                            <span>{`👼 Halal `}</span>
+                            <span className={"votes-bullet-separator"}>&bull;</span>
+                            <span>{` ${halalVotes} `}</span>
+                            <span className={"votes-bullet-separator"}>&bull;</span>
+                            <span>{` ${Math.round((halalVotes / (halalVotes + haramVotes) ) * 100)}% 👼`}</span>
+                        </span>
+                    )
                 } else {
-                    return <span>{`👼 Halal - ${halalVotes} 👼`}</span>
+                    return (
+                        <span>
+                            <span>{`👼 Halal`}</span>
+                            <span className={"votes-bullet-separator"}>&bull;</span>
+                            <span>{`${halalVotes} 👼`}</span>
+                        </span>
+                    )
                 }
             } else {
                 return <span>{"👼 Halal 👼"}</span>
@@ -69,13 +79,23 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
         case Judgment.HARAM:
             if (halalVotes != undefined && haramVotes != undefined) {
                 if (halalVotes > 0 || haramVotes > 0) {
-                    return <span>
-                        <span>{`😈 Haram - ${haramVotes} `}</span>
-                        <span className={"votes-bullet-separator"}>&bull;</span>
-                        <span>{` ${Math.round((haramVotes / (halalVotes + haramVotes) ) * 100)}% 😈`}</span>
-                    </span>
+                    return (
+                        <span>
+                            <span>{`😈 Haram `}</span>
+                            <span className={"votes-bullet-separator"}>&bull;</span>
+                            <span>{` ${haramVotes} `}</span>
+                            <span className={"votes-bullet-separator"}>&bull;</span>
+                            <span>{` ${Math.round((haramVotes / (halalVotes + haramVotes) ) * 100)}% 😈`}</span>
+                        </span>
+                    )
                 } else {
-                    return <span>{`😈 Haram - ${halalVotes} 😈`}</span>
+                    return (
+                        <span>
+                            <span>{`😈 Haram ${halalVotes} 😈`}</span>
+                            <span className={"votes-bullet-separator"}>&bull;</span>
+                            <span>{`${haramVotes} 😈`}</span>
+                        </span>
+                    )
                 }
             } else {
                 return <span>{"😈 Haram 😈"}</span>

@@ -59,7 +59,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                 "username": username,
                 "parentId": parentComment?.id,
                 "depth": 2, 
-                "n": 2,
+                "n": 5,
                 "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : state.comments?.map((r) => r.id),
             },
             additionalHeaders: { },
