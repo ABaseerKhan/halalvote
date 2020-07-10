@@ -47,20 +47,23 @@
     padding-right: 5px;
     background-clip: content-box;
     background-color: var(--gray);
+    opacity: .2;
     width: 2px;
     position: absolute;
 }
 
-.comment-tail-0:hover {
+.comment-tail-0:hover, .comment-tail-1:hover {
     cursor: pointer;
-    background-color: var(--halal-compliment-color);
+    opacity: 1;
     width: 5px;
 }
 
+.comment-tail-0:hover {
+    background-color: var(--halal-compliment-color);
+}
+
 .comment-tail-1:hover {
-    cursor: pointer;
     background-color: var(--haram-compliment-color);
-    width: 5px;
 }
 
 .comment-header {
