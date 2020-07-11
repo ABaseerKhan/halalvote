@@ -11,3 +11,7 @@ ReactDOM.render(
   <AppShellComponent />,
   document.getElementById('root')
 );
+
+export const elementStyles = {
+  toolbarHeightVh: 5
+}

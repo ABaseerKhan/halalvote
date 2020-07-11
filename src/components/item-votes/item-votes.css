@@ -1,14 +1,14 @@
 .item-voter-0, .item-voter-1 {
     width: 80%;
     margin: auto;
-    height: 20px;
+    height: 5vh;
     padding: 5px 0;
     box-shadow: 4px 4px lightgray;
     border-radius: 25px 25px 25px 25px;
     border: none;
     display: table;
     background-color: var(--gray);
-    font-size: 32px;
+    font-size: 3vh;
     text-align: center;
     cursor: pointer;
 }

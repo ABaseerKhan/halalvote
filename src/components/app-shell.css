@@ -15,7 +15,7 @@
 .comments-table {
   height: 100%;
   width: 100%;
-  padding-top: 120px;
+  padding-top: 20vh;
   scroll-snap-align: start;
 }
 
@@ -37,7 +37,7 @@
   height: 100%;
   width: 100%;
   text-align: center;
-  padding-top: 120px;
+  padding-top: 20vh;
   padding-bottom: 0px;
   scroll-snap-align: start;
 }

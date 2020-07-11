@@ -41,3 +41,7 @@ export const timeSince = (timeStampString: string) => {
         return Math.round(elapsed/msPerYear ) + ' years ago';   
     }
 }
+
+export const vhToPixels = (vh: number) => {
+    return (vh / 100.0) * window.innerHeight;
+}

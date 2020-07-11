@@ -1,9 +1,9 @@
 .menu {
     position: fixed;
     width: 100%;
-    height: 60px;
+    height: 10vh;
     background-color: var(--neutral-color);
-    top: 0px;
+    top: 0;
 }
 
 .login-button {

@@ -7,11 +7,13 @@ import { Item } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
 import Cookies from 'universal-cookie';
+import { vhToPixels } from "../utils";
 
 // type imports
 import { Judgment } from '../types';
 
 // style imports
+import { elementStyles } from "../index";
 import './app-shell.css';
 import { ItemVotesComponent } from './item-votes/item-votes';
 import { SearchComponent } from './search/search';
@@ -131,14 +133,15 @@ export const AppShellComponent = (props: any) => {
 
   if (appShell && itemCarousel) {
     appShell.onscroll = function (event: any) {
-      const windowHeight = window.innerHeight / 2.0;
+      const { toolbarHeightVh } = elementStyles;
+      const halfWindowHeight = window.innerHeight / 2.0;
   
-      if (appShell.scrollTop > windowHeight) {
+      if (appShell.scrollTop > halfWindowHeight) {
         itemCarousel.style.visibility = "visible";
         itemCarousel.style.opacity = "1.0";
-      } else if (appShell.scrollTop > 60) {
+      } else if (appShell.scrollTop > (toolbarHeightVh/100.0) * window.innerHeight) {
         itemCarousel.style.visibility = "visible";
-        itemCarousel.style.opacity = ((appShell.scrollTop - 60.0)/(windowHeight - 60.0)).toString();
+        itemCarousel.style.opacity = ((appShell.scrollTop - (toolbarHeightVh/100.0) * window.innerHeight)/(halfWindowHeight - (toolbarHeightVh/100.0) * window.innerHeight)).toString();
       } else {
         itemCarousel.style.opacity = "0.0";
         itemCarousel.style.visibility = "hidden";
@@ -148,49 +151,51 @@ export const AppShellComponent = (props: any) => {
 
   if (appShell && menu && itemCarousel && search && commentsTable && commentsCardZero && commentsCardOne && description && analytics) {
     window.onwheel = function (event: any) {
+      const { toolbarHeightVh } = elementStyles;
       const canMove = canMoveMenu(event);
+      const toolbarHeightPx = vhToPixels(toolbarHeightVh);
 
       if (canMove) {
         if (menu.style.top) {
           if (event.deltaY < 0) {
             menu.style.top = Math.min(parseInt(menu.style.top) - event.deltaY, 0) + "px";
-            itemCarousel.style.top = Math.min(parseInt(itemCarousel.style.top) - event.deltaY, 60) + "px";
-            search.style.paddingTop = Math.min(parseInt(search.style.paddingTop) - event.deltaY, 60) + "px";
-            description.style.paddingTop = Math.min(parseInt(description.style.paddingTop) - event.deltaY, 120) + "px";
-            commentsTable.style.paddingTop = Math.min(parseInt(commentsTable.style.paddingTop) - event.deltaY, 120) + "px";
-            analytics.style.paddingTop = Math.min(parseInt(analytics.style.paddingTop) - event.deltaY, 120) + "px";
+            itemCarousel.style.top = Math.min(parseInt(itemCarousel.style.top) - event.deltaY, toolbarHeightPx) + "px";
+            search.style.paddingTop = Math.min(parseInt(search.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
+            description.style.paddingTop = Math.min(parseInt(description.style.paddingTop) - event.deltaY, toolbarHeightPx * 2) + "px";
+            commentsTable.style.paddingTop = Math.min(parseInt(commentsTable.style.paddingTop) - event.deltaY, toolbarHeightPx * 2) + "px";
+            analytics.style.paddingTop = Math.min(parseInt(analytics.style.paddingTop) - event.deltaY, toolbarHeightPx * 2) + "px";
             
-            search.style.paddingBottom = 60 - parseInt(search.style.paddingTop) + "px";
-            description.style.paddingBottom = 120 - parseInt(description.style.paddingTop) + "px";
-            commentsTable.style.paddingBottom = 120 - parseInt(commentsTable.style.paddingTop) + "px";
-            analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
+            search.style.paddingBottom = toolbarHeightPx - parseInt(search.style.paddingTop) + "px";
+            description.style.paddingBottom = toolbarHeightPx * 2 - parseInt(description.style.paddingTop) + "px";
+            commentsTable.style.paddingBottom = toolbarHeightPx * 2 - parseInt(commentsTable.style.paddingTop) + "px";
+            analytics.style.paddingBottom = toolbarHeightPx * 2 - parseInt(analytics.style.paddingTop) + "px";
 
           } else if (event.deltaY > 0) {
-            menu.style.top = Math.max(parseInt(menu.style.top) - event.deltaY, -60) + "px";
+            menu.style.top = Math.max(parseInt(menu.style.top) - event.deltaY, - toolbarHeightPx) + "px";
             itemCarousel.style.top = Math.max(parseInt(itemCarousel.style.top) - event.deltaY, 0) + "px";
             search.style.paddingTop = Math.max(parseInt(search.style.paddingTop) - event.deltaY, 0) + "px";
-            description.style.paddingTop = Math.max(parseInt(description.style.paddingTop) - event.deltaY, 60) + "px";
-            commentsTable.style.paddingTop = Math.max(parseInt(commentsTable.style.paddingTop) - event.deltaY, 60) + "px";
-            analytics.style.paddingTop = Math.max(parseInt(analytics.style.paddingTop) - event.deltaY, 60) + "px";
+            description.style.paddingTop = Math.max(parseInt(description.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
+            commentsTable.style.paddingTop = Math.max(parseInt(commentsTable.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
+            analytics.style.paddingTop = Math.max(parseInt(analytics.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
 
-            search.style.paddingBottom = 60 - parseInt(search.style.paddingTop) + "px";
-            description.style.paddingBottom = 120 - parseInt(description.style.paddingTop) + "px";
-            commentsTable.style.paddingBottom = 120 - parseInt(commentsTable.style.paddingTop) + "px";
-            analytics.style.paddingBottom = 120 - parseInt(analytics.style.paddingTop) + "px";
+            search.style.paddingBottom = toolbarHeightPx - parseInt(search.style.paddingTop) + "px";
+            description.style.paddingBottom = toolbarHeightPx * 2 - parseInt(description.style.paddingTop) + "px";
+            commentsTable.style.paddingBottom = toolbarHeightPx * 2 - parseInt(commentsTable.style.paddingTop) + "px";
+            analytics.style.paddingBottom = toolbarHeightPx * 2 - parseInt(analytics.style.paddingTop) + "px";
           }
 
-          commentsCardZero.style.height = `calc(60vh - ${commentsTable.style.paddingTop} + 120px)`;
-          commentsCardOne.style.height = `calc(60vh - ${commentsTable.style.paddingTop} + 120px)`;
+          commentsCardZero.style.height = `calc(60vh - ${commentsTable.style.paddingTop} + ${toolbarHeightVh * 2}vh)`;
+          commentsCardOne.style.height = `calc(60vh - ${commentsTable.style.paddingTop} + ${toolbarHeightVh * 2}vh)`;
 
         } else {
           menu.style.top = "0px";
-          itemCarousel.style.top = "60px";
-          search.style.paddingTop = "60px";
-          description.style.paddingTop = "120px";
-          commentsTable.style.paddingTop = "120px";
+          itemCarousel.style.top = toolbarHeightPx + "px";
+          search.style.paddingTop = toolbarHeightPx + "px";
+          description.style.paddingTop = (toolbarHeightPx * 2) + "px";
+          commentsTable.style.paddingTop = (toolbarHeightPx * 2) + "px";
           commentsCardZero.style.height = "60vh";
           commentsCardOne.style.height = "60vh";
-          analytics.style.paddingTop = "120px";
+          analytics.style.paddingTop = (toolbarHeightPx * 2) + "px";
           description.style.paddingBottom = "0px";
           commentsTable.style.paddingBottom = "0px";
           analytics.style.paddingBottom = "0px";
