@@ -7,3 +7,23 @@
     padding-bottom: 0px;
     scroll-snap-align: start;
 }
+
+.search-bar {
+    position: relative;
+    margin: auto;
+    top: 20vh;
+    width: 60vh;
+}
+
+.search-header {
+    font-size: 64px;
+}
+
+.search-bar-input {
+    border-radius: 24px;
+    border: 1px solid #dfe1e5;
+}
+
+.search-bar-input:focus {
+    outline: none;
+}
