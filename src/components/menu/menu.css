@@ -2,7 +2,7 @@
     position: fixed;
     width: 100%;
     height: 60px;
-    background-color: cadetblue;
+    background-color: var(--neutral-color);
     top: 0px;
 }
 

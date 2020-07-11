@@ -3,7 +3,7 @@
     height: 60px;
     width: 100%;
     display: flex;
-    background: rgb(0, 0, 0, 0.2);
+    background: var(--neutral-color-transparent);
     top: 60px;
     opacity: 0.0;
     visibility: hidden;

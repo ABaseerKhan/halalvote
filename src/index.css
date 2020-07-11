@@ -3,17 +3,21 @@ html, body {
   padding: 0;
   height: 100%;
   font-family: verdana, arial, helvetica, sans-serif;
-  background-color: #f0f0f0;
+  color: #6d6d6d;
+  background-color: #d4d4d4;
   position: relative;
 }
 
 :root {
-  --haram-color: #ffc8e6;
-  --halal-color: #c8ffe6;
+  --haram-color: #C1B8C8;
+  --halal-color: #A9DDD6;
 
-  --haram-compliment-color: rgb(173, 0, 0);
-  --halal-compliment-color: #008b8b;
+  --haram-compliment-color: #9BA0BC;
+  --halal-compliment-color: #7A8B99;
+
+  --neutral-color: #91adc2;
+  --neutral-color-transparent: rgb(145, 173, 194, 0.5);
 
   --link-color: #6495ed;
-  --gray: #969696;
+  --gray: #7A8B99;
 }
