@@ -13,5 +13,6 @@ ReactDOM.render(
 );
 
 export const elementStyles = {
-  toolbarHeightVh: 5
+  toolbarHeightVh: 10,
+  commentsCardHeightVh: 60
 }

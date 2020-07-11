@@ -1,7 +1,7 @@
 .menu {
     position: fixed;
     width: 100%;
-    height: 10vh;
+    height: min(var(--toolbar-height), var(--max-toolbar-height));
     background-color: var(--neutral-color);
     top: 0;
 }

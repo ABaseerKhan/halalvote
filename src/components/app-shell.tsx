@@ -7,7 +7,7 @@ import { Item } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
 import Cookies from 'universal-cookie';
-import { vhToPixels } from "../utils";
+import { vhToPixels, vhToPixelsWithMax } from "../utils";
 
 // type imports
 import { Judgment } from '../types';
@@ -134,14 +134,15 @@ export const AppShellComponent = (props: any) => {
   if (appShell && itemCarousel) {
     appShell.onscroll = function (event: any) {
       const { toolbarHeightVh } = elementStyles;
+      const toolbarHeightPx = vhToPixelsWithMax(toolbarHeightVh);
       const halfWindowHeight = window.innerHeight / 2.0;
   
       if (appShell.scrollTop > halfWindowHeight) {
         itemCarousel.style.visibility = "visible";
         itemCarousel.style.opacity = "1.0";
-      } else if (appShell.scrollTop > (toolbarHeightVh/100.0) * window.innerHeight) {
+      } else if (appShell.scrollTop > toolbarHeightPx) {
         itemCarousel.style.visibility = "visible";
-        itemCarousel.style.opacity = ((appShell.scrollTop - (toolbarHeightVh/100.0) * window.innerHeight)/(halfWindowHeight - (toolbarHeightVh/100.0) * window.innerHeight)).toString();
+        itemCarousel.style.opacity = ((appShell.scrollTop - toolbarHeightPx)/(halfWindowHeight - toolbarHeightPx)).toString();
       } else {
         itemCarousel.style.opacity = "0.0";
         itemCarousel.style.visibility = "hidden";
@@ -151,9 +152,10 @@ export const AppShellComponent = (props: any) => {
 
   if (appShell && menu && itemCarousel && search && commentsTable && commentsCardZero && commentsCardOne && description && analytics) {
     window.onwheel = function (event: any) {
-      const { toolbarHeightVh } = elementStyles;
+      const { toolbarHeightVh, commentsCardHeightVh } = elementStyles;
+      const toolbarHeightPx = vhToPixelsWithMax(toolbarHeightVh);
+      const commentsCardHeightPx = vhToPixels(commentsCardHeightVh);
       const canMove = canMoveMenu(event);
-      const toolbarHeightPx = vhToPixels(toolbarHeightVh);
 
       if (canMove) {
         if (menu.style.top) {
@@ -184,17 +186,19 @@ export const AppShellComponent = (props: any) => {
             analytics.style.paddingBottom = toolbarHeightPx * 2 - parseInt(analytics.style.paddingTop) + "px";
           }
 
-          commentsCardZero.style.height = `calc(60vh - ${commentsTable.style.paddingTop} + ${toolbarHeightVh * 2}vh)`;
-          commentsCardOne.style.height = `calc(60vh - ${commentsTable.style.paddingTop} + ${toolbarHeightVh * 2}vh)`;
+          const calculatedCommentsCardHeight = `${commentsCardHeightPx - parseInt(commentsTable.style.paddingTop) + (toolbarHeightPx * 2)}px`
+
+          commentsCardZero.style.height = calculatedCommentsCardHeight;
+          commentsCardOne.style.height = calculatedCommentsCardHeight;
 
         } else {
           menu.style.top = "0px";
           itemCarousel.style.top = toolbarHeightPx + "px";
-          search.style.paddingTop = toolbarHeightPx + "px";
+          search.style.paddingTop = (toolbarHeightPx * 2) + "px";
           description.style.paddingTop = (toolbarHeightPx * 2) + "px";
           commentsTable.style.paddingTop = (toolbarHeightPx * 2) + "px";
-          commentsCardZero.style.height = "60vh";
-          commentsCardOne.style.height = "60vh";
+          commentsCardZero.style.height = commentsCardHeightPx + "px";
+          commentsCardOne.style.height = commentsCardHeightPx + "px";
           analytics.style.paddingTop = (toolbarHeightPx * 2) + "px";
           description.style.paddingBottom = "0px";
           commentsTable.style.paddingBottom = "0px";

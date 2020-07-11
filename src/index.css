@@ -20,4 +20,7 @@ html, body {
 
   --link-color: #6495ed;
   --gray: #7A8B99;
+
+  --toolbar-height: 10vh;
+  --max-toolbar-height: 60px;
 }

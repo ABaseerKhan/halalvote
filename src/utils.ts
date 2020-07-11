@@ -45,3 +45,7 @@ export const timeSince = (timeStampString: string) => {
 export const vhToPixels = (vh: number) => {
     return (vh / 100.0) * window.innerHeight;
 }
+
+export const vhToPixelsWithMax = (vh: number) => {
+    return Math.min((vh / 100.0) * window.innerHeight, 60);
+}

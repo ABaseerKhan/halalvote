@@ -1,10 +1,10 @@
 .item-carousel {
     position: fixed;
-    height: 10vh;
+    height: min(var(--toolbar-height), var(--max-toolbar-height));
     width: 100%;
     display: flex;
     background: var(--neutral-color-transparent);
-    top: 10vh;
+    top: min(var(--toolbar-height), var(--max-toolbar-height));
     opacity: 0.0;
     visibility: hidden;
 }
