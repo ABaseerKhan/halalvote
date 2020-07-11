@@ -160,49 +160,69 @@ export const AppShellComponent = (props: any) => {
       if (canMove) {
         if (menu.style.top) {
           if (event.deltaY < 0) {
+            // scrolling up
+
+            // fixed tops
             menu.style.top = Math.min(parseInt(menu.style.top) - event.deltaY, 0) + "px";
             itemCarousel.style.top = Math.min(parseInt(itemCarousel.style.top) - event.deltaY, toolbarHeightPx) + "px";
-            search.style.paddingTop = Math.min(parseInt(search.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
-            description.style.paddingTop = Math.min(parseInt(description.style.paddingTop) - event.deltaY, toolbarHeightPx * 2) + "px";
-            commentsTable.style.paddingTop = Math.min(parseInt(commentsTable.style.paddingTop) - event.deltaY, toolbarHeightPx * 2) + "px";
-            analytics.style.paddingTop = Math.min(parseInt(analytics.style.paddingTop) - event.deltaY, toolbarHeightPx * 2) + "px";
             
+            // top paddings
+            search.style.paddingTop = Math.min(parseInt(search.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
+            commentsTable.style.paddingTop = Math.min(parseInt(commentsTable.style.paddingTop) - event.deltaY, toolbarHeightPx * 2) + "px";
+            description.style.paddingTop = commentsTable.style.paddingTop
+            analytics.style.paddingTop = commentsTable.style.paddingTop
+            
+            // bottom paddings
             search.style.paddingBottom = toolbarHeightPx - parseInt(search.style.paddingTop) + "px";
-            description.style.paddingBottom = toolbarHeightPx * 2 - parseInt(description.style.paddingTop) + "px";
-            commentsTable.style.paddingBottom = toolbarHeightPx * 2 - parseInt(commentsTable.style.paddingTop) + "px";
-            analytics.style.paddingBottom = toolbarHeightPx * 2 - parseInt(analytics.style.paddingTop) + "px";
+            commentsTable.style.paddingBottom = (toolbarHeightPx * 2) - parseInt(commentsTable.style.paddingTop) + "px";
+            description.style.paddingBottom = commentsTable.style.paddingBottom
+            analytics.style.paddingBottom = commentsTable.style.paddingBottom
 
           } else if (event.deltaY > 0) {
+            // scrolling down
+
+            // fixed tops
             menu.style.top = Math.max(parseInt(menu.style.top) - event.deltaY, - toolbarHeightPx) + "px";
             itemCarousel.style.top = Math.max(parseInt(itemCarousel.style.top) - event.deltaY, 0) + "px";
+            
+            // top paddings
             search.style.paddingTop = Math.max(parseInt(search.style.paddingTop) - event.deltaY, 0) + "px";
-            description.style.paddingTop = Math.max(parseInt(description.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
             commentsTable.style.paddingTop = Math.max(parseInt(commentsTable.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
-            analytics.style.paddingTop = Math.max(parseInt(analytics.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
+            description.style.paddingTop = commentsTable.style.paddingTop
+            analytics.style.paddingTop = commentsTable.style.paddingTop
 
+            // bottom paddings
             search.style.paddingBottom = toolbarHeightPx - parseInt(search.style.paddingTop) + "px";
-            description.style.paddingBottom = toolbarHeightPx * 2 - parseInt(description.style.paddingTop) + "px";
-            commentsTable.style.paddingBottom = toolbarHeightPx * 2 - parseInt(commentsTable.style.paddingTop) + "px";
-            analytics.style.paddingBottom = toolbarHeightPx * 2 - parseInt(analytics.style.paddingTop) + "px";
+            commentsTable.style.paddingBottom = (toolbarHeightPx * 2) - parseInt(commentsTable.style.paddingTop) + "px";
+            description.style.paddingBottom = commentsTable.style.paddingBottom
+            analytics.style.paddingBottom = commentsTable.style.paddingBottom
           }
 
+          // comment card heights
           const calculatedCommentsCardHeight = `${commentsCardHeightPx - parseInt(commentsTable.style.paddingTop) + (toolbarHeightPx * 2)}px`
-
           commentsCardZero.style.height = calculatedCommentsCardHeight;
           commentsCardOne.style.height = calculatedCommentsCardHeight;
 
         } else {
+          // fixed tops
           menu.style.top = "0px";
           itemCarousel.style.top = toolbarHeightPx + "px";
-          search.style.paddingTop = (toolbarHeightPx * 2) + "px";
-          description.style.paddingTop = (toolbarHeightPx * 2) + "px";
+
+          // top paddings
+          search.style.paddingTop = toolbarHeightPx + "px";
           commentsTable.style.paddingTop = (toolbarHeightPx * 2) + "px";
+          description.style.paddingTop = commentsTable.style.paddingTop;
+          analytics.style.paddingTop = commentsTable.style.paddingTop;
+
+          // bottom paddings
+          search.style.paddingBottom = "0px";
+          commentsTable.style.paddingBottom = "0px";
+          description.style.paddingBottom = "0px";
+          analytics.style.paddingBottom = "0px";
+
+          // comment card heights
           commentsCardZero.style.height = commentsCardHeightPx + "px";
           commentsCardOne.style.height = commentsCardHeightPx + "px";
-          analytics.style.paddingTop = (toolbarHeightPx * 2) + "px";
-          description.style.paddingBottom = "0px";
-          commentsTable.style.paddingBottom = "0px";
-          analytics.style.paddingBottom = "0px";
         }
       }
     }
