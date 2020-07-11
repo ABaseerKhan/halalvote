@@ -14,5 +14,6 @@ ReactDOM.render(
 
 export const elementStyles = {
   toolbarHeightVh: 10,
+  maxToolbarHeightPx: 60,
   commentsCardHeightVh: 60
 }

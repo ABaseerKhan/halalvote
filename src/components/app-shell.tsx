@@ -133,8 +133,8 @@ export const AppShellComponent = (props: any) => {
 
   if (appShell && itemCarousel) {
     appShell.onscroll = function (event: any) {
-      const { toolbarHeightVh } = elementStyles;
-      const toolbarHeightPx = vhToPixelsWithMax(toolbarHeightVh);
+      const { toolbarHeightVh, maxToolbarHeightPx } = elementStyles;
+      const toolbarHeightPx = vhToPixelsWithMax(toolbarHeightVh, maxToolbarHeightPx);
       const halfWindowHeight = window.innerHeight / 2.0;
   
       if (appShell.scrollTop > halfWindowHeight) {
@@ -152,8 +152,8 @@ export const AppShellComponent = (props: any) => {
 
   if (appShell && menu && itemCarousel && search && commentsTable && commentsCardZero && commentsCardOne && description && analytics) {
     window.onwheel = function (event: any) {
-      const { toolbarHeightVh, commentsCardHeightVh } = elementStyles;
-      const toolbarHeightPx = vhToPixelsWithMax(toolbarHeightVh);
+      const { toolbarHeightVh, maxToolbarHeightPx, commentsCardHeightVh } = elementStyles;
+      const toolbarHeightPx = vhToPixelsWithMax(toolbarHeightVh, maxToolbarHeightPx);
       const commentsCardHeightPx = vhToPixels(commentsCardHeightVh);
       const canMove = canMoveMenu(event);
 
