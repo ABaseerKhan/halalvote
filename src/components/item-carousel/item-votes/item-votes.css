@@ -26,12 +26,24 @@
     background-color: var(--haram-color-transparent);
 }
 
+.item-voter-0:hover {
+    background-color: var(--halal-compliment-color-transparent);
+}
+
+.item-voter-1:hover {
+    background-color: var(--haram-compliment-color-transparent);
+}
+
 .item-voter-0-selected {
     background-color: var(--halal-compliment-color-transparent);
+    outline: 2px solid black;
+    outline-offset: -2px;
 }
 
 .item-voter-1-selected {
     background-color: var(--haram-compliment-color-transparent);
+    outline: 2px solid black;
+    outline-offset: -2px;
 }
 
 .item-vote-text {
