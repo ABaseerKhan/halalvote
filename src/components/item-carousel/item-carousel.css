@@ -1,12 +1,17 @@
 .item-carousel {
     position: fixed;
-    height: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
+    height: min(var(--item-carousel-height-vh), var(--max-item-carousel-height-px));
     width: 100%;
-    display: flex;
     background: var(--neutral-color-transparent);
     top: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
     opacity: 0.0;
     visibility: hidden;
+}
+
+.item-navigator {
+    height: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
+    width: 100%;
+    display: flex;
 }
 
 .item-text {

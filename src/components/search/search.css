@@ -3,7 +3,7 @@
     height: 100%;
     width: 100%;
     text-align: center;
-    padding-top: 10vh;
+    padding-top: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
     padding-bottom: 0px;
     scroll-snap-align: start;
 }

@@ -8,6 +8,7 @@ import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
 import Cookies from 'universal-cookie';
 import { vhToPixels, vhToPixelsWithMax } from "../utils";
+import { SearchComponent } from './search/search';
 
 // type imports
 import { Judgment } from '../types';
@@ -15,8 +16,6 @@ import { Judgment } from '../types';
 // style imports
 import { elementStyles } from "../index";
 import './app-shell.css';
-import { ItemVotesComponent } from './item-votes/item-votes';
-import { SearchComponent } from './search/search';
 
 export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean; scrollPosition: number }>({
@@ -133,16 +132,16 @@ export const AppShellComponent = (props: any) => {
 
   if (appShell && itemCarousel) {
     appShell.onscroll = function (event: any) {
-      const { toolbarHeightVh, maxToolbarHeightPx } = elementStyles;
-      const toolbarHeightPx = vhToPixelsWithMax(toolbarHeightVh, maxToolbarHeightPx);
+      const { itemCarouselHeightVh, maxItemCarouselHeightPx } = elementStyles;
+      const itemCarouselHeightPx = vhToPixelsWithMax(itemCarouselHeightVh, maxItemCarouselHeightPx);
       const halfWindowHeight = window.innerHeight / 2.0;
   
       if (appShell.scrollTop > halfWindowHeight) {
         itemCarousel.style.visibility = "visible";
         itemCarousel.style.opacity = "1.0";
-      } else if (appShell.scrollTop > toolbarHeightPx) {
+      } else if (appShell.scrollTop > itemCarouselHeightPx) {
         itemCarousel.style.visibility = "visible";
-        itemCarousel.style.opacity = ((appShell.scrollTop - toolbarHeightPx)/(halfWindowHeight - toolbarHeightPx)).toString();
+        itemCarousel.style.opacity = ((appShell.scrollTop - itemCarouselHeightPx)/(halfWindowHeight - itemCarouselHeightPx)).toString();
       } else {
         itemCarousel.style.opacity = "0.0";
         itemCarousel.style.visibility = "hidden";
@@ -152,8 +151,9 @@ export const AppShellComponent = (props: any) => {
 
   if (appShell && menu && itemCarousel && search && commentsTable && commentsCardZero && commentsCardOne && description && analytics) {
     window.onwheel = function (event: any) {
-      const { toolbarHeightVh, maxToolbarHeightPx, commentsCardHeightVh } = elementStyles;
+      const { toolbarHeightVh, maxToolbarHeightPx, itemCarouselHeightVh, maxItemCarouselHeightPx, commentsCardHeightVh } = elementStyles;
       const toolbarHeightPx = vhToPixelsWithMax(toolbarHeightVh, maxToolbarHeightPx);
+      const itemCarouselHeightPx = vhToPixelsWithMax(itemCarouselHeightVh, maxItemCarouselHeightPx);
       const commentsCardHeightPx = vhToPixels(commentsCardHeightVh);
       const canMove = canMoveMenu(event);
 
@@ -168,13 +168,13 @@ export const AppShellComponent = (props: any) => {
             
             // top paddings
             search.style.paddingTop = Math.min(parseInt(search.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
-            commentsTable.style.paddingTop = Math.min(parseInt(commentsTable.style.paddingTop) - event.deltaY, toolbarHeightPx * 2) + "px";
+            commentsTable.style.paddingTop = Math.min(parseInt(commentsTable.style.paddingTop) - event.deltaY, toolbarHeightPx + itemCarouselHeightPx) + "px";
             description.style.paddingTop = commentsTable.style.paddingTop
             analytics.style.paddingTop = commentsTable.style.paddingTop
             
             // bottom paddings
             search.style.paddingBottom = toolbarHeightPx - parseInt(search.style.paddingTop) + "px";
-            commentsTable.style.paddingBottom = (toolbarHeightPx * 2) - parseInt(commentsTable.style.paddingTop) + "px";
+            commentsTable.style.paddingBottom = (toolbarHeightPx + itemCarouselHeightPx) - parseInt(commentsTable.style.paddingTop) + "px";
             description.style.paddingBottom = commentsTable.style.paddingBottom
             analytics.style.paddingBottom = commentsTable.style.paddingBottom
 
@@ -187,19 +187,19 @@ export const AppShellComponent = (props: any) => {
             
             // top paddings
             search.style.paddingTop = Math.max(parseInt(search.style.paddingTop) - event.deltaY, 0) + "px";
-            commentsTable.style.paddingTop = Math.max(parseInt(commentsTable.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
+            commentsTable.style.paddingTop = Math.max(parseInt(commentsTable.style.paddingTop) - event.deltaY, itemCarouselHeightPx) + "px";
             description.style.paddingTop = commentsTable.style.paddingTop
             analytics.style.paddingTop = commentsTable.style.paddingTop
 
             // bottom paddings
             search.style.paddingBottom = toolbarHeightPx - parseInt(search.style.paddingTop) + "px";
-            commentsTable.style.paddingBottom = (toolbarHeightPx * 2) - parseInt(commentsTable.style.paddingTop) + "px";
+            commentsTable.style.paddingBottom = (toolbarHeightPx + itemCarouselHeightPx) - parseInt(commentsTable.style.paddingTop) + "px";
             description.style.paddingBottom = commentsTable.style.paddingBottom
             analytics.style.paddingBottom = commentsTable.style.paddingBottom
           }
 
           // comment card heights
-          const calculatedCommentsCardHeight = `${commentsCardHeightPx - parseInt(commentsTable.style.paddingTop) + (toolbarHeightPx * 2)}px`
+          const calculatedCommentsCardHeight = `${commentsCardHeightPx - parseInt(commentsTable.style.paddingTop) + (toolbarHeightPx + itemCarouselHeightPx)}px`
           commentsCardZero.style.height = calculatedCommentsCardHeight;
           commentsCardOne.style.height = calculatedCommentsCardHeight;
 
@@ -210,7 +210,7 @@ export const AppShellComponent = (props: any) => {
 
           // top paddings
           search.style.paddingTop = toolbarHeightPx + "px";
-          commentsTable.style.paddingTop = (toolbarHeightPx * 2) + "px";
+          commentsTable.style.paddingTop = (toolbarHeightPx + itemCarouselHeightPx) + "px";
           description.style.paddingTop = commentsTable.style.paddingTop;
           analytics.style.paddingTop = commentsTable.style.paddingTop;
 
@@ -249,7 +249,7 @@ export const AppShellComponent = (props: any) => {
         <table id={commentsTableId} className="comments-table">
           <tbody>
             <tr className="comments-table-empty-row"/>
-            <tr>
+            {/* <tr>
               <td className="comments-table-column vote-column">
                 <ItemVotesComponent judgment={Judgment.HARAM} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
               </td>
@@ -257,7 +257,7 @@ export const AppShellComponent = (props: any) => {
                 <ItemVotesComponent judgment={Judgment.HALAL} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
               </td>
             </tr>
-            <tr className="comments-table-empty-row"/>
+            <tr className="comments-table-empty-row"/> */}
             <tr>
               <td className="comments-table-column">
                 <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
@@ -272,7 +272,7 @@ export const AppShellComponent = (props: any) => {
         <div id={analyticsId} className="other-page">Analytics</div>
         <div className="header">
           <MenuComponent id={menuId} displayLogin={displayLogin} setUserDetails={setUserDetails} />
-          <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={item?.itemName} />
+          <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
           {
             state.loginDisplayed && <LoginComponent displayLogin={displayLogin} setUserDetails={setUserDetails} />
           }

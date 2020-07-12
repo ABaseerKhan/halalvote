@@ -1,16 +1,15 @@
 import React, {memo} from 'react';
-import { UserContext } from '../app-shell'
-import { postData } from '../../https-client/post-data';
-import { itemsConfig } from '../../https-client/config';
+import { UserContext } from '../../app-shell'
+import { postData } from '../../../https-client/post-data';
+import { itemsConfig } from '../../../https-client/config';
 
 //type imports
-import { Judgment } from '../../types';
+import { Judgment } from '../../../types';
 
 //style imports
 import './item-votes.css';
 
 interface ItemVotesComponentProps {
-    judgment: Judgment,
     itemName: string,
     userVote: number | undefined | null,
     halalVotes: number,
@@ -19,12 +18,13 @@ interface ItemVotesComponentProps {
 };
 
 const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
-    const { judgment, itemName, userVote, halalVotes, haramVotes, addItemVoteLocally } = props;
+    const { itemName, userVote, halalVotes, haramVotes, addItemVoteLocally } = props;
     const { username, sessiontoken } = React.useContext(UserContext)
 
-    const isSelected = userVote === judgment
+    const isHalalSelected = userVote === Judgment.HALAL;
+    const isHaramSelected = userVote === Judgment.HARAM;
 
-    const vote = async () => {
+    const vote = async (vote: Judgment) => {
         if (itemName && username && sessiontoken) {
             const response = await postData({
                 baseUrl: itemsConfig.url,
@@ -32,21 +32,25 @@ const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
                 data: {
                     "itemName": itemName,
                     "username": username,
-                    "vote": judgment,
+                    "vote": vote,
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken
                 }
             });
     
-            addItemVoteLocally(itemName, judgment)
+            addItemVoteLocally(itemName, vote)
         }
     };
 
-    const classNames = "item-voter-" + judgment + " " + (isSelected ? "item-voter-" + judgment + "-selected" : "");
+    const halalClassNames = "item-voter-" + Judgment.HALAL + " " + (isHalalSelected ? "item-voter-" + Judgment.HALAL + "-selected" : "");
+    const haramClassNames = "item-voter-" + Judgment.HARAM + " " + (isHaramSelected ? "item-voter-" + Judgment.HARAM + "-selected" : "");
 
     return (
-        <div onClick={ vote } className={classNames}>{judgementToVoteText(judgment, halalVotes, haramVotes)}</div>
+        <div className={"item-votes-container"}>
+            <div onClick={() => {vote(Judgment.HARAM)}} className={haramClassNames}>{judgementToVoteText(Judgment.HARAM, halalVotes, haramVotes)}</div>
+            <div onClick={() => {vote(Judgment.HALAL)}} className={halalClassNames}>{judgementToVoteText(Judgment.HALAL, halalVotes, haramVotes)}</div>
+        </div>
     )
 };
 
@@ -56,7 +60,7 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
             if (halalVotes != undefined && haramVotes != undefined) {
                 if (halalVotes > 0 || haramVotes > 0) {
                     return (
-                        <span>
+                        <span className={"item-vote-text"}>
                             <span>{`👼 Halal `}</span>
                             <span className={"votes-bullet-separator"}>&bull;</span>
                             <span>{` ${halalVotes} `}</span>
@@ -66,7 +70,7 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
                     )
                 } else {
                     return (
-                        <span>
+                        <span className={"item-vote-text"}>
                             <span>{`👼 Halal`}</span>
                             <span className={"votes-bullet-separator"}>&bull;</span>
                             <span>{`${halalVotes} 👼`}</span>
@@ -74,13 +78,13 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
                     )
                 }
             } else {
-                return <span>{"👼 Halal 👼"}</span>
+                return <span className={"item-vote-text"}>{"👼 Halal 👼"}</span>
             }
         case Judgment.HARAM:
             if (halalVotes != undefined && haramVotes != undefined) {
                 if (halalVotes > 0 || haramVotes > 0) {
                     return (
-                        <span>
+                        <span className={"item-vote-text"}>
                             <span>{`😈 Haram `}</span>
                             <span className={"votes-bullet-separator"}>&bull;</span>
                             <span>{` ${haramVotes} `}</span>
@@ -90,7 +94,7 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
                     )
                 } else {
                     return (
-                        <span>
+                        <span className={"item-vote-text"}>
                             <span>{`😈 Haram ${halalVotes} 😈`}</span>
                             <span className={"votes-bullet-separator"}>&bull;</span>
                             <span>{`${haramVotes} 😈`}</span>
@@ -98,7 +102,7 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
                     )
                 }
             } else {
-                return <span>{"😈 Haram 😈"}</span>
+                return <span className={"item-vote-text"}>{"😈 Haram 😈"}</span>
             }
         default:
             return <span></span>
