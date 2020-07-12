@@ -69,7 +69,6 @@
 .comment-header {
     display: flex;
     font-size: 14px;
-    color: var(--gray);
 }
 
 .comment-header .expand-button-0 {
@@ -109,7 +108,6 @@
 .comment-header .vote-buttons .up-vote-button {
     height: 12px;
     width: 12px;
-    fill: var(--gray);
 }
 
 .comment-header .vote-buttons .up-vote-button-clicked {
@@ -127,7 +125,6 @@
 .comment-header .vote-buttons .down-vote-button {
     height: 12px;
     width: 12px;
-    fill: var(--gray);
 }
 
 .comment-header .vote-buttons .down-vote-button-clicked {
@@ -151,13 +148,11 @@
 .comment-header .vote-counts .up-votes {
     width: fit-content;
     float:right;
-    color: var(--halal-compliment-color);
 }
 
 .comment-header .vote-counts .down-votes {
     width: fit-content;
     float: right;
-    color: var(--haram-compliment-color);
 }
 
 .comment-header .username {
@@ -166,7 +161,7 @@
     overflow-wrap: break-word;
     word-wrap: break-word;
     font-size: 14px;
-    color: var(--var(--gray));
+    color: var(--gray);
 }
 
 .comment-header .time-stamp {
@@ -194,7 +189,7 @@
 .comment-actions {
     margin-left: 20px;
     margin-bottom: 10px;
-    color: var(--var(--gray));
+    color: var(--gray);
     font-size: 12px;
     font-weight: 700;
 }

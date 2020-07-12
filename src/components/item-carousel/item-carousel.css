@@ -19,6 +19,7 @@
     text-align: center;
     margin: auto;
     font-size: 32px;
+    color: var(--gray)
 }
 
 .carousel-button {

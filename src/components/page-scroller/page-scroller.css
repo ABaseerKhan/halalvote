@@ -24,7 +24,7 @@
     left: 0;
     right: 0;
     border-radius: 10px;
-    background-color: var(--gray);
+    background-color: var(--light-neutral-color);
 }
 
 .page-scroller-button:hover {

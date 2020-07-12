@@ -9,21 +9,22 @@ html, body {
 }
 
 :root {
-  --haram-color: #C1B8C8;
-  --haram-color-transparent: rgb(193, 184, 200, 0.5);
+  --haram-color: #D0ADEB;
+  --haram-color-transparent: rgb(208, 173, 235, 0.75);
   --halal-color: #A9DDD6;
-  --halal-color-transparent: rgb(169, 221, 214, 0.5);
+  --halal-color-transparent: rgb(169, 221, 214, 0.75);
 
-  --haram-compliment-color: #9BA0BC;
-  --haram-compliment-color-transparent: rgb(155, 160, 188, 0.5);
-  --halal-compliment-color: #7A8B99;
-  --halal-compliment-color-transparent: rgb(122, 139, 153, 0.5);
+  --haram-compliment-color: #AB6BDB;
+  --haram-compliment-color-transparent: rgb(171, 107, 219, 0.75);
+  --halal-compliment-color: #7CCBBE;
+  --halal-compliment-color-transparent: rgb(124, 203, 190, 0.75);
 
-  --neutral-color: #91adc2;
-  --neutral-color-transparent: rgb(145, 173, 194, 0.5);
+  --light-neutral-color: #97A5AF;
+  --neutral-color: #6A7C8A;
+  --neutral-color-transparent: rgb(106, 124, 138, 0.75);
 
   --link-color: #6495ed;
-  --gray: #7A8B99;
+  --gray: #232B2F;
 
   --toolbar-height-vh: 10vh;
   --max-toolbar-height-px: 60px;
