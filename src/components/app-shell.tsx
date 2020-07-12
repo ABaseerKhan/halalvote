@@ -2,21 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { MenuComponent } from './menu/menu';
 import { LoginComponent } from './login/login';
 import { ItemCarouselComponent } from './item-carousel/item-carousel';
-import { CommentsCardComponent } from './comments/comments-card';
+import { SearchComponent } from './search/search';
+import { CommentsComponent } from './comments/comments';
+import { DescriptionComponent } from './description/description';
+import { AnalyticsComponent } from './analytics/analytics';
 import { Item } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
 import Cookies from 'universal-cookie';
 import { vhToPixels, vhToPixelsWithMax } from "../utils";
-import { SearchComponent } from './search/search';
 
 // type imports
-import { Judgment } from '../types';
 
 // style imports
 import { elementStyles } from "../index";
 import './app-shell.css';
-import { CommentsComponent } from './comments/comments';
 
 export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean; scrollPosition: number }>({
@@ -248,8 +248,8 @@ export const AppShellComponent = (props: any) => {
       <div id={appShellId} className={appShellId} >
         <SearchComponent id={searchId} />
         <CommentsComponent id={commentsTableId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
-        <div id={descriptionId} className="other-page">Description</div>
-        <div id={analyticsId} className="other-page">Analytics</div>
+        <DescriptionComponent id={descriptionId} />
+        <AnalyticsComponent id={analyticsId} />
         <div className="header">
           <MenuComponent id={menuId} displayLogin={displayLogin} setUserDetails={setUserDetails} />
           <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />

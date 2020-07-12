@@ -31,13 +31,3 @@
 .comments-table-empty-row {
   height: 10px;
 }
-
-.other-page {
-  display: table;
-  height: 100%;
-  width: 100%;
-  text-align: center;
-  padding-top: min(calc(var(--toolbar-height-vh) + var(--item-carousel-height-vh)), calc(var(--max-toolbar-height-px) + var(--max-item-carousel-height-px)));;
-  padding-bottom: 0px;
-  scroll-snap-align: start;
-}
