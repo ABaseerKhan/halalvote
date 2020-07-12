@@ -1,13 +1,13 @@
 import React, {memo} from 'react';
-import { UserContext } from '../../app-shell'
-import { postData } from '../../../https-client/post-data';
-import { itemsConfig } from '../../../https-client/config';
+import { UserContext } from '../app-shell'
+import { postData } from '../../https-client/post-data';
+import { itemsConfig } from '../../https-client/config';
 
 //type imports
-import { Judgment } from '../../../types';
+import { Judgment } from '../../types';
 
 //style imports
-import './item-votes.css';
+import './item-carousel.css';
 
 interface ItemVotesComponentProps {
     itemName: string,

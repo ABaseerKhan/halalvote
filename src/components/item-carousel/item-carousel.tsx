@@ -1,6 +1,6 @@
 import React from 'react';
 import Linkify from 'react-linkify';
-import { ItemVotesComponent } from './item-votes/item-votes';
+import { ItemVotesComponent } from './item-votes';
 
 // type imports
 
