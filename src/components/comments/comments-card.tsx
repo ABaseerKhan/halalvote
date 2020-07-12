@@ -11,7 +11,7 @@ import { UserContext } from '../app-shell'
 import { Judgment, judgementToTextMap } from '../../types';
 
 // style imports
-import './comments-card.css';
+import './comments.css';
 
 interface CommentsCardComponentProps {
     judgment: Judgment,

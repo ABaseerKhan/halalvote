@@ -16,6 +16,7 @@ import { Judgment } from '../types';
 // style imports
 import { elementStyles } from "../index";
 import './app-shell.css';
+import { CommentsComponent } from './comments/comments';
 
 export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean; scrollPosition: number }>({
@@ -246,28 +247,7 @@ export const AppShellComponent = (props: any) => {
     <UserContext.Provider value={state.userDetails}>
       <div id={appShellId} className={appShellId} >
         <SearchComponent id={searchId} />
-        <table id={commentsTableId} className="comments-table">
-          <tbody>
-            <tr className="comments-table-empty-row"/>
-            {/* <tr>
-              <td className="comments-table-column vote-column">
-                <ItemVotesComponent judgment={Judgment.HARAM} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
-              </td>
-              <td className="comments-table-column vote-column">
-                <ItemVotesComponent judgment={Judgment.HALAL} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
-              </td>
-            </tr>
-            <tr className="comments-table-empty-row"/> */}
-            <tr>
-              <td className="comments-table-column">
-                <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
-              </td>
-              <td className="comments-table-column">
-                <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <CommentsComponent id={commentsTableId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
         <div id={descriptionId} className="other-page">Description</div>
         <div id={analyticsId} className="other-page">Analytics</div>
         <div className="header">

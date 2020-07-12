@@ -14,7 +14,7 @@ import { postData } from '../../https-client/post-data';
 import { Vote } from '../../types';
 
 // style imports
-import './comments-card.css';
+import './comments.css';
 
 interface CommentComponentProps {
     key: number,

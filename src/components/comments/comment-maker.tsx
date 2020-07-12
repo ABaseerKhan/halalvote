@@ -7,7 +7,7 @@ import { Judgment } from '../../types';
 
 //style imports
 import 'react-quill/dist/quill.snow.css';
-import './comments-card.css';
+import './comments.css';
 
 interface CommentMakerComponentProps {
     judgment: Judgment,
