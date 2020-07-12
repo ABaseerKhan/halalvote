@@ -1,0 +1,52 @@
+.page-scroller {
+    position: fixed;
+    height: 80px;
+    width: 20px;
+    margin-right: 10px;
+    right: 0;
+    top: 50%;
+    margin-top: -40px;
+}
+
+.page-scroller-button-container {
+    position: relative;
+    height: 20px;
+    width: 20px;
+}
+
+.page-scroller-button {
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 10px;
+    background-color: var(--gray);
+}
+
+.page-scroller-button:hover {
+    height: 15px;
+    width: 15px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.page-scroller-button-selected {
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 15px;
+    background-color: var(--neutral-color);
+}
+
+.page-scroller-button-selected:hover {
+    cursor: pointer;
+}

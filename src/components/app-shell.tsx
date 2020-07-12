@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { MenuComponent } from './menu/menu';
 import { LoginComponent } from './login/login';
+import { PageScrollerComponent } from './page-scroller/page-scroller';
+import { MenuComponent } from './menu/menu';
 import { ItemCarouselComponent } from './item-carousel/item-carousel';
 import { SearchComponent } from './search/search';
 import { CommentsComponent } from './comments/comments';
@@ -112,27 +113,37 @@ export const AppShellComponent = (props: any) => {
   const numHaramComments = item?.numHaramComments != undefined ? item.numHaramComments : 0;
 
   const appShellId = "app-shell";
-  const searchId = "search";
   const menuId = "menu";
   const itemCarouselId = "itemCarousel";
-  const descriptionId = "description";
+  const pageZeroId = "pageZero";
+  const pageOneId = "pageOne";
+  const pageTwoId = "pageTwo";
+  const pageThreeId = "pageThree";
+
+  const searchId = "search";
   const commentsTableId = "commentsTable";
   const commentsCardZeroId = "comments-card-0";
   const commentsCardOneId = "comments-card-1";
+  const descriptionId = "description";
   const analyticsId = "analytics";
 
   const appShell = document.getElementById(appShellId);
   const menu = document.getElementById(menuId);
-  const search = document.getElementById(searchId);
   const itemCarousel = document.getElementById(itemCarouselId);
-  const description = document.getElementById(descriptionId);
+  const pageZero = document.getElementById(pageZeroId);
+  const pageOne = document.getElementById(pageOneId);
+  const pageTwo = document.getElementById(pageTwoId);
+  const pageThree = document.getElementById(pageThreeId);
+
+  const search = document.getElementById(searchId);
   const commentsTable = document.getElementById(commentsTableId);
   const commentsCardZero = document.getElementById(commentsCardZeroId);
   const commentsCardOne = document.getElementById(commentsCardOneId);
+  const description = document.getElementById(descriptionId);
   const analytics = document.getElementById(analyticsId);
 
   if (appShell && itemCarousel) {
-    appShell.onscroll = function (event: any) {
+    appShell.onscroll = () => {
       const { itemCarouselHeightVh, maxItemCarouselHeightPx } = elementStyles;
       const itemCarouselHeightPx = vhToPixelsWithMax(itemCarouselHeightVh, maxItemCarouselHeightPx);
       const halfWindowHeight = window.innerHeight / 2.0;
@@ -147,11 +158,17 @@ export const AppShellComponent = (props: any) => {
         itemCarousel.style.opacity = "0.0";
         itemCarousel.style.visibility = "hidden";
       }
+
+
+      if (appShell.scrollTop % window.innerHeight == 0) {
+        const page = Math.floor(appShell.scrollTop / window.innerHeight);
+        selectPageScrollerButton(page);
+      }
     }
   }
 
   if (appShell && menu && itemCarousel && search && commentsTable && commentsCardZero && commentsCardOne && description && analytics) {
-    window.onwheel = function (event: any) {
+    window.onwheel = (event: any) => {
       const { toolbarHeightVh, maxToolbarHeightPx, itemCarouselHeightVh, maxItemCarouselHeightPx, commentsCardHeightVh } = elementStyles;
       const toolbarHeightPx = vhToPixelsWithMax(toolbarHeightVh, maxToolbarHeightPx);
       const itemCarouselHeightPx = vhToPixelsWithMax(itemCarouselHeightVh, maxItemCarouselHeightPx);
@@ -243,6 +260,22 @@ export const AppShellComponent = (props: any) => {
     return true;
   }
 
+  const scrollToPage = (page: number) => {
+    if (appShell) {
+      appShell.scrollTop = page * window.innerHeight;
+      selectPageScrollerButton(page);
+    }
+  }
+
+  const selectPageScrollerButton = (page: number) => {
+    if (pageZero && pageOne && pageTwo && pageThree) {
+      pageZero.className = page == 0 ? 'page-scroller-button-selected' : 'page-scroller-button'
+      pageOne.className = page == 1 ? 'page-scroller-button-selected' : 'page-scroller-button'
+      pageTwo.className = page == 2 ? 'page-scroller-button-selected' : 'page-scroller-button'
+      pageThree.className = page == 3 ? 'page-scroller-button-selected' : 'page-scroller-button'
+    }
+  }
+
   return (
     <UserContext.Provider value={state.userDetails}>
       <div id={appShellId} className={appShellId} >
@@ -250,9 +283,10 @@ export const AppShellComponent = (props: any) => {
         <CommentsComponent id={commentsTableId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
         <DescriptionComponent id={descriptionId} />
         <AnalyticsComponent id={analyticsId} />
-        <div className="header">
+        <div className="fixed-content">
           <MenuComponent id={menuId} displayLogin={displayLogin} setUserDetails={setUserDetails} />
           <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
+          <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} pageThreeId={pageThreeId} scrollToPage={scrollToPage} />
           {
             state.loginDisplayed && <LoginComponent displayLogin={displayLogin} setUserDetails={setUserDetails} />
           }

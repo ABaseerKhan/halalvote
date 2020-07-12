@@ -7,7 +7,7 @@
   scroll-snap-type: y mandatory;
 }
 
-.header {
+.fixed-content {
   position: fixed;
   width: 100%;
 }
