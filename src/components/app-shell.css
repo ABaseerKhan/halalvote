@@ -11,23 +11,3 @@
   position: fixed;
   width: 100%;
 }
-
-.comments-table {
-  height: 100%;
-  width: 100%;
-  padding-top: min(calc(var(--toolbar-height-vh) + var(--item-carousel-height-vh)), calc(var(--max-toolbar-height-px) + var(--max-item-carousel-height-px)));
-  scroll-snap-align: start;
-}
-
-.comments-table-column {
-  width: 50%;
-  vertical-align: top;
-}
-
-.vote-column {
-  height: 20px;
-}
-
-.comments-table-empty-row {
-  height: 10px;
-}

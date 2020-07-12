@@ -1,9 +1,21 @@
-.menu {
+.menu-table {
     position: fixed;
     width: 100%;
     height: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
     background-color: var(--neutral-color);
     top: 0;
+}
+
+.menu-table-column {
+    width: 33%;
+    vertical-align: middle;
+}
+
+.logo {
+    height: fit-content;
+    width: 100%;
+    font-size: 20px;
+    text-align: center;
 }
 
 .login-button {
@@ -46,5 +58,5 @@
 }
 
 .user-info-container {
-    height: 100%
+    height: 100%;
 }

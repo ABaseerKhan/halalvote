@@ -284,7 +284,7 @@ export const AppShellComponent = (props: any) => {
         <DescriptionComponent id={descriptionId} />
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">
-          <MenuComponent id={menuId} displayLogin={displayLogin} setUserDetails={setUserDetails} />
+          <MenuComponent menuId={menuId} displayLogin={displayLogin} setUserDetails={setUserDetails} />
           <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} pageThreeId={pageThreeId} scrollToPage={scrollToPage} />
           {
