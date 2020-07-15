@@ -17,5 +17,5 @@ export const elementStyles = {
   maxToolbarHeightPx: 60,
   itemCarouselHeightVh: 20,
   maxItemCarouselHeightPx: 120,
-  commentsCardHeightVh: 60
+  commentsCardHeightVh: 70
 }
