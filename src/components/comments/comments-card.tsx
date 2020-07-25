@@ -158,9 +158,17 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const scrollToHighlightedComment = (highlightedComment: Comment | undefined) => {
         if (highlightedComment) {
             const highlightedCommentElement = document.getElementById("comment-" + highlightedComment.id);
+            const commentsContainerElement = document.getElementById(commentsContainerId);
             
-            if (highlightedCommentElement) {
-                highlightedCommentElement.scrollIntoView({ behavior: "smooth", block: 'nearest' }); 
+            if (highlightedCommentElement && commentsContainerElement) {
+                let topPos = highlightedCommentElement.offsetTop;
+                let offsetParent = highlightedCommentElement.offsetParent;
+    
+                while (offsetParent && offsetParent.className != "comments-container") {
+                    topPos += (offsetParent as HTMLElement).offsetTop;
+                    offsetParent = (offsetParent as HTMLElement).offsetParent;
+                }
+                commentsContainerElement.scrollTop =  topPos - 5;
             }
         }
     }

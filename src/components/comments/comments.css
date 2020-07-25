@@ -44,15 +44,14 @@
     display: none;
 }
 
-.comment-border-highlighted {
-    border: 5px solid #8fb4ff;
-    border-radius: 10px;
+.comment-border-unhighlighted, .comment-border-highlighted {
     padding: 5px;
+    position: relative;
 }
 
-.comment-border-unhighlighted, .comment-border-highlighted {
-    margin-bottom: 5px;
-    position: relative;
+.comment-border-highlighted {
+    border-radius: 10px;
+    box-shadow: 0 0 10px #8fb4ff;
 }
 
 .comment-tail-0, .comment-tail-1 {
@@ -195,7 +194,6 @@
     margin-left: 15px;
     margin-top: 5px;
     margin-bottom: 5px;
-    width: 100%;
     white-space: pre-wrap;
     overflow-wrap: break-word;
     word-wrap: break-word;
