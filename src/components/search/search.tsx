@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { getData } from '../../https-client/post-data';
+import { itemsConfig } from '../../https-client/config';
+import { useDebouncedSearch } from '../../hooks/useDebouncedSearch';
 
 // styles
 import './search.css';
-import { itemsConfig } from '../../https-client/config';
-import { useDebouncedSearch } from '../../hooks/useDebouncedEffect';
 
 interface SearchComponentProps {
     id: string,
