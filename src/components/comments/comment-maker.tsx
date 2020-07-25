@@ -16,7 +16,10 @@ interface CommentMakerComponentProps {
 };
 
 const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => {
-    const [value, setValue] = useState('');
+    const [state, setState] = useState({
+        holdingDownShift: false
+    });
+    let [value, setValue] = useState('');
     const quillEditor = useRef<ReactQuill>(null);
 
     useEffect(() => {
@@ -41,15 +44,45 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
             setValue('');
         }
     };
+
+    const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        switch (event.keyCode) {	
+            case 13:
+                console.log(value);
+                event.preventDefault();
+                if (!state.holdingDownShift) {
+                    value = value.replace(new RegExp('<p><br><\/p>' + '$'), '');
+                    submitComment(event as any);
+                }	
+                break;	
+            case 16:	
+                setState({	
+                    ...state,	
+                    holdingDownShift: true	
+                });	
+            }	
+    }	
+
+
+    const onKeyUp = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.keyCode === 16) {	
+            setState({	
+                ...state,	
+                holdingDownShift: false	
+            });	
+        }	
+    };
     
     return (
         <div className={"comment-maker-card-" + props.judgment} onClick={(e) => { e.stopPropagation()}}>
-            <ReactQuill 
+            <ReactQuill
                 ref={quillEditor} 
                 className={"comment-maker-input"} 
                 theme="snow" 
                 value={value} 
                 onChange={setValue} 
+                onKeyDown={onKeyDown}
+                onKeyUp={onKeyUp}
                 modules={modules} 
                 formats={formats} 
                 preserveWhitespace
