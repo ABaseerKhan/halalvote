@@ -1,22 +1,27 @@
-.comments-table {
-    height: 100%;
+.comments-body {
+    height: calc(100% - min(calc(var(--toolbar-height-vh) + var(--item-carousel-height-vh)), calc(var(--max-toolbar-height-px) + var(--max-item-carousel-height-px))));
     width: 100%;
     padding-top: min(calc(var(--toolbar-height-vh) + var(--item-carousel-height-vh)), calc(var(--max-toolbar-height-px) + var(--max-item-carousel-height-px)));
     scroll-snap-align: start;
 }
 
-.comments-table-column {
+.comments-body-1, .comments-body-0 {
+    height: 100%;
     width: 50%;
-    vertical-align: top;
 }
 
-.comments-table-empty-row {
-    height: 10px;
-  }
+.comments-body-1 {
+    float: left;
+}
+
+.comments-body-0 {
+    float: right;
+}
 
 .comments-card-1, .comments-card-0 {
+    height: calc(100% - 4vh);
     width: 80%;
-    height: 70vh;
+    margin-top: 2vh;
     margin-left: auto;
     margin-right: auto;
     box-shadow: 4px 4px lightgray;
@@ -33,8 +38,8 @@
 
 .comments-container {
     position: relative;
-    height: calc(100% - 25px - 1.5em);
-    padding: 25px 25px 0px 25px;
+    height: calc(100% - 4em - 20px);
+    padding: 10px 25px 10px 25px;
     border-radius: 25px 25px 25px 25px;
     overflow: scroll;
     scroll-behavior: smooth;
@@ -245,7 +250,6 @@
 }
 
 .show-more-comments {
-    margin-bottom: 10px;
     color: var(--link-color);
     cursor: pointer;
     font-size: 12px;
@@ -256,11 +260,10 @@
 }
 
 .comment-maker-card-0, .comment-maker-card-1 {
-    display: table;
     position: relative;
     bottom: 0px;
     width: 100%;
-    height: 1.5em;
+    height: 4em;
     border-radius: 0px 0px 25px 25px;
     box-shadow: 4px 4px lightgray;
 }

@@ -121,9 +121,7 @@ export const AppShellComponent = (props: any) => {
   const pageThreeId = "pageThree";
 
   const searchId = "search";
-  const commentsTableId = "commentsTable";
-  const commentsCardZeroId = "comments-card-0";
-  const commentsCardOneId = "comments-card-1";
+  const commentsId = "comments";
   const descriptionId = "description";
   const analyticsId = "analytics";
 
@@ -136,9 +134,7 @@ export const AppShellComponent = (props: any) => {
   const pageThree = document.getElementById(pageThreeId);
 
   const search = document.getElementById(searchId);
-  const commentsTable = document.getElementById(commentsTableId);
-  const commentsCardZero = document.getElementById(commentsCardZeroId);
-  const commentsCardOne = document.getElementById(commentsCardOneId);
+  const comments = document.getElementById(commentsId);
   const description = document.getElementById(descriptionId);
   const analytics = document.getElementById(analyticsId);
 
@@ -167,12 +163,11 @@ export const AppShellComponent = (props: any) => {
     }
   }
 
-  if (appShell && menu && itemCarousel && search && commentsTable && commentsCardZero && commentsCardOne && description && analytics) {
+  if (appShell && menu && itemCarousel && search && comments && description && analytics) {
     window.onwheel = (event: any) => {
-      const { toolbarHeightVh, maxToolbarHeightPx, itemCarouselHeightVh, maxItemCarouselHeightPx, commentsCardHeightVh } = elementStyles;
+      const { toolbarHeightVh, maxToolbarHeightPx, itemCarouselHeightVh, maxItemCarouselHeightPx } = elementStyles;
       const toolbarHeightPx = vhToPixelsWithMax(toolbarHeightVh, maxToolbarHeightPx);
       const itemCarouselHeightPx = vhToPixelsWithMax(itemCarouselHeightVh, maxItemCarouselHeightPx);
-      const commentsCardHeightPx = vhToPixels(commentsCardHeightVh);
       const canMove = canMoveMenu(event);
 
       if (canMove) {
@@ -186,15 +181,14 @@ export const AppShellComponent = (props: any) => {
             
             // top paddings
             search.style.paddingTop = Math.min(parseInt(search.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
-            commentsTable.style.paddingTop = Math.min(parseInt(commentsTable.style.paddingTop) - event.deltaY, toolbarHeightPx + itemCarouselHeightPx) + "px";
-            description.style.paddingTop = commentsTable.style.paddingTop
-            analytics.style.paddingTop = commentsTable.style.paddingTop
+            comments.style.paddingTop = Math.min(parseInt(comments.style.paddingTop) - event.deltaY, toolbarHeightPx + itemCarouselHeightPx) + "px";
+            description.style.paddingTop = comments.style.paddingTop
+            analytics.style.paddingTop = comments.style.paddingTop
             
             // bottom paddings
             search.style.paddingBottom = toolbarHeightPx - parseInt(search.style.paddingTop) + "px";
-            commentsTable.style.paddingBottom = (toolbarHeightPx + itemCarouselHeightPx) - parseInt(commentsTable.style.paddingTop) + "px";
-            description.style.paddingBottom = commentsTable.style.paddingBottom
-            analytics.style.paddingBottom = commentsTable.style.paddingBottom
+            description.style.paddingBottom = (toolbarHeightPx + itemCarouselHeightPx) - parseInt(description.style.paddingTop) + "px"
+            analytics.style.paddingBottom = description.style.paddingBottom
 
           } else if (event.deltaY > 0) {
             // scrolling down
@@ -205,22 +199,15 @@ export const AppShellComponent = (props: any) => {
             
             // top paddings
             search.style.paddingTop = Math.max(parseInt(search.style.paddingTop) - event.deltaY, 0) + "px";
-            commentsTable.style.paddingTop = Math.max(parseInt(commentsTable.style.paddingTop) - event.deltaY, itemCarouselHeightPx) + "px";
-            description.style.paddingTop = commentsTable.style.paddingTop
-            analytics.style.paddingTop = commentsTable.style.paddingTop
+            comments.style.paddingTop = Math.max(parseInt(comments.style.paddingTop) - event.deltaY, itemCarouselHeightPx) + "px";
+            description.style.paddingTop = comments.style.paddingTop
+            analytics.style.paddingTop = comments.style.paddingTop
 
             // bottom paddings
             search.style.paddingBottom = toolbarHeightPx - parseInt(search.style.paddingTop) + "px";
-            commentsTable.style.paddingBottom = (toolbarHeightPx + itemCarouselHeightPx) - parseInt(commentsTable.style.paddingTop) + "px";
-            description.style.paddingBottom = commentsTable.style.paddingBottom
-            analytics.style.paddingBottom = commentsTable.style.paddingBottom
+            description.style.paddingBottom = (toolbarHeightPx + itemCarouselHeightPx) - parseInt(description.style.paddingTop) + "px";
+            analytics.style.paddingBottom = description.style.paddingBottom
           }
-
-          // comment card heights
-          const calculatedCommentsCardHeight = `${commentsCardHeightPx - parseInt(commentsTable.style.paddingTop) + (toolbarHeightPx + itemCarouselHeightPx)}px`
-          commentsCardZero.style.height = calculatedCommentsCardHeight;
-          commentsCardOne.style.height = calculatedCommentsCardHeight;
-
         } else {
           // fixed tops
           menu.style.top = "0px";
@@ -228,20 +215,18 @@ export const AppShellComponent = (props: any) => {
 
           // top paddings
           search.style.paddingTop = toolbarHeightPx + "px";
-          commentsTable.style.paddingTop = (toolbarHeightPx + itemCarouselHeightPx) + "px";
-          description.style.paddingTop = commentsTable.style.paddingTop;
-          analytics.style.paddingTop = commentsTable.style.paddingTop;
+          comments.style.paddingTop = (toolbarHeightPx + itemCarouselHeightPx) + "px";
+          description.style.paddingTop = comments.style.paddingTop;
+          analytics.style.paddingTop = comments.style.paddingTop;
 
           // bottom paddings
           search.style.paddingBottom = "0px";
-          commentsTable.style.paddingBottom = "0px";
           description.style.paddingBottom = "0px";
           analytics.style.paddingBottom = "0px";
-
-          // comment card heights
-          commentsCardZero.style.height = commentsCardHeightPx + "px";
-          commentsCardOne.style.height = commentsCardHeightPx + "px";
         }
+
+        // comments height
+        comments.style.height = `calc(100% - ${parseInt(comments.style.paddingTop)}px)`;
       }
     }
   }
@@ -280,7 +265,7 @@ export const AppShellComponent = (props: any) => {
     <UserContext.Provider value={state.userDetails}>
       <div id={appShellId} className={appShellId} >
         <SearchComponent id={searchId} />
-        <CommentsComponent id={commentsTableId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
+        <CommentsComponent id={commentsId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
         <DescriptionComponent id={descriptionId} />
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">

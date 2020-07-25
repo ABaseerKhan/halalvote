@@ -18,18 +18,13 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     const { id, itemName, numHalalComments, numHaramComments, refreshItem } = props;
 
     return (
-        <table id={id} className="comments-table">
-        <tbody>
-          <tr className="comments-table-empty-row"/>
-          <tr>
-            <td className="comments-table-column">
-              <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} />
-            </td>
-            <td className="comments-table-column">
-              <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <div id={id} className="comments-body">
+          <div className="comments-body-1">
+            <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} />
+          </div>
+          <div className="comments-body-0">
+            <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} />
+          </div>
+        </div>
     );
 }
