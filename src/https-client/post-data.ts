@@ -17,17 +17,23 @@ export const postData = async ({ baseUrl, path, data, additionalHeaders }: { bas
     return { status: response.status, data: await response.json() };
 }
 
-export const getData = async (url = '', data = {}) => {
+export const getData = async ({ baseUrl, path, queryParams={}, additionalHeaders={} }: { baseUrl: string, path: string, queryParams: any, additionalHeaders: any }) => {
+    const query = Object.keys(queryParams)
+        .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(queryParams[k]))
+        .join('&');
+
+    const url = baseUrl + path + (query && ("?" + query) || "");
     const response = await fetch(url, {
         method: 'GET',
         mode: 'cors',
         cache: 'no-cache',
         headers: {
+            ...additionalHeaders,
             'Content-Type': 'application/json',
-            'x-api-key': '0idjsdWPR62EQoEPW8Wh46tw2TYNgpU36VLHGQpu',
+            'x-api-key': getApiKey(baseUrl, envConfig),
         },
     });
-    return await response.json();
+    return { status: response.status, data: await response.json() };
 }
 
 const getApiKey = (baseUrl: string, envConfig: EnvConfig) => { 
