@@ -58,7 +58,12 @@ export const AppShellComponent = (props: any) => {
         }
       }
     }
-    setState(s => ({ ...s, items: [...s.items, ...data] }));
+    if(itemsTofetch) {
+      const indexOfItemToFetch = state.items.findIndex(i => i.itemName === itemsTofetch[0]);
+      setState(s => ({ ...s, items: [...s.items, ...data], itemIndex: indexOfItemToFetch }));
+    } else {
+      setState(s => ({ ...s, items: [...s.items, ...data] }));
+    }
   }
 
   const iterateItem = (iteration: number) => () => {
@@ -264,7 +269,7 @@ export const AppShellComponent = (props: any) => {
   return (
     <UserContext.Provider value={state.userDetails}>
       <div id={appShellId} className={appShellId} >
-        <SearchComponent id={searchId} />
+        <SearchComponent id={searchId} onSuggestionClick={fetchItems} />
         <CommentsComponent id={commentsId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
         <DescriptionComponent id={descriptionId} />
         <AnalyticsComponent id={analyticsId} />

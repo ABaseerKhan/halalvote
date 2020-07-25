@@ -8,6 +8,7 @@ import { useDebouncedSearch } from '../../hooks/useDebouncedEffect';
 
 interface SearchComponentProps {
     id: string,
+    onSuggestionClick: (itemsTofetch?: string[]) => void;
 };
 export const SearchComponent = (props: SearchComponentProps) => {
     const { id } = props;
@@ -20,12 +21,17 @@ export const SearchComponent = (props: SearchComponentProps) => {
         } else {
             setAutoCompleteOpen(false);
         }
-    }, [searchResults])
+    }, [searchResults]);
+
+    const onClickSuggestion = (itemName: string) => () => {
+        props.onSuggestionClick([itemName])
+        document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
+    };
 
     return (
         <div id={id} className='search-page'>
             <div className={"search-bar"}>
-                <span className="search-header">Google</span>
+                <span className="search-header">--Logo--</span>
                 <input className={autoCompleteOpen ? "search-bar-input-autocomplete-open" : "search-bar-input"} type="text" value={inputText} onChange={e => setInputText(e.target.value)} />
                 <div className={"autocomplete"}>
                     {searchResults.result && searchResults.result.data && !!searchResults.result.data.length && (
@@ -33,7 +39,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
                             {
                                 searchResults.result.data.map((itemName: [string]) => (
                                     <li className={"autocomplete-list-item"} key={itemName[0]}>
-                                        <div className={"suggestions-inner-container"}>
+                                        <div onClick={onClickSuggestion(itemName[0])} className={"suggestions-inner-container"}>
                                             <div className={"option"}>{itemName[0]}</div>
                                         </div>
                                     </li>
