@@ -15,7 +15,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
     const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
 
     useEffect(() => {
-        if (searchResults.loading || searchResults?.result?.data) {
+        if (searchResults?.result?.data && searchResults?.result?.data.length) {
             setAutoCompleteOpen(true);
         } else {
             setAutoCompleteOpen(false);
@@ -26,15 +26,17 @@ export const SearchComponent = (props: SearchComponentProps) => {
         <div id={id} className='search-page'>
             <div className={"search-bar"}>
                 <span className="search-header">Google</span>
-                <input className={autoCompleteOpen ? "search-bar-input-no-bottom-radius" : "search-bar-input"} type="text" value={inputText} onChange={e => setInputText(e.target.value)} />
+                <input className={autoCompleteOpen ? "search-bar-input-autocomplete-open" : "search-bar-input"} type="text" value={inputText} onChange={e => setInputText(e.target.value)} />
                 <div className={"autocomplete"}>
-                    {searchResults.loading && <div>...</div>}
-                    {searchResults.error && <div>Error: {searchResults.error.message}</div>}
-                    {searchResults.result && searchResults.result.data && (
+                    {searchResults.result && searchResults.result.data && !!searchResults.result.data.length && (
                         <ul className={"autocomplete-list"}>
                             {
                                 searchResults.result.data.map((itemName: [string]) => (
-                                    <li className={"autocomplete-list-item"} key={itemName[0]}>{itemName[0]}</li>
+                                    <li className={"autocomplete-list-item"} key={itemName[0]}>
+                                        <div className={"suggestions-inner-container"}>
+                                            <div className={"option"}>{itemName[0]}</div>
+                                        </div>
+                                    </li>
                                 ))
                             }
                         </ul>
