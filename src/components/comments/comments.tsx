@@ -7,6 +7,7 @@ import { CommentsCardComponent } from './comments-card';
 import './comments.css';
 import { Judgment } from '../../types';
 
+const animationStepInVW = 0.5;
 interface CommentsComponentProps {
     id: string,
     itemName: string, 
@@ -55,15 +56,15 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
 
     const separateCards = (value: number) => {
       if (halalCard && haramCard) {
-        halalCard.style.marginLeft = `${Math.min(parseInt(halalCard.style.marginLeft) + value, 0)}vw`;
-        haramCard.style.marginRight = `${Math.min(parseInt(haramCard.style.marginRight) + value, 0)}vw`;
+        halalCard.style.marginLeft = `${Math.min(parseFloat(halalCard.style.marginLeft) + value, 0)}vw`;
+        haramCard.style.marginRight = `${Math.min(parseFloat(haramCard.style.marginRight) + value, 0)}vw`;
       }
     }
 
     const mergeCards = (value: number) => {
       if (halalCard && haramCard) {
-        halalCard.style.marginLeft = `${Math.max(parseInt(halalCard.style.marginLeft) - value, -20)}vw`;
-        haramCard.style.marginRight = `${Math.max(parseInt(haramCard.style.marginRight) - value, -20)}vw`;
+        halalCard.style.marginLeft = `${Math.max(parseFloat(halalCard.style.marginLeft) - value, -20)}vw`;
+        haramCard.style.marginRight = `${Math.max(parseFloat(haramCard.style.marginRight) - value, -20)}vw`;
       }
     }
     
@@ -71,16 +72,16 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
       if (halalCard && haramCard && halalCard.style.marginLeft && haramCard.style.marginRight && halalCard.style.zIndex && haramCard.style.zIndex) {
         switch (judgment) {	
           case Judgment.HALAL:
-            const halalCardMargin = parseInt(halalCard.style.marginLeft);
+            const halalCardMargin = parseFloat(halalCard.style.marginLeft);
             if (halalCard.style.zIndex === "1") {
               if (halalCardMargin > -20) {
-                mergeCards(1);
+                mergeCards(animationStepInVW);
               } else {
                 clearAnimations();
               }
             } else {
               if (halalCardMargin < 0) {
-                separateCards(1)
+                separateCards(animationStepInVW);
               } else if (halalCardMargin === 0) {
                 halalCard.style.zIndex = "1";
                 haramCard.style.zIndex = "0";
@@ -88,21 +89,21 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
                 haramCard.style.pointerEvents = "none";
                 halalCard.style.filter = "none";
                 haramCard.style.filter = "blur(1px)";
-                mergeCards(1);
+                mergeCards(animationStepInVW);
               }
             }
             break;
           case Judgment.HARAM:
-            const haramCardMargin = parseInt(haramCard.style.marginRight);
+            const haramCardMargin = parseFloat(haramCard.style.marginRight);
             if (haramCard.style.zIndex === "1") {
               if (haramCardMargin > -20) {
-                mergeCards(1);
+                mergeCards(animationStepInVW);
               } else {
                 clearAnimations();
               }
             } else {
               if (haramCardMargin < 0) {
-                separateCards(1)
+                separateCards(animationStepInVW);
               } else if (haramCardMargin === 0) {
                 halalCard.style.zIndex = "0";
                 haramCard.style.zIndex = "1";
@@ -110,7 +111,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
                 haramCard.style.pointerEvents = "all";
                 halalCard.style.filter = "blur(1px)";
                 haramCard.style.filter = "none";
-                mergeCards(1);
+                mergeCards(animationStepInVW);
               }
             }
         }
@@ -124,14 +125,14 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
             clearInterval(animationInterval);
           }
           currentAnimation = Judgment.HARAM;
-          animationInterval = setInterval(() => {revealCard(Judgment.HARAM)}, 10);
+          animationInterval = setInterval(() => {revealCard(Judgment.HARAM)}, 5);
           break;
         case (Judgment.HALAL):
           if (currentAnimation === Judgment.HARAM) {
             clearInterval(animationInterval);
           }
           currentAnimation = Judgment.HALAL;
-          animationInterval = setInterval(() => {revealCard(Judgment.HALAL)}, 10);
+          animationInterval = setInterval(() => {revealCard(Judgment.HALAL)}, 5);
         }
     }
 
