@@ -99,16 +99,16 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
       }
     }
 
-    window.onkeydown = (event: any) => {
-      switch (event.keyCode) {	
-        case 37:
+    const switchCard = (judgment: Judgment) => () => {
+      switch (judgment) {	
+        case Judgment.HARAM:
           if (currentAnimation === Judgment.HALAL) {
             clearInterval(animationInterval);
           }
           currentAnimation = Judgment.HARAM;
           animationInterval = setInterval(() => {revealCard(Judgment.HARAM)}, 10);
           break;
-        case 39:
+        case (Judgment.HALAL):
           if (currentAnimation === Judgment.HARAM) {
             clearInterval(animationInterval);
           }
@@ -119,10 +119,10 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
 
     return (
         <div id={id} className="comments-body">
-          <div className="comments-body-1">
+          <div onClick={switchCard(Judgment.HARAM)} className="comments-body-1">
             <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} />
           </div>
-          <div className="comments-body-0">
+          <div onClick={switchCard(Judgment.HALAL)} className="comments-body-0">
             <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} />
           </div>
         </div>
