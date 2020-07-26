@@ -18,7 +18,8 @@ interface CommentsCardComponentProps {
     itemName: string, 
     numHalalComments: number,
     numHaramComments: number,
-    refreshItem: (itemTofetch: string) => any
+    refreshItem: (itemTofetch: string) => any,
+    switchCard: (judgement: Judgment) => any
 };
 
 interface CommentsCardState {
@@ -177,9 +178,11 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
     const commentsContainerId = `comments-container-${judgment.toString()}`;
     const commentsCardId = "comments-card-" + judgment.toString();
+    const commentsCardCoverId = `comments-card-cover-${judgment.toString()}`
 
     return(
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} >
+            <div id={commentsCardCoverId} className="comments-card-cover" onClick={props.switchCard(judgment)}></div>
             <div id={commentsContainerId} className="comments-container">
                 {
                     state.comments.map((comment: Comment, i: number) => {
