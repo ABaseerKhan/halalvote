@@ -70,6 +70,8 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
                 haramCard.style.zIndex = "0";
                 halalCard.style.pointerEvents = "all";
                 haramCard.style.pointerEvents = "none";
+                halalCard.style.filter = "none";
+                haramCard.style.filter = "blur(1px)";
               }
             }
             break;
@@ -89,6 +91,8 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
                 haramCard.style.zIndex = "1";
                 halalCard.style.pointerEvents = "none";
                 haramCard.style.pointerEvents = "all";
+                halalCard.style.filter = "blur(1px)";
+                haramCard.style.filter = "none";
               }
             }
         }
