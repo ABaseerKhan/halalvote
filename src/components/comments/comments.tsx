@@ -139,10 +139,10 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     return (
         <div id={id} className="comments-body">
           <div onClick={switchCard(Judgment.HARAM)} className="comments-body-1">
-            <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} />
+            <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCard={switchCard} />
           </div>
           <div onClick={switchCard(Judgment.HALAL)} className="comments-body-0">
-            <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} />
+            <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCard={switchCard} />
           </div>
         </div>
     );

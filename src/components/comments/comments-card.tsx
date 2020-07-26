@@ -19,6 +19,7 @@ interface CommentsCardComponentProps {
     numHalalComments: number,
     numHaramComments: number,
     refreshItem: (itemTofetch: string) => any,
+    switchCard: (judgment: Judgment) => any,
 };
 
 interface CommentsCardState {
@@ -179,7 +180,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const commentsCardId = "comments-card-" + judgment.toString();
 
     return(
-        <div id={commentsCardId} className={commentsCardId} onClick={() => highlightComment(undefined)}>
+        <div id={commentsCardId} onClick={ (e) => { e.stopPropagation(); props.switchCard(judgment)(); highlightComment(undefined) }} className={commentsCardId} >
             <div id={commentsContainerId} className="comments-container">
                 {
                     state.comments.map((comment: Comment, i: number) => {
