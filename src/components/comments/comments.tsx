@@ -18,6 +18,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     const { id, itemName, numHalalComments, numHaramComments, refreshItem } = props;
 
     let animationInterval: NodeJS.Timeout;
+    let currentAnimation: Judgment | undefined = undefined;
     
     const halalCard = document.getElementById("comments-card-0");
     const haramCard = document.getElementById("comments-card-1");
@@ -29,6 +30,11 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
       haramCard.style.zIndex = "0";
       halalCard.style.pointerEvents = "all";
       haramCard.style.pointerEvents = "none";
+    }
+
+    const clearAnimations = () => {
+      clearInterval(animationInterval);
+      currentAnimation = undefined;
     }
 
     const separateCards = (value: number) => {
@@ -54,7 +60,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
               if (halalCardMargin > -20) {
                 mergeCards(1);
               } else {
-                clearInterval(animationInterval);
+                clearAnimations();
               }
             } else {
               if (halalCardMargin < 0) {
@@ -73,7 +79,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
               if (haramCardMargin > -20) {
                 mergeCards(1);
               } else {
-                clearInterval(animationInterval);
+                clearAnimations();
               }
             } else {
               if (haramCardMargin < 0) {
@@ -92,10 +98,18 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     window.onkeydown = (event: any) => {
       switch (event.keyCode) {	
         case 37:
-          animationInterval = setInterval(() => {revealCard(Judgment.HARAM)}, 1);
+          if (currentAnimation === Judgment.HALAL) {
+            clearInterval(animationInterval);
+          }
+          currentAnimation = Judgment.HARAM;
+          animationInterval = setInterval(() => {revealCard(Judgment.HARAM)}, 10);
           break;
         case 39:
-          animationInterval = setInterval(() => {revealCard(Judgment.HALAL)}, 1);
+          if (currentAnimation === Judgment.HARAM) {
+            clearInterval(animationInterval);
+          }
+          currentAnimation = Judgment.HALAL;
+          animationInterval = setInterval(() => {revealCard(Judgment.HALAL)}, 10);
         }
     }
 
