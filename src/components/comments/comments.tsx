@@ -88,6 +88,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
                 haramCard.style.pointerEvents = "none";
                 halalCard.style.filter = "none";
                 haramCard.style.filter = "blur(1px)";
+                mergeCards(1);
               }
             }
             break;
@@ -109,6 +110,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
                 haramCard.style.pointerEvents = "all";
                 halalCard.style.filter = "blur(1px)";
                 haramCard.style.filter = "none";
+                mergeCards(1);
               }
             }
         }
