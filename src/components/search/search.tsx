@@ -8,7 +8,7 @@ import './search.css';
 
 interface SearchComponentProps {
     id: string,
-    onSuggestionClick: (itemsTofetch?: string[]) => void;
+    onSuggestionClick: (itemTofetch?: string) => void;
 };
 export const SearchComponent = (props: SearchComponentProps) => {
     const { id } = props;
@@ -24,7 +24,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
     }, [searchResults]);
 
     const onClickSuggestion = (itemName: string) => () => {
-        props.onSuggestionClick([itemName])
+        props.onSuggestionClick(itemName)
         document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
     };
 

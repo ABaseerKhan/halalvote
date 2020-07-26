@@ -18,7 +18,7 @@ interface CommentsCardComponentProps {
     itemName: string, 
     numHalalComments: number,
     numHaramComments: number,
-    refreshItem: (itemsTofetch: string[]) => any,
+    refreshItem: (itemTofetch: string) => any,
 };
 
 interface CommentsCardState {
@@ -101,7 +101,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         };
 
         if (!highlightedComment) {
-            refreshItem([itemName]);
+            refreshItem(itemName);
         }
         
         const updatedComments = addCommentsLocally(state.comments, [commentObject], highlightedComment && state.pathToHighlightedComment);
@@ -126,7 +126,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         });
         
         if (pathToComment.length === 1) {
-            await refreshItem([itemName]);
+            await refreshItem(itemName);
         }
 
         const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.data?.psuedoDelete);

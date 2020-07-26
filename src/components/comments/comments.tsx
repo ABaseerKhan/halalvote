@@ -12,7 +12,7 @@ interface CommentsComponentProps {
     itemName: string, 
     numHalalComments: number,
     numHaramComments: number,
-    refreshItem: (itemsTofetch: string[]) => any,
+    refreshItem: (itemTofetch: string) => any,
 };
 export const CommentsComponent = (props: CommentsComponentProps) => {
     const { id, itemName, numHalalComments, numHaramComments, refreshItem } = props;

@@ -49,3 +49,15 @@ export const vhToPixels = (vh: number) => {
 export const vhToPixelsWithMax = (vh: number, max: number) => {
     return Math.min((vh / 100.0) * window.innerHeight, max);
 }
+
+// Move array element from one index to another- in place
+export const arrayMove = (arr: Array<any>, old_index: number, new_index: number) => {
+    if (old_index === new_index) return undefined;
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+};
