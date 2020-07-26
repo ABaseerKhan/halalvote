@@ -61,3 +61,7 @@ export const arrayMove = (arr: Array<any>, old_index: number, new_index: number)
     }
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
 };
+
+export const getRandomBinary = () => {
+    return Math.floor(Math.random() * 2);
+}

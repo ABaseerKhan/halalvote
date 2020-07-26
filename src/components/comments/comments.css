@@ -28,6 +28,10 @@
     z-index: 1;
 }
 
+.comments-card-cover:hover{
+    background-color: var(--highlight-color);
+}
+
 .comments-card-1, .comments-card-0 {
     height: calc(100% - 4vh);
     position: relative;
@@ -69,7 +73,7 @@
 
 .comment-border-highlighted {
     border-radius: 10px;
-    box-shadow: 0 0 10px #8fb4ff;
+    box-shadow: 0 0 10px var(--highlight-color);
 }
 
 .comment-tail-0, .comment-tail-1 {
