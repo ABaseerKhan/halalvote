@@ -26,10 +26,26 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     if (halalCard && haramCard) {
       halalCard.style.marginLeft = "-20vw";
       haramCard.style.marginRight = "-20vw";
-      halalCard.style.zIndex = "1";
-      haramCard.style.zIndex = "0";
-      halalCard.style.pointerEvents = "all";
-      haramCard.style.pointerEvents = "none";
+
+      if (getRandomBinary()) {
+        halalCard.style.zIndex = "0";
+        haramCard.style.zIndex = "1";
+        halalCard.style.pointerEvents = "none";
+        haramCard.style.pointerEvents = "all";
+        halalCard.style.filter = "blur(1px)";
+        haramCard.style.filter = "none";
+      } else {
+        halalCard.style.zIndex = "1";
+        haramCard.style.zIndex = "0";
+        halalCard.style.pointerEvents = "all";
+        haramCard.style.pointerEvents = "none";
+        halalCard.style.filter = "none";
+        haramCard.style.filter = "blur(1px)";
+      }
+    }
+
+    function getRandomBinary() {
+      return Math.floor(Math.random() * 2);
     }
 
     const clearAnimations = () => {
