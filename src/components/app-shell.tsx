@@ -11,7 +11,7 @@ import { Item } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
 import Cookies from 'universal-cookie';
-import { vhToPixels, vhToPixelsWithMax } from "../utils";
+import { vhToPixels, vhToPixelsWithMax, arrayMove } from "../utils";
 
 // type imports
 
@@ -38,8 +38,8 @@ export const AppShellComponent = (props: any) => {
     }, 500)
   }, [state.userDetails])
 
-  const fetchItems = async (itemsTofetch?: string[]) => {
-    let body: any = { "itemNames": itemsTofetch };
+  const fetchItems = async (itemTofetch?: string) => {
+    let body: any = { "itemNames": itemTofetch ? [itemTofetch] : undefined };
     let additionalHeaders = {};
 
     if (state.userDetails.username && state.userDetails.sessiontoken && state.userDetails.username != "") {
@@ -49,18 +49,15 @@ export const AppShellComponent = (props: any) => {
 
     const { data } = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders, });
 
-    for (let i = 0; i < state.items.length; i++) {
-      for (let j = data.length - 1; j >= 0; j--) {
-        if (state.items[i].itemName === data[j].itemName) {
-          state.items.splice(i, 1, data[j]);
-          data.splice(j, 1);
-          break;
-        }
+    if(itemTofetch) {
+      const indexOfItemToFetch = state.items.findIndex(i => i.itemName === itemTofetch);
+      if (indexOfItemToFetch >= 0) {
+        arrayMove(state.items, indexOfItemToFetch, state.itemIndex); // move item to current index if needed (for search)
+        state.items[state.itemIndex] = data[0]; // refresh item with new data from db
+        setState(s => ({ ...s, items: state.items })); // trigger re-render
+      } else {
+        setState(s => ({ ...s, items: [...s.items.slice(0, s.itemIndex), ...data, ...s.items.slice(s.itemIndex)], itemIndex: s.itemIndex+1 }));
       }
-    }
-    if(itemsTofetch) {
-      const indexOfItemToFetch = state.items.findIndex(i => i.itemName === itemsTofetch[0]);
-      setState(s => ({ ...s, items: [...s.items, ...data], itemIndex: indexOfItemToFetch }));
     } else {
       setState(s => ({ ...s, items: [...s.items, ...data] }));
     }
@@ -259,10 +256,10 @@ export const AppShellComponent = (props: any) => {
 
   const selectPageScrollerButton = (page: number) => {
     if (pageZero && pageOne && pageTwo && pageThree) {
-      pageZero.className = page == 0 ? 'page-scroller-button-selected' : 'page-scroller-button'
-      pageOne.className = page == 1 ? 'page-scroller-button-selected' : 'page-scroller-button'
-      pageTwo.className = page == 2 ? 'page-scroller-button-selected' : 'page-scroller-button'
-      pageThree.className = page == 3 ? 'page-scroller-button-selected' : 'page-scroller-button'
+      pageZero.className = page === 0 ? 'page-scroller-button-selected' : 'page-scroller-button'
+      pageOne.className = page === 1 ? 'page-scroller-button-selected' : 'page-scroller-button'
+      pageTwo.className = page === 2 ? 'page-scroller-button-selected' : 'page-scroller-button'
+      pageThree.className = page === 3 ? 'page-scroller-button-selected' : 'page-scroller-button'
     }
   }
 
