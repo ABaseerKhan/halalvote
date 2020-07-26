@@ -61,7 +61,7 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
                 if (halalVotes > 0 || haramVotes > 0) {
                     return (
                         <span className={"item-vote-text"}>
-                            <span>{`👼 Halal `}</span>
+                            <span>{`👼 Vote Halal `}</span>
                             <span className={"votes-bullet-separator"}>&bull;</span>
                             <span>{` ${halalVotes} `}</span>
                             <span className={"votes-bullet-separator"}>&bull;</span>
@@ -71,21 +71,21 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
                 } else {
                     return (
                         <span className={"item-vote-text"}>
-                            <span>{`👼 Halal`}</span>
+                            <span>{`👼 Vote Halal`}</span>
                             <span className={"votes-bullet-separator"}>&bull;</span>
                             <span>{`${halalVotes} 👼`}</span>
                         </span>
                     )
                 }
             } else {
-                return <span className={"item-vote-text"}>{"👼 Halal 👼"}</span>
+                return <span className={"item-vote-text"}>{"👼 Vote Halal 👼"}</span>
             }
         case Judgment.HARAM:
             if (halalVotes != undefined && haramVotes != undefined) {
                 if (halalVotes > 0 || haramVotes > 0) {
                     return (
                         <span className={"item-vote-text"}>
-                            <span>{`😈 Haram `}</span>
+                            <span>{`😈 Vote Haram `}</span>
                             <span className={"votes-bullet-separator"}>&bull;</span>
                             <span>{` ${haramVotes} `}</span>
                             <span className={"votes-bullet-separator"}>&bull;</span>
@@ -95,14 +95,14 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
                 } else {
                     return (
                         <span className={"item-vote-text"}>
-                            <span>{`😈 Haram ${halalVotes} 😈`}</span>
+                            <span>{`😈 Vote Haram ${halalVotes} 😈`}</span>
                             <span className={"votes-bullet-separator"}>&bull;</span>
                             <span>{`${haramVotes} 😈`}</span>
                         </span>
                     )
                 }
             } else {
-                return <span className={"item-vote-text"}>{"😈 Haram 😈"}</span>
+                return <span className={"item-vote-text"}>{"😈 Vote Haram 😈"}</span>
             }
         default:
             return <span></span>

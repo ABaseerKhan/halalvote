@@ -7,11 +7,11 @@ import { SearchComponent } from './search/search';
 import { CommentsComponent } from './comments/comments';
 import { DescriptionComponent } from './description/description';
 import { AnalyticsComponent } from './analytics/analytics';
-import { Item } from '../types';
+import { Item, Judgment } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
 import Cookies from 'universal-cookie';
-import { vhToPixels, vhToPixelsWithMax, arrayMove } from "../utils";
+import { vhToPixelsWithMax, arrayMove, getRandomJudment } from "../utils";
 
 // type imports
 
@@ -20,7 +20,7 @@ import { elementStyles } from "../index";
 import './app-shell.css';
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean; scrollPosition: number }>({
+  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean; scrollPosition: number, randomJudgment: Judgment }>({
     userDetails: {
       username: cookies.get('username'),
       sessiontoken: cookies.get('sessiontoken'),
@@ -29,6 +29,7 @@ export const AppShellComponent = (props: any) => {
     itemIndex: 0,
     loginDisplayed: false,
     scrollPosition: window.innerHeight,
+    randomJudgment: getRandomJudment(),
   });
 
   useEffect(() => {
@@ -267,7 +268,7 @@ export const AppShellComponent = (props: any) => {
     <UserContext.Provider value={state.userDetails}>
       <div id={appShellId} className={appShellId} >
         <SearchComponent id={searchId} onSuggestionClick={fetchItems} />
-        <CommentsComponent id={commentsId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
+        <CommentsComponent id={commentsId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} randomJudgement={state.randomJudgment} refreshItem={fetchItems} />
         <DescriptionComponent id={descriptionId} />
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">

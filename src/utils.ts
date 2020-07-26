@@ -1,3 +1,5 @@
+import { Judgment } from "./types";
+
 const dateTimeOptions = { year: 'numeric', month: 'numeric', day: '2-digit', hour: 'numeric', minute:'2-digit'};
 
 export const convertUTCDateToLocalDate = (dateString: string): string => {
@@ -62,6 +64,6 @@ export const arrayMove = (arr: Array<any>, old_index: number, new_index: number)
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
 };
 
-export const getRandomBinary = () => {
+export const getRandomJudment = (): Judgment => {
     return Math.floor(Math.random() * 2);
 }

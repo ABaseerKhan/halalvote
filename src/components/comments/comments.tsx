@@ -1,6 +1,5 @@
 import React from 'react';
 import { CommentsCardComponent } from './comments-card';
-import { getRandomBinary } from "../../utils";
 
 // type imports
 
@@ -14,6 +13,7 @@ interface CommentsComponentProps {
     itemName: string, 
     numHalalComments: number,
     numHaramComments: number,
+    randomJudgement: Judgment,
     refreshItem: (itemTofetch: string) => any,
 };
 export const CommentsComponent = (props: CommentsComponentProps) => {
@@ -31,7 +31,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
       halalCard.style.marginLeft = "-20vw";
       haramCard.style.marginRight = "-20vw";
 
-      if (getRandomBinary()) {
+      if (props.randomJudgement == Judgment.HARAM) {
         halalCard.style.zIndex = "0";
         haramCard.style.zIndex = "2";
         halalCardCover.style.display = "block";
