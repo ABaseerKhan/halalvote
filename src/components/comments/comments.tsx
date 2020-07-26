@@ -30,16 +30,12 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
 
       if (getRandomBinary()) {
         halalCard.style.zIndex = "0";
-        haramCard.style.zIndex = "1";
-        halalCard.style.pointerEvents = "none";
-        haramCard.style.pointerEvents = "all";
+        haramCard.style.zIndex = "2";
         halalCard.style.filter = "blur(1px)";
         haramCard.style.filter = "none";
       } else {
-        halalCard.style.zIndex = "1";
+        halalCard.style.zIndex = "2";
         haramCard.style.zIndex = "0";
-        halalCard.style.pointerEvents = "all";
-        haramCard.style.pointerEvents = "none";
         halalCard.style.filter = "none";
         haramCard.style.filter = "blur(1px)";
       }
@@ -73,7 +69,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
         switch (judgment) {	
           case Judgment.HALAL:
             const halalCardMargin = parseFloat(halalCard.style.marginLeft);
-            if (halalCard.style.zIndex === "1") {
+            if (halalCard.style.zIndex === "2") {
               if (halalCardMargin > -20) {
                 mergeCards(animationStepInVW);
               } else {
@@ -83,10 +79,8 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
               if (halalCardMargin < 0) {
                 separateCards(animationStepInVW);
               } else if (halalCardMargin === 0) {
-                halalCard.style.zIndex = "1";
+                halalCard.style.zIndex = "2";
                 haramCard.style.zIndex = "0";
-                halalCard.style.pointerEvents = "all";
-                haramCard.style.pointerEvents = "none";
                 halalCard.style.filter = "none";
                 haramCard.style.filter = "blur(1px)";
                 mergeCards(animationStepInVW);
@@ -95,7 +89,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
             break;
           case Judgment.HARAM:
             const haramCardMargin = parseFloat(haramCard.style.marginRight);
-            if (haramCard.style.zIndex === "1") {
+            if (haramCard.style.zIndex === "2") {
               if (haramCardMargin > -20) {
                 mergeCards(animationStepInVW);
               } else {
@@ -106,9 +100,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
                 separateCards(animationStepInVW);
               } else if (haramCardMargin === 0) {
                 halalCard.style.zIndex = "0";
-                haramCard.style.zIndex = "1";
-                halalCard.style.pointerEvents = "none";
-                haramCard.style.pointerEvents = "all";
+                haramCard.style.zIndex = "2";
                 halalCard.style.filter = "blur(1px)";
                 haramCard.style.filter = "none";
                 mergeCards(animationStepInVW);
@@ -119,7 +111,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     }
 
     const switchCard = (judgment: Judgment) => () => {
-      switch (judgment) {	
+      switch (judgment) {
         case Judgment.HARAM:
           if (currentAnimation === Judgment.HALAL) {
             clearInterval(animationInterval);
@@ -139,10 +131,12 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     return (
         <div id={id} className="comments-body">
           <div className="comments-body-1">
-            <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCard={switchCard} />
+            <div className="comments-body-cover" onClick={switchCard(Judgment.HARAM)}></div>
+            <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} />
           </div>
           <div className="comments-body-0">
-            <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCard={switchCard} />
+            <div className="comments-body-cover" onClick={switchCard(Judgment.HALAL)}></div>
+            <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} />
           </div>
         </div>
     );

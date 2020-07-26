@@ -18,6 +18,13 @@
     float: right;
 }
 
+.comments-body-cover {
+    height: inherit;
+    width: inherit;
+    position: absolute;
+    z-index: 1;
+}
+
 .comments-card-1, .comments-card-0 {
     height: calc(100% - 4vh);
     position: relative;
