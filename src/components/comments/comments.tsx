@@ -17,8 +17,19 @@ interface CommentsComponentProps {
 export const CommentsComponent = (props: CommentsComponentProps) => {
     const { id, itemName, numHalalComments, numHaramComments, refreshItem } = props;
 
+    let animationInterval: NodeJS.Timeout;
+    
     const halalCard = document.getElementById("comments-card-0");
     const haramCard = document.getElementById("comments-card-1");
+
+    if (halalCard && haramCard) {
+      halalCard.style.marginLeft = "-20vw";
+      haramCard.style.marginRight = "-20vw";
+      halalCard.style.zIndex = "1";
+      haramCard.style.zIndex = "0";
+      halalCard.style.pointerEvents = "all";
+      haramCard.style.pointerEvents = "none";
+    }
 
     const separateCards = (value: number) => {
       if (halalCard && haramCard) {
@@ -35,44 +46,45 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     }
     
     const revealCard = (judgment: Judgment) => {
-      if (halalCard && haramCard) {
-        if (halalCard.style.marginLeft && haramCard.style.marginRight && halalCard.style.zIndex && haramCard.style.zIndex) {
-          switch (judgment) {	
-            case Judgment.HALAL:
-              const halalCardMargin = parseInt(halalCard.style.marginLeft);
-              if (halalCard.style.zIndex === "1") {
-                if (halalCardMargin > -20) {
-                  mergeCards(2);
-                }
+      if (halalCard && haramCard && halalCard.style.marginLeft && haramCard.style.marginRight && halalCard.style.zIndex && haramCard.style.zIndex) {
+        switch (judgment) {	
+          case Judgment.HALAL:
+            const halalCardMargin = parseInt(halalCard.style.marginLeft);
+            if (halalCard.style.zIndex === "1") {
+              if (halalCardMargin > -20) {
+                mergeCards(1);
               } else {
-                if (halalCardMargin < 0) {
-                  separateCards(2)
-                } else if (halalCardMargin === 0) {
-                  halalCard.style.zIndex = "1";
-                  haramCard.style.zIndex = "0";
-                }
+                clearInterval(animationInterval);
               }
-              break;
-            case Judgment.HARAM:
-              const haramCardMargin = parseInt(haramCard.style.marginRight);
-              if (haramCard.style.zIndex === "1") {
-                if (haramCardMargin > -20) {
-                  mergeCards(2);
-                }
+            } else {
+              if (halalCardMargin < 0) {
+                separateCards(1)
+              } else if (halalCardMargin === 0) {
+                halalCard.style.zIndex = "1";
+                haramCard.style.zIndex = "0";
+                halalCard.style.pointerEvents = "all";
+                haramCard.style.pointerEvents = "none";
+              }
+            }
+            break;
+          case Judgment.HARAM:
+            const haramCardMargin = parseInt(haramCard.style.marginRight);
+            if (haramCard.style.zIndex === "1") {
+              if (haramCardMargin > -20) {
+                mergeCards(1);
               } else {
-                if (haramCardMargin < 0) {
-                  separateCards(2)
-                } else if (haramCardMargin === 0) {
-                  halalCard.style.zIndex = "0";
-                  haramCard.style.zIndex = "1";
-                }
+                clearInterval(animationInterval);
               }
-          }
-        } else {
-          halalCard.style.marginLeft = "-20vw";
-          haramCard.style.marginRight = "-20vw";
-          halalCard.style.zIndex = "1";
-          haramCard.style.zIndex = "0";
+            } else {
+              if (haramCardMargin < 0) {
+                separateCards(1)
+              } else if (haramCardMargin === 0) {
+                halalCard.style.zIndex = "0";
+                haramCard.style.zIndex = "1";
+                halalCard.style.pointerEvents = "none";
+                haramCard.style.pointerEvents = "all";
+              }
+            }
         }
       }
     }
@@ -80,10 +92,10 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     window.onkeydown = (event: any) => {
       switch (event.keyCode) {	
         case 37:
-          revealCard(Judgment.HARAM);
+          animationInterval = setInterval(() => {revealCard(Judgment.HARAM)}, 1);
           break;
         case 39:
-          revealCard(Judgment.HALAL);
+          animationInterval = setInterval(() => {revealCard(Judgment.HALAL)}, 1);
         }
     }
 
