@@ -56,7 +56,7 @@ export const AppShellComponent = (props: any) => {
         state.items[state.itemIndex] = data[0]; // refresh item with new data from db
         setState(s => ({ ...s, items: state.items })); // trigger re-render
       } else {
-        setState(s => ({ ...s, items: [...s.items.slice(0, s.itemIndex), ...data, ...s.items.slice(s.itemIndex)], itemIndex: s.itemIndex }));
+        setState(s => ({ ...s, items: [...s.items.slice(0, s.itemIndex+1), ...data, ...s.items.slice(s.itemIndex+1)], itemIndex: s.itemIndex+1 }));
       }
     } else {
       setState(s => ({ ...s, items: [...s.items, ...data] }));
