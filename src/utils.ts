@@ -1,13 +1,13 @@
 const dateTimeOptions = { year: 'numeric', month: 'numeric', day: '2-digit', hour: 'numeric', minute:'2-digit'};
 
 export const convertUTCDateToLocalDate = (dateString: string): string => {
-    const date = new Date(dateString);
+    const date = new Date(dateString.replace(/-/g, "/"));
     var newDate = new Date(date.getTime() - date.getTimezoneOffset()*60*1000).toLocaleString([], dateTimeOptions);
     return newDate;
 }
 
 export const timeSince = (timeStampString: string) => {
-    const timeStamp = new Date(timeStampString + " UTC");
+    const timeStamp = new Date(timeStampString.replace(/-/g, "/") + " UTC");
     const now = new Date();
     const elapsed = now.getTime() - timeStamp.getTime()
 
