@@ -39,7 +39,7 @@ export const AppShellComponent = (props: any) => {
   }, [state.userDetails])
 
   const fetchItems = async (itemTofetch?: string) => {
-    let body: any = { "itemNames": itemTofetch ? [itemTofetch] : undefined };
+    let body: any = { "itemNames": itemTofetch ? [itemTofetch] : undefined, "n": 3 };
     let additionalHeaders = {};
 
     if (state.userDetails.username && state.userDetails.sessiontoken && state.userDetails.username != "") {
@@ -56,7 +56,7 @@ export const AppShellComponent = (props: any) => {
         state.items[state.itemIndex] = data[0]; // refresh item with new data from db
         setState(s => ({ ...s, items: state.items })); // trigger re-render
       } else {
-        setState(s => ({ ...s, items: [...s.items.slice(0, s.itemIndex), ...data, ...s.items.slice(s.itemIndex)], itemIndex: s.itemIndex+1 }));
+        setState(s => ({ ...s, items: [...s.items.slice(0, s.itemIndex), ...data, ...s.items.slice(s.itemIndex)], itemIndex: s.itemIndex }));
       }
     } else {
       setState(s => ({ ...s, items: [...s.items, ...data] }));
