@@ -31,13 +31,9 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
       if (getRandomBinary()) {
         halalCard.style.zIndex = "0";
         haramCard.style.zIndex = "2";
-        halalCard.style.filter = "blur(1px)";
-        haramCard.style.filter = "none";
       } else {
         halalCard.style.zIndex = "2";
         haramCard.style.zIndex = "0";
-        halalCard.style.filter = "none";
-        haramCard.style.filter = "blur(1px)";
       }
     }
 
@@ -81,8 +77,6 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
               } else if (halalCardMargin === 0) {
                 halalCard.style.zIndex = "2";
                 haramCard.style.zIndex = "0";
-                halalCard.style.filter = "none";
-                haramCard.style.filter = "blur(1px)";
                 mergeCards(animationStepInVW);
               }
             }
@@ -101,8 +95,6 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
               } else if (haramCardMargin === 0) {
                 halalCard.style.zIndex = "0";
                 haramCard.style.zIndex = "2";
-                halalCard.style.filter = "blur(1px)";
-                haramCard.style.filter = "none";
                 mergeCards(animationStepInVW);
               }
             }
