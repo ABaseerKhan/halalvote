@@ -22,7 +22,7 @@ export const getData = async ({ baseUrl, path, queryParams={}, additionalHeaders
         .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(queryParams[k]))
         .join('&');
 
-    const url = baseUrl + path + (query && ("?" + query) || "");
+    const url = baseUrl + path + ((query && ("?" + query)) || "");
     const response = await fetch(url, {
         method: 'GET',
         mode: 'cors',

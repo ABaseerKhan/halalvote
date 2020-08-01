@@ -155,6 +155,8 @@ export const CommentComponent = (props: CommentComponentProps) => {
                     <span
                         className={"delete-button"}
                         onClick={() => props.deleteComment(props.path)}
+                        role={"img"}
+                        aria-label="trash"
                     >
                         🗑️
                     </span>

@@ -51,7 +51,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
                 console.log(value);
                 event.preventDefault();
                 if (!state.holdingDownShift) {
-                    value = value.replace(new RegExp('<p><br><\/p>' + '$'), '');
+                    value = value.replace(new RegExp('<p><br></p>$'), '');
                     submitComment(event as any);
                 }	
                 break;	

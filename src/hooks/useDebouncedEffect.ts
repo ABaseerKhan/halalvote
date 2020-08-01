@@ -20,5 +20,5 @@ export const useDebouncedEffect = (effect: any, delay: any, deps: any) => {
             clearTimeout(handler);
         };
 
-    }, [callback, delay]);
+    }, [callback, delay, state.pendingCalls]);
 }

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { LoginComponent } from './login/login';
 import { PageScrollerComponent } from './page-scroller/page-scroller';
 import { MenuComponent } from './menu/menu';
 import { ItemCarouselComponent } from './item-carousel/item-carousel';
@@ -37,14 +36,14 @@ export const AppShellComponent = (props: any) => {
     fetchItems();
     setTimeout(() => {
       document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
-    }, 500)
+    }, 500) // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.userDetails])
 
   const fetchItems = async (itemTofetch?: string) => {
     let body: any = { "itemNames": itemTofetch ? [itemTofetch] : undefined, "n": 3 };
     let additionalHeaders = {};
 
-    if (state.userDetails.username && state.userDetails.sessiontoken && state.userDetails.username != "") {
+    if (state.userDetails.username && state.userDetails.sessiontoken && state.userDetails.username !== "") {
       body = { ...body, "username": state.userDetails.username };
       additionalHeaders = { ...additionalHeaders, "sessiontoken": state.userDetails.sessiontoken };
     }
@@ -87,20 +86,20 @@ export const AppShellComponent = (props: any) => {
     for (let x in state.items) {
       const item = state.items[x];
 
-      if (item.itemName == itemName) {
-        if (itemVote != item.vote) {
+      if (item.itemName === itemName) {
+        if (itemVote !== item.vote) {
           state.items[x] = {
             ...item,
             vote: itemVote,
-            halalVotes: itemVote == 0 ? item.halalVotes + 1 : (item.vote == 0 ? item.halalVotes - 1 : item.halalVotes),
-            haramVotes: itemVote == 1 ? item.haramVotes + 1 : (item.vote == 1 ? item.haramVotes - 1 : item.haramVotes)
+            halalVotes: itemVote === 0 ? item.halalVotes + 1 : (item.vote === 0 ? item.halalVotes - 1 : item.halalVotes),
+            haramVotes: itemVote === 1 ? item.haramVotes + 1 : (item.vote === 1 ? item.haramVotes - 1 : item.haramVotes)
           }
-        } else if (item.vote != undefined) {
+        } else if (item.vote !== undefined) {
           state.items[x] = {
             ...item,
             vote: undefined,
-            halalVotes: itemVote == 0 ? item.halalVotes - 1 : item.halalVotes,
-            haramVotes: itemVote == 1 ? item.haramVotes - 1 : item.haramVotes
+            halalVotes: itemVote === 0 ? item.halalVotes - 1 : item.halalVotes,
+            haramVotes: itemVote === 1 ? item.haramVotes - 1 : item.haramVotes
           }
         }
       }
@@ -110,11 +109,11 @@ export const AppShellComponent = (props: any) => {
   }
 
   const item = state.items.length > 0 ? state.items[state.itemIndex] : undefined;
-  const itemName = item?.itemName != undefined ? item.itemName : "";
-  const halalVotes = item?.halalVotes != undefined ? item.halalVotes : 0;
-  const haramVotes = item?.haramVotes != undefined ? item.haramVotes : 0;
-  const numHalalComments = item?.numHalalComments != undefined ? item.numHalalComments : 0;
-  const numHaramComments = item?.numHaramComments != undefined ? item.numHaramComments : 0;
+  const itemName = item?.itemName !== undefined ? item.itemName : "";
+  const halalVotes = item?.halalVotes !== undefined ? item.halalVotes : 0;
+  const haramVotes = item?.haramVotes !== undefined ? item.haramVotes : 0;
+  const numHalalComments = item?.numHalalComments !== undefined ? item.numHalalComments : 0;
+  const numHaramComments = item?.numHaramComments !== undefined ? item.numHaramComments : 0;
 
   const appShellId = "app-shell";
   const menuId = "menu";
@@ -160,7 +159,7 @@ export const AppShellComponent = (props: any) => {
       }
 
 
-      if (appShell.scrollTop % window.innerHeight == 0) {
+      if (appShell.scrollTop % window.innerHeight === 0) {
         const page = Math.floor(appShell.scrollTop / window.innerHeight);
         selectPageScrollerButton(page);
       }
@@ -277,7 +276,7 @@ export const AppShellComponent = (props: any) => {
           <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} pageThreeId={pageThreeId} scrollToPage={scrollToPage} />
           {
-            state.modalDisplayed != ModalType.NONE && <ModalComponent modalType={state.modalDisplayed} displayModal={displayModal} setUserDetails={setUserDetails} />
+            state.modalDisplayed !== ModalType.NONE && <ModalComponent modalType={state.modalDisplayed} displayModal={displayModal} setUserDetails={setUserDetails} />
           }
         </div>
       </div>

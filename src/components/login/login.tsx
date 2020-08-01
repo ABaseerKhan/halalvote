@@ -54,7 +54,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 additionalHeaders: { }
             });
 
-            if (username == data) {
+            if (username === data) {
                 displayModal(ModalType.NONE);
             }
         }

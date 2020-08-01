@@ -12,7 +12,7 @@ interface MenuComponentProps {
 };
 export const MenuComponent = (props: MenuComponentProps) => {
     const { menuId, displayModal, setUserDetails } = props;
-    let {username, sessiontoken} = React.useContext(UserContext)
+    let { username } = React.useContext(UserContext)
 
     return (
         <table id={menuId} className='menu-table'>
@@ -26,7 +26,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                     </td>
                     <td className='menu-table-column'>
                     {
-                        username && username != "" ?
+                        username && username !== "" ?
                             <div className="user-info-container">
                                 <div className="logout-button" onClick={ () => { setUserDetails("", "") } }>Logout</div>
                                 <div className="username-text">{username}</div>
