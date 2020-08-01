@@ -43,7 +43,9 @@ export const SearchComponent = (props: SearchComponentProps) => {
             else if (autoCompleteIndex < searchResults?.result?.data?.length - 1) {
                 setAutoCompleteIndex( prevIndex => (prevIndex + 1));
             }
-        } else if (e.keyCode === 13) {
+        } 
+        // enter key should execute itemClick
+        else if (e.keyCode === 13) {
             onClickSuggestion(searchResults.result.data[autoCompleteIndex][0])();
         }
     }
