@@ -95,7 +95,7 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
                 } else {
                     return (
                         <span className={"item-vote-text"}>
-                            <span>{`😈 Vote Haram ${halalVotes} 😈`}</span>
+                            <span>{`😈 Vote Haram ${halalVotes}`}</span>
                             <span className={"votes-bullet-separator"}>&bull;</span>
                             <span>{`${haramVotes} 😈`}</span>
                         </span>

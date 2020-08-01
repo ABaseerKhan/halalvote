@@ -48,7 +48,6 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         switch (event.keyCode) {	
             case 13:
-                console.log(value);
                 event.preventDefault();
                 if (!state.holdingDownShift) {
                     value = value.replace(new RegExp('<p><br><\/p>' + '$'), '');

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { LoginComponent } from './login/login';
 import { PageScrollerComponent } from './page-scroller/page-scroller';
 import { MenuComponent } from './menu/menu';
 import { ItemCarouselComponent } from './item-carousel/item-carousel';
@@ -7,6 +6,7 @@ import { SearchComponent } from './search/search';
 import { CommentsComponent } from './comments/comments';
 import { DescriptionComponent } from './description/description';
 import { AnalyticsComponent } from './analytics/analytics';
+import { AddItemButtonComponent } from './add-item/add-item-button';
 import { Item, ModalType } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
@@ -276,6 +276,7 @@ export const AppShellComponent = (props: any) => {
           <MenuComponent menuId={menuId} displayModal={displayModal} setUserDetails={setUserDetails} />
           <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} pageThreeId={pageThreeId} scrollToPage={scrollToPage} />
+          <AddItemButtonComponent displayModal={displayModal}/>
           {
             state.modalDisplayed != ModalType.NONE && <ModalComponent modalType={state.modalDisplayed} displayModal={displayModal} setUserDetails={setUserDetails} />
           }
