@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { CommentsCardComponent } from './comments-card';
 
 // type imports
@@ -6,6 +6,7 @@ import { CommentsCardComponent } from './comments-card';
 // styles
 import './comments.css';
 import { Judgment } from '../../types';
+import { getRandomJudment } from '../../utils';
 
 const animationStepInVW = 0.5;
 interface CommentsComponentProps {
@@ -13,11 +14,12 @@ interface CommentsComponentProps {
     itemName: string, 
     numHalalComments: number,
     numHaramComments: number,
-    randomJudgement: Judgment,
     refreshItem: (itemTofetch: string) => any,
 };
 export const CommentsComponent = (props: CommentsComponentProps) => {
     const { id, itemName, numHalalComments, numHaramComments, refreshItem } = props;
+
+    const [cardToShow] = useState<{ judgment: Judgment }>({ judgment: getRandomJudment() });
 
     let animationInterval: NodeJS.Timeout;
     let currentAnimation: Judgment | undefined = undefined;
@@ -31,7 +33,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
       haramCard.style.marginLeft = "20vw";
       haramCard.style.marginRight = "-40vw";
 
-      if (props.randomJudgement == Judgment.HARAM) {
+      if (cardToShow.judgment == Judgment.HARAM) {
         halalCard.style.zIndex = "0";
         haramCard.style.zIndex = "2";
         halalCardCover.style.display = "block";
@@ -123,6 +125,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     const switchCards = (judgment: Judgment) => () => {
       switch (judgment) {
         case Judgment.HARAM:
+          cardToShow.judgment = Judgment.HARAM;
           if (currentAnimation === Judgment.HALAL) {
             clearInterval(animationInterval);
           }
@@ -130,6 +133,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
           animationInterval = setInterval(() => {switchCardsStep(Judgment.HARAM)}, 5);
           break;
         case (Judgment.HALAL):
+          cardToShow.judgment = Judgment.HALAL;
           if (currentAnimation === Judgment.HARAM) {
             clearInterval(animationInterval);
           }

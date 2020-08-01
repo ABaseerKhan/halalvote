@@ -7,7 +7,7 @@ import { SearchComponent } from './search/search';
 import { CommentsComponent } from './comments/comments';
 import { DescriptionComponent } from './description/description';
 import { AnalyticsComponent } from './analytics/analytics';
-import { Item, Judgment, ModalType } from '../types';
+import { Item, ModalType } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
 import Cookies from 'universal-cookie';
@@ -21,7 +21,7 @@ import './app-shell.css';
 import { ModalComponent } from './modal/modal';
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; modalDisplayed: ModalType; scrollPosition: number, randomJudgment: Judgment }>({
+  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; modalDisplayed: ModalType; scrollPosition: number }>({
     userDetails: {
       username: cookies.get('username'),
       sessiontoken: cookies.get('sessiontoken'),
@@ -30,7 +30,6 @@ export const AppShellComponent = (props: any) => {
     itemIndex: 0,
     modalDisplayed: ModalType.NONE,
     scrollPosition: window.innerHeight,
-    randomJudgment: getRandomJudment(),
   });
 
   useEffect(() => {
@@ -269,7 +268,7 @@ export const AppShellComponent = (props: any) => {
     <UserContext.Provider value={state.userDetails}>
       <div id={appShellId} className={appShellId} >
         <SearchComponent id={searchId} onSuggestionClick={fetchItems} />
-        <CommentsComponent id={commentsId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} randomJudgement={state.randomJudgment} refreshItem={fetchItems} />
+        <CommentsComponent id={commentsId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
         <DescriptionComponent id={descriptionId} />
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">
