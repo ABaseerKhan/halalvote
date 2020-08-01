@@ -278,7 +278,7 @@ export const AppShellComponent = (props: any) => {
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} pageThreeId={pageThreeId} scrollToPage={scrollToPage} />
           <AddItemButtonComponent displayModal={displayModal}/>
           {
-            state.modalDisplayed !== ModalType.NONE && <ModalComponent modalType={state.modalDisplayed} displayModal={displayModal} setUserDetails={setUserDetails} />
+            state.modalDisplayed !== ModalType.NONE && <ModalComponent modalType={state.modalDisplayed} displayModal={displayModal} setUserDetails={setUserDetails} fetchItems={fetchItems} />
           }
         </div>
       </div>

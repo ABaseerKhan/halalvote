@@ -12,16 +12,17 @@ interface ModalComponentProps {
     modalType: ModalType;
     displayModal: any;
     setUserDetails: any;
+    fetchItems: any;
 };
 export const ModalComponent = (props: ModalComponentProps) => {
-    const { modalType, displayModal, setUserDetails } = props;
+    const { modalType, displayModal, setUserDetails, fetchItems } = props;
 
     return (
         <div>
             <div className='modal-cover' onClick={ () => { displayModal(ModalType.NONE) } }></div>
             <div className="modal">
                 { modalType == ModalType.LOGIN && <LoginComponent displayModal={displayModal} setUserDetails={setUserDetails} /> }
-                { modalType == ModalType.ADD_ITEM && <AddItemComponent displayModal={displayModal} /> }
+                { modalType == ModalType.ADD_ITEM && <AddItemComponent displayModal={displayModal} fetchItems={fetchItems} /> }
             </div>
         </div>
     );

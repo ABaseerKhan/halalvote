@@ -11,10 +11,11 @@ import './add-item.css';
 
 interface AddItemComponentProps {
     displayModal: any;
+    fetchItems: any;
 };
 export const AddItemComponent = (props: AddItemComponentProps) => {
     let { username, sessiontoken } = React.useContext(UserContext);
-    const { displayModal } = props;
+    const { displayModal, fetchItems } = props;
 
     const addItem = async () => {
         const itemName = (document.getElementById("item-name-input") as HTMLInputElement).value
@@ -32,7 +33,9 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
         });
 
         if (status == 200 && itemName == data) {
-            displayModal(ModalType.NONE)   
+            displayModal(ModalType.NONE);
+            fetchItems(itemName);
+            document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
         }
     }
 
