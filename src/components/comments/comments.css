@@ -5,19 +5,6 @@
     scroll-snap-align: start;
 }
 
-.comments-body-1, .comments-body-0 {
-    height: 100%;
-    width: 50%;
-}
-
-.comments-body-1 {
-    float: left;
-}
-
-.comments-body-0 {
-    float: right;
-}
-
 .comments-card-cover {
     height: 100%;
     width: 100%;
@@ -38,20 +25,19 @@
     position: relative;
     width: 50vw;
     margin-top: 2vh;
-    margin-left: auto;
-    margin-right: auto;
     box-shadow: 0 5px 50px 0 rgba(32,33,36,0.28);
     border-radius: 25px 25px 25px 25px;
+    float: left;
 }
 
 .comments-card-1 {
     background-color: var(--haram-color);
-    margin-right: -20vw;
+    margin-left: 20vw;
+    margin-right: -40vw;
 }
 
 .comments-card-0 {
     background-color: var(--halal-color);
-    margin-left: -20vw;
 }
 
 .comments-container {

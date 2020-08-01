@@ -28,8 +28,8 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     const haramCardCover = document.getElementById("comments-card-cover-1");
 
     if (halalCard && haramCard && halalCardCover && haramCardCover) {
-      halalCard.style.marginLeft = "-20vw";
-      haramCard.style.marginRight = "-20vw";
+      haramCard.style.marginLeft = "20vw";
+      haramCard.style.marginRight = "-40vw";
 
       if (props.randomJudgement == Judgment.HARAM) {
         halalCard.style.zIndex = "0";
@@ -46,9 +46,6 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
         halalCardCover.style.opacity = "0.0";
         haramCardCover.style.opacity = "0.5";
       }
-
-      halalCardCover.style.zIndex = "1";
-      haramCardCover.style.zIndex = "1";
     }
 
     const clearAnimations = () => {
@@ -57,36 +54,36 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     }
 
     const moveCardsApart = (value: number) => {
-      if (halalCard && haramCard && halalCardCover && haramCardCover) {
-        halalCard.style.marginLeft = `${Math.min(parseFloat(halalCard.style.marginLeft) + value, 0)}vw`;
-        haramCard.style.marginRight = `${Math.min(parseFloat(haramCard.style.marginRight) + value, 0)}vw`;
+      if (haramCard && haramCardCover) {
+        haramCard.style.marginLeft = `${Math.max(parseFloat(haramCard.style.marginLeft) - value, 0)}vw`;
+        haramCard.style.marginRight = `${Math.min(parseFloat(haramCard.style.marginRight) + (2 * value), 0)}vw`;
       }
     }
 
     const moveCardsCloser = (value: number) => {
-      if (halalCard && haramCard && halalCardCover && haramCardCover) {
-        halalCard.style.marginLeft = `${Math.max(parseFloat(halalCard.style.marginLeft) - value, -20)}vw`;
-        haramCard.style.marginRight = `${Math.max(parseFloat(haramCard.style.marginRight) - value, -20)}vw`;
+      if (haramCard && haramCardCover) {
+        haramCard.style.marginLeft = `${Math.min(parseFloat(haramCard.style.marginLeft) + value, 20)}vw`;
+        haramCard.style.marginRight = `${Math.max(parseFloat(haramCard.style.marginRight) - (2 * value), -40)}vw`;
       }
     }
     
     const switchCardsStep = (judgment: Judgment) => {
-      if (halalCard && haramCard && halalCardCover && haramCardCover && halalCard.style.marginLeft && haramCard.style.marginRight && halalCard.style.zIndex && haramCard.style.zIndex) {
+      if (halalCard && haramCard && halalCardCover && haramCardCover && haramCard.style.marginLeft && haramCard.style.marginRight && halalCard.style.zIndex && haramCard.style.zIndex) {
+        const haramCardMarginLeft = parseFloat(haramCard.style.marginLeft);
         switch (judgment) {	
           case Judgment.HALAL:
-            const halalCardMargin = parseFloat(halalCard.style.marginLeft);
-            if (halalCard.style.zIndex === "2") {
-              if (halalCardMargin > -20) {
+            if (halalCard.style.zIndex == "2") {
+              if (haramCardMarginLeft < 20) {
                 moveCardsCloser(animationStepInVW);
                 haramCardCover.style.opacity = `${Math.min(parseFloat(haramCardCover.style.opacity) + 0.02, 0.5)}`;
               } else {
                 clearAnimations();
               }
             } else {
-              if (halalCardMargin < 0) {
+              if (haramCardMarginLeft > 0) {
                 moveCardsApart(animationStepInVW);
                 halalCardCover.style.opacity = `${Math.max(parseFloat(halalCardCover.style.opacity) - 0.02, 0.0)}`;
-              } else if (halalCardMargin === 0) {
+              } else if (haramCardMarginLeft == 0) {
                 halalCard.style.zIndex = "2";
                 haramCard.style.zIndex = "0";
                 halalCardCover.style.display = "none";
@@ -98,19 +95,18 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
             }
             break;
           case Judgment.HARAM:
-            const haramCardMargin = parseFloat(haramCard.style.marginRight);
-            if (haramCard.style.zIndex === "2") {
-              if (haramCardMargin > -20) {
+            if (haramCard.style.zIndex == "2") {
+              if (haramCardMarginLeft < 20) {
                 moveCardsCloser(animationStepInVW);
                 halalCardCover.style.opacity = `${Math.min(parseFloat(halalCardCover.style.opacity) + 0.02, 0.5)}`;
               } else {
                 clearAnimations();
               }
             } else {
-              if (haramCardMargin < 0) {
+              if (haramCardMarginLeft > 0) {
                 moveCardsApart(animationStepInVW);
                 haramCardCover.style.opacity = `${Math.max(parseFloat(haramCardCover.style.opacity) - 0.02, 0.0)}`;
-              } else if (haramCardMargin === 0) {
+              } else if (haramCardMarginLeft == 0) {
                 halalCard.style.zIndex = "0";
                 haramCard.style.zIndex = "2";
                 halalCardCover.style.display = "block";
@@ -144,12 +140,8 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
 
     return (
         <div id={id} className="comments-body">
-          <div className="comments-body-1">
             <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCards={switchCards} />
-          </div>
-          <div className="comments-body-0">
             <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCards={switchCards}/>
-          </div>
         </div>
     );
 }
