@@ -31,7 +31,9 @@ export const MenuComponent = (props: MenuComponentProps) => {
                                 <div className="logout-button" onClick={ () => { setUserDetails("", "") } }>Logout</div>
                                 <div className="username-text">{username}</div>
                             </div> :
-                            <div className='login-button' onClick={ () => { displayModal(ModalType.LOGIN) } }>Log In</div>
+                            <div className="user-info-container">
+                                <div className='login-button' onClick={ () => { displayModal(ModalType.LOGIN) } }>Log In</div>
+                            </div>
                     }
                     </td>
                 </tr>
