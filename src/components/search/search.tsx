@@ -30,18 +30,15 @@ export const SearchComponent = (props: SearchComponentProps) => {
     };
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (!(searchResults?.result?.data || searchResults?.result?.data?.length)) {
-            return;
-        }
+        if (!(searchResults?.result?.data || searchResults?.result?.data?.length)) return;
+        
         // arrow up/down button should select next/previous list element
         if (e.keyCode === 38) {
             e.preventDefault();
             if (autoCompleteIndex > 0) setAutoCompleteIndex(prevIndex => (prevIndex - 1));
         } else if (e.keyCode === 40) {
             e.preventDefault();
-            if (autoCompleteIndex === -1) {
-                setAutoCompleteIndex(0);
-            }
+            if (autoCompleteIndex === -1) setAutoCompleteIndex(0);
             else if (autoCompleteIndex < searchResults?.result?.data?.length - 1) {
                 setAutoCompleteIndex( prevIndex => (prevIndex + 1));
             }
