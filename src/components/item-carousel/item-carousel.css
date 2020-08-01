@@ -23,10 +23,18 @@
 }
 
 .carousel-button {
+    padding: 0;
     cursor: pointer;
     width: 100px;
-    height: 25px;
-    margin: auto;
+    height: 100%;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+}
+
+.carousel-button:hover {
+    background-color: var(--light-neutral-color);
+    border: none;
 }
 
 .item-votes-container {
@@ -87,4 +95,9 @@
     font-size: medium;
     vertical-align: middle;
     margin-bottom: 5px;
+}
+
+.arrow-icon-left, .arrow-icon-right {
+    height: 100%;
+    width: 100%;
 }
