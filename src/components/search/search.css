@@ -61,11 +61,15 @@
     margin-top: 0;
 }
 
-.autocomplete-list-item {
+.autocomplete-list-item, .autocomplete-list-item-highlighted {
     display: flex;
     align-items: center;
     min-width: 0;
     padding: 0;
+}
+
+.autocomplete-list-item-highlighted {
+    background: #eee;
 }
 
 .autocomplete-list-item:hover {

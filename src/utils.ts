@@ -52,16 +52,18 @@ export const vhToPixelsWithMax = (vh: number, max: number) => {
     return Math.min((vh / 100.0) * window.innerHeight, max);
 }
 
-// Move array element from one index to another- in place
-export const arrayMove = (arr: Array<any>, old_index: number, new_index: number) => {
-    if (old_index === new_index) return undefined;
+// Move array element from an old_index to a new_index+1 and return the new_index+1
+// Note that this mutates the array (in place operation)
+export const arrayMove = (arr: Array<any>, old_index: number, new_index: number): number => {
+    if (old_index === new_index) return old_index;
     if (new_index >= arr.length) {
         var k = new_index - arr.length + 1;
         while (k--) {
             arr.push(undefined);
         }
     }
-    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    arr.splice(new_index+1, 0, arr.splice(old_index, 1)[0]);
+    return new_index+1;
 };
 
 export const getRandomJudment = (): Judgment => {
