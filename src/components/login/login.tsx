@@ -30,7 +30,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 additionalHeaders: { }
             });
 
-            if (status == 200) {
+            if (status === 200) {
                 const sessionToken = data;
                 setUserDetails(username, sessionToken);
             }
@@ -56,7 +56,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 additionalHeaders: { }
             });
 
-            if (status == 200 && username == data) {
+            if (status === 200 && username === data) {
                 displayModal(ModalType.NONE);
             }
         }

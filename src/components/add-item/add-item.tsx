@@ -32,7 +32,7 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
             }
         });
 
-        if (status == 200 && itemName == data) {
+        if (status === 200 && itemName === data) {
             displayModal(ModalType.NONE);
             fetchItems(itemName);
             document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);

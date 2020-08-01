@@ -21,8 +21,8 @@ export const ModalComponent = (props: ModalComponentProps) => {
         <div>
             <div className='modal-cover' onClick={ () => { displayModal(ModalType.NONE) } }></div>
             <div className="modal">
-                { modalType == ModalType.LOGIN && <LoginComponent displayModal={displayModal} setUserDetails={setUserDetails} /> }
-                { modalType == ModalType.ADD_ITEM && <AddItemComponent displayModal={displayModal} fetchItems={fetchItems} /> }
+                { modalType === ModalType.LOGIN && <LoginComponent displayModal={displayModal} setUserDetails={setUserDetails} /> }
+                { modalType === ModalType.ADD_ITEM && <AddItemComponent displayModal={displayModal} fetchItems={fetchItems} /> }
             </div>
         </div>
     );
