@@ -33,3 +33,10 @@ html, body {
 
   --highlight-color: #8fb4ff;
 }
+
+input[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  display: inline-block;
+  box-sizing: border-box;
+}
