@@ -33,7 +33,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
       haramCard.style.marginLeft = "20vw";
       haramCard.style.marginRight = "-40vw";
 
-      if (cardToShow.current == Judgment.HARAM) {
+      if (cardToShow.current === Judgment.HARAM) {
         halalCard.style.zIndex = "0";
         haramCard.style.zIndex = "2";
         halalCardCover.style.display = "block";
@@ -74,7 +74,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
         const haramCardMarginLeft = parseFloat(haramCard.style.marginLeft);
         switch (judgment) {	
           case Judgment.HALAL:
-            if (halalCard.style.zIndex == "2") {
+            if (halalCard.style.zIndex === "2") {
               if (haramCardMarginLeft < 20) {
                 moveCardsCloser(animationStepInVW);
                 haramCardCover.style.opacity = `${Math.min(parseFloat(haramCardCover.style.opacity) + 0.02, 0.5)}`;
@@ -85,7 +85,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
               if (haramCardMarginLeft > 0) {
                 moveCardsApart(animationStepInVW);
                 halalCardCover.style.opacity = `${Math.max(parseFloat(halalCardCover.style.opacity) - 0.02, 0.0)}`;
-              } else if (haramCardMarginLeft == 0) {
+              } else if (haramCardMarginLeft === 0) {
                 halalCard.style.zIndex = "2";
                 haramCard.style.zIndex = "0";
                 halalCardCover.style.display = "none";
@@ -97,7 +97,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
             }
             break;
           case Judgment.HARAM:
-            if (haramCard.style.zIndex == "2") {
+            if (haramCard.style.zIndex === "2") {
               if (haramCardMarginLeft < 20) {
                 moveCardsCloser(animationStepInVW);
                 halalCardCover.style.opacity = `${Math.min(parseFloat(halalCardCover.style.opacity) + 0.02, 0.5)}`;
@@ -108,7 +108,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
               if (haramCardMarginLeft > 0) {
                 moveCardsApart(animationStepInVW);
                 haramCardCover.style.opacity = `${Math.max(parseFloat(haramCardCover.style.opacity) - 0.02, 0.0)}`;
-              } else if (haramCardMarginLeft == 0) {
+              } else if (haramCardMarginLeft === 0) {
                 halalCard.style.zIndex = "0";
                 haramCard.style.zIndex = "2";
                 halalCardCover.style.display = "block";

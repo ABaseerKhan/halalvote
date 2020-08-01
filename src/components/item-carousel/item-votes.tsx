@@ -26,7 +26,7 @@ const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
 
     const vote = async (vote: Judgment) => {
         if (itemName && username && sessiontoken) {
-            const response = await postData({
+            await postData({
                 baseUrl: itemsConfig.url,
                 path: 'vote-item',
                 data: {
@@ -57,7 +57,7 @@ const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
 const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes: number) => {
     switch (judgement) {
         case Judgment.HALAL:
-            if (halalVotes != undefined && haramVotes != undefined) {
+            if (halalVotes !== undefined && haramVotes !== undefined) {
                 if (halalVotes > 0 || haramVotes > 0) {
                     return (
                         <span className={"item-vote-text"}>
@@ -81,7 +81,7 @@ const judgementToVoteText = (judgement: Judgment, halalVotes: number, haramVotes
                 return <span className={"item-vote-text"}>{"👼 Vote Halal 👼"}</span>
             }
         case Judgment.HARAM:
-            if (halalVotes != undefined && haramVotes != undefined) {
+            if (halalVotes !== undefined && haramVotes !== undefined) {
                 if (halalVotes > 0 || haramVotes > 0) {
                     return (
                         <span className={"item-vote-text"}>

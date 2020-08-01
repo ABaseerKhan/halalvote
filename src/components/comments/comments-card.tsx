@@ -165,7 +165,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                 let topPos = highlightedCommentElement.offsetTop;
                 let offsetParent = highlightedCommentElement.offsetParent;
     
-                while (offsetParent && offsetParent.className != "comments-container") {
+                while (offsetParent && offsetParent.className !== "comments-container") {
                     topPos += (offsetParent as HTMLElement).offsetTop;
                     offsetParent = (offsetParent as HTMLElement).offsetParent;
                 }
@@ -199,10 +199,10 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                     })
                 }
                 {
-                    moreComments > 0 && state.comments.length &&
+                    (moreComments > 0 && state.comments.length &&
                     <div className="show-more-comments" onClick={(e) => { e.stopPropagation(); fetchComments([]);  }}>
                         {moreComments + (moreComments > 1 ? " more comments" : " more comment")}
-                    </div> || null
+                    </div>) || null
                 }
             </div>
             <CommentMakerComponent 
