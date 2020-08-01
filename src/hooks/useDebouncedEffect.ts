@@ -20,5 +20,6 @@ export const useDebouncedEffect = (effect: any, delay: any, deps: any) => {
             clearTimeout(handler);
         };
 
-    }, [callback, delay, state.pendingCalls]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [callback, delay]);
 }
