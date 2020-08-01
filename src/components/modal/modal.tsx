@@ -1,11 +1,11 @@
 import React from 'react';
 
 // type imports
+import { ModalType } from '../../types';
+import { LoginComponent } from '../login/login';
 
 // styles
 import './modal.css';
-import { ModalType } from '../../types';
-import { LoginComponent } from '../login/login';
 
 interface ModalComponentProps {
     modalType: ModalType;

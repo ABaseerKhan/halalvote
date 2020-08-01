@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import { CommentsCardComponent } from './comments-card';
+import { Judgment } from '../../types';
+import { getRandomJudment } from '../../utils';
 
 // type imports
 
 // styles
 import './comments.css';
-import { Judgment } from '../../types';
-import { getRandomJudment } from '../../utils';
 
 const animationStepInVW = 0.5;
 interface CommentsComponentProps {

@@ -3,10 +3,10 @@ import { postData } from '../../https-client/post-data';
 import { usersConfig } from '../../https-client/config';
 
 // type imports
+import { ModalType } from '../../types';
 
 // styles
 import './login.css';
-import { ModalType } from '../../types';
 
 interface LoginComponentProps {
     displayModal: any;

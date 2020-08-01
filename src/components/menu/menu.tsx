@@ -1,9 +1,9 @@
 import React from 'react';
 import { UserContext } from '../app-shell'
+import { ModalType } from '../../types';
 
 // styles
 import './menu.css';
-import { ModalType } from '../../types';
 
 interface MenuComponentProps {
     menuId: string,

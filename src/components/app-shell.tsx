@@ -11,14 +11,15 @@ import { Item, ModalType } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
 import Cookies from 'universal-cookie';
-import { vhToPixelsWithMax, arrayMove, getRandomJudment } from "../utils";
+import { vhToPixelsWithMax, arrayMove } from "../utils";
+import { ModalComponent } from './modal/modal';
+import { elementStyles } from "../index";
 
 // type imports
 
 // style imports
-import { elementStyles } from "../index";
 import './app-shell.css';
-import { ModalComponent } from './modal/modal';
+
 
 export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; modalDisplayed: ModalType; scrollPosition: number }>({
