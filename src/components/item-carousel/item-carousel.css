@@ -98,6 +98,7 @@
 }
 
 .arrow-icon-left, .arrow-icon-right {
+    color: var(--gray);
     height: 100%;
     width: 100%;
 }
