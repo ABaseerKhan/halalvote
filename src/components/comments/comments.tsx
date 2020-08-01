@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { CommentsCardComponent } from './comments-card';
 
 // type imports
@@ -19,7 +19,7 @@ interface CommentsComponentProps {
 export const CommentsComponent = (props: CommentsComponentProps) => {
     const { id, itemName, numHalalComments, numHaramComments, refreshItem } = props;
 
-    const [cardToShow] = useState<{ judgment: Judgment }>({ judgment: getRandomJudment() });
+    const cardToShow = useRef<Judgment>(getRandomJudment());
 
     let animationInterval: NodeJS.Timeout;
     let currentAnimation: Judgment | undefined = undefined;
@@ -33,7 +33,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
       haramCard.style.marginLeft = "20vw";
       haramCard.style.marginRight = "-40vw";
 
-      if (cardToShow.judgment == Judgment.HARAM) {
+      if (cardToShow.current == Judgment.HARAM) {
         halalCard.style.zIndex = "0";
         haramCard.style.zIndex = "2";
         halalCardCover.style.display = "block";
@@ -125,7 +125,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     const switchCards = (judgment: Judgment) => () => {
       switch (judgment) {
         case Judgment.HARAM:
-          cardToShow.judgment = Judgment.HARAM;
+          cardToShow.current = Judgment.HARAM;
           if (currentAnimation === Judgment.HALAL) {
             clearInterval(animationInterval);
           }
@@ -133,7 +133,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
           animationInterval = setInterval(() => {switchCardsStep(Judgment.HARAM)}, 5);
           break;
         case (Judgment.HALAL):
-          cardToShow.judgment = Judgment.HALAL;
+          cardToShow.current = Judgment.HALAL;
           if (currentAnimation === Judgment.HARAM) {
             clearInterval(animationInterval);
           }
