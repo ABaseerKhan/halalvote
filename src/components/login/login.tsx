@@ -6,13 +6,14 @@ import { usersConfig } from '../../https-client/config';
 
 // styles
 import './login.css';
+import { ModalType } from '../../types';
 
 interface LoginComponentProps {
-    displayLogin: any;
+    displayModal: any;
     setUserDetails: any;
 };
 export const LoginComponent = (props: LoginComponentProps) => {
-    const { displayLogin, setUserDetails } = props;
+    const { displayModal, setUserDetails } = props;
 
     const login = () => {
         const fetchData = async () => {
@@ -54,7 +55,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
             });
 
             if (username == data) {
-                displayLogin(false);
+                displayModal(ModalType.NONE);
             }
         }
 
@@ -62,28 +63,51 @@ export const LoginComponent = (props: LoginComponentProps) => {
     }
 
     return (
-        <div>
-            <div className='login-cover' onClick={ () => { displayLogin(false) } }></div>
-            <div className='login-modal'>
-                <div className='login-text'>Log In</div>
-                <div>
-                    <label>Username</label>
+        <table className="login-body">
+            <tbody>
+                <tr>
+                    <div className="login-section-text">Log In</div>
+                </tr>
+                <tr>
+                    <div className="login-label-text">Username</div>
+                </tr>
+                <tr>
                     <input id="username-input" type="text" placeholder="Username"/>
-                    <label>Password</label>
+                </tr>
+                <tr>
+                    <div className="login-label-text">Password</div>
+                </tr>
+                <tr>
                     <input id="password-input" type="text" placeholder="Password"/>
+                </tr>
+                <tr>
                     <button className="login-submit-button" onClick={ () => { login() } }>Log In</button>
-                </div>
-                <div className="register-text">Register</div>
-                <div>
-                    <label>Email</label>
+                </tr>
+                <tr>
+                    <div className="login-section-text">Register</div>
+                </tr>
+                <tr>
+                    <div className="login-label-text">Email</div>
+                </tr>
+                <tr>
                     <input id="register-email-input" type="text" placeholder="Email"/>
-                    <label>Username</label>
+                </tr>
+                <tr>
+                    <div className="login-label-text">Username</div>
+                </tr>
+                <tr>
                     <input id="register-username-input" type="text" placeholder="Username"/>
-                    <label>Password</label>
+                </tr>
+                <tr>
+                    <div className="login-label-text">Password</div>
+                </tr>
+                <tr>
                     <input id="register-password-input" type="text" placeholder="Password"/>
+                </tr>
+                <tr>
                     <button className="login-submit-button" onClick={ () => { registerUser() } }>Register</button>
-                </div>
-            </div>
-        </div>
+                </tr>
+            </tbody>
+        </table>
     );
 }

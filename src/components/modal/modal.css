@@ -1,0 +1,20 @@
+.modal {
+    height: 500px;
+    width: 500px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -250px;
+    margin-left: -250px;
+    border-radius: 25px 25px 25px 25px;
+    background-color: #75acff;
+}
+
+.modal-cover {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    background-color: #D3D3D3;
+    opacity: 0.8;
+    top: 0;
+}

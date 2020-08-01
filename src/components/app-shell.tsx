@@ -7,7 +7,7 @@ import { SearchComponent } from './search/search';
 import { CommentsComponent } from './comments/comments';
 import { DescriptionComponent } from './description/description';
 import { AnalyticsComponent } from './analytics/analytics';
-import { Item, Judgment } from '../types';
+import { Item, Judgment, ModalType } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
 import Cookies from 'universal-cookie';
@@ -18,16 +18,17 @@ import { vhToPixelsWithMax, arrayMove, getRandomJudment } from "../utils";
 // style imports
 import { elementStyles } from "../index";
 import './app-shell.css';
+import { ModalComponent } from './modal/modal';
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; loginDisplayed: boolean; scrollPosition: number, randomJudgment: Judgment }>({
+  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; modalDisplayed: ModalType; scrollPosition: number, randomJudgment: Judgment }>({
     userDetails: {
       username: cookies.get('username'),
       sessiontoken: cookies.get('sessiontoken'),
     },
     items: [],
     itemIndex: 0,
-    loginDisplayed: false,
+    modalDisplayed: ModalType.NONE,
     scrollPosition: window.innerHeight,
     randomJudgment: getRandomJudment(),
   });
@@ -75,11 +76,11 @@ export const AppShellComponent = (props: any) => {
   const setUserDetails = (username: string, sessiontoken: string) => {
     cookies.set('username', username);
     cookies.set('sessiontoken', sessiontoken);
-    setState({ ...state, userDetails: { username: username, sessiontoken: sessiontoken }, loginDisplayed: false });
+    setState({ ...state, userDetails: { username: username, sessiontoken: sessiontoken }, modalDisplayed: ModalType.NONE });
   }
 
-  const displayLogin = (loginDisplayed: boolean) => {
-    setState({ ...state, loginDisplayed: loginDisplayed });
+  const displayModal = (modalDisplayed: ModalType) => {
+    setState({ ...state, modalDisplayed: modalDisplayed });
   }
 
   const addItemVoteLocally = (itemName: string, itemVote: number) => {
@@ -272,11 +273,11 @@ export const AppShellComponent = (props: any) => {
         <DescriptionComponent id={descriptionId} />
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">
-          <MenuComponent menuId={menuId} displayLogin={displayLogin} setUserDetails={setUserDetails} />
+          <MenuComponent menuId={menuId} displayModal={displayModal} setUserDetails={setUserDetails} />
           <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} pageThreeId={pageThreeId} scrollToPage={scrollToPage} />
           {
-            state.loginDisplayed && <LoginComponent displayLogin={displayLogin} setUserDetails={setUserDetails} />
+            state.modalDisplayed != ModalType.NONE && <ModalComponent modalType={state.modalDisplayed} displayModal={displayModal} setUserDetails={setUserDetails} />
           }
         </div>
       </div>

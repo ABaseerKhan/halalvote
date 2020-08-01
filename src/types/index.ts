@@ -36,3 +36,9 @@ export enum Vote {
     DOWNVOTE,
     UPVOTE,
 }
+
+export enum ModalType {
+    LOGIN,
+    ADD_ITEM,
+    NONE
+}

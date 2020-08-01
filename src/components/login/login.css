@@ -1,53 +1,30 @@
-.login-modal {
-    height: 500px;
-    width: 500px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-top: -250px;
-    margin-left: -250px;
-    border-radius: 25px 25px 25px 25px;
-    padding: 20px 20px 20px 20px;
-    background-color: #75acff;
-    overflow: scroll;
-}
-
-.login-cover {
+.login-body {
     height: 100%;
     width: 100%;
-    position: fixed;
-    background-color: #D3D3D3;
-    opacity: 0.8;
-    top: 0;
+    padding: 20px 20px 20px 20px;
 }
 
-.login-text {
+.login-section-text {
     width: 100%;
-    position: relative;
-    font-size: 20px;
     text-align: center;
 }
 
-.register-text {
+.login-label-text {
     width: 100%;
-    position: relative;
-    margin-top: 20px;
-    font-size: 20px;
-    text-align: center;
 }
 
 input[type=text] {
     width: 100%;
     padding: 12px 20px;
-    margin: 8px 0;
     display: inline-block;
     box-sizing: border-box;
+    border-style: solid;
 }
 
 .login-submit-button {
     width: 100%;
     padding: 12px 20px;
-    margin: 8px 0;
     display: inline-block;
     box-sizing: border-box;
+    border-style: solid;
 }

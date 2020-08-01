@@ -3,14 +3,15 @@ import { UserContext } from '../app-shell'
 
 // styles
 import './menu.css';
+import { ModalType } from '../../types';
 
 interface MenuComponentProps {
     menuId: string,
-    displayLogin: any;
+    displayModal: any;
     setUserDetails: any;
 };
 export const MenuComponent = (props: MenuComponentProps) => {
-    const { menuId, displayLogin, setUserDetails } = props;
+    const { menuId, displayModal, setUserDetails } = props;
     let {username, sessiontoken} = React.useContext(UserContext)
 
     return (
@@ -30,7 +31,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                                 <div className="logout-button" onClick={ () => { setUserDetails("", "") } }>Logout</div>
                                 <div className="username-text">{username}</div>
                             </div> :
-                            <div className='login-button' onClick={ () => { displayLogin(true) } }>Log In</div>
+                            <div className='login-button' onClick={ () => { displayModal(ModalType.LOGIN) } }>Log In</div>
                     }
                     </td>
                 </tr>
