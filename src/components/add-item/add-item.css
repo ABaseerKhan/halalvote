@@ -29,6 +29,7 @@
     border: 1px solid #dfe1e5;
     outline: none;
     padding: 14px;
+    color: var(--gray);
 }
 
 .add-item-button:hover {
