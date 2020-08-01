@@ -53,7 +53,7 @@ export const AppShellComponent = (props: any) => {
     if(itemTofetch) {
       const indexOfItemToFetch = state.items.findIndex(i => i.itemName === itemTofetch);
       if (indexOfItemToFetch >= 0) {
-        arrayMove(state.items, indexOfItemToFetch, state.itemIndex); // move item to current index if needed (for search)
+        state.itemIndex = arrayMove(state.items, indexOfItemToFetch, state.itemIndex); // move item to current index if needed (for search)
         state.items[state.itemIndex] = data[0]; // refresh item with new data from db
         setState(s => ({ ...s, items: state.items })); // trigger re-render
       } else {
