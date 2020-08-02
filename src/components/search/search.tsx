@@ -19,7 +19,6 @@ export const SearchComponent = (props: SearchComponentProps) => {
     useEffect(() => {
         if (searchResults?.result?.data && searchResults?.result?.data.length) {
             setAutoCompleteOpen(true);
-            setAutoCompleteIndex(0);
         } else {
             setAutoCompleteOpen(false);
         }

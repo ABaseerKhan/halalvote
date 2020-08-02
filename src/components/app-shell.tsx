@@ -32,7 +32,7 @@ export const AppShellComponent = (props: any) => {
   });
 
   useEffect(() => {
-    fetchItems();
+    fetchItems(cookies.get('itemName') || undefined);
     setTimeout(() => {
       document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
     }, 500) // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,7 +47,7 @@ export const AppShellComponent = (props: any) => {
       additionalHeaders = { ...additionalHeaders, "sessiontoken": state.userDetails.sessiontoken };
     }
 
-    const { data } = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders, });
+    const { data }: { data: Item[] } = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders, });
 
     if(itemTofetch) {
       const indexOfItemToFetch = state.items.findIndex(i => i.itemName === itemTofetch);
@@ -56,16 +56,18 @@ export const AppShellComponent = (props: any) => {
         state.items[state.itemIndex] = data[0]; // refresh item with new data from db
         setState(s => ({ ...s, items: state.items })); // trigger re-render
       } else {
-        setState(s => ({ ...s, items: [...s.items.slice(0, s.itemIndex+1), ...data, ...s.items.slice(s.itemIndex+1)], itemIndex: s.itemIndex+1 }));
+        setState(s => ({ ...s, items: [...s.items.slice(0, s.itemIndex+1), ...data, ...s.items.slice(s.itemIndex+1)], itemIndex: s.items.length ? s.itemIndex+1 : 0 }));
       }
     } else {
       setState(s => ({ ...s, items: [...s.items, ...data] }));
     }
+    if (data && data.length) cookies.set('itemName', data[0].itemName);
   }
 
   const iterateItem = (iteration: number) => () => {
     if ((state.itemIndex + iteration) < state.items.length && (state.itemIndex + iteration) >= 0) {
       setState({ ...state, itemIndex: state.itemIndex + iteration });
+      cookies.set("itemName", state.items[state.itemIndex + iteration].itemName);
     } else {
       return undefined;
     }
