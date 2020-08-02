@@ -6,6 +6,7 @@ import { Comment } from '../../types';
 import { postData } from '../../https-client/post-data';
 import { commentsConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
+import { ReactComponent as FlipSVG } from '../../icons/flip.svg';
 
 // type imports
 import { Judgment, judgementToTextMap } from '../../types';
@@ -192,7 +193,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
     return(
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} >
-            <div onClick={props.switchCards(+(!judgment))} className="card-flip">Flip</div>
+            <div onClick={props.switchCards(+(!judgment))} className="card-flip"><FlipSVG /></div>
             {!isMobile && <div id={commentsCardCoverId} className="comments-card-cover" onClick={props.switchCards(judgment)}></div>}
             <div id={commentsContainerId} className="comments-container">
                 {

@@ -34,9 +34,12 @@
         display: block !important;
         position: absolute;
         right: 0;
+        margin-top: 5px;
+        margin-right: 5px;
         padding-top: 5px;
         padding-right: 5px;
         z-index: 1;
+        border-radius: 0 48px 0 0;
     }
 }
 
