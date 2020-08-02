@@ -30,16 +30,16 @@ export const config = (): EnvConfig => {
     };
     const prodConfig = {
         items: {
-            apiKey: '',
-            url: '',
+            apiKey: '0idjsdWPR62EQoEPW8Wh46tw2TYNgpU36VLHGQpu',
+            url: 'https://3qhzg4cerc.execute-api.us-east-1.amazonaws.com/qa/',
         },
         comments: {
-            apiKey: '',
-            url: '',
+            apiKey: 'wQeeD3fsZ5yvo5E74WeW64pB0rPPOWm4AXdEF4zc',
+            url: 'https://15v0695aui.execute-api.us-east-1.amazonaws.com/qa/',
         },
         users: {
-            apiKey: '',
-            url: '',
+            apiKey: 'KaNe6CPBPAaakZXWauVd61E2hPU0uxLG7AkIzdEI',
+            url: 'https://3nu4kqzyt4.execute-api.us-east-1.amazonaws.com/qa/',
         }
     };
 
