@@ -155,10 +155,16 @@ export const AppShellComponent = (props: any) => {
         itemCarousel.style.visibility = "hidden";
       }
 
+      const scrollRatio = parseFloat((appShell.scrollTop / window.innerHeight).toFixed(1));
 
-      if (appShell.scrollTop % window.innerHeight === 0) {
-        const page = Math.floor(appShell.scrollTop / window.innerHeight);
-        selectPageScrollerButton(page);
+      if (scrollRatio === 0 || scrollRatio === 0.4) {
+        selectPageScrollerButton(0);
+      } else if (scrollRatio === 0.6 || scrollRatio === 1 || scrollRatio === 1.4) {
+        selectPageScrollerButton(1);
+      } else if (scrollRatio === 1.6 || scrollRatio === 2 || scrollRatio === 2.4) {
+        selectPageScrollerButton(2);
+      } else if (scrollRatio === 2.6 || scrollRatio === 3) {
+        selectPageScrollerButton(3);
       }
     }
   }
@@ -247,8 +253,7 @@ export const AppShellComponent = (props: any) => {
 
   const scrollToPage = (page: number) => {
     if (appShell) {
-      appShell.scrollTop = page * window.innerHeight;
-      selectPageScrollerButton(page);
+      appShell.scrollTo({left: 0, top: page * window.innerHeight, behavior:'smooth'});
     }
   }
 
