@@ -7,11 +7,11 @@ import { useCookies } from 'react-cookie';
 import './add-item.css';
 
 interface AddItemComponentProps {
-    removeModal: any,
+    closeModal: any,
     fetchItems: any;
 };
 export const AddItemComponent = (props: AddItemComponentProps) => {
-    const { removeModal, fetchItems } = props;
+    const { closeModal, fetchItems } = props;
     const [cookies] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
     const [state, setState] = useState<{ isAddItemButtonDisabled: boolean }>({
@@ -44,7 +44,7 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
 
             if (status === 200 && input.value === data) {
                 fetchItems(input.value);
-                removeModal();
+                closeModal();
                 document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
             }
         }

@@ -7,11 +7,11 @@ import { useCookies } from 'react-cookie';
 import './login.css';
 
 interface LoginComponentProps {
-    removeModal: any,
+    closeModal: any,
 };
 
 export const LoginComponent = (props: LoginComponentProps) => {
-    const { removeModal } = props;
+    const { closeModal } = props;
     // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const [state, setState] = useState<{ isLogin: boolean, isLoginButtonDisabled: boolean, isRegisterButtonDisabled: boolean }>({
@@ -89,7 +89,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     const sessionToken = data;
                     setCookie('username', usernameInput.value, { path: '/' });
                     setCookie('sessiontoken', sessionToken, { path: '/ '});
-                    removeModal();
+                    closeModal();
                 }
             }
         }
@@ -116,7 +116,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 });
 
                 if (status === 200 && usernameInput.value === data) {
-                    removeModal();
+                    closeModal();
                 }
             }
         }
