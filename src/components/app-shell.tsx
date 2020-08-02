@@ -19,7 +19,6 @@ import { useCookies } from 'react-cookie';
 // style imports
 import './app-shell.css';
 
-
 export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<{ items: Item[]; itemIndex: number; scrollPosition: number }>({
     items: [],

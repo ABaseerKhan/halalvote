@@ -68,4 +68,6 @@ export const arrayMove = (arr: Array<any>, old_index: number, new_index: number)
 
 export const getRandomJudment = (): Judgment => {
     return Math.floor(Math.random() * 2);
-}
+};
+
+export var isMobile = window.matchMedia("(max-width: 600px)").matches;

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import { CommentsCardComponent } from './comments-card';
 import { Judgment } from '../../types';
 import { getRandomJudment } from '../../utils';
@@ -7,6 +7,7 @@ import { getRandomJudment } from '../../utils';
 
 // styles
 import './comments.css';
+import { useMedia } from '../../hooks/useMedia';
 
 const animationStepInVW = 0.5;
 interface CommentsComponentProps {
@@ -18,7 +19,16 @@ interface CommentsComponentProps {
 };
 export const CommentsComponent = (props: CommentsComponentProps) => {
     const { id, itemName, numHalalComments, numHaramComments, refreshItem } = props;
-    const cardToShow = useRef<Judgment>(getRandomJudment());
+
+    const [cardToShow, setCardToShow] = useState<{ judgment: Judgment }>({ judgment: getRandomJudment() });
+
+    const isMobile = useMedia(
+      // Media queries
+      ['(max-width: 600px)'],
+      [true],
+      // default value
+      false
+    );
 
     let animationInterval: NodeJS.Timeout;
     let currentAnimation: Judgment | undefined = undefined;
@@ -32,7 +42,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
       haramCard.style.marginLeft = "20vw";
       haramCard.style.marginRight = "-40vw";
 
-      if (cardToShow.current === Judgment.HARAM) {
+      if (cardToShow.judgment === Judgment.HARAM) {
         halalCard.style.zIndex = "0";
         haramCard.style.zIndex = "2";
         halalCardCover.style.display = "block";
@@ -124,27 +134,35 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     const switchCards = (judgment: Judgment) => () => {
       switch (judgment) {
         case Judgment.HARAM:
-          cardToShow.current = Judgment.HARAM;
-          if (currentAnimation === Judgment.HALAL) {
-            clearInterval(animationInterval);
+          if (isMobile) {
+            setCardToShow({ judgment: Judgment.HARAM });
+          } else {
+            cardToShow.judgment = Judgment.HARAM;
+            if (currentAnimation === Judgment.HALAL) {
+              clearInterval(animationInterval);
+            }
+            currentAnimation = Judgment.HARAM;
+            animationInterval = setInterval(() => {switchCardsStep(Judgment.HARAM)}, 5);
           }
-          currentAnimation = Judgment.HARAM;
-          animationInterval = setInterval(() => {switchCardsStep(Judgment.HARAM)}, 5);
           break;
         case (Judgment.HALAL):
-          cardToShow.current = Judgment.HALAL;
-          if (currentAnimation === Judgment.HARAM) {
-            clearInterval(animationInterval);
+          if (isMobile) {
+            setCardToShow({ judgment: Judgment.HALAL });
+          } else {
+            cardToShow.judgment = Judgment.HALAL;
+            if (currentAnimation === Judgment.HARAM) {
+              clearInterval(animationInterval);
+            }
+            currentAnimation = Judgment.HALAL;
+            animationInterval = setInterval(() => {switchCardsStep(Judgment.HALAL)}, 5);
           }
-          currentAnimation = Judgment.HALAL;
-          animationInterval = setInterval(() => {switchCardsStep(Judgment.HALAL)}, 5);
         }
     }
 
     return (
         <div id={id} className="comments-body">
-            <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCards={switchCards} />
-            <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCards={switchCards}/>
+            {(!isMobile || cardToShow.judgment === Judgment.HARAM) && <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCards={switchCards} />}
+            {(!isMobile || cardToShow.judgment === Judgment.HALAL) && <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCards={switchCards}/>}
         </div>
     );
 }
