@@ -12,20 +12,21 @@
     height: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
     width: 100%;
     display: flex;
+    overflow: scroll;
 }
 
 .item-text {
-    width: 50%;
     text-align: center;
     margin: auto;
     font-size: 32px;
-    color: var(--gray)
+    color: var(--gray);
 }
 
 .carousel-button {
     padding: 0;
     cursor: pointer;
     width: 100px;
+    min-width: 100px;
     height: 100%;
     background: transparent;
     border: none;
@@ -44,6 +45,10 @@
 }
 
 .item-voter-0, .item-voter-1 {
+    display: flex;
+    justify-content: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
     width: 50%;
     height: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
     border: none;
