@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { UserContext } from '../app-shell'
 import { ModalComponent } from '../modal/modal';
 
 // type imports
@@ -7,17 +6,19 @@ import { ModalType } from '../../types';
 
 // styles
 import './menu.css';
+import { useCookies } from 'react-cookie';
 
 interface MenuComponentProps {
     menuId: string,
-    setUserDetails: any;
 };
 export const MenuComponent = (props: MenuComponentProps) => {
-    const { menuId, setUserDetails } = props;
+    const { menuId } = props;
+    const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
+    const { username } = cookies;
+
     const [state, setState] = useState<{loginDisplayed: Boolean  }>({
         loginDisplayed: false
     });
-    let { username } = React.useContext(UserContext)
 
     const setLoginDisplayed = (loginDisplayed: Boolean) => {
         setState({loginDisplayed: loginDisplayed});
@@ -26,7 +27,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
     return (
         <div>
             { state.loginDisplayed &&
-                <ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} setUserDetails={setUserDetails} fetchItems={null}/>
+                <ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchItems={null}/>
             }
             <table id={menuId} className='menu-table'>
                 <tbody>
@@ -41,7 +42,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                         {
                             username && username !== "" ?
                                 <div className="menu-text-container">
-                                    <div className="logout-button" onClick={ () => { setUserDetails("", "") } }>Logout</div>
+                                    <div className="logout-button" onClick={ () => { setCookie("username", "", { path: '/' }); setCookie("sessiontoken", "", { path: '/' }) } }>Logout</div>
                                     <div className="username-text">{username}</div>
                                 </div> :
                                 <div className="menu-text-container">

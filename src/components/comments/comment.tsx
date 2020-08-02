@@ -4,7 +4,6 @@ import { ReactComponent as UpArrowSVG } from '../../icons/up-arrow.svg';
 import { ReactComponent as DownArrowSVG } from '../../icons/down-arrow.svg';
 import { ReactComponent as ExpandSVG } from '../../icons/expand-button.svg';
 import { Comment, Judgment } from '../../types';
-import { UserContext } from '../app-shell';
 import { convertUTCDateToLocalDate, timeSince } from '../../utils';
 import Linkify from 'react-linkify'; 
 import { commentsConfig } from '../../https-client/config';
@@ -15,6 +14,7 @@ import { Vote } from '../../types';
 
 // style imports
 import './comments.css';
+import { useCookies } from 'react-cookie';
 
 interface CommentComponentProps {
     key: number,
@@ -27,7 +27,9 @@ interface CommentComponentProps {
     judgment: Judgment;
 }
 export const CommentComponent = (props: CommentComponentProps) => {
-    let { username, sessiontoken } = React.useContext(UserContext);
+    const [cookies] = useCookies(['username', 'sessiontoken']);
+    const { username, sessiontoken } = cookies;
+
     const [state, setState] = useState({
         comment: props.comment,
         canShowMore: true,

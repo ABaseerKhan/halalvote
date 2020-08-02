@@ -5,13 +5,13 @@ import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
 import { postData } from '../../https-client/post-data';
 import { commentsConfig } from '../../https-client/config';
-import { UserContext } from '../app-shell'
 
 // type imports
 import { Judgment, judgementToTextMap } from '../../types';
 
 // style imports
 import './comments.css';
+import { useCookies } from 'react-cookie';
 
 interface CommentsCardComponentProps {
     judgment: Judgment,
@@ -35,7 +35,8 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const { judgment, itemName, numHalalComments, numHaramComments, refreshItem } = props;
     const totalTopLevelComments = (judgment === Judgment.HALAL ? numHalalComments : numHaramComments) || 0;
 
-    const { username, sessiontoken } = React.useContext(UserContext)
+    const [cookies] = useCookies(['username', 'sessiontoken']);
+    const { username, sessiontoken } = cookies;
 
     const [state, setState] = useState<CommentsCardState>(initialState);
 

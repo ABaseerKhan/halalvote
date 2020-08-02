@@ -1,18 +1,19 @@
 import React from 'react';
-import { UserContext } from '../app-shell';
 import { postData } from '../../https-client/post-data';
 import { itemsConfig } from '../../https-client/config';
 
 // styles
 import './add-item.css';
+import { useCookies } from 'react-cookie';
 
 interface AddItemComponentProps {
     removeModal: any,
     fetchItems: any;
 };
 export const AddItemComponent = (props: AddItemComponentProps) => {
-    let { username, sessiontoken } = React.useContext(UserContext);
     const { removeModal, fetchItems } = props;
+    const [cookies] = useCookies(['username', 'sessiontoken']);
+    const { username, sessiontoken } = cookies;
 
     const addItem = async () => {
         const itemName = (document.getElementById("item-name-input") as HTMLInputElement).value

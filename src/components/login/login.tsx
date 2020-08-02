@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { postData } from '../../https-client/post-data';
 import { usersConfig } from '../../https-client/config';
+import { useCookies } from 'react-cookie';
 
 // styles
 import './login.css';
 
 interface LoginComponentProps {
     removeModal: any,
-    setUserDetails: any;
 };
+
 export const LoginComponent = (props: LoginComponentProps) => {
-    const { removeModal, setUserDetails } = props;
+    const { removeModal } = props;
+    const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const [state, setState] = useState<{ isLogin: Boolean }>({
         isLogin: true
     });
@@ -36,7 +38,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
 
             if (status === 200) {
                 const sessionToken = data;
-                setUserDetails(username, sessionToken);
+                setCookie('username', username, { path: '/' });
+                setCookie('sessiontoken', sessionToken, { path: '/ '});
                 removeModal();
             }
         }

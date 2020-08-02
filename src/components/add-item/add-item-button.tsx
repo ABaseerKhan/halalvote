@@ -24,7 +24,7 @@ export const AddItemButtonComponent = (props: AddItemButtonComponentProps) => {
     return (
         <div>
             { state.addItemDisplayed &&
-                <ModalComponent removeModal={() => setAddItemDisplayed(false)} modalType={ModalType.ADD_ITEM} setUserDetails={null} fetchItems={fetchItems}/>
+                <ModalComponent removeModal={() => setAddItemDisplayed(false)} modalType={ModalType.ADD_ITEM} fetchItems={fetchItems}/>
             }
             <AddButtonSVG className="add-item-button" onClick={ () => setAddItemDisplayed(true) }></AddButtonSVG>
         </div>
