@@ -5,13 +5,14 @@ import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
 import { postData } from '../../https-client/post-data';
 import { commentsConfig } from '../../https-client/config';
+import { useCookies } from 'react-cookie';
 
 // type imports
 import { Judgment, judgementToTextMap } from '../../types';
 
 // style imports
 import './comments.css';
-import { useCookies } from 'react-cookie';
+import { useMedia } from '../../hooks/useMedia';
 
 interface CommentsCardComponentProps {
     judgment: Judgment,
@@ -34,6 +35,14 @@ const initialState = {
 const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const { judgment, itemName, numHalalComments, numHaramComments, refreshItem } = props;
     const totalTopLevelComments = (judgment === Judgment.HALAL ? numHalalComments : numHaramComments) || 0;
+
+    const isMobile = useMedia(
+        // Media queries
+        ['(max-width: 600px)'],
+        [true],
+        // default value
+        false
+    );
 
     const [cookies] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
@@ -152,7 +161,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             let highlightedComment = getCommentFromPath(state.comments, path);
             scrollToHighlightedComment(highlightedComment);
             if (commentMakerRef.current) {
-                commentMakerRef.current.focus();
+                //commentMakerRef.current.focus();
             };
         }
     }
@@ -183,7 +192,8 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
     return(
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} >
-            <div id={commentsCardCoverId} className="comments-card-cover" onClick={props.switchCards(judgment)}></div>
+            <div onClick={props.switchCards(+(!judgment))} className="card-flip">Flip</div>
+            {!isMobile && <div id={commentsCardCoverId} className="comments-card-cover" onClick={props.switchCards(judgment)}></div>}
             <div id={commentsContainerId} className="comments-container">
                 {
                     state.comments.map((comment: Comment, i: number) => {

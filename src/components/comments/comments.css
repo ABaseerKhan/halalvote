@@ -20,6 +20,30 @@
     background-color: var(--highlight-color);
 }
 
+@media only screen and (max-width: 600px) {
+    .comments-body {
+        display: flex;
+    }
+    .comments-card-1, .comments-card-0 {
+        width: 80vw !important;
+        display: flex !important;
+        margin-left: 10px !important;
+    }
+    .card-flip {
+        cursor: pointer;
+        display: block !important;
+        position: absolute;
+        right: 0;
+        padding-top: 5px;
+        padding-right: 5px;
+        z-index: 1;
+    }
+}
+
+.card-flip {
+    display: none;
+}
+
 .comments-card-1, .comments-card-0 {
     height: calc(100% - 4vh);
     position: relative;
