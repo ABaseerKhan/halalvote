@@ -18,7 +18,6 @@ interface CommentsComponentProps {
 };
 export const CommentsComponent = (props: CommentsComponentProps) => {
     const { id, itemName, numHalalComments, numHaramComments, refreshItem } = props;
-
     const cardToShow = useRef<Judgment>(getRandomJudment());
 
     let animationInterval: NodeJS.Timeout;
