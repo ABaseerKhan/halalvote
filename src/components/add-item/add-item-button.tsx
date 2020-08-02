@@ -36,14 +36,21 @@ export const AddItemButtonComponent = (props: AddItemButtonComponentProps) => {
     const addButton = document.getElementById(addButtonId);
 
     if (addButton) {
+        window.onresize = () => {
+            addButton.style.top = "";
+            addButton.style.left = "";
+            addButton.style.bottom = "5%";
+            addButton.style.right = "5%";
+        }
+
         if (isMobile) {
             addButton.ontouchmove = (event: any) => {
                 // grab the location of touch
                 var touchLocation = event.targetTouches[0];
                 
                 // assign box new coordinates based on the touch.
-                addButton.style.left = touchLocation.pageX - 30 + 'px';
-                addButton.style.top = touchLocation.pageY - 30 + 'px';
+                addButton.style.left = touchLocation.pageX - 30 + "px";
+                addButton.style.top = touchLocation.pageY - 30 + "px";
             }
             addButton.onclick = () => {
                 setAddItemDisplayed(true);
@@ -53,8 +60,8 @@ export const AddItemButtonComponent = (props: AddItemButtonComponentProps) => {
                 state.isDragging.value = true;
                 addButton.style.bottom = "0";
                 addButton.style.right = "0";
-                addButton.style.top = (parseInt(event.pageY) - 30).toString();
-                addButton.style.left = (parseInt(event.pageX) - 30).toString();
+                addButton.style.top = event.pageY - 30 + "px";
+                addButton.style.left = event.pageX - 30 + "px";
             }
             addButton.onmousedown = () => {
                 window.onmousemove = onMouseMove
@@ -71,6 +78,7 @@ export const AddItemButtonComponent = (props: AddItemButtonComponentProps) => {
                 state.isDragging.value = false;
                 addButton.onmousemove = null;
             }
+            addButton.onclick = null;
         }
     }
 
