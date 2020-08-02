@@ -1,21 +1,28 @@
 .add-item-body {
-    height: 100%;
+    position: absolute;
     width: 100%;
-    padding: 20px 20px 20px 20px;
+    display: block;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .add-item-section-text {
     width: 100%;
     text-align: center;
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: var(--gray);
 }
 
-.add-item-label-text {
-    width: 100%;
+.add-item-input {
+    width: 80% !important;
+    margin: 10px 0 10px 10%;
 }
 
 .add-item-submit-button {
-    width: 100%;
+    width: 80%;
     padding: 6px;
+    margin: 10px 0 0 10%;
 }
 
 .add-item-button {
