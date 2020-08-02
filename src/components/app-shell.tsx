@@ -67,7 +67,6 @@ export const AppShellComponent = (props: any) => {
     if (data && data.length) setCookie('itemName', data[0].itemName);
     else {
       removeCookie("itemName");
-      fetchItems();
     }
   }
 
