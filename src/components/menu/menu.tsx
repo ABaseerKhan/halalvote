@@ -1,18 +1,22 @@
 import React from 'react';
-import { UserContext } from '../app-shell'
 import { ModalType } from '../../types';
 
 // styles
 import './menu.css';
+import { useCookies } from 'react-cookie';
 
 interface MenuComponentProps {
     menuId: string,
     displayModal: any;
-    setUserDetails: any;
 };
 export const MenuComponent = (props: MenuComponentProps) => {
-    const { menuId, displayModal, setUserDetails } = props;
-    let { username } = React.useContext(UserContext)
+    const { menuId, displayModal } = props;
+    const [cookies, setCookie] = useCookies(['userDetails']);
+
+    let username: string | undefined;
+    if (cookies.userDetails) {
+        username = cookies.userDetails.username;
+    };
 
     return (
         <table id={menuId} className='menu-table'>
@@ -28,8 +32,8 @@ export const MenuComponent = (props: MenuComponentProps) => {
                     {
                         username && username !== "" ?
                             <div className="menu-text-container">
-                                <div className="logout-button" onClick={ () => { setUserDetails("", "") } }>Logout</div>
-                                <div className="username-text">{username}</div>
+                                <div className="logout-button" onClick={ () => { setCookie("userDetails", { username: "", sessiontoken: "" }, { path: '/' }) } }>Logout</div>
+                                <div className="username-text">{cookies.username}</div>
                             </div> :
                             <div className="menu-text-container">
                                 <div className='login-button' onClick={ () => { displayModal(ModalType.LOGIN) } }>Log In</div>

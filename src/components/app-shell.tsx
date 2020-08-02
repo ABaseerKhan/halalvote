@@ -10,10 +10,10 @@ import { AddItemButtonComponent } from './add-item/add-item-button';
 import { Item, ModalType } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
-import Cookies from 'universal-cookie';
 import { vhToPixelsWithMax, arrayMove } from "../utils";
 import { ModalComponent } from './modal/modal';
 import { elementStyles } from "../index";
+import { useCookies } from 'react-cookie';
 
 // type imports
 
@@ -22,31 +22,29 @@ import './app-shell.css';
 
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; modalDisplayed: ModalType; scrollPosition: number }>({
-    userDetails: {
-      username: cookies.get('username'),
-      sessiontoken: cookies.get('sessiontoken'),
-    },
+  const [state, setState] = useState<{ items: Item[]; itemIndex: number; modalDisplayed: ModalType; scrollPosition: number }>({
     items: [],
     itemIndex: 0,
     modalDisplayed: ModalType.NONE,
     scrollPosition: window.innerHeight,
   });
 
+  const [cookies, setCookie] = useCookies(['userDetails', 'itemName']);
+
   useEffect(() => {
-    fetchItems(cookies.get('itemName') || undefined);
+    fetchItems(cookies.itemName || undefined);
     setTimeout(() => {
       document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
     }, 500) // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.userDetails])
+  }, [cookies.userDetails]);
 
   const fetchItems = async (itemTofetch?: string) => {
     let body: any = { "itemNames": itemTofetch ? [itemTofetch] : undefined, "n": 3 };
     let additionalHeaders = {};
 
-    if (state.userDetails.username && state.userDetails.sessiontoken && state.userDetails.username !== "") {
-      body = { ...body, "username": state.userDetails.username };
-      additionalHeaders = { ...additionalHeaders, "sessiontoken": state.userDetails.sessiontoken };
+    if (cookies?.userDetails?.username && cookies?.userDetails?.sessiontoken && cookies?.userDetails?.username !== "") {
+      body = { ...body, "username": cookies.userDetails.username };
+      additionalHeaders = { ...additionalHeaders, "sessiontoken": cookies.userDetails.sessiontoken };
     }
 
     const { data }: { data: Item[] } = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders, });
@@ -63,22 +61,22 @@ export const AppShellComponent = (props: any) => {
     } else {
       setState(s => ({ ...s, items: [...s.items, ...data] }));
     }
-    if (data && data.length) cookies.set('itemName', data[0].itemName);
+    if (data && data.length) setCookie('itemName', data[0].itemName);
   }
 
   const iterateItem = (iteration: number) => () => {
     if ((state.itemIndex + iteration) < state.items.length && (state.itemIndex + iteration) >= 0) {
       setState({ ...state, itemIndex: state.itemIndex + iteration });
-      cookies.set("itemName", state.items[state.itemIndex + iteration].itemName);
+      setCookie("itemName", state.items[state.itemIndex + iteration].itemName);
     } else {
       return undefined;
     }
   };
 
   const setUserDetails = (username: string, sessiontoken: string) => {
-    cookies.set('username', username);
-    cookies.set('sessiontoken', sessiontoken);
-    setState({ ...state, userDetails: { username: username, sessiontoken: sessiontoken }, modalDisplayed: ModalType.NONE });
+    setCookie('username', username);
+    setCookie('sessiontoken', sessiontoken);
+    setState({ ...state, modalDisplayed: ModalType.NONE });
   }
 
   const displayModal = (modalDisplayed: ModalType) => {
@@ -268,29 +266,20 @@ export const AppShellComponent = (props: any) => {
   }
 
   return (
-    <UserContext.Provider value={state.userDetails}>
       <div id={appShellId} className={appShellId} >
         <SearchComponent id={searchId} onSuggestionClick={fetchItems} />
         <CommentsComponent id={commentsId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
         <DescriptionComponent id={descriptionId} />
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">
-          <MenuComponent menuId={menuId} displayModal={displayModal} setUserDetails={setUserDetails} />
+          <MenuComponent menuId={menuId} displayModal={displayModal} />
           <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} pageThreeId={pageThreeId} scrollToPage={scrollToPage} />
           <AddItemButtonComponent displayModal={displayModal}/>
           {
-            state.modalDisplayed !== ModalType.NONE && <ModalComponent modalType={state.modalDisplayed} displayModal={displayModal} setUserDetails={setUserDetails} fetchItems={fetchItems} />
+            state.modalDisplayed !== ModalType.NONE && <ModalComponent modalType={state.modalDisplayed} displayModal={displayModal} fetchItems={fetchItems} />
           }
         </div>
       </div>
-    </UserContext.Provider>
   )
 }
-
-const cookies = new Cookies();
-
-export const UserContext = React.createContext({
-  username: cookies.get('username'),
-  sessiontoken: cookies.get('sessiontoken'),
-});

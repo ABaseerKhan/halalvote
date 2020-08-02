@@ -1,5 +1,4 @@
 import React from 'react';
-import { UserContext } from '../app-shell';
 import { postData } from '../../https-client/post-data';
 import { itemsConfig } from '../../https-client/config';
 
@@ -8,13 +7,16 @@ import { ModalType } from '../../types';
 
 // styles
 import './add-item.css';
+import { useCookies } from 'react-cookie';
 
 interface AddItemComponentProps {
     displayModal: any;
     fetchItems: any;
 };
 export const AddItemComponent = (props: AddItemComponentProps) => {
-    let { username, sessiontoken } = React.useContext(UserContext);
+    const [cookies] = useCookies(['UserContext']);
+    const { username, sessiontoken } = cookies.userDetails;
+
     const { displayModal, fetchItems } = props;
 
     const addItem = async () => {

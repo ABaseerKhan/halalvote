@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { postData } from '../../https-client/post-data';
 import { usersConfig } from '../../https-client/config';
+import { useCookies } from 'react-cookie';
 
 // type imports
 import { ModalType } from '../../types';
@@ -10,10 +11,10 @@ import './login.css';
 
 interface LoginComponentProps {
     displayModal: any;
-    setUserDetails: any;
 };
 export const LoginComponent = (props: LoginComponentProps) => {
-    const { displayModal, setUserDetails } = props;
+    const { displayModal } = props;
+    const [cookies, setCookie] = useCookies(['userDetails']);
     const [state, setState] = useState<{ isLogin: Boolean }>({
         isLogin: true
     });
@@ -39,7 +40,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
 
             if (status === 200) {
                 const sessionToken = data;
-                setUserDetails(username, sessionToken);
+                setCookie('userDetails', { username: username, sessiontoken: sessionToken }, { path: '/' });
             }
         }
 

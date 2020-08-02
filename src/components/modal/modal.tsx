@@ -11,17 +11,16 @@ import { AddItemComponent } from '../add-item/add-item';
 interface ModalComponentProps {
     modalType: ModalType;
     displayModal: any;
-    setUserDetails: any;
     fetchItems: any;
 };
 export const ModalComponent = (props: ModalComponentProps) => {
-    const { modalType, displayModal, setUserDetails, fetchItems } = props;
+    const { modalType, displayModal, fetchItems } = props;
 
     return (
         <div>
             <div className='modal-cover' onClick={ () => { displayModal(ModalType.NONE) } }></div>
             <div className="modal">
-                { modalType === ModalType.LOGIN && <LoginComponent displayModal={displayModal} setUserDetails={setUserDetails} /> }
+                { modalType === ModalType.LOGIN && <LoginComponent displayModal={displayModal} /> }
                 { modalType === ModalType.ADD_ITEM && <AddItemComponent displayModal={displayModal} fetchItems={fetchItems} /> }
             </div>
         </div>
