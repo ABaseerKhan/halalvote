@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { postData } from '../../https-client/post-data';
 import { usersConfig } from '../../https-client/config';
 
@@ -14,7 +14,14 @@ interface LoginComponentProps {
 };
 export const LoginComponent = (props: LoginComponentProps) => {
     const { displayModal, setUserDetails } = props;
+    const [state, setState] = useState<{ isLogin: Boolean }>({
+        isLogin: true
+    });
 
+    const setLogin = (isLogin: Boolean) => {
+        setState({isLogin: isLogin});
+    }
+    
     const login = () => {
         const fetchData = async () => {
             const username = (document.getElementById("username-input") as HTMLInputElement).value
@@ -65,51 +72,24 @@ export const LoginComponent = (props: LoginComponentProps) => {
     }
 
     return (
-        <table className="login-body">
-            <tbody>
-                <tr>
-                    <div className="login-section-text">Log In</div>
-                </tr>
-                <tr>
-                    <div className="login-label-text">Username</div>
-                </tr>
-                <tr>
-                    <input id="username-input" type="text" placeholder="Username"/>
-                </tr>
-                <tr>
-                    <div className="login-label-text">Password</div>
-                </tr>
-                <tr>
-                    <input id="password-input" type="text" placeholder="Password"/>
-                </tr>
-                <tr>
-                    <button className="login-submit-button" onClick={ () => { login() } }>Log In</button>
-                </tr>
-                <tr>
-                    <div className="login-section-text">Register</div>
-                </tr>
-                <tr>
-                    <div className="login-label-text">Email</div>
-                </tr>
-                <tr>
-                    <input id="register-email-input" type="text" placeholder="Email"/>
-                </tr>
-                <tr>
-                    <div className="login-label-text">Username</div>
-                </tr>
-                <tr>
-                    <input id="register-username-input" type="text" placeholder="Username"/>
-                </tr>
-                <tr>
-                    <div className="login-label-text">Password</div>
-                </tr>
-                <tr>
-                    <input id="register-password-input" type="text" placeholder="Password"/>
-                </tr>
-                <tr>
-                    <button className="login-submit-button" onClick={ () => { registerUser() } }>Register</button>
-                </tr>
-            </tbody>
-        </table>
+        <div>
+        { state.isLogin ?
+            <div className="login-body">
+                <div className="login-section-text">Log In</div>
+                <input id="username-input" className="login-input" type="text" placeholder="Username"/>
+                <input id="password-input" className="login-input" type="text" placeholder="Password"/>
+                <button className="login-submit-button" onClick={ () => { login() } }>Log In</button>
+                <div className="login-switch-button" onClick={() => setLogin(false)}>New user? Create account here.</div>
+            </div> :
+            <div className="login-body">
+                <div className="login-section-text">Register</div>
+                <input id="register-email-input" className="login-input" type="text" placeholder="Email"/>
+                <input id="register-username-input" className="login-input" type="text" placeholder="Username"/>
+                <input id="register-password-input" className="login-input" type="text" placeholder="Password"/>
+                <button className="login-submit-button" onClick={ () => { registerUser() } }>Register</button>
+                <div className="login-switch-button" onClick={() => setLogin(true)}>Already have an account? Log in here.</div>
+            </div> 
+        }
+        </div>
     );
 }

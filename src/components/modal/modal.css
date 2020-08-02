@@ -7,7 +7,7 @@
     margin-top: -250px;
     margin-left: -250px;
     border-radius: 25px 25px 25px 25px;
-    background-color: #75acff;
+    background-color: var(--light-neutral-color);
 }
 
 .modal-cover {

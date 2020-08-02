@@ -40,15 +40,10 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
     }
 
     return (
-        <table className="add-item-body">
-            <tbody>
-                <tr>
-                    <input id="item-name-input" type="text" placeholder="Item Name"/>
-                </tr>
-                <tr>
-                    <button className="add-item-submit-button" onClick={ () => { addItem() } }>Add Item</button>
-                </tr>
-            </tbody>
-        </table>
+        <div className="add-item-body">
+            <div className="add-item-section-text">Register</div>
+            <input id="item-name-input" className="add-item-input" type="text" placeholder="Item Name"/>
+            <button className="add-item-submit-button" onClick={ () => { addItem() } }>Add Item</button>
+        </div>
     );
 }
