@@ -27,7 +27,7 @@ export const AppShellComponent = (props: any) => {
     scrollPosition: window.innerHeight,
   });
 
-  const [cookies, setCookie] = useCookies(['username', 'sessiontoken', 'itemName']);
+  const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken', 'itemName']);
   const { username, sessiontoken } = cookies;
 
   useEffect(() => {
@@ -65,6 +65,10 @@ export const AppShellComponent = (props: any) => {
       setState(s => ({ ...s, items: [...s.items, ...data] }));
     }
     if (data && data.length) setCookie('itemName', data[0].itemName);
+    else {
+      removeCookie("itemName");
+      fetchItems();
+    }
   }
 
   const iterateItem = (iteration: number) => () => {
