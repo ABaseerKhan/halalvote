@@ -39,7 +39,6 @@
         margin-right: 5px;
         padding-top: 5px;
         padding-right: 5px;
-        z-index: 0;
         border-radius: 0 48px 0 0;
     }
     .comments-container {
@@ -74,7 +73,7 @@
 .comments-container {
     position: relative;
     height: calc(100% - 4em - 20px);
-    margin: 10px 25px 10px 25px;
+    padding: 10px 25px 10px 25px;
     border-radius: 25px 25px 25px 25px;
     overflow: scroll;
     scroll-behavior: smooth;
