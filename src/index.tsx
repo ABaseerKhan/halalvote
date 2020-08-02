@@ -8,7 +8,7 @@ import { AppShellComponent } from './components/app-shell';
 import './index.css';
 
 ReactDOM.render(
-  <AppShellComponent />,
+    <AppShellComponent />,
   document.getElementById('root')
 );
 
