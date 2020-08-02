@@ -8,6 +8,12 @@
     scroll-snap-align: start;
 }
 
+@media only screen and (max-width: 600px) {
+    .search-bar {
+        display: inline;
+    }
+}
+
 .search-bar {
     font-size: 16px;
     position: relative;

@@ -1,5 +1,9 @@
 .comments-body {
+<<<<<<< Updated upstream
     height: max(calc(100% - calc(var(--toolbar-height-vh) + var(--item-carousel-height-vh))), calc(100% - calc(var(--max-toolbar-height-px) + var(--max-item-carousel-height-px))));
+=======
+    height: min(calc(var(--toolbar-height-vh) + var(--item-carousel-height-vh)), calc(var(--max-toolbar-height-px) + var(--max-item-carousel-height-px)));
+>>>>>>> Stashed changes
     width: 100%;
     padding-top: min(calc(var(--toolbar-height-vh) + var(--item-carousel-height-vh)), calc(var(--max-toolbar-height-px) + var(--max-item-carousel-height-px)));
     scroll-snap-align: start;
