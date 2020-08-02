@@ -7,12 +7,11 @@ import { CommentsComponent } from './comments/comments';
 import { DescriptionComponent } from './description/description';
 import { AnalyticsComponent } from './analytics/analytics';
 import { AddItemButtonComponent } from './add-item/add-item-button';
-import { Item, ModalType } from '../types';
+import { Item } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
 import Cookies from 'universal-cookie';
 import { vhToPixelsWithMax, arrayMove } from "../utils";
-import { ModalComponent } from './modal/modal';
 import { elementStyles } from "../index";
 
 // type imports
@@ -22,14 +21,13 @@ import './app-shell.css';
 
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; modalDisplayed: ModalType; scrollPosition: number }>({
+  const [state, setState] = useState<{ userDetails: any; items: Item[]; itemIndex: number; scrollPosition: number }>({
     userDetails: {
       username: cookies.get('username'),
       sessiontoken: cookies.get('sessiontoken'),
     },
     items: [],
     itemIndex: 0,
-    modalDisplayed: ModalType.NONE,
     scrollPosition: window.innerHeight,
   });
 
@@ -76,11 +74,7 @@ export const AppShellComponent = (props: any) => {
   const setUserDetails = (username: string, sessiontoken: string) => {
     cookies.set('username', username);
     cookies.set('sessiontoken', sessiontoken);
-    setState({ ...state, userDetails: { username: username, sessiontoken: sessiontoken }, modalDisplayed: ModalType.NONE });
-  }
-
-  const displayModal = (modalDisplayed: ModalType) => {
-    setState({ ...state, modalDisplayed: modalDisplayed });
+    setState({ ...state, userDetails: { username: username, sessiontoken: sessiontoken } });
   }
 
   const addItemVoteLocally = (itemName: string, itemVote: number) => {
@@ -273,13 +267,10 @@ export const AppShellComponent = (props: any) => {
         <DescriptionComponent id={descriptionId} />
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">
-          <MenuComponent menuId={menuId} displayModal={displayModal} setUserDetails={setUserDetails} />
+          <MenuComponent menuId={menuId} setUserDetails={setUserDetails} />
           <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} pageThreeId={pageThreeId} scrollToPage={scrollToPage} />
-          <AddItemButtonComponent displayModal={displayModal}/>
-          {
-            state.modalDisplayed !== ModalType.NONE && <ModalComponent modalType={state.modalDisplayed} displayModal={displayModal} setUserDetails={setUserDetails} fetchItems={fetchItems} />
-          }
+          <AddItemButtonComponent fetchItems={fetchItems}/>
         </div>
       </div>
     </UserContext.Provider>

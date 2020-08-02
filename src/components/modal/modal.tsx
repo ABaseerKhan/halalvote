@@ -1,4 +1,6 @@
 import React from 'react';
+import { AddItemComponent } from '../add-item/add-item';
+import { Portal } from '../../index';
 
 // type imports
 import { ModalType } from '../../types';
@@ -6,24 +8,23 @@ import { LoginComponent } from '../login/login';
 
 // styles
 import './modal.css';
-import { AddItemComponent } from '../add-item/add-item';
 
 interface ModalComponentProps {
+    removeModal: any,
     modalType: ModalType;
-    displayModal: any;
     setUserDetails: any;
     fetchItems: any;
 };
 export const ModalComponent = (props: ModalComponentProps) => {
-    const { modalType, displayModal, setUserDetails, fetchItems } = props;
+    const { removeModal, modalType, setUserDetails, fetchItems } = props;
 
     return (
-        <div>
-            <div className='modal-cover' onClick={ () => { displayModal(ModalType.NONE) } }></div>
+        <Portal>
+            <div className='modal-cover' onClick={ removeModal }></div>
             <div className="modal">
-                { modalType === ModalType.LOGIN && <LoginComponent displayModal={displayModal} setUserDetails={setUserDetails} /> }
-                { modalType === ModalType.ADD_ITEM && <AddItemComponent displayModal={displayModal} fetchItems={fetchItems} /> }
+                { modalType === ModalType.LOGIN && <LoginComponent removeModal={removeModal} setUserDetails={setUserDetails} /> }
+                { modalType === ModalType.ADD_ITEM && <AddItemComponent removeModal={removeModal} fetchItems={fetchItems} /> }
             </div>
-        </div>
+        </Portal>
     );
 }

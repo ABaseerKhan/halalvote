@@ -2,18 +2,15 @@ import React, { useState } from 'react';
 import { postData } from '../../https-client/post-data';
 import { usersConfig } from '../../https-client/config';
 
-// type imports
-import { ModalType } from '../../types';
-
 // styles
 import './login.css';
 
 interface LoginComponentProps {
-    displayModal: any;
+    removeModal: any,
     setUserDetails: any;
 };
 export const LoginComponent = (props: LoginComponentProps) => {
-    const { displayModal, setUserDetails } = props;
+    const { removeModal, setUserDetails } = props;
     const [state, setState] = useState<{ isLogin: Boolean }>({
         isLogin: true
     });
@@ -40,6 +37,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
             if (status === 200) {
                 const sessionToken = data;
                 setUserDetails(username, sessionToken);
+                removeModal();
             }
         }
 
@@ -64,7 +62,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
             });
 
             if (status === 200 && username === data) {
-                displayModal(ModalType.NONE);
+                removeModal();
             }
         }
 

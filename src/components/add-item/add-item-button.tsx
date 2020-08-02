@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ReactComponent as AddButtonSVG } from '../../icons/add-button.svg';
+import { ModalComponent } from '../modal/modal';
 
 // type imports
 import { ModalType } from '../../types';
@@ -8,12 +9,24 @@ import { ModalType } from '../../types';
 import './add-item.css';
 
 interface AddItemButtonComponentProps {
-    displayModal: any;
+    fetchItems: any
 };
 export const AddItemButtonComponent = (props: AddItemButtonComponentProps) => {
-    const { displayModal } = props;
+    const { fetchItems } = props;
+    const [state, setState] = useState<{addItemDisplayed: Boolean  }>({
+        addItemDisplayed: false
+    });
+
+    const setAddItemDisplayed = (addItemDisplayed: Boolean) => {
+        setState({addItemDisplayed: addItemDisplayed});
+    }
 
     return (
-        <AddButtonSVG className="add-item-button" onClick={ () => { displayModal(ModalType.ADD_ITEM) } }>+</AddButtonSVG>
+        <div>
+            { state.addItemDisplayed &&
+                <ModalComponent removeModal={() => setAddItemDisplayed(false)} modalType={ModalType.ADD_ITEM} setUserDetails={null} fetchItems={fetchItems}/>
+            }
+            <AddButtonSVG className="add-item-button" onClick={ () => setAddItemDisplayed(true) }></AddButtonSVG>
+        </div>
     );
 }
