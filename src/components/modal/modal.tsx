@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { AddItemComponent } from '../add-item/add-item';
 import { Portal } from '../../index';
-
-// type imports
 import { ModalType } from '../../types';
 import { LoginComponent } from '../login/login';
+import { useMedia } from '../../hooks/useMedia';
+
+// type imports
 
 // styles
 import './modal.css';
@@ -17,14 +18,34 @@ interface ModalComponentProps {
 export const ModalComponent = (props: ModalComponentProps) => {
     const { removeModal, modalType, fetchItems } = props;
 
+    const isMobile = useMedia(
+        // Media queries
+        ['(max-width: 600px)'],
+        [true],
+        // default value
+        false
+    );
+
     const modalId = "modal";
 
     useEffect(() => {
         const modal = document.getElementById(modalId);
 
         if (modal) {
+            let height = "min(60vh, 500px)";
+            let marginTop = "max(-30vh, -250px)";
+            let width = "min(50vw, 500px)";
+            let marginLeft = "max(-25vw, -250px)";
+
+            if (isMobile) {
+                height = "50vh";
+                marginTop = "-25vh";
+                width = "70vw";
+                marginLeft = "-35vw";
+            }
+
             modal.animate([
-                {height: "min(60vh, 500px)", marginTop: "max(-30vh, -250px)", width: "min(50vw, 500px)", marginLeft: "max(-25vw, -250px)"}
+                {height: height, marginTop: marginTop, width: width, marginLeft: marginLeft}
             ], {
                 duration: 100,
                 fill: "forwards"

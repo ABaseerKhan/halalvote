@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { CommentsCardComponent } from './comments-card';
 import { Judgment } from '../../types';
 import { getRandomJudment } from '../../utils';
+import { useMedia } from '../../hooks/useMedia';
 
 // type imports
 
 // styles
 import './comments.css';
-import { useMedia } from '../../hooks/useMedia';
 
 const animationStepInVW = 0.5;
 interface CommentsComponentProps {
