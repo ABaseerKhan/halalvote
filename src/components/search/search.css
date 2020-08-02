@@ -18,6 +18,7 @@
 
 .search-header {
     font-size: 64px;
+    color: var(--gray);
 }
 
 .search-bar-input,
