@@ -1,5 +1,4 @@
 import React, {memo} from 'react';
-import { UserContext } from '../app-shell'
 import { postData } from '../../https-client/post-data';
 import { itemsConfig } from '../../https-client/config';
 
@@ -8,6 +7,7 @@ import { Judgment } from '../../types';
 
 //style imports
 import './item-carousel.css';
+import { useCookies } from 'react-cookie';
 
 interface ItemVotesComponentProps {
     itemName: string,
@@ -19,7 +19,8 @@ interface ItemVotesComponentProps {
 
 const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
     const { itemName, userVote, halalVotes, haramVotes, addItemVoteLocally } = props;
-    const { username, sessiontoken } = React.useContext(UserContext)
+    const [cookies] = useCookies(['username', 'sessiontoken']);
+    const { username, sessiontoken } = cookies;
 
     const isHalalSelected = userVote === Judgment.HALAL;
     const isHaramSelected = userVote === Judgment.HARAM;

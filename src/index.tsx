@@ -1,6 +1,7 @@
 import React, {ReactNode} from 'react';
 import ReactDOM from 'react-dom';
 import { AppShellComponent } from './components/app-shell';
+import { CookiesProvider } from 'react-cookie';
 
 // type imports
 
@@ -8,10 +9,10 @@ import { AppShellComponent } from './components/app-shell';
 import './index.css';
 
 ReactDOM.render(
-  <div>
+  <CookiesProvider >
     <AppShellComponent />
     <div id="portal"></div>
-  </div>,
+  </CookiesProvider>,
   document.getElementById('root')
 );
 

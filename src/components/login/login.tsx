@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import { postData } from '../../https-client/post-data';
 import { usersConfig } from '../../https-client/config';
+import { useCookies } from 'react-cookie';
 
 // styles
 import './login.css';
 
 interface LoginComponentProps {
     removeModal: any,
-    setUserDetails: any;
 };
+
 export const LoginComponent = (props: LoginComponentProps) => {
-    const { removeModal, setUserDetails } = props;
-    const [state, setState] = useState<{ isLogin: Boolean }>({
-        isLogin: true
+    const { removeModal } = props;
+    // eslint-disable-next-line
+    const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
+    const [state, setState] = useState<{ isLogin: boolean, isLoginButtonDisabled: boolean, isRegisterButtonDisabled: boolean }>({
+        isLogin: true,
+        isLoginButtonDisabled: true,
+        isRegisterButtonDisabled: true
     });
 
     const getUsernameInput = (): HTMLInputElement => {
@@ -55,11 +60,13 @@ export const LoginComponent = (props: LoginComponentProps) => {
         if (registerEmailInput) {registerEmailInput.value = ""};
         if (registerUsernameInput) {registerUsernameInput.value = ""};
         if (registerPasswordInput) {registerPasswordInput.value = ""};
+
+        setState({...state, isLoginButtonDisabled: false, isRegisterButtonDisabled: false});
     }
 
-    const setLogin = (isLogin: Boolean) => {
+    const setLogin = (isLogin: boolean) => {
         clearInputs();
-        setState({isLogin: isLogin});
+        setState({...state, isLogin: isLogin});
     }
     
     const login = () => {
@@ -80,7 +87,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
 
                 if (status === 200) {
                     const sessionToken = data;
-                    setUserDetails(usernameInput.value, sessionToken);
+                    setCookie('username', usernameInput.value, { path: '/' });
+                    setCookie('sessiontoken', sessionToken, { path: '/ '});
                     removeModal();
                 }
             }
@@ -123,11 +131,11 @@ export const LoginComponent = (props: LoginComponentProps) => {
 
         if (usernameInput && passwordInput && submitButton) {
             if (usernameInput.value === "" || passwordInput.value === "") {
-                submitButton.disabled = true;
                 submitButton.classList.add("disabled-button");
+                setState({...state, isLoginButtonDisabled: true});
             } else {
-                submitButton.disabled = false;
                 submitButton.classList.remove("disabled-button");
+                setState({...state, isLoginButtonDisabled: false});
             }
         }
     }
@@ -140,11 +148,11 @@ export const LoginComponent = (props: LoginComponentProps) => {
 
         if (emailInput && usernameInput && passwordInput && submitButton) {
             if (emailInput.value === "" || usernameInput.value === "" || passwordInput.value === "") {
-                submitButton.disabled = true;
                 submitButton.classList.add("disabled-button");
+                setState({...state, isRegisterButtonDisabled: true});
             } else {
-                submitButton.disabled = false;
                 submitButton.classList.remove("disabled-button");
+                setState({...state, isRegisterButtonDisabled: false});
             }
         }
     }
@@ -156,7 +164,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 <div className="login-section-text">Log In</div>
                 <input id="username-input" className="login-input" type="text" placeholder="Username" onChange={checkLoginInputs}/>
                 <input id="password-input" className="login-input" type="password" placeholder="Password" onChange={checkLoginInputs}/>
-                <button id="login-submit-button" className="login-submit-button disabled-button" onClick={ () => { login() } } disabled={true}>Log In</button>
+                <button id="login-submit-button" className="login-submit-button disabled-button" onClick={ () => { login() } } disabled={state.isLoginButtonDisabled}>Log In</button>
                 <div className="login-switch-button" onClick={() => setLogin(false)}>New user? Create account here.</div>
             </div> :
             <div className="login-body">
@@ -164,7 +172,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 <input id="register-email-input" className="login-input" type="text" placeholder="Email" onChange={checkRegisterInputs}/>
                 <input id="register-username-input" className="login-input" type="text" placeholder="Username" onChange={checkRegisterInputs}/>
                 <input id="register-password-input" className="login-input" type="password" placeholder="Password" onChange={checkRegisterInputs}/>
-                <button id="register-submit-button" className="login-submit-button disabled-button" onClick={ () => { registerUser() } } disabled={true}>Register</button>
+                <button id="register-submit-button" className="login-submit-button disabled-button" onClick={ () => { registerUser() } } disabled={state.isRegisterButtonDisabled}>Register</button>
                 <div className="login-switch-button" onClick={() => setLogin(true)}>Already have an account? Log in here.</div>
             </div> 
         }
