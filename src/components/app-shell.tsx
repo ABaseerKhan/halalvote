@@ -38,7 +38,11 @@ export const AppShellComponent = (props: any) => {
   }, []);
 
   const fetchItems = async (itemTofetch?: string) => {
-    let body: any = { "itemNames": itemTofetch ? [itemTofetch] : undefined, "n": 3 };
+    let body: any = { 
+      "itemNames": itemTofetch ? [itemTofetch] : undefined, 
+      "n": 3,
+      "excludedItems": state.items && state.items.length && !itemTofetch ? state.items.map((item) => item.itemName) : undefined,
+    };
     let additionalHeaders = {};
 
     if (username && sessiontoken && username !== "") {
@@ -67,8 +71,9 @@ export const AppShellComponent = (props: any) => {
     if ((state.itemIndex + iteration) < state.items.length && (state.itemIndex + iteration) >= 0) {
       setState({ ...state, itemIndex: state.itemIndex + iteration });
       setCookie("itemName", state.items[state.itemIndex + iteration].itemName);
-    } else {
-      return undefined;
+    } else if ((state.itemIndex + iteration) === state.items.length) {
+      fetchItems();
+      setState({ ...state, itemIndex: state.itemIndex + iteration });
     }
   };
 
