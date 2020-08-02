@@ -45,6 +45,7 @@ export const AddItemButtonComponent = (props: AddItemButtonComponentProps) => {
 
         if (isMobile) {
             addButton.ontouchmove = (event: any) => {
+                event.preventDefault();
                 // grab the location of touch
                 var touchLocation = event.targetTouches[0];
                 
