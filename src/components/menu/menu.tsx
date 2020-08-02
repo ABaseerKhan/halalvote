@@ -22,16 +22,16 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
                     </td>
                     <td className='menu-table-column'>
-                        <div className='logo'>--LOGO--</div>
+                        <div className='logo'>HV</div>
                     </td>
                     <td className='menu-table-column'>
                     {
                         username && username !== "" ?
-                            <div className="user-info-container">
+                            <div className="menu-text-container">
                                 <div className="logout-button" onClick={ () => { setUserDetails("", "") } }>Logout</div>
                                 <div className="username-text">{username}</div>
                             </div> :
-                            <div className="user-info-container">
+                            <div className="menu-text-container">
                                 <div className='login-button' onClick={ () => { displayModal(ModalType.LOGIN) } }>Log In</div>
                             </div>
                     }
