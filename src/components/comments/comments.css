@@ -27,7 +27,8 @@
     .comments-card-1, .comments-card-0 {
         width: 80vw !important;
         display: flex !important;
-        margin-left: 10px !important;
+        margin-left: unset !important;
+        margin-right: unset !important;
     }
     .card-flip {
         cursor: pointer;
@@ -38,8 +39,11 @@
         margin-right: 5px;
         padding-top: 5px;
         padding-right: 5px;
-        z-index: 1;
+        z-index: 0;
         border-radius: 0 48px 0 0;
+    }
+    .comments-container {
+        margin: 10px 25px 10px 10px !important;
     }
 }
 
@@ -70,7 +74,7 @@
 .comments-container {
     position: relative;
     height: calc(100% - 4em - 20px);
-    padding: 10px 25px 10px 25px;
+    margin: 10px 25px 10px 25px;
     border-radius: 25px 25px 25px 25px;
     overflow: scroll;
     scroll-behavior: smooth;

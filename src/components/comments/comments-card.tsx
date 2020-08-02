@@ -21,7 +21,7 @@ interface CommentsCardComponentProps {
     numHalalComments: number,
     numHaramComments: number,
     refreshItem: (itemTofetch: string) => any,
-    switchCards: (judgement: Judgment) => any
+    switchCards: (judgement: Judgment) => any,
 };
 
 interface CommentsCardState {
@@ -193,37 +193,37 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
     return(
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} >
-            <div onClick={props.switchCards(+(!judgment))} className="card-flip"><FlipSVG /></div>
-            {!isMobile && <div id={commentsCardCoverId} className="comments-card-cover" onClick={props.switchCards(judgment)}></div>}
-            <div id={commentsContainerId} className="comments-container">
-                {
-                    state.comments.map((comment: Comment, i: number) => {
-                        return <CommentComponent 
-                                    key={comment.id} 
-                                    comment={comment} 
-                                    path={[i]} 
-                                    pathToHighlightedComment={state.pathToHighlightedComment} 
-                                    highlightComment={highlightComment} 
-                                    fetchMoreReplies={fetchComments}
-                                    deleteComment={deleteComment}
-                                    judgment={judgment}
-                                />
-                    })
-                }
-                {
-                    (moreComments > 0 && state.comments.length &&
-                    <div className="show-more-comments" onClick={(e) => { e.stopPropagation(); fetchComments([]);  }}>
-                        {moreComments + (moreComments > 1 ? " more comments" : " more comment")}
-                    </div>) || null
-                }
-            </div>
-            <CommentMakerComponent 
-                ref={commentMakerRef}
-                judgment={judgment} 
-                submitComment={createComment} 
-                replyToUsername={highlightedComment?.username}
-            />
-            <br/>
+                <div onClick={props.switchCards(+(!judgment))} className="card-flip"><FlipSVG /></div>
+                {!isMobile && <div id={commentsCardCoverId} className="comments-card-cover" onClick={props.switchCards(judgment)}></div>}
+                <div id={commentsContainerId} className="comments-container">
+                    {
+                        state.comments.map((comment: Comment, i: number) => {
+                            return <CommentComponent 
+                                        key={comment.id} 
+                                        comment={comment} 
+                                        path={[i]} 
+                                        pathToHighlightedComment={state.pathToHighlightedComment} 
+                                        highlightComment={highlightComment} 
+                                        fetchMoreReplies={fetchComments}
+                                        deleteComment={deleteComment}
+                                        judgment={judgment}
+                                    />
+                        })
+                    }
+                    {
+                        (moreComments > 0 && state.comments.length &&
+                        <div className="show-more-comments" onClick={(e) => { e.stopPropagation(); fetchComments([]);  }}>
+                            {moreComments + (moreComments > 1 ? " more comments" : " more comment")}
+                        </div>) || null
+                    }
+                </div>
+                <CommentMakerComponent 
+                    ref={commentMakerRef}
+                    judgment={judgment} 
+                    submitComment={createComment} 
+                    replyToUsername={highlightedComment?.username}
+                />
+                <br/>
         </div>
     )
 }

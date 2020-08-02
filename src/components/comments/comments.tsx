@@ -3,6 +3,7 @@ import { CommentsCardComponent } from './comments-card';
 import { Judgment } from '../../types';
 import { getRandomJudment } from '../../utils';
 import { useMedia } from '../../hooks/useMedia';
+import ReactCardFlip from '../../card-flip/card-flip';
 
 // type imports
 
@@ -159,10 +160,19 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
         }
     }
 
-    return (
+    const MobileView = (
+      <div id={id} className="comments-body">
+          <ReactCardFlip isFlipped={cardToShow.judgment === Judgment.HALAL} flipDirection="horizontal" infinite={true}>
+            {cardToShow.judgment === Judgment.HARAM ? <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCards={switchCards}/> : <div></div>}
+            {true ? <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCards={switchCards}/> : <div></div>}
+          </ReactCardFlip>
+        </div>
+    )
+
+    return isMobile ? MobileView : (
         <div id={id} className="comments-body">
-            {(!isMobile || cardToShow.judgment === Judgment.HARAM) && <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCards={switchCards} />}
-            {(!isMobile || cardToShow.judgment === Judgment.HALAL) && <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCards={switchCards}/>}
+            <CommentsCardComponent judgment={Judgment.HARAM} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCards={switchCards}/>
+            <CommentsCardComponent judgment={Judgment.HALAL} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={refreshItem} switchCards={switchCards}/>
         </div>
     );
 }
