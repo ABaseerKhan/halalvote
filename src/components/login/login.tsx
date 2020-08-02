@@ -12,6 +12,7 @@ interface LoginComponentProps {
 
 export const LoginComponent = (props: LoginComponentProps) => {
     const { removeModal } = props;
+    // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const [state, setState] = useState<{ isLogin: Boolean }>({
         isLogin: true

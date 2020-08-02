@@ -13,7 +13,8 @@ interface MenuComponentProps {
 };
 export const MenuComponent = (props: MenuComponentProps) => {
     const { menuId } = props;
-    const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
+    // eslint-disable-next-line
+    const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken']);
     const { username } = cookies;
 
     const [state, setState] = useState<{loginDisplayed: Boolean  }>({
@@ -42,7 +43,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                         {
                             username && username !== "" ?
                                 <div className="menu-text-container">
-                                    <div className="logout-button" onClick={ () => { setCookie("username", "", { path: '/' }); setCookie("sessiontoken", "", { path: '/' }) } }>Logout</div>
+                                    <div className="logout-button" onClick={ () => { removeCookie("username"); removeCookie("sessiontoken") } }>Logout</div>
                                     <div className="username-text">{username}</div>
                                 </div> :
                                 <div className="menu-text-container">
