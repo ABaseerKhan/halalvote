@@ -65,11 +65,17 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
         }
     }
 
+    const handleKeyPress = (event: any) => {
+        if (!state.isAddItemButtonDisabled && event.charCode === 13) {
+            addItem();
+        }
+    }
+
     return (
         <div className="add-item-body">
             <div className="add-item-section-text">Add Item</div>
-            <input id="add-item-input" className="add-item-input" type="text" placeholder="Item Name" onChange={checkInput}/>
-            <button id="add-item-submit-button" className="add-item-submit-button disabled-button" onClick={ () => { addItem() } } disabled={state.isAddItemButtonDisabled}>Add Item</button>
+            <input id="add-item-input" className="add-item-input" type="text" placeholder="Item Name" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
+            <button id="add-item-submit-button" className="add-item-submit-button disabled-button" onClick={addItem} disabled={state.isAddItemButtonDisabled}>Add Item</button>
         </div>
     );
 }
