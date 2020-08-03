@@ -43,6 +43,7 @@
     }
     .comments-container {
         margin: 10px 25px 10px 10px !important;
+        padding: 0 !important;
     }
 }
 
