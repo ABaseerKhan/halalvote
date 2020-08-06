@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 import { ReactFlipCardProps } from './index';
+import { NONAME } from 'dns';
 
 const ReactCardFlip: React.FC<ReactFlipCardProps> = (props: ReactFlipCardProps) => {
     const {
@@ -18,10 +19,12 @@ const ReactCardFlip: React.FC<ReactFlipCardProps> = (props: ReactFlipCardProps) 
     } = props;
 
     const [isFlipped, setFlipped] = useState(props.isFlipped);
-    const [rotation, setRotation] = useState(0);
+    const [rotation, setRotation] = useState(props.isFlipped ? 180 : 0);
+    const [frontCardWidth, setFrontCardWidth] = useState('100%');
+    const [backCardWidth, setBackCardWidth] = useState('100%');
 
     useEffect(() => {
-        if (props.isFlipped !== isFlipped) {
+        if (props.isFlipped != isFlipped) {
             const commentsContainers = [document.getElementById("comments-container-0"), document.getElementById("comments-container-1")];
             if (commentsContainers[0] && commentsContainers[1]) {
                 commentsContainers[0].style.overflow = "hidden";
@@ -29,12 +32,21 @@ const ReactCardFlip: React.FC<ReactFlipCardProps> = (props: ReactFlipCardProps) 
             }
             setFlipped(props.isFlipped);
             setRotation((c) => c + 180);
+
+            setFrontCardWidth("100%");
+            setBackCardWidth("100%")
             setTimeout(() => {
                 if (commentsContainers[0] && commentsContainers[1]) {
                     commentsContainers[0].style.overflow = "scroll";
                     commentsContainers[1].style.overflow = "scroll";
+
+                    if (props.isFlipped) {
+                        setFrontCardWidth("0");
+                    } else {
+                        setBackCardWidth("0");
+                    }
                 }
-            }, (flipSpeedFrontToBack * 1000 + 50));
+            }, (flipSpeedFrontToBack * 1000 + 20));
         }
     }, [props.isFlipped]);
 
@@ -70,8 +82,8 @@ const ReactCardFlip: React.FC<ReactFlipCardProps> = (props: ReactFlipCardProps) 
             top: '0',
             transform: flipDirection === 'horizontal' ? backRotateY : backRotateX,
             transformStyle: 'preserve-3d',
-            transition: `${flipSpeedFrontToBack}s`,
-            width: '100%',
+            transition: `transform ${flipSpeedFrontToBack}s`,
+            width: backCardWidth,
             zIndex: isFlipped ? '2' : 'unset',
             ...back,
         },
@@ -93,8 +105,8 @@ const ReactCardFlip: React.FC<ReactFlipCardProps> = (props: ReactFlipCardProps) 
             top: '0',
             transform: flipDirection === 'horizontal' ? frontRotateY : frontRotateX,
             transformStyle: 'preserve-3d',
-            transition: `${flipSpeedBackToFront}s`,
-            width: '100%',
+            transition: `transform ${flipSpeedBackToFront}s`,
+            width: frontCardWidth,
             zIndex: isFlipped ? 'unset' : '2',
             ...front,
         },
