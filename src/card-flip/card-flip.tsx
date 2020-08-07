@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 import { ReactFlipCardProps } from './index';
-import { NONAME } from 'dns';
 
 const ReactCardFlip: React.FC<ReactFlipCardProps> = (props: ReactFlipCardProps) => {
     const {
@@ -20,11 +19,11 @@ const ReactCardFlip: React.FC<ReactFlipCardProps> = (props: ReactFlipCardProps) 
 
     const [isFlipped, setFlipped] = useState(props.isFlipped);
     const [rotation, setRotation] = useState(props.isFlipped ? 180 : 0);
-    const [frontCardWidth, setFrontCardWidth] = useState('100%');
+    const [frontCardWidth, setFrontCardWidth] = useState(props.isFlipped ? '0' : '100%');
     const [backCardWidth, setBackCardWidth] = useState('100%');
 
     useEffect(() => {
-        if (props.isFlipped != isFlipped) {
+        if (props.isFlipped !== isFlipped) {
             const commentsContainers = [document.getElementById("comments-container-0"), document.getElementById("comments-container-1")];
             if (commentsContainers[0] && commentsContainers[1]) {
                 commentsContainers[0].style.overflow = "hidden";
@@ -47,7 +46,7 @@ const ReactCardFlip: React.FC<ReactFlipCardProps> = (props: ReactFlipCardProps) 
                     }
                 }
             }, (flipSpeedFrontToBack * 1000 + 20));
-        }
+        } // eslint-disable-next-line
     }, [props.isFlipped]);
 
     const getComponent = (key: 0 | 1) => {

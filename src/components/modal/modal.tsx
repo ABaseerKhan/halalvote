@@ -50,7 +50,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
                 duration: 100,
                 fill: "forwards"
             })
-        }
+        } // eslint-disable-next-line
     }, []);
 
     const closeModal = () => {
