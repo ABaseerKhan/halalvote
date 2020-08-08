@@ -12,7 +12,11 @@
     height: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
     width: 100%;
     display: flex;
-    overflow: scroll;
+    overflow-y: scroll;
+}
+
+.item-navigator::-webkit-scrollbar {
+    display: none;
 }
 
 .item-text {

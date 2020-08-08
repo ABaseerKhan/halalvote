@@ -1,4 +1,4 @@
-import React, { useState, memo, useRef } from 'react';
+import React, { useState, memo, useRef, useEffect } from 'react';
 import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
@@ -7,6 +7,7 @@ import { postData } from '../../https-client/post-data';
 import { commentsConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
 import { ReactComponent as FlipSVG } from '../../icons/flip.svg';
+import { SkeletonComponent } from "./comments-skeleton";
 
 // type imports
 import { Judgment, judgementToTextMap } from '../../types';
@@ -26,11 +27,15 @@ interface CommentsCardComponentProps {
 
 interface CommentsCardState {
     comments: Comment[];
+    loading: boolean;
+    commentsShowable: boolean;
     pathToHighlightedComment: number[] | undefined;
 };
 
 const initialState = {
     comments: [],
+    loading: true,
+    commentsShowable: true,
     pathToHighlightedComment: undefined,
 }
 const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
@@ -58,7 +63,14 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             state.pathToHighlightedComment = undefined;
             fetchComments([]);
         }
-    }, 500, [itemName, judgment])
+    }, 500, [itemName, judgment]);
+
+    useEffect(() => {
+        if (!state.loading) {
+            setTimeout(() => { setState(prevState => ({ ...prevState, commentsShowable: true })) }, 300);
+            setState(prevState => ({ ...prevState, loading: true, commentsShowable: false }));
+        }
+    }, [itemName]);
 
     const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
@@ -78,9 +90,9 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         });
         const updatedComments = addCommentsLocally(state.comments, comments, pathToParentComment, true);
         if (totalTopLevelComments !== undefined) {
-            setState(prevState => ({ ...prevState, comments: updatedComments, totalTopLevelComments: totalTopLevelComments }));
+            setState(prevState => ({ ...prevState, comments: updatedComments, totalTopLevelComments: totalTopLevelComments, loading: false }));
         } else {
-            setState(prevState => ({ ...prevState, comments: updatedComments }));
+            setState(prevState => ({ ...prevState, comments: updatedComments, loading: false }));
         }
     }
 
@@ -196,7 +208,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                 <div onClick={props.switchCards(+(!judgment))} className="card-flip"><FlipSVG /></div>
                 {!isMobile && <div id={commentsCardCoverId} className="comments-card-cover" onClick={props.switchCards(judgment)}></div>}
                 <div id={commentsContainerId} className="comments-container">
-                    {
+                    {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
                         state.comments.map((comment: Comment, i: number) => {
                             return <CommentComponent 
                                         key={comment.id} 
