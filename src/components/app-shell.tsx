@@ -4,7 +4,6 @@ import { MenuComponent } from './menu/menu';
 import { ItemCarouselComponent } from './item-carousel/item-carousel';
 import { SearchComponent } from './search/search';
 import { CommentsComponent } from './comments/comments';
-import { DescriptionComponent } from './description/description';
 import { AnalyticsComponent } from './analytics/analytics';
 import { AddItemButtonComponent } from './add-item/add-item-button';
 import { Item } from '../types';
@@ -115,14 +114,12 @@ export const AppShellComponent = (props: any) => {
   const appShellId = "app-shell";
   const menuId = "menu";
   const itemCarouselId = "itemCarousel";
-  const pageZeroId = "pageZero";
-  const pageOneId = "pageOne";
-  const pageTwoId = "pageTwo";
-  const pageThreeId = "pageThree";
+  const pageZeroId = "Search";
+  const pageOneId = "Comments";
+  const pageTwoId = "Analytics";
 
   const searchId = "search";
   const commentsId = "comments";
-  const descriptionId = "description";
   const analyticsId = "analytics";
 
   const appShell = document.getElementById(appShellId);
@@ -131,11 +128,9 @@ export const AppShellComponent = (props: any) => {
   const pageZero = document.getElementById(pageZeroId);
   const pageOne = document.getElementById(pageOneId);
   const pageTwo = document.getElementById(pageTwoId);
-  const pageThree = document.getElementById(pageThreeId);
 
   const search = document.getElementById(searchId);
   const comments = document.getElementById(commentsId);
-  const description = document.getElementById(descriptionId);
   const analytics = document.getElementById(analyticsId);
 
   if (appShell && itemCarousel) {
@@ -163,13 +158,11 @@ export const AppShellComponent = (props: any) => {
         selectPageScrollerButton(1);
       } else if (scrollRatio === 1.6 || scrollRatio === 2 || scrollRatio === 2.4) {
         selectPageScrollerButton(2);
-      } else if (scrollRatio === 2.6 || scrollRatio === 3) {
-        selectPageScrollerButton(3);
       }
     }
   }
 
-  if (appShell && menu && itemCarousel && search && comments && description && analytics) {
+  if (appShell && menu && itemCarousel && search && comments && analytics) {
     window.onwheel = (event: any) => {
       const { toolbarHeightVh, maxToolbarHeightPx, itemCarouselHeightVh, maxItemCarouselHeightPx } = elementStyles;
       const toolbarHeightPx = vhToPixelsWithMax(toolbarHeightVh, maxToolbarHeightPx);
@@ -188,13 +181,11 @@ export const AppShellComponent = (props: any) => {
             // top paddings
             search.style.paddingTop = Math.min(parseInt(search.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
             comments.style.paddingTop = Math.min(parseInt(comments.style.paddingTop) - event.deltaY, toolbarHeightPx + itemCarouselHeightPx) + "px";
-            description.style.paddingTop = comments.style.paddingTop
             analytics.style.paddingTop = comments.style.paddingTop
             
             // bottom paddings
             search.style.paddingBottom = toolbarHeightPx - parseInt(search.style.paddingTop) + "px";
-            description.style.paddingBottom = (toolbarHeightPx + itemCarouselHeightPx) - parseInt(description.style.paddingTop) + "px"
-            analytics.style.paddingBottom = description.style.paddingBottom
+            analytics.style.paddingBottom = (toolbarHeightPx + itemCarouselHeightPx) - parseInt(analytics.style.paddingTop) + "px";
 
           } else if (event.deltaY > 0) {
             // scrolling down
@@ -206,13 +197,11 @@ export const AppShellComponent = (props: any) => {
             // top paddings
             search.style.paddingTop = Math.max(parseInt(search.style.paddingTop) - event.deltaY, 0) + "px";
             comments.style.paddingTop = Math.max(parseInt(comments.style.paddingTop) - event.deltaY, itemCarouselHeightPx) + "px";
-            description.style.paddingTop = comments.style.paddingTop
             analytics.style.paddingTop = comments.style.paddingTop
 
             // bottom paddings
             search.style.paddingBottom = toolbarHeightPx - parseInt(search.style.paddingTop) + "px";
-            description.style.paddingBottom = (toolbarHeightPx + itemCarouselHeightPx) - parseInt(description.style.paddingTop) + "px";
-            analytics.style.paddingBottom = description.style.paddingBottom
+            analytics.style.paddingBottom = (toolbarHeightPx + itemCarouselHeightPx) - parseInt(analytics.style.paddingTop) + "px";
           }
         } else {
           // fixed tops
@@ -222,12 +211,10 @@ export const AppShellComponent = (props: any) => {
           // top paddings
           search.style.paddingTop = toolbarHeightPx + "px";
           comments.style.paddingTop = (toolbarHeightPx + itemCarouselHeightPx) + "px";
-          description.style.paddingTop = comments.style.paddingTop;
           analytics.style.paddingTop = comments.style.paddingTop;
 
           // bottom paddings
           search.style.paddingBottom = "0px";
-          description.style.paddingBottom = "0px";
           analytics.style.paddingBottom = "0px";
         }
 
@@ -258,11 +245,10 @@ export const AppShellComponent = (props: any) => {
   }
 
   const selectPageScrollerButton = (page: number) => {
-    if (pageZero && pageOne && pageTwo && pageThree) {
+    if (pageZero && pageOne && pageTwo) {
       pageZero.className = page === 0 ? 'page-scroller-button-selected' : 'page-scroller-button'
       pageOne.className = page === 1 ? 'page-scroller-button-selected' : 'page-scroller-button'
       pageTwo.className = page === 2 ? 'page-scroller-button-selected' : 'page-scroller-button'
-      pageThree.className = page === 3 ? 'page-scroller-button-selected' : 'page-scroller-button'
     }
   }
 
@@ -270,12 +256,11 @@ export const AppShellComponent = (props: any) => {
       <div id={appShellId} className={appShellId} >
         <SearchComponent id={searchId} onSuggestionClick={fetchItems} />
         <CommentsComponent id={commentsId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
-        <DescriptionComponent id={descriptionId} />
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">
           <MenuComponent menuId={menuId} />
           <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
-          <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} pageThreeId={pageThreeId} scrollToPage={scrollToPage} />
+          <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} scrollToPage={scrollToPage} />
           <AddItemButtonComponent fetchItems={fetchItems}/>
         </div>
       </div>
