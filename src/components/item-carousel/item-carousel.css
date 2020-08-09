@@ -12,7 +12,6 @@
     background: var(--neutral-color-transparent);
     width: 100%;
     display: flex;
-    overflow-y: scroll;
 }
 
 .item-navigator::-webkit-scrollbar {
@@ -21,9 +20,9 @@
 
 .item-text {
     text-align: center;
-    margin: auto;
     font-size: 32px;
     color: var(--gray);
+    overflow-y: scroll;
 }
 
 .carousel-button {
