@@ -56,26 +56,32 @@ export const MenuComponent = (props: MenuComponentProps) => {
         const menuButtonInterior = document.getElementById(menuButtonInteriorId);
 
         if (menu && menuButton && menuButtonInterior && state.menuLocation !== MenuLocation.NONE) {
-            menuButtonInterior.animate([
-                {width: menuButtonInteriorWidthExpanded + "px"}
-            ], {
-                duration: 50,
-                fill: "forwards"
-            });
-            menuButton.animate([
-                {width: menuButtonWidthExpanded + "px"}
-            ], {
-                duration: 50,
-                fill: "forwards"
-            });
+            if (usernameExists()) {
+                menuButtonInterior.animate([
+                    {width: menuButtonInteriorWidthExpanded + "px"}
+                ], {
+                    duration: 50,
+                    fill: "forwards"
+                });
+                menuButton.animate([
+                    {width: menuButtonWidthExpanded + "px"}
+                ], {
+                    duration: 50,
+                    fill: "forwards"
+                });
+            }
             menu.animate([
                 {height: menuHeightExpanded + "px", width: menuWidthExpanded + "px"}
             ], {
                 duration: 50,
                 fill: "forwards"
             });
-        }
+        } // eslint-disable-next-line
     }, [state.menuLocation]);
+
+    const usernameExists = () => {
+        return username && username !== "";
+    }
 
     const setLoginDisplayed = (loginDisplayed: boolean) => {
         closeMenu({...state, menuLocation: MenuLocation.NONE, loginDisplayed: loginDisplayed}, () => {});
@@ -149,7 +155,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
     }
 
     const login = () => {
-        if (username && username !== "") {
+        if (usernameExists()) {
             closeMenu({...state, menuLocation: MenuLocation.NONE}, () => {
                 removeCookie("username"); 
                 removeCookie("sessiontoken");
@@ -161,11 +167,11 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
     if (menu && menuButton) {
         if (isMobile) {
-            menuButton.ontouchmove = (event: any) => {
+            menuButton.ontouchmove = (event: TouchEvent) => {
                 event.preventDefault();
                 const touchLocation = event.targetTouches[0];
                 const yOffset = menuHeight / 2;
-                const xOffset = menuWidthExpanded / 2;
+                const xOffset = (usernameExists() ? menuWidthExpanded : menuWidth) / 2;
 
                 switch(state.menuLocation) {
                     case MenuLocation.UPPER_LEFT:
@@ -263,7 +269,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 state.menuLocation !== MenuLocation.NONE && 
                     <ul className="menu-items-list">
                         <li className="menu-item" style={{marginTop: state.menuLocation === MenuLocation.BOTTOM_LEFT || state.menuLocation === MenuLocation.BOTTOM_RIGHT ? "75px" : "30px"}} onClick={login}>
-                            { username && username !== "" ? "Logout" : "Login" }
+                            { usernameExists() ? "Logout" : "Login" }
                         </li>
                         <li className="menu-item" onClick={() => {setAddItemDisplayed(true)}}>Add Item</li>
                     </ul>
@@ -271,7 +277,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
             <div id={menuButtonId} className={menuButtonId} onClick={pressButton}>
                 <div id={menuButtonInteriorId} className={menuButtonInteriorId}>
                     { 
-                        username && username !== "" && state.menuLocation === MenuLocation.NONE ? username.charAt(0) : username
+                        usernameExists() && state.menuLocation === MenuLocation.NONE ? username.charAt(0) : username
                     }
                 </div>
             </div>
