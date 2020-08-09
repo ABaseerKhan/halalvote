@@ -26,6 +26,8 @@ html, body {
   --link-color: #6495ed;
   --gray: #232B2F;
 
+  --site-background-color: #d4d4d4;
+
   --toolbar-height-vh: 10vh;
   --max-toolbar-height-px: 60px;
   --item-carousel-height-vh: 20vh;

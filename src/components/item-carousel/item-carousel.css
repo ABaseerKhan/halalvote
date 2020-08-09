@@ -23,7 +23,7 @@
     margin-left: auto;
     text-align: center;
     font-size: 32px;
-    color: var(--gray);
+    color: var(--site-background-color);
     overflow-y: scroll;
 }
 

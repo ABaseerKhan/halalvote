@@ -42,7 +42,7 @@ const PrettoSlider = withStyles({
             height: '50px',
             borderRadius: '50%',
             fontSize: '20px',
-            color: '#d4d4d4',
+            color: 'var(--site-background-color)',
             textAlign: 'center',
             justifyContent: 'center',
             backgroundColor: 'var(--neutral-color)',
