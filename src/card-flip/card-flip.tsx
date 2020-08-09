@@ -21,6 +21,7 @@ const ReactCardFlip: React.FC<ReactFlipCardProps> = (props: ReactFlipCardProps) 
     const [rotation, setRotation] = useState(props.isFlipped ? 180 : 0);
     const [frontCardWidth, setFrontCardWidth] = useState(props.isFlipped ? '0' : '100%');
     const [backCardWidth, setBackCardWidth] = useState('100%');
+    const [flipping, setFlipping] = useState(false);
 
     useEffect(() => {
         if (props.isFlipped !== isFlipped) {
@@ -33,17 +34,21 @@ const ReactCardFlip: React.FC<ReactFlipCardProps> = (props: ReactFlipCardProps) 
             setRotation((c) => c + 180);
 
             setFrontCardWidth("100%");
-            setBackCardWidth("100%")
+            setBackCardWidth("100%");
+
+            setFlipping(true);
+
             setTimeout(() => {
                 if (commentsContainers[0] && commentsContainers[1]) {
                     commentsContainers[0].style.overflow = "scroll";
                     commentsContainers[1].style.overflow = "scroll";
 
                     if (props.isFlipped) {
-                        setFrontCardWidth("0");
+                        setFrontCardWidth("0px");
                     } else {
-                        setBackCardWidth("0");
+                        setBackCardWidth("0px");
                     }
+                    setFlipping(false);
                 }
             }, (flipSpeedFrontToBack * 1000 + 20));
         } // eslint-disable-next-line
@@ -75,10 +80,10 @@ const ReactCardFlip: React.FC<ReactFlipCardProps> = (props: ReactFlipCardProps) 
         back: {
             WebkitBackfaceVisibility: 'hidden',
             backfaceVisibility: 'hidden',
-            height: '100%',
+            height: backCardWidth,
             left: '0',
             position: isFlipped ? 'relative' : 'absolute',
-            top: '0',
+            top: !isFlipped && !flipping ? '-5000px' : '0',
             transform: flipDirection === 'horizontal' ? backRotateY : backRotateX,
             transformStyle: 'preserve-3d',
             transition: `transform ${flipSpeedFrontToBack}s`,
@@ -98,10 +103,10 @@ const ReactCardFlip: React.FC<ReactFlipCardProps> = (props: ReactFlipCardProps) 
         front: {
             WebkitBackfaceVisibility: 'hidden',
             backfaceVisibility: 'hidden',
-            height: '100%',
+            height: frontCardWidth,
             left: '0',
             position: isFlipped ? 'absolute' : 'relative',
-            top: '0',
+            top: isFlipped && !flipping ? '-5000px' : '0',
             transform: flipDirection === 'horizontal' ? frontRotateY : frontRotateX,
             transformStyle: 'preserve-3d',
             transition: `transform ${flipSpeedBackToFront}s`,
