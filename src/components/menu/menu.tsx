@@ -217,6 +217,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 menu.style.right = Math.round(window.innerWidth - rect.x - menuWidth) + "px";
                 menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
                 menu.style.left = "";
+                menu.style.animation = "unset";
                 menuButton.style.bottom = "0";
                 menuButton.style.right = "0";
                 break;
@@ -225,6 +226,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 menu.style.right = "";
                 menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
                 menu.style.left = rect.x + "px";
+                menu.style.animation = "unset";
                 menuButton.style.bottom = "0";
                 menuButton.style.left = "0";
                 break;
@@ -233,6 +235,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 menu.style.right = Math.round(window.innerWidth - rect.x - menuWidth) + "px";
                 menu.style.bottom = "";
                 menu.style.left = "";
+                menu.style.animation = "unset";
                 menuButton.style.top = "0";
                 menuButton.style.right = "0";
                 break;
@@ -241,6 +244,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 menu.style.right = "";
                 menu.style.bottom = "";
                 menu.style.left = rect.x + "px";
+                menu.style.animation = "unset";
                 menuButton.style.top = "0";
                 menuButton.style.left = "0";
                 break;
