@@ -11,7 +11,7 @@ import { VotingSlider } from './voting-slider';
 
 interface ItemVotesComponentProps {
     itemName: string,
-    userVote: number | undefined | null,
+    userVote: number | undefined,
     halalPoints: number,
     haramPoints: number,
     numVotes: number,

@@ -17,7 +17,7 @@ export interface Item {
     numHalalComments: number;
     numHaramComments: number;
     timeStamp: string;
-    vote: number | undefined | null;
+    vote: number | undefined;
 }
 
 export interface Comment {

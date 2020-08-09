@@ -14,7 +14,7 @@ interface ItemCarouselComponentProps {
     id: string,
     iterateItem: any,
     itemName: string,
-    userVote: number | undefined | null,
+    userVote: number | undefined,
     halalPoints: number,
     haramPoints: number,
     numVotes: number,
