@@ -22,8 +22,16 @@ const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
     const [cookies] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
-    const submitVote = async (event: Object, value: number | number[]) => {
+    const submitVote = async (value: number) => {
         if (itemName && username && sessiontoken) {
+            if (value > 0) {
+                document.body.style.backgroundColor = 'var(--halal-color)';
+            } else {
+                document.body.style.backgroundColor = 'var(--haram-color)';
+            }
+            setTimeout(() => {
+                document.body.style.backgroundColor = 'var(--site-background-color)'
+            }, 500);
             await postData({
                 baseUrl: itemsConfig.url,
                 path: 'vote-item',

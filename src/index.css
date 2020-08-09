@@ -6,6 +6,7 @@ html, body {
   color: #616161;
   background-color: #d4d4d4;
   position: relative;
+  transition: background-color 0.5s linear;
 }
 
 :root {

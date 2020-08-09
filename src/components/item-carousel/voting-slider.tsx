@@ -83,7 +83,7 @@ const PrettoSlider = withStyles({
 
 
 type VotingSliderProps = {
-    submitVote: (event: Object, value: number | number[]) => void,
+    submitVote: (value: number) => void,
     userVote: number | undefined,
     halalPoints: number,
     haramPoints: number,
@@ -111,9 +111,9 @@ export const VotingSlider = (props: VotingSliderProps) => {
     const onChangeCommitted = (event: Object, value: number | number[]) => {
         if (value < 10 && value > -10) {
             setState({ value: 0 });
-            props.submitVote(event, 0);
+            props.submitVote(0);
         } else {
-            props.submitVote(event, value);
+            props.submitVote(value as number);
         }
     };
 
