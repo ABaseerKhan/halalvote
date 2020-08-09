@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ReactComponent as MenuButtonSVG } from '../../icons/menu-button.svg';
 import { ModalComponent } from '../modal/modal';
 import { useMedia } from '../../hooks/useMedia';
@@ -13,13 +13,18 @@ import './menu.css';
 interface MenuComponentProps {
     fetchItems: any
 };
+interface MenuComponentState {
+    menuLocation: MenuLocation, 
+    loginDisplayed: boolean, 
+    addItemDisplayed: boolean
+}
 export const MenuComponent = (props: MenuComponentProps) => {
     const { fetchItems } = props;
     // eslint-disable-next-line
     const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken']);
     const { username } = cookies;
 
-    const [state, setState] = useState<{menuLocation: MenuLocation, loginDisplayed: boolean, addItemDisplayed: boolean }>({
+    const [state, setState] = useState<MenuComponentState>({
         menuLocation: MenuLocation.NONE,
         loginDisplayed: false,
         addItemDisplayed: false
@@ -33,18 +38,6 @@ export const MenuComponent = (props: MenuComponentProps) => {
         false
     );
 
-    const setLoginDisplayed = (loginDisplayed: boolean) => {
-        setState({...state, menuLocation: MenuLocation.NONE, loginDisplayed: loginDisplayed});
-    }
-
-    const setAddItemDisplayed = (addItemDisplayed: boolean) => {
-        setState({...state, menuLocation: MenuLocation.NONE, addItemDisplayed: addItemDisplayed});
-    }
-
-    const setMenuLocation = (menuLocation: MenuLocation) => {
-        setState({...state, menuLocation: menuLocation});
-    }
-
     const menuHeight = 72;
     const menuWidth = 72;
     const menuHeightExpanded = 200;
@@ -52,6 +45,46 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
     const menuId = "menu";
     const menuButtonId = "menu-button";
+
+    useEffect(() => {
+        const menu = document.getElementById(menuId);
+        if (menu && state.menuLocation !== MenuLocation.NONE) {
+            menu.animate([
+                {height: menuHeightExpanded + "px", width: menuWidthExpanded + "px"}
+            ], {
+                duration: 50,
+                fill: "forwards"
+            });
+        }
+    }, [state.menuLocation]);
+
+    const setLoginDisplayed = (loginDisplayed: boolean) => {
+        closeMenu({...state, menuLocation: MenuLocation.NONE, loginDisplayed: loginDisplayed});
+    }
+
+    const setAddItemDisplayed = (addItemDisplayed: boolean) => {
+        closeMenu({...state, menuLocation: MenuLocation.NONE, addItemDisplayed: addItemDisplayed});
+    }
+
+    const setMenuLocation = (menuLocation: MenuLocation) => {
+        closeMenu({...state, menuLocation: menuLocation});
+    }
+
+    const closeMenu = (state: MenuComponentState) => {
+        const menu = document.getElementById(menuId);
+        if (menu && state.menuLocation === MenuLocation.NONE) {
+            menu.animate([
+                {height: menuHeight + "px", width: menuWidth + "px"}
+            ], {
+                duration: 50,
+                fill: "forwards"
+            }).onfinish = () => {
+                setState(state);
+            }
+        } else {
+            setState(state);
+        }
+    }
 
     const menu = document.getElementById(menuId);
     const menuButton = document.getElementById(menuButtonId);
@@ -107,42 +140,42 @@ export const MenuComponent = (props: MenuComponentProps) => {
         const rect = menuButton.getBoundingClientRect();
         switch(state.menuLocation) {
             case MenuLocation.UPPER_LEFT:
-                menu.style.height = menuHeightExpanded + "px";
-                menu.style.width = menuWidthExpanded + "px";
+                menu.style.top = "";
                 menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
                 menu.style.right = Math.round(window.innerWidth - rect.x - menuWidth) + "px";
+                menu.style.left = "";
                 menuButton.style.bottom = "0";
                 menuButton.style.right = "0";
                 break;
             case MenuLocation.UPPER_RIGHT:
-                menu.style.height = menuHeightExpanded + "px";
-                menu.style.width = menuWidthExpanded + "px";
+                menu.style.top = "";
                 menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
-                menu.style.right = Math.round(window.innerWidth - rect.x - menuWidthExpanded) + "px";
+                menu.style.right = "";
+                menu.style.left = rect.x + "px";
                 menuButton.style.bottom = "0";
                 menuButton.style.left = "0";
                 break;
             case MenuLocation.BOTTOM_LEFT:
-                menu.style.height = menuHeightExpanded + "px";
-                menu.style.width = menuWidthExpanded + "px";
-                menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeightExpanded) + "px";
+                menu.style.top = rect.y + "px";
+                menu.style.bottom = "";
                 menu.style.right = Math.round(window.innerWidth - rect.x - menuWidth) + "px";
+                menu.style.left = "";
                 menuButton.style.top = "0";
                 menuButton.style.right = "0";
                 break;
             case MenuLocation.BOTTOM_RIGHT:
-                menu.style.height = menuHeightExpanded + "px";
-                menu.style.width = menuWidthExpanded + "px";
-                menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeightExpanded) + "px";
-                menu.style.right = Math.round(window.innerWidth - rect.x - menuWidthExpanded) + "px";
+                menu.style.top = rect.y + "px";
+                menu.style.bottom = "";
+                menu.style.right = "";
+                menu.style.left = rect.x + "px";
                 menuButton.style.top = "0";
                 menuButton.style.left = "0";
                 break;
             case MenuLocation.NONE:
-                menu.style.height = menuHeight + "px";
-                menu.style.width = menuWidth + "px";
-                menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
+                menu.style.top = "";
                 menu.style.right = Math.round(window.innerWidth - rect.x - menuWidth) + "px";
+                menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
+                menu.style.left = "";
                 menuButton.style.top = "";
                 menuButton.style.right = "";
                 menuButton.style.bottom = "";
