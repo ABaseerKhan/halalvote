@@ -22,7 +22,7 @@ function ValueLabelComponent(props: ValueLabelComponentProps) {
     const { children, open, value } = props;
 
     return (
-        <Tooltip open={open} enterTouchDelay={0} placement={"bottom"} title={value}>
+        <Tooltip open={open} enterTouchDelay={0} placement={"top"} title={value}>
             {children}
         </Tooltip>
     );
@@ -93,7 +93,7 @@ const PrettoSlider = withStyles({
     markLabel: {
         wordWrap: 'break-word',
         display: 'block',
-        marginTop: '5px',
+        top: '-20%',
         fontSize: '14px',
         color: 'var(--neutral-color)',
     }
