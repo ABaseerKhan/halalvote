@@ -2,7 +2,6 @@
     position: fixed;
     height: min(var(--item-carousel-height-vh), var(--max-item-carousel-height-px));
     width: 100%;
-    background: var(--neutral-color-transparent);
     top: 0;
     opacity: 0.0;
     visibility: hidden;
