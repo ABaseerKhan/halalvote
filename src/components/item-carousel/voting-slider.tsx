@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 
@@ -84,41 +84,55 @@ const PrettoSlider = withStyles({
 
 type VotingSliderProps = {
     submitVote: (event: Object, value: number | number[]) => void,
-    userVote: number | null | undefined,
+    userVote: number | undefined,
     halalPoints: number,
     haramPoints: number,
     numVotes: number,
 };
 export const VotingSlider = (props: VotingSliderProps) => {
     const classes = useStyles();
-
     const { userVote, halalPoints, haramPoints, numVotes } = props;
+
+    const [state, setState] = useState<{ value: number | undefined }>({ value: 0 });
+
+    useEffect(() => {
+        if (userVote !== undefined) {
+            setState({ value: userVote });
+        };
+    }, [userVote]);
+
     const marks = [
         {
             value: ((halalPoints - haramPoints) / (numVotes)),
             label: '',
         },
     ];
+
+    const onChangeCommitted = (event: Object, value: number | number[]) => {
+        if (value < 10 && value > -10) {
+            setState({ value: 0 });
+            props.submitVote(event, 0);
+        } else {
+            props.submitVote(event, value);
+        }
+    };
+
+    const onChange = (event: Object, value: number | number[]) => {
+        setState({ value: value as number });
+    };
+    
     return (
         <div className={classes.root}>
-            {userVote ? <PrettoSlider 
+            <PrettoSlider 
                 ThumbComponent={ThumbComponent}
                 marks={numVotes > 0 ? marks : undefined}
                 aria-label="pretto slider"
-                defaultValue={userVote}
+                value={state.value}
                 min={-100}
                 max={100}
-                onChangeCommitted={props.submitVote}
-            /> : null}
-            {!userVote ? <PrettoSlider 
-                ThumbComponent={ThumbComponent}
-                marks={numVotes > 0 ? marks : undefined}
-                aria-label="pretto slider"
-                defaultValue={0}
-                min={-100}
-                max={100}
-                onChangeCommitted={props.submitVote}
-            /> : null}
+                onChangeCommitted={onChangeCommitted}
+                onChange={onChange}
+            />
         </div>
     )
 }
