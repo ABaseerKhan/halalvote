@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { PageScrollerComponent } from './page-scroller/page-scroller';
-import { MenuComponent } from './menu/menu';
 import { ItemCarouselComponent } from './item-carousel/item-carousel';
 import { SearchComponent } from './search/search';
 import { CommentsComponent } from './comments/comments';
 import { AnalyticsComponent } from './analytics/analytics';
-import { AddItemButtonComponent } from './add-item/add-item-button';
+import { MenuComponent } from './menu/menu';
 import { Item } from '../types';
 import { postData } from '../https-client/post-data';
 import { itemsConfig } from '../https-client/config';
@@ -123,15 +122,10 @@ export const AppShellComponent = (props: any) => {
   const analyticsId = "analytics";
 
   const appShell = document.getElementById(appShellId);
-  const menu = document.getElementById(menuId);
   const itemCarousel = document.getElementById(itemCarouselId);
   const pageZero = document.getElementById(pageZeroId);
   const pageOne = document.getElementById(pageOneId);
   const pageTwo = document.getElementById(pageTwoId);
-
-  const search = document.getElementById(searchId);
-  const comments = document.getElementById(commentsId);
-  const analytics = document.getElementById(analyticsId);
 
   if (appShell && itemCarousel) {
     appShell.onscroll = () => {
@@ -162,82 +156,6 @@ export const AppShellComponent = (props: any) => {
     }
   }
 
-  if (appShell && menu && itemCarousel && search && comments && analytics) {
-    window.onwheel = (event: any) => {
-      const { toolbarHeightVh, maxToolbarHeightPx, itemCarouselHeightVh, maxItemCarouselHeightPx } = elementStyles;
-      const toolbarHeightPx = vhToPixelsWithMax(toolbarHeightVh, maxToolbarHeightPx);
-      const itemCarouselHeightPx = vhToPixelsWithMax(itemCarouselHeightVh, maxItemCarouselHeightPx);
-      const canMove = canMoveMenu(event);
-
-      if (canMove) {
-        if (menu.style.top) {
-          if (event.deltaY < 0) {
-            // scrolling up
-
-            // fixed tops
-            menu.style.top = Math.min(parseInt(menu.style.top) - event.deltaY, 0) + "px";
-            itemCarousel.style.top = Math.min(parseInt(itemCarousel.style.top) - event.deltaY, toolbarHeightPx) + "px";
-            
-            // top paddings
-            search.style.paddingTop = Math.min(parseInt(search.style.paddingTop) - event.deltaY, toolbarHeightPx) + "px";
-            comments.style.paddingTop = Math.min(parseInt(comments.style.paddingTop) - event.deltaY, toolbarHeightPx + itemCarouselHeightPx) + "px";
-            analytics.style.paddingTop = comments.style.paddingTop
-            
-            // bottom paddings
-            search.style.paddingBottom = toolbarHeightPx - parseInt(search.style.paddingTop) + "px";
-            analytics.style.paddingBottom = (toolbarHeightPx + itemCarouselHeightPx) - parseInt(analytics.style.paddingTop) + "px";
-
-          } else if (event.deltaY > 0) {
-            // scrolling down
-
-            // fixed tops
-            menu.style.top = Math.max(parseInt(menu.style.top) - event.deltaY, - toolbarHeightPx) + "px";
-            itemCarousel.style.top = Math.max(parseInt(itemCarousel.style.top) - event.deltaY, 0) + "px";
-            
-            // top paddings
-            search.style.paddingTop = Math.max(parseInt(search.style.paddingTop) - event.deltaY, 0) + "px";
-            comments.style.paddingTop = Math.max(parseInt(comments.style.paddingTop) - event.deltaY, itemCarouselHeightPx) + "px";
-            analytics.style.paddingTop = comments.style.paddingTop
-
-            // bottom paddings
-            search.style.paddingBottom = toolbarHeightPx - parseInt(search.style.paddingTop) + "px";
-            analytics.style.paddingBottom = (toolbarHeightPx + itemCarouselHeightPx) - parseInt(analytics.style.paddingTop) + "px";
-          }
-        } else {
-          // fixed tops
-          menu.style.top = "0px";
-          itemCarousel.style.top = toolbarHeightPx + "px";
-
-          // top paddings
-          search.style.paddingTop = toolbarHeightPx + "px";
-          comments.style.paddingTop = (toolbarHeightPx + itemCarouselHeightPx) + "px";
-          analytics.style.paddingTop = comments.style.paddingTop;
-
-          // bottom paddings
-          search.style.paddingBottom = "0px";
-          analytics.style.paddingBottom = "0px";
-        }
-
-        // comments height
-        comments.style.height = `calc(100% - ${parseInt(comments.style.paddingTop)}px)`;
-      }
-    }
-  }
-
-  const canMoveMenu = (scrollEvent: any): Boolean => {
-    let path = scrollEvent.path;
-    for (let index in path) {
-      let element = path[index];
-
-      if (element.className === "comments-container") {
-        return (element.scrollTop === 0 && scrollEvent.deltaY < 0) ||
-          (element.scrollTop === (element.scrollHeight - element.offsetHeight) && scrollEvent.deltaY > 0);
-      }
-    }
-
-    return true;
-  }
-
   const scrollToPage = (page: number) => {
     if (appShell) {
       appShell.scrollTo({left: 0, top: page * window.innerHeight, behavior:'smooth'});
@@ -258,10 +176,9 @@ export const AppShellComponent = (props: any) => {
         <CommentsComponent id={commentsId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">
-          <MenuComponent menuId={menuId} />
           <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} scrollToPage={scrollToPage} />
-          <AddItemButtonComponent fetchItems={fetchItems}/>
+          <MenuComponent fetchItems={fetchItems}/>
         </div>
       </div>
   )

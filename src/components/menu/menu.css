@@ -1,63 +1,50 @@
-.menu-table {
+.menu {
     position: fixed;
-    width: 100%;
-    height: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
-    background-color: var(--neutral-color);
-    top: 0;
+    height: 72px;
+    width: 72px;
+    bottom: 5%;
+    right: 5%;
+    border-radius: 36px;
+    background: var(--neutral-color);
+    color: var(--gray);
 }
 
-.menu-table-column {
-    width: 33%;
-    vertical-align: middle;
+.menu-button {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    padding: 16px;
+    bottom: 0;
+    right: 0;
+    border-radius: 36px;
+    outline: none;
+    background-color: var(--button-background-color);
+    color: var(--gray);
 }
 
-.logo {
+.menu-button:hover {
+    cursor: pointer;
+    color: var(--highlight-color);
+}
+
+.menu-items-list {
     width: 100%;
+    height: 100px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li.menu-item {
+    width: 100%;
+    cursor: pointer;
+    background: transparent;
     font-size: 20px;
     text-align: center;
-    color: var(--gray);
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
-.login-button {
-    position: relative;
-    float:right;
-    font-size: 20px;
-    top: 50%;
-    margin-top: -10px;
-    margin-right: 10px;
-    cursor: pointer;
-    color: var(--gray);
-}
-
-.login-button:hover {
-    text-decoration: underline;
-}
-
-.username-text {
-    position: relative;
-    float:right;
-    font-size: 20px;
-    top: 50%;
-    margin-top: -10px;
-    margin-right: 10px;
-    color: var(--gray);
-}
-
-.logout-button {
-    position: relative;
-    float:right;
-    font-size: 20px;
-    top: 50%;
-    margin-top: -10px;
-    margin-right: 10px;
-    cursor: pointer;
-    color: var(--gray);
-}
-
-.logout-button:hover {
-    text-decoration: underline;
-}
-
-.menu-text-container {
-    height: 100%;
+li.menu-item:hover {
+    background-color: var(--light-neutral-color);
 }

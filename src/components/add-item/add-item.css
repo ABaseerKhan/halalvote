@@ -24,22 +24,3 @@
     padding: 6px;
     margin: 10px 0 0 10%;
 }
-
-.add-item-button {
-    position: fixed;
-    height: 40px;
-    width: 40px;
-    bottom: 5%;
-    right: 5%;
-    border-radius: 50%;
-    background-color: var(--button-background-color);
-    border: 1px solid #dfe1e5;
-    outline: none;
-    padding: 14px;
-    color: var(--gray);
-}
-
-.add-item-button:hover {
-    cursor: pointer;
-    border: 1px solid black;
-}

@@ -41,3 +41,11 @@ export enum ModalType {
     LOGIN,
     ADD_ITEM
 }
+
+export enum MenuLocation {
+    UPPER_LEFT,
+    UPPER_RIGHT,
+    BOTTOM_RIGHT,
+    BOTTOM_LEFT,
+    NONE
+}
