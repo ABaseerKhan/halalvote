@@ -23,7 +23,7 @@
 }
 
 .menu-button-computer:hover {
-    background-color: var(--gray);
+    background-color: var(--highlight-color);
 }
 
 .menu-items-list {
