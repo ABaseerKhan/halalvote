@@ -103,7 +103,7 @@ export const VotingSlider = (props: VotingSliderProps) => {
     const marks = [
         {
             value: ((halalPoints - haramPoints) / (numVotes)),
-            label: ((halalPoints - haramPoints) / (numVotes)).toString(),
+            label: '',
         },
     ];
     return (
