@@ -28,6 +28,14 @@
     color: var(--gray);
 }
 
+.search-header-haram {
+    color: var(--haram-compliment-color);
+}
+
+.search-header-halal {
+    color: var(--halal-compliment-color);
+}
+
 .search-bar-input,
 .search-bar-input-autocomplete-open {
     margin: 8px 0 0 0 !important;
