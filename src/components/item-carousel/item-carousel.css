@@ -14,16 +14,17 @@
     display: flex;
 }
 
-.item-navigator::-webkit-scrollbar {
+.item-text::-webkit-scrollbar {
     display: none;
 }
 
 .item-text {
     margin-right: auto;
     margin-left: auto;
+    padding-top: 1%;
     text-align: center;
     font-size: 32px;
-    color: var(--gray);
+    color: var(--site-background-color);
     overflow-y: scroll;
 }
 
@@ -60,7 +61,7 @@
 }
 
 .arrow-icon-left, .arrow-icon-right {
-    color: var(--gray);
+    color: var(--site-background-color);
     height: 100%;
     width: 100%;
 }

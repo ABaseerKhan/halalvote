@@ -52,7 +52,10 @@ export const SearchComponent = (props: SearchComponentProps) => {
     return (
         <div id={id} className='search-page'>
             <div className={"search-bar"}>
-                <span className="search-header">HV</span>
+                <span className="search-header">
+                    <span className="search-header-haram">H</span>
+                    <span className="search-header-halal">V</span>
+                </span>
                 <input 
                     className={autoCompleteOpen ? "search-bar-input-autocomplete-open" : "search-bar-input"} 
                     type="text" value={inputText} 
