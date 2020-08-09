@@ -127,11 +127,41 @@ export const MenuComponent = (props: MenuComponentProps) => {
             menuButton.ontouchmove = (event: any) => {
                 event.preventDefault();
                 const touchLocation = event.targetTouches[0];
-                const yOffset = state.menuLocation === MenuLocation.BOTTOM_LEFT || state.menuLocation === MenuLocation.BOTTOM_RIGHT ? menuHeightExpanded - (menuHeight / 2) : (menuHeight / 2);
-                const xOffset = state.menuLocation === MenuLocation.UPPER_RIGHT || state.menuLocation === MenuLocation.BOTTOM_RIGHT ? menuWidthExpanded - (menuWidth / 2) : (menuWidth / 2);
+                const yOffset = menuHeight / 2;
+                const xOffset = menuWidth / 2;
 
-                menu.style.bottom = Math.round(window.innerHeight - touchLocation.pageY - yOffset) + "px";
-                menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - xOffset) + "px";
+                switch(state.menuLocation) {
+                    case MenuLocation.UPPER_LEFT:
+                        menu.style.top = "";
+                        menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - xOffset) + "px";
+                        menu.style.bottom = Math.round(window.innerHeight - touchLocation.pageY - yOffset) + "px";
+                        menu.style.left = "";
+                        break;
+                    case MenuLocation.UPPER_RIGHT:
+                        menu.style.top = "";
+                        menu.style.right = "";
+                        menu.style.bottom = Math.round(window.innerHeight - touchLocation.pageY - yOffset) + "px";
+                        menu.style.left = touchLocation.pageX - xOffset + "px";
+                        break;
+                    case MenuLocation.BOTTOM_LEFT:
+                        menu.style.top = touchLocation.pageY - yOffset + "px";
+                        menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - xOffset) + "px";
+                        menu.style.bottom = "";
+                        menu.style.left = "";
+                        break;
+                    case MenuLocation.BOTTOM_RIGHT:
+                        menu.style.top = touchLocation.pageY - yOffset + "px";
+                        menu.style.right = "";
+                        menu.style.bottom = "";
+                        menu.style.left = touchLocation.pageX - xOffset + "px";
+                        break;
+                    case MenuLocation.NONE:
+                        menu.style.top = "";
+                        menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - xOffset) + "px";
+                        menu.style.bottom = Math.round(window.innerHeight - touchLocation.pageY - yOffset) + "px";
+                        menu.style.left = "";
+                        break;
+                }
             }
         } else {
             menuButton.classList.add("menu-button-computer");
@@ -141,32 +171,32 @@ export const MenuComponent = (props: MenuComponentProps) => {
         switch(state.menuLocation) {
             case MenuLocation.UPPER_LEFT:
                 menu.style.top = "";
-                menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
                 menu.style.right = Math.round(window.innerWidth - rect.x - menuWidth) + "px";
+                menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
                 menu.style.left = "";
                 menuButton.style.bottom = "0";
                 menuButton.style.right = "0";
                 break;
             case MenuLocation.UPPER_RIGHT:
                 menu.style.top = "";
-                menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
                 menu.style.right = "";
+                menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
                 menu.style.left = rect.x + "px";
                 menuButton.style.bottom = "0";
                 menuButton.style.left = "0";
                 break;
             case MenuLocation.BOTTOM_LEFT:
                 menu.style.top = rect.y + "px";
-                menu.style.bottom = "";
                 menu.style.right = Math.round(window.innerWidth - rect.x - menuWidth) + "px";
+                menu.style.bottom = "";
                 menu.style.left = "";
                 menuButton.style.top = "0";
                 menuButton.style.right = "0";
                 break;
             case MenuLocation.BOTTOM_RIGHT:
                 menu.style.top = rect.y + "px";
-                menu.style.bottom = "";
                 menu.style.right = "";
+                menu.style.bottom = "";
                 menu.style.left = rect.x + "px";
                 menuButton.style.top = "0";
                 menuButton.style.left = "0";
