@@ -101,7 +101,7 @@ export const VotingSlider = (props: VotingSliderProps) => {
     ];
     return (
         <div className={classes.root}>
-            {userVote && <PrettoSlider 
+            {userVote ? <PrettoSlider 
                 ThumbComponent={ThumbComponent}
                 marks={numVotes > 0 ? marks : undefined}
                 aria-label="pretto slider"
@@ -109,8 +109,8 @@ export const VotingSlider = (props: VotingSliderProps) => {
                 min={-100}
                 max={100}
                 onChangeCommitted={props.submitVote}
-            />}
-            {!userVote && <PrettoSlider 
+            /> : null}
+            {!userVote ? <PrettoSlider 
                 ThumbComponent={ThumbComponent}
                 marks={numVotes > 0 ? marks : undefined}
                 aria-label="pretto slider"
@@ -118,7 +118,7 @@ export const VotingSlider = (props: VotingSliderProps) => {
                 min={-100}
                 max={100}
                 onChangeCommitted={props.submitVote}
-            />}
+            /> : null}
         </div>
     )
 }
