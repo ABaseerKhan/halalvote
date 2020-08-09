@@ -86,7 +86,6 @@ export const AppShellComponent = (props: any) => {
   const numHaramComments = item?.numHaramComments !== undefined ? item.numHaramComments : 0;
 
   const appShellId = "app-shell";
-  const menuId = "menu";
   const itemCarouselId = "itemCarousel";
   const pageZeroId = "Search";
   const pageOneId = "Comments";
