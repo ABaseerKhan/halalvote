@@ -78,18 +78,18 @@ export const MenuComponent = (props: MenuComponentProps) => {
     }, [state.menuLocation]);
 
     const setLoginDisplayed = (loginDisplayed: boolean) => {
-        closeMenu({...state, menuLocation: MenuLocation.NONE, loginDisplayed: loginDisplayed});
+        closeMenu({...state, menuLocation: MenuLocation.NONE, loginDisplayed: loginDisplayed}, () => {});
     }
 
     const setAddItemDisplayed = (addItemDisplayed: boolean) => {
-        closeMenu({...state, menuLocation: MenuLocation.NONE, addItemDisplayed: addItemDisplayed});
+        closeMenu({...state, menuLocation: MenuLocation.NONE, addItemDisplayed: addItemDisplayed}, () => {});
     }
 
     const setMenuLocation = (menuLocation: MenuLocation) => {
-        closeMenu({...state, menuLocation: menuLocation});
+        closeMenu({...state, menuLocation: menuLocation}, () => {});
     }
 
-    const closeMenu = (state: MenuComponentState) => {
+    const closeMenu = (state: MenuComponentState, onfinish: () => void) => {
         const menu = document.getElementById(menuId);
         const menuButton = document.getElementById(menuButtonId);
         const menuButtonInterior = document.getElementById(menuButtonInteriorId);
@@ -114,9 +114,11 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 fill: "forwards"
             }).onfinish = () => {
                 setState(state);
+                onfinish();
             }
         } else {
             setState(state);
+            onfinish();
         }
     }
 
@@ -148,9 +150,10 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
     const login = () => {
         if (username && username !== "") {
-            removeCookie("username"); 
-            removeCookie("sessiontoken");
-            setMenuLocation(MenuLocation.NONE);
+            closeMenu({...state, menuLocation: MenuLocation.NONE}, () => {
+                removeCookie("username"); 
+                removeCookie("sessiontoken");
+            });
         } else {
             setLoginDisplayed(true);
         }
@@ -268,8 +271,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
             <div id={menuButtonId} className={menuButtonId} onClick={pressButton}>
                 <div id={menuButtonInteriorId} className={menuButtonInteriorId}>
                     { 
-                        username && username !== "" && 
-                            state.menuLocation === MenuLocation.NONE ? username.charAt(0) : username
+                        username && username !== "" && state.menuLocation === MenuLocation.NONE ? username.charAt(0) : username
                     }
                 </div>
             </div>
