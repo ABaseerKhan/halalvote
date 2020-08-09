@@ -14,7 +14,7 @@
     display: flex;
 }
 
-.item-navigator::-webkit-scrollbar {
+.item-text::-webkit-scrollbar {
     display: none;
 }
 
