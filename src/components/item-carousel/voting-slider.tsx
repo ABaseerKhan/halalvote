@@ -91,8 +91,6 @@ const PrettoSlider = withStyles({
         backgroundColor: "black",
     },
     markLabel: {
-        wordWrap: 'break-word',
-        display: 'block',
         top: '-20%',
         fontSize: '14px',
         color: 'var(--neutral-color)',
@@ -114,7 +112,7 @@ export const VotingSlider = (props: VotingSliderProps) => {
     const marks = [
         {
             value: ((halalPoints - haramPoints) / (numVotes)),
-            label: `${numVotes} votes`,
+            label: '',
         },
     ];
     return (
