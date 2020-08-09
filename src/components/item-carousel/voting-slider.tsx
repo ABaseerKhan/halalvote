@@ -7,6 +7,7 @@ import { ReactComponent as VoteSVG } from '../../icons/vote-icon.svg';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '50%',
+        minWidth: '300px',
     },
     margin: {
         height: theme.spacing(3),
@@ -102,7 +103,7 @@ export const VotingSlider = (props: VotingSliderProps) => {
     const marks = [
         {
             value: ((halalPoints - haramPoints) / (numVotes)),
-            label: 'Mean',
+            label: '',
         },
     ];
     return (
