@@ -63,4 +63,14 @@
 
 .item-vote-text {
     font-size: 32px;
+    margin-left: 15px;
+    margin-right: 15px;
+    padding-bottom: 20px;
+}
+
+@media only screen and (max-width: 600px) {
+    .item-vote-text {
+        margin-left: 5px !important;
+        margin-right: 5px !important;
+    }
 }

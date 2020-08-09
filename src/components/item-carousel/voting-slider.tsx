@@ -2,7 +2,6 @@ import React from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
-import { ReactComponent as VoteSVG } from '../../icons/vote-icon.svg';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,7 +31,7 @@ function ValueLabelComponent(props: ValueLabelComponentProps) {
 function ThumbComponent(props: any) {
     return (
         <span {...props}>
-            <VoteSVG/>
+            <div className="voter">vote</div>
         </span>
     );
 }
@@ -43,22 +42,26 @@ const PrettoSlider = withStyles({
         height: 8,
     },
     thumb: {
-        height: 'min-content',
-        width: 'min-content',
+        width: '50px',
+        height: '50px',
+        borderRadius: '50%',
         backgroundColor: 'transparent',
-        marginTop: -23,
-        marginLeft: -30,
-        borderRadius: '10px',
+        marginTop: -17,
+        marginLeft: -25,
         '&:focus, &:hover, &$active': {
-            boxShadow: 'inherit',
+            boxShadow: '#ccc 3px',
         },
-        '& .vote-text': {
-            // display: inline-block !important;
-            fontSize: '32px',
-            color: 'var(--gray)',
-            padding: '5px',
-            marginLeft: 1,
-            marginRight: 1,
+        '& .voter': {
+            display: 'table',
+            lineHeight: '2.3',
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            fontSize: '20px',
+            color: '#d4d4d4',
+            textAlign: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'var(--neutral-color)',
         },
     },
     active: {
@@ -83,8 +86,16 @@ const PrettoSlider = withStyles({
     },
     mark: {
         height: '50%',
+        width: '3px',
         borderRadius: '0',
         backgroundColor: "black",
+    },
+    markLabel: {
+        wordWrap: 'break-word',
+        display: 'block',
+        marginTop: '5px',
+        fontSize: '14px',
+        color: 'var(--neutral-color)',
     }
 })(Slider);
 
@@ -103,7 +114,7 @@ export const VotingSlider = (props: VotingSliderProps) => {
     const marks = [
         {
             value: ((halalPoints - haramPoints) / (numVotes)),
-            label: '',
+            label: `${numVotes} votes`,
         },
     ];
     return (
