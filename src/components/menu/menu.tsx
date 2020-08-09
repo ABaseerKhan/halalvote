@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ReactComponent as AddButtonSVG } from '../../icons/add-button.svg';
+import { ReactComponent as MenuButtonSVG } from '../../icons/menu-button.svg';
 import { ModalComponent } from '../modal/modal';
 import { useMedia } from '../../hooks/useMedia';
 import { useCookies } from 'react-cookie';
@@ -100,6 +100,8 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 menu.style.bottom = Math.round(window.innerHeight - touchLocation.pageY - yOffset) + "px";
                 menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - xOffset) + "px";
             }
+        } else {
+            menuButton.classList.add("menu-button-computer");
         }
 
         const rect = menuButton.getBoundingClientRect();
@@ -166,7 +168,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                         <li className="menu-item" onClick={() => {setAddItemDisplayed(true)}}>Add Item</li>
                     </ul>
             }
-            <AddButtonSVG id={menuButtonId} className={menuButtonId} onClick={pressButton}></AddButtonSVG>
+            <MenuButtonSVG id={menuButtonId} className={menuButtonId} onClick={pressButton}></MenuButtonSVG>
         </div>
     );
 }

@@ -18,13 +18,12 @@
     right: 0;
     border-radius: 36px;
     outline: none;
-    background-color: var(--button-background-color);
-    color: var(--gray);
+    background-color: var(--light-neutral-color);
+    cursor: pointer;
 }
 
-.menu-button:hover {
-    cursor: pointer;
-    color: var(--highlight-color);
+.menu-button-computer:hover {
+    background-color: var(--highlight-color);
 }
 
 .menu-items-list {
