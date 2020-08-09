@@ -38,8 +38,11 @@
 }
 
 .carousel-button:hover {
-    background-color: var(--light-neutral-color);
     border: none;
+}
+
+.carousel-button-computer:hover {
+    background-color: var(--light-neutral-color);
 }
 
 .item-votes-container {
