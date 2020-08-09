@@ -10,7 +10,8 @@
 
 @media only screen and (max-width: 600px) {
     .search-bar {
-        display: table-cell;
+        top: 10vh !important;
+        width: 90% !important;
     }
 }
 
