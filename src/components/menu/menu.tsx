@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ReactComponent as MenuButtonSVG } from '../../icons/menu-button.svg';
 import { ModalComponent } from '../modal/modal';
 import { useMedia } from '../../hooks/useMedia';
 import { useCookies } from 'react-cookie';
@@ -231,7 +230,11 @@ export const MenuComponent = (props: MenuComponentProps) => {
                         <li className="menu-item" onClick={() => {setAddItemDisplayed(true)}}>Add Item</li>
                     </ul>
             }
-            <MenuButtonSVG id={menuButtonId} className={menuButtonId} onClick={pressButton}></MenuButtonSVG>
+            <div id={menuButtonId} className={menuButtonId} onClick={pressButton}>
+                <div className="menu-button-interior">
+                    { username && username !== "" && username.charAt(0)}
+                </div>
+            </div>
         </div>
     );
 }
