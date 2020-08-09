@@ -1,7 +1,6 @@
 import React from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
-import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -12,21 +11,6 @@ const useStyles = makeStyles((theme) => ({
         height: theme.spacing(3),
     },
 }));
-
-type ValueLabelComponentProps = {
-    children: JSX.Element,
-    open: boolean,
-    value: number,
-};
-function ValueLabelComponent(props: ValueLabelComponentProps) {
-    const { children, open, value } = props;
-
-    return (
-        <Tooltip open={open} enterTouchDelay={0} placement={"top"} title={value}>
-            {children}
-        </Tooltip>
-    );
-}
 
 function ThumbComponent(props: any) {
     return (
@@ -118,7 +102,6 @@ export const VotingSlider = (props: VotingSliderProps) => {
     return (
         <div className={classes.root}>
             {userVote && <PrettoSlider 
-                ValueLabelComponent={ValueLabelComponent} 
                 ThumbComponent={ThumbComponent}
                 marks={numVotes > 0 ? marks : undefined}
                 aria-label="pretto slider"
@@ -128,7 +111,6 @@ export const VotingSlider = (props: VotingSliderProps) => {
                 onChangeCommitted={props.submitVote}
             />}
             {!userVote && <PrettoSlider 
-                ValueLabelComponent={ValueLabelComponent} 
                 ThumbComponent={ThumbComponent}
                 marks={numVotes > 0 ? marks : undefined}
                 aria-label="pretto slider"
