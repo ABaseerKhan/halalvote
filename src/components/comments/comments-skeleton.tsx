@@ -12,7 +12,7 @@ for (let i = 0; i < 10; i++) {
 }
 
 export const SkeletonComponent = () => (
-    <SkeletonTheme color="#d9d9d9" highlightColor="#e6e6e6">
+    <SkeletonTheme color="#cccccc" highlightColor="#d9d9d9">
         {SkeletonSections}
     </SkeletonTheme>
 );

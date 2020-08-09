@@ -69,7 +69,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         if (!state.loading) {
             setTimeout(() => { setState(prevState => ({ ...prevState, commentsShowable: true })) }, 300);
             setState(prevState => ({ ...prevState, loading: true, commentsShowable: false }));
-        }
+        } // eslint-disable-next-line
     }, [itemName]);
 
     const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number) => {

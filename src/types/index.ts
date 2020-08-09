@@ -11,8 +11,9 @@ export const judgementToTextMap = {
 export interface Item {
     itemName: string;
     username: string;
-    haramVotes: number;
-    halalVotes: number;
+    haramPoints: number;
+    halalPoints: number;
+    numVotes: number;
     numHalalComments: number;
     numHaramComments: number;
     timeStamp: string;

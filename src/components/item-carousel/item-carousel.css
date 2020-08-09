@@ -10,6 +10,7 @@
 
 .item-navigator {
     height: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
+    background: var(--neutral-color-transparent);
     width: 100%;
     display: flex;
     overflow-y: scroll;
@@ -48,66 +49,19 @@
     color: var(--gray);
 }
 
-.item-voter-0, .item-voter-1 {
+.voting-slider {
+    margin-top: 10px;
     display: flex;
+    align-items: center;
     justify-content: center;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    width: 50%;
-    height: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
-    border: none;
-    font-size: 3vh;
-    text-align: center;
-    cursor: pointer;
-}
-
-.item-voter-0:focus, .item-voter-1:focus {
-    outline: none;
-}
-
-.item-voter-0 {
-    float: right;
-    background-color: var(--halal-color-transparent);
-}
-
-.item-voter-1 {
-    float: left;
-    background-color: var(--haram-color-transparent);
-}
-
-.item-voter-0:hover {
-    background-color: var(--halal-compliment-color-transparent);
-}
-
-.item-voter-1:hover {
-    background-color: var(--haram-compliment-color-transparent);
-}
-
-.item-voter-0-selected {
-    background-color: var(--halal-compliment-color-transparent);
-    outline: 2px solid black;
-    outline-offset: -2px;
-}
-
-.item-voter-1-selected {
-    background-color: var(--haram-compliment-color-transparent);
-    outline: 2px solid black;
-    outline-offset: -2px;
-}
-
-.item-vote-text {
-    line-height: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
-}
-
-.votes-bullet-separator {
-    display: inline-block;
-    font-size: medium;
-    vertical-align: middle;
-    margin-bottom: 5px;
 }
 
 .arrow-icon-left, .arrow-icon-right {
     color: var(--gray);
     height: 100%;
     width: 100%;
+}
+
+.item-vote-text {
+    font-size: 32px;
 }
