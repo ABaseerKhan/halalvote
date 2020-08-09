@@ -14,13 +14,13 @@ interface ItemCarouselComponentProps {
     iterateItem: any,
     itemName: string,
     userVote: number | undefined | null,
-    halalVotes: number,
-    haramVotes: number,
-    addItemVoteLocally: (itemName: string, itemVote: number) => void,
+    halalPoints: number,
+    haramPoints: number,
+    numVotes: number,
     style?: any;
 };
 export const ItemCarouselComponent = (props: ItemCarouselComponentProps) => {
-    const { id, iterateItem, itemName, userVote, halalVotes, haramVotes, addItemVoteLocally } = props;
+    const { id, iterateItem, itemName, userVote, halalPoints, haramPoints, numVotes } = props;
     return (
         <div id={id} style={props.style} className='item-carousel'>
             <div className="item-navigator">
@@ -34,7 +34,7 @@ export const ItemCarouselComponent = (props: ItemCarouselComponentProps) => {
                     <ChevronRightSVG className={"arrow-icon-right"}/>
                 </button>
             </div>
-            <ItemVotesComponent itemName={itemName} userVote={userVote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
+            <ItemVotesComponent itemName={itemName} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />
         </div>
     );
 }

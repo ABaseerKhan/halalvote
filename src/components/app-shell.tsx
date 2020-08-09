@@ -78,36 +78,11 @@ export const AppShellComponent = (props: any) => {
     }
   };
 
-  const addItemVoteLocally = (itemName: string, itemVote: number) => {
-    for (let x in state.items) {
-      const item = state.items[x];
-
-      if (item.itemName === itemName) {
-        if (itemVote !== item.vote) {
-          state.items[x] = {
-            ...item,
-            vote: itemVote,
-            halalVotes: itemVote === 0 ? item.halalVotes + 1 : (item.vote === 0 ? item.halalVotes - 1 : item.halalVotes),
-            haramVotes: itemVote === 1 ? item.haramVotes + 1 : (item.vote === 1 ? item.haramVotes - 1 : item.haramVotes)
-          }
-        } else if (item.vote !== undefined) {
-          state.items[x] = {
-            ...item,
-            vote: undefined,
-            halalVotes: itemVote === 0 ? item.halalVotes - 1 : item.halalVotes,
-            haramVotes: itemVote === 1 ? item.haramVotes - 1 : item.haramVotes
-          }
-        }
-      }
-
-      setState({ ...state, items: state.items });
-    }
-  }
-
   const item = state.items.length > 0 ? state.items[state.itemIndex] : undefined;
   const itemName = item?.itemName !== undefined ? item.itemName : "";
-  const halalVotes = item?.halalVotes !== undefined ? item.halalVotes : 0;
-  const haramVotes = item?.haramVotes !== undefined ? item.haramVotes : 0;
+  const halalPoints = item?.halalPoints !== undefined ? item.halalPoints : 0;
+  const haramPoints = item?.haramPoints !== undefined ? item.haramPoints : 0;
+  const numItemVotes = item?.numVotes !== undefined ? item.numVotes : 0;
   const numHalalComments = item?.numHalalComments !== undefined ? item.numHalalComments : 0;
   const numHaramComments = item?.numHaramComments !== undefined ? item.numHaramComments : 0;
 
@@ -259,7 +234,7 @@ export const AppShellComponent = (props: any) => {
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">
           <MenuComponent menuId={menuId} />
-          <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalVotes={halalVotes} haramVotes={haramVotes} addItemVoteLocally={addItemVoteLocally} />
+          <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numItemVotes} />
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} scrollToPage={scrollToPage} />
           <AddItemButtonComponent fetchItems={fetchItems}/>
         </div>
