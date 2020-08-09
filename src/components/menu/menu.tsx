@@ -41,13 +41,33 @@ export const MenuComponent = (props: MenuComponentProps) => {
     const menuWidth = 72;
     const menuHeightExpanded = 200;
     const menuWidthExpanded = 150;
+    const menuButtonWidth = 40;
+    const menuButtonInteriorWidth = 24;
+    const menuButtonWidthExpanded = 118;
+    const menuButtonInteriorWidthExpanded = 102;
 
     const menuId = "menu";
     const menuButtonId = "menu-button";
+    const menuButtonInteriorId = "menu-button-interior";
 
     useEffect(() => {
         const menu = document.getElementById(menuId);
-        if (menu && state.menuLocation !== MenuLocation.NONE) {
+        const menuButton = document.getElementById(menuButtonId);
+        const menuButtonInterior = document.getElementById(menuButtonInteriorId);
+
+        if (menu && menuButton && menuButtonInterior && state.menuLocation !== MenuLocation.NONE) {
+            menuButtonInterior.animate([
+                {width: menuButtonInteriorWidthExpanded + "px"}
+            ], {
+                duration: 50,
+                fill: "forwards"
+            });
+            menuButton.animate([
+                {width: menuButtonWidthExpanded + "px"}
+            ], {
+                duration: 50,
+                fill: "forwards"
+            });
             menu.animate([
                 {height: menuHeightExpanded + "px", width: menuWidthExpanded + "px"}
             ], {
@@ -71,7 +91,22 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
     const closeMenu = (state: MenuComponentState) => {
         const menu = document.getElementById(menuId);
-        if (menu && state.menuLocation === MenuLocation.NONE) {
+        const menuButton = document.getElementById(menuButtonId);
+        const menuButtonInterior = document.getElementById(menuButtonInteriorId);
+
+        if (menu && menuButton && menuButtonInterior && state.menuLocation === MenuLocation.NONE) {
+            menuButtonInterior.animate([
+                {width: menuButtonInteriorWidth + "px"}
+            ], {
+                duration: 50,
+                fill: "forwards"
+            });
+            menuButton.animate([
+                {width: menuButtonWidth + "px"}
+            ], {
+                duration: 50,
+                fill: "forwards"
+            });
             menu.animate([
                 {height: menuHeight + "px", width: menuWidth + "px"}
             ], {
@@ -127,7 +162,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 event.preventDefault();
                 const touchLocation = event.targetTouches[0];
                 const yOffset = menuHeight / 2;
-                const xOffset = menuWidth / 2;
+                const xOffset = menuWidthExpanded / 2;
 
                 switch(state.menuLocation) {
                     case MenuLocation.UPPER_LEFT:
@@ -156,7 +191,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                         break;
                     case MenuLocation.NONE:
                         menu.style.top = "";
-                        menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - xOffset) + "px";
+                        menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - (menuWidth / 2)) + "px";
                         menu.style.bottom = Math.round(window.innerHeight - touchLocation.pageY - yOffset) + "px";
                         menu.style.left = "";
                         break;
@@ -231,8 +266,11 @@ export const MenuComponent = (props: MenuComponentProps) => {
                     </ul>
             }
             <div id={menuButtonId} className={menuButtonId} onClick={pressButton}>
-                <div className="menu-button-interior">
-                    { username && username !== "" && username.charAt(0)}
+                <div id={menuButtonInteriorId} className={menuButtonInteriorId}>
+                    { 
+                        username && username !== "" && 
+                            state.menuLocation === MenuLocation.NONE ? username.charAt(0) : username
+                    }
                 </div>
             </div>
         </div>

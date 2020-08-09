@@ -28,11 +28,15 @@
 }
 
 .menu-button-interior {
+    position: absolute;
     width: 24px;
     height: 24px;
-    padding: 8px;
-    border-radius: 20px;
-    margin: auto;
+    padding: 12px;
+    border-radius: 24px;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 12px;
+    margin-right: 12px;
     outline: none;
     background-color: white;
     text-align: center;
