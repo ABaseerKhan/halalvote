@@ -23,6 +23,7 @@
 @media only screen and (max-width: 600px) {
     .comments-body {
         display: flex;
+        justify-content: center;
     }
     .comments-card-1, .comments-card-0 {
         width: 80vw !important;
