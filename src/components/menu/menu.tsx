@@ -122,6 +122,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 setState(state);
                 onfinish();
             }
+            menu.style.animation = "pulse 3s infinite cubic-bezier(.16,-0.02,0,1.31)";
         } else {
             setState(state);
             onfinish();

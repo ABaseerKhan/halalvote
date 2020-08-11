@@ -26,12 +26,15 @@ const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
         if (itemName && username && sessiontoken) {
             if (value > 0) {
                 document.body.style.backgroundColor = 'var(--halal-color)';
-            } else {
+                setTimeout(() => {
+                    document.body.style.backgroundColor = 'var(--site-background-color)'
+                }, 500);
+            } else if (value < 0) {
                 document.body.style.backgroundColor = 'var(--haram-color)';
+                setTimeout(() => {
+                    document.body.style.backgroundColor = 'var(--site-background-color)'
+                }, 500);
             }
-            setTimeout(() => {
-                document.body.style.backgroundColor = 'var(--site-background-color)'
-            }, 500);
             await postData({
                 baseUrl: itemsConfig.url,
                 path: 'vote-item',
