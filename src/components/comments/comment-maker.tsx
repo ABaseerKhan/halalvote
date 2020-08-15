@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
 import { ReactComponent as SendButtonSVG } from '../../icons/send-button.svg';
 import { useMedia } from '../../hooks/useMedia';
 
@@ -112,3 +112,19 @@ const modules = {
 const formats = [
     'header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block', 'link', 'image',
 ];
+
+let Link = Quill.import('formats/link');
+class CustomLink extends Link {
+    static sanitize(url: any) {
+        let value = super.sanitize(url);
+        if(value)
+        {
+            for(let i=0;i<CustomLink.PROTOCOL_WHITELIST.length;i++)
+            if(value.startsWith(CustomLink.PROTOCOL_WHITELIST[i]))
+                return value;
+            return `http://${value}`
+        }
+        return value;
+    }
+}
+Quill.register(CustomLink);
