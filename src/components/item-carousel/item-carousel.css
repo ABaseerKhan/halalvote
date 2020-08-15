@@ -21,7 +21,7 @@
 .item-text {
     margin-right: auto;
     margin-left: auto;
-    padding-top: 1%;
+    padding-top: 0.5%;
     text-align: center;
     font-size: 32px;
     color: var(--site-background-color);
