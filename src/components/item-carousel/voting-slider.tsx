@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
+import { useMedia } from '../../hooks/useMedia';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -69,15 +70,13 @@ const PrettoSlider = withStyles({
         opacity: 'unset',
     },
     mark: {
-        height: '50%',
-        width: '3px',
-        borderRadius: '0',
-        backgroundColor: "black",
+        display: 'none'
     },
     markLabel: {
-        top: '-20%',
-        fontSize: '14px',
-        color: 'var(--neutral-color)',
+        top: 'unset',
+        fontSize: '16px',
+        lineHeight: 'unset',
+        fontWeight: 600,
     }
 })(Slider);
 
@@ -90,6 +89,13 @@ type VotingSliderProps = {
     numVotes: number,
 };
 export const VotingSlider = (props: VotingSliderProps) => {
+    const isMobile = useMedia(
+        // Media queries
+        ['(max-width: 600px)'],
+        [true],
+        // default value
+        false
+    );
     const classes = useStyles();
     const { userVote, halalPoints, haramPoints, numVotes } = props;
 
@@ -104,7 +110,19 @@ export const VotingSlider = (props: VotingSliderProps) => {
     const marks = [
         {
             value: ((halalPoints - haramPoints) / (numVotes)),
-            label: '',
+            label: (
+                <span {...props}>
+                    <div className="average-votes-mark"></div>
+                </span>
+            ),
+        },
+        {
+            value: -100,
+            label: <span style={{ color: '#401d5a', position: 'absolute', transform: 'translate(0%, -95%)' }}>{'haram (حرام)'}</span>
+        },
+        {
+            value: 100,
+            label: <span style={{ color: '#1c4d44', position: 'absolute', transform: 'translate(-100%, -95%)' }}>{'halal (حلال)'}</span>
         },
     ];
 

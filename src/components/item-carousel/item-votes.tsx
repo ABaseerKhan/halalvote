@@ -53,9 +53,6 @@ const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
     return (
         <div className={"item-votes-container"}>
             <div className={"voting-slider"} >
-                <span className={"item-vote-text"}>
-                    <span>{` 😈 `}</span>
-                </span>
                 <VotingSlider 
                     submitVote={submitVote}
                     userVote={userVote}
@@ -63,9 +60,6 @@ const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
                     haramPoints={haramPoints}
                     numVotes={numVotes}
                 />
-                <span className={"item-vote-text"}>
-                    <span>{` 👼 `}</span>
-                </span>
             </div>
         </div>
     )
