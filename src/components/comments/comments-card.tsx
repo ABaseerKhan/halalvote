@@ -38,6 +38,7 @@ const initialState = {
     commentsShowable: true,
     pathToHighlightedComment: undefined,
 }
+var clickTimer: any = null;
 const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const { judgment, itemName, numHalalComments, numHaramComments, refreshItem } = props;
     const totalTopLevelComments = (judgment === Judgment.HALAL ? numHalalComments : numHaramComments) || 0;
@@ -203,8 +204,20 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const commentsCardId = "comments-card-" + judgment.toString();
     const commentsCardCoverId = `comments-card-cover-${judgment.toString()}`
 
+    const doubleTap = (judgmentMemo: any) => (() => {
+        if (clickTimer == null) {
+            clickTimer = setTimeout(function () {
+                clickTimer = null;
+
+            }, 300)
+        } else {
+            clearTimeout(clickTimer);
+            clickTimer = null;
+            props.switchCards(judgmentMemo)();
+        }
+    });
     return(
-        <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} >
+        <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onTouchStart={doubleTap(+(!judgment))} className={commentsCardId} >
                 <div onClick={props.switchCards(+(!judgment))} className="card-flip"><FlipSVG /></div>
                 {!isMobile && <div id={commentsCardCoverId} className="comments-card-cover" onClick={props.switchCards(judgment)}></div>}
                 <div id={commentsContainerId} className="comments-container">
