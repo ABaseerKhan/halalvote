@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
-import { useMedia } from '../../hooks/useMedia';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -89,13 +88,6 @@ type VotingSliderProps = {
     numVotes: number,
 };
 export const VotingSlider = (props: VotingSliderProps) => {
-    const isMobile = useMedia(
-        // Media queries
-        ['(max-width: 600px)'],
-        [true],
-        // default value
-        false
-    );
     const classes = useStyles();
     const { userVote, halalPoints, haramPoints, numVotes } = props;
 
@@ -109,7 +101,7 @@ export const VotingSlider = (props: VotingSliderProps) => {
 
     const marks = [
         {
-            value: ((halalPoints - haramPoints) / (numVotes)),
+            value: numVotes > 0 ? ((halalPoints - haramPoints) / (numVotes)) : 0,
             label: (
                 <span {...props}>
                     <div className="average-votes-mark"></div>
@@ -117,11 +109,11 @@ export const VotingSlider = (props: VotingSliderProps) => {
             ),
         },
         {
-            value: -100,
+            value: -99,
             label: <span style={{ color: '#401d5a', position: 'absolute', transform: 'translate(0%, -95%)' }}>{'haram (حرام)'}</span>
         },
         {
-            value: 100,
+            value: 99,
             label: <span style={{ color: '#1c4d44', position: 'absolute', transform: 'translate(-100%, -95%)' }}>{'halal (حلال)'}</span>
         },
     ];
@@ -143,7 +135,7 @@ export const VotingSlider = (props: VotingSliderProps) => {
         <div className={classes.root}>
             <PrettoSlider 
                 ThumbComponent={ThumbComponent}
-                marks={numVotes > 0 ? marks : undefined}
+                marks={marks}
                 aria-label="pretto slider"
                 value={state.value}
                 min={-100}
