@@ -49,6 +49,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     const submitComment = (event: any) => {
         if (value !== "") {
             event.preventDefault();
+            value = value.replace(new RegExp('<img '), '<img style="max-width: 100%;max-height: 75vh;"');
             props.submitComment(value);
             setValue('');
         }
