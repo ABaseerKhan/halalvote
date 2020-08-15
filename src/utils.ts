@@ -16,7 +16,6 @@ export const timeSince = (timeStampString: string) => {
     var msPerMinute = 60 * 1000;
     var msPerHour = msPerMinute * 60;
     var msPerDay = msPerHour * 24;
-    var msPerMonth = msPerDay * 30;
     var msPerYear = msPerDay * 365;
 
     if (elapsed < msPerMinute) {
