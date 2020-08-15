@@ -43,8 +43,8 @@
         border-radius: 0 48px 0 0;
     }
     .comments-container {
-        margin: 10px 25px 10px 10px !important;
-        padding: 0 !important;
+        margin: 10px 25px 0 10px !important;
+        padding: 0 0 10px 0px !important;
         width: 100%;
     }
 }
