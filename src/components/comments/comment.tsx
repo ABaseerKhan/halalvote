@@ -134,7 +134,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
     );
 
     return (
-        state.collapsed ? CommentHeader : 
+        state.collapsed ? <div id={`comment-${state.comment.id}`} className={commentBorderClass}>{CommentHeader}</div> : 
         <div id={`comment-${state.comment.id}`} onClick={(e) => { if (isHighlighted) e.stopPropagation(); }} className={commentBorderClass}>
             {CommentHeader}
             {!isHighlighted && <div className={"comment-tail-" + judgment} onClick={toggleCollapse}></div>}
@@ -182,7 +182,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
             </div>
             {
                 moreReplies > 0 &&
-                <div className="show-more-replies" onClick={(e) => { e.stopPropagation(); props.fetchMoreReplies(props.path);  }}>
+                <div className={judgment ? "show-more-replies-1" : "show-more-replies-0"} onClick={(e) => { e.stopPropagation(); props.fetchMoreReplies(props.path);  }}>
                     {moreReplies + (moreReplies > 1 ? " more replies" : " more reply")}
                 </div>
             }

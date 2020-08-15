@@ -110,11 +110,11 @@ export const VotingSlider = (props: VotingSliderProps) => {
         },
         {
             value: -99,
-            label: <span style={{ color: '#401d5a', position: 'absolute', transform: 'translate(0%, -95%)' }}>{'haram (حرام)'}</span>
+            label: <span style={{ color: '#452061', position: 'absolute', transform: 'translate(0%, -95%)' }}>{'haram (حرام)'}</span>
         },
         {
             value: 99,
-            label: <span style={{ color: '#1c4d44', position: 'absolute', transform: 'translate(-100%, -95%)' }}>{'halal (حلال)'}</span>
+            label: <span style={{ color: '#1f594f', position: 'absolute', transform: 'translate(-100%, -95%)' }}>{'halal (حلال)'}</span>
         },
     ];
 

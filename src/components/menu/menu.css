@@ -13,7 +13,6 @@
 }
 
 .menu-button-computer:hover {
-    background-color: var(--neutral-color);
 }
 
 @keyframes pulse {to {box-shadow: 0 0 0 20px rgba(106, 124, 138, 0.0);}}
@@ -27,7 +26,7 @@
     right: 0;
     border-radius: 36px;
     outline: none;
-    background-color: var(--light-neutral-color);
+    background-color: var(--neutral-color);
     cursor: pointer;
     color: var(--gray);
 }
