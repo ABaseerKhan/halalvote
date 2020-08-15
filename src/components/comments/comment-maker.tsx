@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import ReactQuill from 'react-quill';
 import { ReactComponent as SendButtonSVG } from '../../icons/send-button.svg';
+import { useMedia } from '../../hooks/useMedia';
 
 //type imports
 import { Judgment } from '../../types';
@@ -16,6 +17,14 @@ interface CommentMakerComponentProps {
 };
 
 const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => {
+    const isMobile = useMedia(
+        // Media queries
+        ['(max-width: 600px)'],
+        [true],
+        // default value
+        false
+    );
+
     const [state, setState] = useState({
         holdingDownShift: false
     });
@@ -49,7 +58,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
         switch (event.keyCode) {	
             case 13:
                 event.preventDefault();
-                if (!state.holdingDownShift) {
+                if (!state.holdingDownShift && !isMobile) {
                     value = value.replace(new RegExp('<p><br></p>$'), '');
                     submitComment(event as any);
                 }	

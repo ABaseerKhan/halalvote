@@ -26,7 +26,7 @@
         justify-content: center;
     }
     .comments-card-1, .comments-card-0 {
-        width: 80vw !important;
+        width: 95vw !important;
         display: flex !important;
         margin-left: unset !important;
         margin-right: unset !important;
@@ -316,7 +316,6 @@
     margin-left: 5px;
     font-size: 18px;
     border-top: 2px solid var(--gray);
-    background-color: transparent;
     resize: none;
 }
 
