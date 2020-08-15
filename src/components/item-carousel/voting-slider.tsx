@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
+import ReactTooltip from 'react-tooltip';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -104,7 +105,10 @@ export const VotingSlider = (props: VotingSliderProps) => {
             value: numVotes > 0 ? ((halalPoints - haramPoints) / (numVotes)) : 0,
             label: (
                 <span {...props}>
-                    <div className="average-votes-mark"></div>
+                    <div className="average-votes-mark">
+                        <span style={{ transform: 'rotate(-135deg)', display: 'block', lineHeight: '1.5', zIndex: 400 }} data-tip={"Community Sentiment"} data-for="cs" id="test" >CS</span>
+                    </div>
+                    <ReactTooltip place="bottom" delayShow={100} effect={"solid"} id="cs" />
                 </span>
             ),
         },

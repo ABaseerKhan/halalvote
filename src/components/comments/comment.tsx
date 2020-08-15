@@ -127,8 +127,8 @@ export const CommentComponent = (props: CommentComponentProps) => {
             <div className="username">{props.comment.username}</div>
             <span className={"bullet-separator"}>&bull;</span>
             <div className={"time-stamp"} >
-                <span data-tip={convertUTCDateToLocalDate(props.comment.timeStamp)}>{timeSince(props.comment.timeStamp)}</span>
-                <ReactTooltip delayShow={400} effect={"solid"} />
+                <span data-tip={convertUTCDateToLocalDate(props.comment.timeStamp)} data-for="comment">{timeSince(props.comment.timeStamp)}</span>
+                <ReactTooltip delayShow={400} effect={"solid"} id="comment"/>
             </div>
         </div>
     );
