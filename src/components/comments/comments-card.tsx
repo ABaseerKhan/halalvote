@@ -3,7 +3,7 @@ import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
-import { postData } from '../../https-client/post-data';
+import { postData } from '../../https-client/client';
 import { commentsConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
 import { ReactComponent as FlipSVG } from '../../icons/flip.svg';

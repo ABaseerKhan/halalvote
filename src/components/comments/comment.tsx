@@ -7,7 +7,7 @@ import { Comment, Judgment } from '../../types';
 import { convertUTCDateToLocalDate, timeSince } from '../../utils';
 import Linkify from 'react-linkify'; 
 import { commentsConfig } from '../../https-client/config';
-import { postData } from '../../https-client/post-data';
+import { postData } from '../../https-client/client';
 
 // type imports
 import { Vote } from '../../types';

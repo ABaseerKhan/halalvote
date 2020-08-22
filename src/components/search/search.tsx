@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getData } from '../../https-client/post-data';
+import { getData } from '../../https-client/client';
 import { itemsConfig } from '../../https-client/config';
 import { useDebouncedSearch } from '../../hooks/useDebouncedSearch';
 
