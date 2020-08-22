@@ -10,6 +10,8 @@ import ReactCardFlip from '../../card-flip/card-flip';
 // styles
 import './comments.css';
 
+const DURATION = 200;
+const EASING = "ease-in";
 interface CommentsComponentProps {
     id: string,
     itemName: string, 
@@ -64,7 +66,8 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
             marginRight: 0 + "vw"
           }
         ], {
-            duration: 100,
+            duration: DURATION,
+            easing: EASING,
             fill: "forwards"
         }).onfinish = onfinish
 
@@ -74,7 +77,8 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
               opacity: "0"
             }
           ], {
-            duration: 100,
+            duration: DURATION,
+            easing: EASING,
             fill: "forwards"
           })
         } else {
@@ -83,7 +87,8 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
               opacity: "0"
             }
           ], {
-            duration: 100,
+            duration: DURATION,
+            easing: EASING,
             fill: "forwards"
           })
         }
@@ -98,7 +103,8 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
             marginRight: -40 + "vw"
           }
         ], {
-            duration: 100,
+            duration: DURATION,
+            easing: EASING,
             fill: "forwards"
         }).onfinish = onfinish
 
@@ -108,7 +114,8 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
               opacity: "0.5"
             }
           ], {
-            duration: 100,
+            duration: DURATION,
+            easing: EASING,
             fill: "forwards"
           })
         } else {
@@ -117,7 +124,8 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
               opacity: "0.5"
             }
           ], {
-            duration: 100,
+            duration: DURATION,
+            easing: EASING,
             fill: "forwards"
           })
         }
