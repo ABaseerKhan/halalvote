@@ -10,8 +10,10 @@ import ReactCardFlip from '../../card-flip/card-flip';
 // styles
 import './comments.css';
 
-const DURATION = 200;
-const EASING = "ease-in";
+const DURATION = 400;
+const EASEAPART = "cubic-bezier(.31,.3,.21,1.02)";
+const EASECLOSER = "cubic-bezier(.79,-0.02,.69,.69)";
+const EASESTANDARD = "ease-in"
 interface CommentsComponentProps {
     id: string,
     itemName: string, 
@@ -38,7 +40,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     const haramCardCover = document.getElementById("comments-card-cover-1");
 
     if (halalCard && haramCard && halalCardCover && haramCardCover) {
-      haramCard.style.marginLeft = "20vw";
+      haramCard.style.marginLeft = "23vw";
       haramCard.style.marginRight = "-40vw";
 
       if (cardToShow.judgment === Judgment.HARAM) {
@@ -62,33 +64,33 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
       if (haramCard && haramCardCover && halalCardCover) {
         haramCard.animate([
           {
-            marginLeft: 0 + "vw",
-            marginRight: 0 + "vw"
+            marginLeft: 3 + "vw",
+            marginRight: 1 + "vw"
           }
         ], {
             duration: DURATION,
-            easing: EASING,
+            easing: EASEAPART,
             fill: "forwards"
         }).onfinish = onfinish
 
         if (judgment === Judgment.HALAL) {
           haramCardCover.animate([
             {
-              opacity: "0"
+              opacity: "0.1"
             }
           ], {
             duration: DURATION,
-            easing: EASING,
+            easing: EASEAPART,
             fill: "forwards"
           })
         } else {
           halalCardCover?.animate([
             {
-              opacity: "0"
+              opacity: "0.1"
             }
           ], {
             duration: DURATION,
-            easing: EASING,
+            easing: EASEAPART,
             fill: "forwards"
           })
         }
@@ -99,12 +101,12 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
       if (haramCard && haramCardCover && halalCardCover) {
         haramCard.animate([
           {
-            marginLeft: 20 + "vw",
+            marginLeft: 23 + "vw",
             marginRight: -40 + "vw"
           }
         ], {
             duration: DURATION,
-            easing: EASING,
+            easing: EASECLOSER,
             fill: "forwards"
         }).onfinish = onfinish
 
@@ -115,7 +117,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
             }
           ], {
             duration: DURATION,
-            easing: EASING,
+            easing: EASESTANDARD,
             fill: "forwards"
           })
         } else {
@@ -125,7 +127,7 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
             }
           ], {
             duration: DURATION,
-            easing: EASING,
+            easing: EASESTANDARD,
             fill: "forwards"
           })
         }
