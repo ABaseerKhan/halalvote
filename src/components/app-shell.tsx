@@ -28,11 +28,14 @@ export const AppShellComponent = (props: any) => {
   const { username, sessiontoken } = cookies;
 
   useEffect(() => {
-    fetchItems(cookies.itemName || undefined);
     setTimeout(() => {
       document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
     }, 500) // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    fetchItems(cookies.itemName || undefined);
+  }, [sessiontoken]);
 
   const fetchItems = async (itemTofetch?: string) => {
     let body: any = { 
