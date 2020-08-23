@@ -95,13 +95,13 @@
 .add-description-back-button {
   position: absolute;
   height: 60px;
-  width: 100px;
-  top: 0;
-  left: 0;
+  width: 60px;
+  top: 8px;
+  left: 8px;
   cursor: pointer;
   background: transparent;
   border: none;
-  border-radius: 25px 0 0 0;
+  border-radius: 30px;
 }
 
 .add-description-back-button:hover {
