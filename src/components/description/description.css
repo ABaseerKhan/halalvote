@@ -6,10 +6,10 @@
 
 .description-navigator-button {
   position: absolute;
-  height: 60px;
-  width: 60px;
-  top: calc(50% - 30px);
-  border-radius: 30px;
+  height: 40px;
+  width: 40px;
+  bottom: -64px;
+  border-radius: 20px;
   background-color: var(--neutral-color);
   color: var(--site-background-color);
   cursor: pointer;
@@ -17,11 +17,11 @@
 }
 
 .description-navigator-button-left {
-  left: -68px;
+  left: calc(50% - 84px);
 }
 
 .description-navigator-button-right {
-  right: -68px;
+  right: calc(50% - 84px);
 }
 
 .description-navigator-button:hover {
@@ -29,7 +29,8 @@
 }
 
 .description-navigator-button-icon {
-  margin-left: -20px;
+  margin-left: -29px;
+  margin-top: -8px;
 }
 
 .item-description {
