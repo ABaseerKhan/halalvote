@@ -332,6 +332,7 @@
     font-size: 18px;
     border-top: 1px dotted var(--gray);
     resize: none;
+    color: var(--gray);
 }
 
 .comment-maker-input .ql-toolbar {
@@ -345,7 +346,9 @@
 }
 
 .comment-maker-input .ql-editor {
-    padding: 0 15px 5px 15px;
+    font-family: revert;
+    min-height: 3em;
+
 }
 
 .comment-maker-button-0, .comment-maker-button-1 {
