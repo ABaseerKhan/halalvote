@@ -115,7 +115,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             setCookie: setCookie,
         });
         if (status !== 200) {
-            return;
+            return status;
         }
         const commentObject: Comment = {
             id: comment.id,
@@ -136,6 +136,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         const updatedComments = addCommentsLocally(state.comments, [commentObject], highlightedComment && state.pathToHighlightedComment);
         setState(prevState => ({ ...prevState, comments: updatedComments }));
         highlightComment(state.pathToHighlightedComment ? state.pathToHighlightedComment.concat(0) : [0]);
+        return status;
     }
 
     const deleteComment = async (pathToComment: number[]) => {

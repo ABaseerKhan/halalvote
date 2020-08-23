@@ -12,7 +12,7 @@ import './comments.css';
 
 interface CommentMakerComponentProps {
     judgment: Judgment,
-    submitComment: (comment: any) => void,
+    submitComment: (comment: any) => Promise<number>,
     replyToUsername?: string,
 };
 
@@ -46,12 +46,11 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
         }
     }));
 
-    const submitComment = (event: any) => {
+    const submitComment = async (event: any) => {
         if (value !== "") {
             event.preventDefault();
             value = value.replace(new RegExp('<img '), '<img style="max-width: 100%;max-height: 65vh;border: 3px solid gray;border-radius: 5px;"');
-            props.submitComment(value);
-            setValue('');
+            if ((await props.submitComment(value)) === 200) setValue('');
         }
     };
 
