@@ -139,13 +139,13 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 const rect = menuButton.getBoundingClientRect();
                 let newMenuLocation = MenuLocation.NONE;
 
-                if (rect.x > (window.innerWidth - rect.x) && rect.y > (window.innerHeight - rect.y)) {
+                if (rect.x > (window.innerWidth/2 - rect.width/2) && rect.y > (window.innerHeight/2 - rect.height/2)) {
                     newMenuLocation = MenuLocation.UPPER_LEFT;
-                } else if (rect.x < (window.innerWidth - rect.x) && rect.y > (window.innerHeight - rect.y)) {
+                } else if (rect.x < (window.innerWidth/2 - rect.width/2) && rect.y > (window.innerHeight/2 - rect.height/2)) {
                     newMenuLocation = MenuLocation.UPPER_RIGHT;
-                } else if (rect.x < (window.innerWidth - rect.x) && rect.y < (window.innerHeight - rect.y)) {
+                } else if (rect.x < (window.innerWidth/2 - rect.width/2) && rect.y < (window.innerHeight/2 - rect.height/2)) {
                     newMenuLocation = MenuLocation.BOTTOM_RIGHT;
-                } else if (rect.x > (window.innerWidth - rect.x) && rect.y < (window.innerHeight - rect.y)) {
+                } else if (rect.x > (window.innerWidth/2 - rect.width/2) && rect.y < (window.innerHeight/2 - rect.height/2)) {
                     newMenuLocation = MenuLocation.BOTTOM_LEFT;
                 }
 
