@@ -10,7 +10,7 @@
   width: 60px;
   top: calc(50% - 30px);
   border-radius: 30px;
-  background-color: var(--light-neutral-color);
+  background-color: var(--neutral-color);
   color: var(--site-background-color);
   cursor: pointer;
   overflow: hidden;
@@ -25,7 +25,7 @@
 }
 
 .description-navigator-button:hover {
-  background-color: var(--neutral-color);
+  background-color: var(--light-neutral-color);
 }
 
 .description-navigator-button-icon {
