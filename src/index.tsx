@@ -10,7 +10,7 @@ import './index.css';
 
 ReactDOM.render(
   <CookiesProvider >
-    <AppShellComponent />
+    <AppShellComponent/>
     <div id="portal"></div>
   </CookiesProvider>,
   document.getElementById('root')

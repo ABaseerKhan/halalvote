@@ -1,8 +1,22 @@
 import { config, EnvConfig } from './config';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { ModalComponent } from '../components/modal/modal';
+import { ModalType } from '../types';
+import { getCookie } from '../utils';
 
 const envConfig = config();
 
-export const postData = async (request: { baseUrl: string, path: string, data: any, additionalHeaders: any }): Promise<any> => {
+interface Request { 
+    baseUrl: string, 
+    path: string, 
+    data?: any, 
+    queryParams?: any,
+    additionalHeaders: any,
+    setCookie?: any,
+};
+
+export const postData = async (request: Request): Promise<any> => {
     const { baseUrl, path, data, additionalHeaders } = request;
 
     const response = await fetch(baseUrl + path, {
@@ -20,10 +34,13 @@ export const postData = async (request: { baseUrl: string, path: string, data: a
         handle401(request);
         return await postData(request);
     }
+    if(response.status === 400) {
+        handle400(request);
+    }
     return { status: response.status, data: await response.json() };
 }
 
-export const getData = async (request: { baseUrl: string, path: string, queryParams: any, additionalHeaders: any }): Promise<any> => {
+export const getData = async (request: Request): Promise<any> => {
     const { baseUrl, path, queryParams={}, additionalHeaders={} } = request;
 
     const query = Object.keys(queryParams)
@@ -45,6 +62,9 @@ export const getData = async (request: { baseUrl: string, path: string, queryPar
         handle401(request);
         return await getData(request);
     }
+    if(response.status === 400) {
+        handle400(request);
+    }
     return { status: response.status, data: await response.json() };
 }
 
@@ -61,10 +81,28 @@ const getApiKey = (baseUrl: string, envConfig: EnvConfig) => {
     }
 }
 
-const handle401 = async ({ data, additionalHeaders }: { baseUrl: string, path: string, data?: any, additionalHeaders: any }) => {
+const handle401 = async ({ data, additionalHeaders }: Request) => {
     document.cookie = "username= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
     document.cookie = "sessiontoken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
     delete additionalHeaders.sessiontoken;
     delete additionalHeaders.username;
     if (data) delete data.username;
+}
+
+const handle400 = ({ setCookie }: Request) => {
+    const portal = document.getElementById('portal');
+    const setLoginCookies = () => {
+        setCookie('username', getCookie('username'), { path: '/' }); 
+        setCookie('sessiontoken', getCookie('sessiontoken'), { path: '/' }); 
+    };
+    if (portal) {
+        ReactDOM.render(
+            <ModalComponent 
+                removeModal={() => { ReactDOM.unmountComponentAtNode(portal) }} 
+                modalType={ModalType.LOGIN} 
+                onLogin={setLoginCookies} 
+            />,
+            portal
+        );
+    }
 }

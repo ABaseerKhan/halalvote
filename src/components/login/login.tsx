@@ -8,6 +8,7 @@ import './login.css';
 
 interface LoginComponentProps {
     closeModal: any,
+    onLogin?: any,
 };
 
 export const LoginComponent = (props: LoginComponentProps) => {
@@ -89,6 +90,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     const sessionToken = data;
                     setCookie('username', usernameInput.value, { path: '/' });
                     setCookie('sessiontoken', sessionToken, { path: '/ '});
+                    props.onLogin('username', 'sessiontoken');
                     closeModal();
                 }
             }

@@ -14,8 +14,9 @@ import { DescriptionComponent } from '../description/description';
 interface ModalComponentProps {
     removeModal: any,
     modalType: ModalType;
-    fetchItems: any;
-    itemName: string | null;
+    fetchItems?: any;
+    itemName?: string | null;
+    onLogin?: any;
 };
 export const ModalComponent = (props: ModalComponentProps) => {
     const { removeModal, modalType, fetchItems, itemName } = props;
@@ -76,7 +77,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
         <Portal>
             <div className='modal-cover' onClick={ closeModal }></div>
             <div id={modalId} className="modal">
-                { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} /> }
+                { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> }
                 { modalType === ModalType.ADD_ITEM && <AddItemComponent closeModal={closeModal} fetchItems={fetchItems} /> }
                 { modalType === ModalType.DESCRIPTION && itemName != null && <DescriptionComponent itemName={itemName} /> }
             </div>

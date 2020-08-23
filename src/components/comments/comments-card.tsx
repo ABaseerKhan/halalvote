@@ -51,7 +51,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         false
     );
 
-    const [cookies] = useCookies(['username', 'sessiontoken']);
+    const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
     const [state, setState] = useState<CommentsCardState>(initialState);
@@ -99,7 +99,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
     const createComment = async (commentText: string) => {
         const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
-        const { data: comment }: { data: Comment } = await postData({
+        const { status, data: comment }: { status: number, data: Comment } = await postData({
             baseUrl: commentsConfig.url,
             path: 'add-comment', 
             data: { 
@@ -111,8 +111,12 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             },
             additionalHeaders: {
                 "sessiontoken": sessiontoken
-            }
+            },
+            setCookie: setCookie,
         });
+        if (status !== 200) {
+            return;
+        }
         const commentObject: Comment = {
             id: comment.id,
             commentType: judgementToTextMap[judgment],

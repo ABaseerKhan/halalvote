@@ -31,7 +31,7 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
         currentIndex: 0,
         isAddItemButtonDisabled: true
     });
-    const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken', 'itemName']);
+    const [cookies] = useCookies(['username', 'sessiontoken', 'itemName']);
     const { username, sessiontoken } = cookies;
 
     useEffect(() => {

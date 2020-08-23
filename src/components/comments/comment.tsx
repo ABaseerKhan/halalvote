@@ -27,7 +27,7 @@ interface CommentComponentProps {
     judgment: Judgment;
 }
 export const CommentComponent = (props: CommentComponentProps) => {
-    const [cookies] = useCookies(['username', 'sessiontoken']);
+    const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
     const [state, setState] = useState({
@@ -56,9 +56,10 @@ export const CommentComponent = (props: CommentComponentProps) => {
                 "commentId": state.comment.id,
                 "vote": 1,
             },
-            additionalHeaders: {
+            additionalHeaders: sessiontoken ? {
                 "sessiontoken": sessiontoken
-            }
+            } : { },
+            setCookie: setCookie,
         });
 
         if (status === 200){
@@ -83,7 +84,8 @@ export const CommentComponent = (props: CommentComponentProps) => {
             },
             additionalHeaders: {
                 "sessiontoken": sessiontoken
-            }
+            },
+            setCookie: setCookie,
         });
 
         if (status === 200) {
