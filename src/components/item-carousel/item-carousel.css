@@ -64,7 +64,15 @@
 }
 
 .average-votes-mark {
-    transform: translate(0px, 25px) rotate(135deg);
+    background-color: var(--gray);
+    height: 100%;
+    width: 2px;
+    position: absolute;
+    transform: translate(12.5px, 0px);
+}
+
+.average-votes-mark-label {
+    transform: translate(1px, 25px) rotate(135deg);
     line-height: 1.2;
     width: 19px;
     padding: 2px;
