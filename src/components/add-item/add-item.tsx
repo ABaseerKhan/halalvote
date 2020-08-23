@@ -18,8 +18,15 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
         isAddItemButtonDisabled: true,
     });
 
-    const getInput = (): HTMLInputElement => {
-        return document.getElementById("add-item-input") as HTMLInputElement;
+    const addItemNameInputId = "add-item-name-input"
+    const addItemDescriptionInputId = "add-item-description-input"
+
+    const getNameInput = (): HTMLInputElement => {
+        return document.getElementById(addItemNameInputId) as HTMLInputElement;
+    }
+
+    const getDescriptionInput = (): HTMLInputElement => {
+        return document.getElementById(addItemDescriptionInputId) as HTMLInputElement;
     }
 
     const getSubmitButton = (): HTMLButtonElement => {
@@ -27,23 +34,25 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
     }
 
     const addItem = async () => {
-        const input = getInput();
+        const nameInput = getNameInput();
+        const descriptionInput = getDescriptionInput();
         
-        if (input) {
+        if (nameInput) {
             const { status, data } = await postData({
                 baseUrl: itemsConfig.url,
                 path: 'add-item',
                 data: {
                     "username": username,
-                    "itemName": input.value
+                    "itemName": nameInput.value,
+                    "description": descriptionInput.value
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken
                 }
             });
 
-            if (status === 200 && input.value === data) {
-                fetchItems(input.value);
+            if (status === 200 && nameInput.value === data) {
+                fetchItems(nameInput.value);
                 closeModal();
                 document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
             }
@@ -51,11 +60,12 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
     }
 
     const checkInput = () => {
-        const input = getInput();
+        const nameInput = getNameInput();
+        const descriptionInput = getDescriptionInput();
         const submitButton = getSubmitButton();
 
-        if (input && submitButton) {
-            if (input.value === "") {
+        if (nameInput && descriptionInput && submitButton) {
+            if (nameInput.value === "" || descriptionInput.value === "") {
                 submitButton.classList.add("disabled-button");
                 setState({...state, isAddItemButtonDisabled: true});
             } else {
@@ -74,7 +84,8 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
     return (
         <div className="add-item-body">
             <div className="add-item-section-text">Add Item</div>
-            <input id="add-item-input" className="add-item-input" type="text" placeholder="Item Name" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
+            <input id={addItemNameInputId} className="add-item-input" type="text" placeholder="Name" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
+            <input id={addItemDescriptionInputId} className="add-item-input" type="text" placeholder="Description" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
             <button id="add-item-submit-button" className="add-item-submit-button disabled-button" onClick={addItem} disabled={state.isAddItemButtonDisabled}>Add Item</button>
         </div>
     );

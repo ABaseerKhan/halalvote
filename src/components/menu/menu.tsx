@@ -265,10 +265,10 @@ export const MenuComponent = (props: MenuComponentProps) => {
     return (
         <div id={menuId} className={menuId}>
             { state.loginDisplayed &&
-                <ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchItems={null}/>
+                <ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchItems={null} itemName={null}/>
             }
             { state.addItemDisplayed &&
-                <ModalComponent removeModal={() => setAddItemDisplayed(false)} modalType={ModalType.ADD_ITEM} fetchItems={fetchItems}/>
+                <ModalComponent removeModal={() => setAddItemDisplayed(false)} modalType={ModalType.ADD_ITEM} fetchItems={fetchItems} itemName={null}/>
             }
             {
                 state.menuLocation !== MenuLocation.NONE && 

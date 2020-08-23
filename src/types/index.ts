@@ -20,6 +20,11 @@ export interface Item {
     vote: number | undefined;
 }
 
+export interface ItemDescription {
+    username: string;
+    description: string;
+}
+
 export interface Comment {
     id: number,
     commentType: string,
@@ -40,7 +45,8 @@ export enum Vote {
 
 export enum ModalType {
     LOGIN,
-    ADD_ITEM
+    ADD_ITEM,
+    DESCRIPTION
 }
 
 export enum MenuLocation {

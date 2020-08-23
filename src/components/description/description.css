@@ -1,9 +1,95 @@
 .description {
-    display: table;
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    padding-top: min(calc(var(--toolbar-height-vh) + var(--item-carousel-height-vh)), calc(var(--max-toolbar-height-px) + var(--max-item-carousel-height-px)));;
-    padding-bottom: 0px;
-    scroll-snap-align: start;
-  }
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+.description-navigator-button {
+  padding: 0;
+  height: 60px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.description-navigator-button:hover {
+  border: none;
+}
+
+.description-navigator-button-column {
+  width: 100px;
+}
+
+.item-description {
+  display: inline;
+  margin: auto;
+  overflow: scroll;
+  color: var(--site-background-color);
+}
+
+.item-description-name {
+  position: absolute;
+  top: 20px;
+  left: 0px;
+  right: 0px;
+  font-size: 24px;
+  color: var(--site-background-color);
+}
+
+.show-add-item-button {
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  padding: 16px;
+  bottom: -80px;
+  left: calc(50% - 36px);
+  border-radius: 36px;
+  background-color: var(--light-neutral-color);
+  color: var(--site-background-color);
+}
+
+.add-description-body {
+  position: absolute;
+  width: 100%;
+  display: block;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.add-description-section-text {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 24px;
+  color: var(--site-background-color);
+}
+
+.add-description-input {
+  width: 80% !important;
+  margin: 10px 0 10px 10%;
+}
+
+.add-description-submit-button {
+  width: 80%;
+  padding: 6px;
+  margin: 10px 0 0 10%;
+}
+
+.add-description-back-button {
+  position: absolute;
+  height: 60px;
+  width: 100px;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.add-description-back-button:hover {
+  border: none;
+}

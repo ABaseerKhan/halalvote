@@ -26,6 +26,7 @@
     font-size: 3vh;
     color: var(--site-background-color);
     overflow-y: scroll;
+    cursor: pointer;
 }
 
 .carousel-button {

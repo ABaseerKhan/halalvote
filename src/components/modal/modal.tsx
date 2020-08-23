@@ -9,14 +9,16 @@ import { useMedia } from '../../hooks/useMedia';
 
 // styles
 import './modal.css';
+import { DescriptionComponent } from '../description/description';
 
 interface ModalComponentProps {
     removeModal: any,
     modalType: ModalType;
     fetchItems: any;
+    itemName: string | null;
 };
 export const ModalComponent = (props: ModalComponentProps) => {
-    const { removeModal, modalType, fetchItems } = props;
+    const { removeModal, modalType, fetchItems, itemName } = props;
 
     const isMobile = useMedia(
         // Media queries
@@ -49,7 +51,9 @@ export const ModalComponent = (props: ModalComponentProps) => {
             ], {
                 duration: 100,
                 fill: "forwards"
-            });
+            }).onfinish = () => {
+                modal.style.overflow = "visible";
+            };
         } // eslint-disable-next-line
     }, []);
 
@@ -57,13 +61,14 @@ export const ModalComponent = (props: ModalComponentProps) => {
         const modal = document.getElementById(modalId);
 
         if (modal) {
-            const animation: Animation = modal.animate([
+            modal.style.overflow = "hidden";
+
+            modal.animate([
                 {height: "0", marginTop: "0", width: "0", marginLeft: "0"}
             ], {
                 duration: 100,
                 fill: "forwards"
-            });
-            animation.onfinish = removeModal;
+            }).onfinish = removeModal;
         }
     }
 
@@ -73,6 +78,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
             <div id={modalId} className="modal">
                 { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} /> }
                 { modalType === ModalType.ADD_ITEM && <AddItemComponent closeModal={closeModal} fetchItems={fetchItems} /> }
+                { modalType === ModalType.DESCRIPTION && itemName != null && <DescriptionComponent itemName={itemName} /> }
             </div>
         </Portal>
     );
