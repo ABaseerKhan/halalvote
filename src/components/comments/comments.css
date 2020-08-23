@@ -328,8 +328,7 @@
 }
 
 .comment-maker-input {
-    width: 98%;
-    margin-left: 5px;
+    width: 100%;
     font-size: 18px;
     border-top: 2px solid var(--gray);
     resize: none;
