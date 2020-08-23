@@ -132,13 +132,14 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
                         <div>
                             <div className='item-description-name'>{props.itemName}</div>
                             {
-                                state.itemDescriptions.length > 0 && 
+                                state.itemDescriptions.length > 0 ? 
                                     <div className='item-description'>
                                         <span>{state.itemDescriptions[state.currentIndex].description}</span>
                                         <br/>
                                         <br/>
                                         <span>{"-" + state.itemDescriptions[state.currentIndex].username}</span>
-                                    </div>
+                                    </div> :
+                                    <div className='no-item-description-text'>No Descriptions</div>
                             }
                             <div className="show-add-item-button" onClick={() => {showAddItem(true)}}>
                                 <AddButtonSVG/>

@@ -16,6 +16,7 @@
 }
 
 .description-navigator-button:hover {
+  background: var(--neutral-color);
   border: none;
 }
 
@@ -27,6 +28,10 @@
   display: inline;
   margin: auto;
   overflow: scroll;
+  color: var(--site-background-color);
+}
+
+.no-item-description-text {
   color: var(--site-background-color);
 }
 
@@ -49,6 +54,11 @@
   border-radius: 36px;
   background-color: var(--light-neutral-color);
   color: var(--site-background-color);
+  cursor: pointer;
+}
+
+.show-add-item-button:hover {
+  background-color: var(--neutral-color);
 }
 
 .add-description-body {
@@ -87,9 +97,10 @@
   cursor: pointer;
   background: transparent;
   border: none;
-  border-radius: 0;
+  border-radius: 25px 0 0 0;
 }
 
 .add-description-back-button:hover {
+  background: var(--neutral-color);
   border: none;
 }
