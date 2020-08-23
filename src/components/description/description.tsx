@@ -31,7 +31,7 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
         currentIndex: 0,
         isAddItemButtonDisabled: true
     });
-    const [cookies] = useCookies(['username', 'sessiontoken', 'itemName']);
+    const [cookies, setCookie] = useCookies(['username', 'sessiontoken', 'itemName']);
     const { username, sessiontoken } = cookies;
 
     useEffect(() => {
@@ -79,7 +79,8 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken
-                }
+                },
+                setCookie: setCookie,
             });
 
             if (status === 200 && props.itemName === data) {
