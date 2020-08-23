@@ -19,11 +19,11 @@ interface ItemVotesComponentProps {
 
 const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
     const { itemName, userVote, halalPoints, haramPoints, numVotes } = props;
-    const [cookies] = useCookies(['username', 'sessiontoken']);
+    const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
     const submitVote = async (value: number) => {
-        if (itemName && username && sessiontoken) {
+        if (itemName) {
             if (value > 0) {
                 document.body.style.backgroundColor = 'var(--halal-color)';
                 setTimeout(() => {
@@ -45,7 +45,8 @@ const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken
-                }
+                },
+                setCookie: setCookie,
             });
         }
     };
