@@ -77,6 +77,7 @@ const PrettoSlider = withStyles({
         display: 'none'
     },
     markLabel: {
+        height: '50%',
         top: 'unset',
         fontSize: '16px',
         lineHeight: 'unset',
@@ -109,10 +110,11 @@ export const VotingSlider = (props: VotingSliderProps) => {
 
     const marks = [
         {
-            value: numVotes > 0 ? ((halalPoints - haramPoints) / (numVotes)) : 0,
+            value: numVotes > 0 ? (Math.max(Math.min((halalPoints - haramPoints) / (numVotes), 98), -98)) : 0,
             label: (
                 <span {...props}>
-                    <div className="average-votes-mark">
+                    <div className="average-votes-mark"/>
+                    <div className="average-votes-mark-label">
                         <span style={{ transform: 'rotate(-135deg)', display: 'block', lineHeight: '1.5', zIndex: 400 }} data-tip={`Community Sentiment (${numVotes} votes)`} data-for="cs" id="test" >CS</span>
                     </div>
                     <ReactTooltip place="bottom" delayShow={100} effect={"solid"} id="cs" />
