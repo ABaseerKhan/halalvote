@@ -50,7 +50,9 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
         if (value !== "") {
             event.preventDefault();
             value = value.replace(new RegExp('<img '), '<img style="max-width: 100%;max-height: 65vh;border: 3px solid gray;border-radius: 5px;"');
-            if ((await props.submitComment(value)) === 200) setValue('');
+            if ((await props.submitComment(value)) === 200) { 
+                setValue('')
+            }
         }
     };
 
@@ -61,7 +63,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
                 if (!state.holdingDownShift && !isMobile) {
                     value = value.replace(new RegExp('<p><br></p>$'), '');
                     submitComment(event as any);
-                }	
+                }
                 break;	
             case 16:	
                 setState({	

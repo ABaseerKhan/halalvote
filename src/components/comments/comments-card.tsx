@@ -268,7 +268,7 @@ const getCommentFromPath = (comments: Comment[], path: number[] | undefined): Co
     }
 
     // recursive step
-    return getCommentFromPath(comments[path[0]].replies, path.slice(1));
+    return getCommentFromPath(comments[path[0]]?.replies, path.slice(1));
 }
 
 const addCommentsLocally = (comments: Comment[], data: Comment[], pathToParentComment?: number[], appendToEnd: Boolean = false): Comment[] => {

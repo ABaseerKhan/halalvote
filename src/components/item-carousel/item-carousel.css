@@ -39,6 +39,7 @@
     border: none;
     border-radius: 0;
     color: var(--site-background-color);
+    outline: none;
 }
 
 .carousel-button:hover {
