@@ -12,14 +12,15 @@ interface AddItemComponentProps {
 };
 export const AddItemComponent = (props: AddItemComponentProps) => {
     const { closeModal, fetchItems } = props;
-    const [cookies] = useCookies(['username', 'sessiontoken']);
+    const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
     const [state, setState] = useState<{ isAddItemButtonDisabled: boolean }>({
         isAddItemButtonDisabled: true,
     });
 
-    const addItemNameInputId = "add-item-name-input"
-    const addItemDescriptionInputId = "add-item-description-input"
+    const addItemNameInputId = "add-item-name-input";
+    const addItemDescriptionInputId = "add-item-description-input";
+    const addItemSubmitButtonId = "add-item-submit-button";
 
     const getNameInput = (): HTMLInputElement => {
         return document.getElementById(addItemNameInputId) as HTMLInputElement;
@@ -30,7 +31,7 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
     }
 
     const getSubmitButton = (): HTMLButtonElement => {
-        return document.getElementById("add-item-submit-button") as HTMLButtonElement;
+        return document.getElementById(addItemSubmitButtonId) as HTMLButtonElement;
     }
 
     const addItem = async () => {
@@ -48,7 +49,8 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken
-                }
+                },
+                setCookie: setCookie
             });
 
             if (status === 200 && nameInput.value === data) {
@@ -86,7 +88,7 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
             <div className="add-item-section-text">Add Item</div>
             <input id={addItemNameInputId} className="add-item-input" type="text" placeholder="Name" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
             <input id={addItemDescriptionInputId} className="add-item-input" type="text" placeholder="Description" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
-            <button id="button" className="button disabled-button" onClick={addItem} disabled={state.isAddItemButtonDisabled}>Add Item</button>
+            <button id={addItemSubmitButtonId} className="button disabled-button" onClick={addItem} disabled={state.isAddItemButtonDisabled}>Add Item</button>
         </div>
     );
 }
