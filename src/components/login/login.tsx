@@ -90,7 +90,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     const sessionToken = data;
                     setCookie('username', usernameInput.value, { path: '/' });
                     setCookie('sessiontoken', sessionToken, { path: '/ '});
-                    props.onLogin('username', 'sessiontoken');
+                    if(props.onLogin) props.onLogin('username', 'sessiontoken');
                     closeModal();
                 }
             }
