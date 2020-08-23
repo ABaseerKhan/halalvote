@@ -22,7 +22,17 @@
 .login-submit-button {
     width: 80%;
     padding: 6px;
-    margin: 10px 0 0 10%;
+    margin: 10% 0 0 10%;
+    border-radius: 24px;
+    color: var(--site-background-color);
+    background-color: var(--gray);
+    border: none;
+}
+
+.login-submit-button:hover {
+    border: none !important;
+    background-color: var(--light-neutral-color);
+    cursor: pointer !important;
 }
 
 .login-switch-button {
@@ -32,7 +42,7 @@
     margin-right: auto;
     margin-top: 20px;
     cursor: pointer;
-    color: var(--gray);
+    color: var(--site-background-color);
 }
 
 .login-switch-button:hover {
