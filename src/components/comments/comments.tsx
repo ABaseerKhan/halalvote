@@ -10,9 +10,12 @@ import ReactCardFlip from '../../card-flip/card-flip';
 // styles
 import './comments.css';
 
-const DURATION = 400;
-const EASEAPART = "cubic-bezier(.31,.3,.21,1.02)";
-const EASECLOSER = "cubic-bezier(.79,-0.02,.69,.69)";
+const x1 = .25, y1 = .1, x2 = .25, y2 = 1;
+const x1r = 1-x2, y1r = 1-y2, x2r = 1-x1, y2r = 1-y1;
+
+const DURATION = 300;
+const EASEAPART = `cubic-bezier(${x1},${y1},${x2},${y2})`;
+const EASECLOSER = `cubic-bezier(${x1r},${y1r},${x2r},${y2r})`;
 const EASESTANDARD = "ease-in"
 interface CommentsComponentProps {
     id: string,
@@ -50,6 +53,8 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
         haramCardCover.style.display = "none";
         halalCardCover.style.opacity = "0.5";
         haramCardCover.style.opacity = "0.0";
+        halalCard.style.transform = "scale(0.95)";
+        haramCard.style.transform = "scale(1)";
       } else {
         halalCard.style.zIndex = "2";
         haramCard.style.zIndex = "0";
@@ -57,11 +62,13 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
         haramCardCover.style.display = "block";
         halalCardCover.style.opacity = "0.0";
         haramCardCover.style.opacity = "0.5";
+        haramCard.style.transform = "scale(0.95)";
+        halalCard.style.transform = "scale(1)";
       }
     }
 
     const animateMoveCardsApart = (judgment: Judgment, onfinish: () => void) => {
-      if (haramCard && haramCardCover && halalCardCover) {
+      if (haramCard && haramCardCover && halalCardCover && halalCard) {
         haramCard.animate([
           {
             marginLeft: 3 + "vw",
@@ -74,31 +81,49 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
         }).onfinish = onfinish
 
         if (judgment === Judgment.HALAL) {
+          halalCardCover.animate([
+            {
+              opacity: "0",
+            }
+          ], {
+            duration: DURATION,
+            easing: EASEAPART,
+            fill: "forwards"
+          });
+          halalCard.animate([
+            {
+              transform: 'scale(1)'
+            }
+          ], {
+            duration: DURATION,
+            easing: EASESTANDARD,
+            fill: "forwards"
+          });
+        } else {
           haramCardCover.animate([
             {
-              opacity: "0.1"
+              opacity: "0",
             }
           ], {
             duration: DURATION,
             easing: EASEAPART,
             fill: "forwards"
-          })
-        } else {
-          halalCardCover?.animate([
+          });
+          haramCard.animate([
             {
-              opacity: "0.1"
+              transform: 'scale(1)'
             }
           ], {
             duration: DURATION,
-            easing: EASEAPART,
+            easing: EASESTANDARD,
             fill: "forwards"
-          })
+          });
         }
       }
     }
 
     const animateMoveCardsCloser = (judgment: Judgment, onfinish: () => void) => {
-      if (haramCard && haramCardCover && halalCardCover) {
+      if (haramCard && haramCardCover && halalCardCover && halalCard) {
         haramCard.animate([
           {
             marginLeft: 23 + "vw",
@@ -119,11 +144,29 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
             duration: DURATION,
             easing: EASESTANDARD,
             fill: "forwards"
+          });
+          haramCard.animate([
+            {
+              transform: 'scale(0.95)'
+            }
+          ], {
+            duration: DURATION,
+            easing: EASESTANDARD,
+            fill: "forwards"
           })
         } else {
           halalCardCover?.animate([
             {
               opacity: "0.5"
+            }
+          ], {
+            duration: DURATION,
+            easing: EASESTANDARD,
+            fill: "forwards"
+          });
+          halalCard.animate([
+            {
+              transform: 'scale(0.95)'
             }
           ], {
             duration: DURATION,
