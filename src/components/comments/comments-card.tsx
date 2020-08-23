@@ -6,7 +6,6 @@ import { Comment } from '../../types';
 import { postData } from '../../https-client/client';
 import { commentsConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
-import { ReactComponent as FlipSVG } from '../../icons/flip.svg';
 import { SkeletonComponent } from "./comments-skeleton";
 
 // type imports
@@ -223,7 +222,6 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     });
     return(
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onTouchStart={doubleTap(+(!judgment))} className={commentsCardId} >
-                <div onClick={props.switchCards(+(!judgment))} className="card-flip"><FlipSVG /></div>
                 {!isMobile && <div id={commentsCardCoverId} className="comments-card-cover" onClick={props.switchCards(judgment)}></div>}
                 <div id={commentsContainerId} className="comments-container">
                     {state.loading || !state.commentsShowable ? <SkeletonComponent /> :

@@ -30,6 +30,7 @@ const PrettoSlider = withStyles({
     thumb: {
         width: '50px',
         height: '50px',
+        transform: 'translate(1px, 0px)',
         borderRadius: '50%',
         backgroundColor: 'transparent',
         marginTop: -17,
