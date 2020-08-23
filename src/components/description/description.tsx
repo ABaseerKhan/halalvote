@@ -165,7 +165,7 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
             <div className="add-description-body">
                 <div className="add-description-section-text">{props.itemName}</div>
                 <input id={addDescriptionInputId} className="add-description-input" type="text" placeholder="Description" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
-                <button id={addDescriptionSubmitId} className="add-description-submit-button disabled-button" onClick={addDescription} disabled={state.isAddItemButtonDisabled}>Add Description</button>
+                <button id={addDescriptionSubmitId} className="button disabled-button" onClick={addDescription} disabled={state.isAddItemButtonDisabled}>Add Description</button>
             </div>
         </div>
     );

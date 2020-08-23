@@ -7,7 +7,7 @@
     margin-top: 0;
     margin-left: 0;
     border-radius: 25px 25px 25px 25px;
-    background-color: var(--light-neutral-color);
+    background-color: var(--neutral-color);
     z-index: 4;
     overflow: hidden;
 }

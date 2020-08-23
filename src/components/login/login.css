@@ -19,18 +19,14 @@
     margin: 10px 0 10px 10%;
 }
 
-.login-submit-button {
-    width: 80%;
-    padding: 6px;
-    margin: 10px 0 0 10%;
-}
-
 .login-switch-button {
-    width: 100%;
+    width: 80%;
     text-align: center;
-    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
     cursor: pointer;
-    color: var(--gray);
+    color: var(--site-background-color);
 }
 
 .login-switch-button:hover {

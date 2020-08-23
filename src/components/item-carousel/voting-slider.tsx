@@ -37,6 +37,9 @@ const PrettoSlider = withStyles({
         '&:focus, &:hover, &$active': {
             boxShadow: '#ccc 3px',
         },
+        '&:after': {
+            content: 'unset',
+        },
         '& .voter': {
             display: 'table',
             lineHeight: '2.3',
@@ -110,7 +113,7 @@ export const VotingSlider = (props: VotingSliderProps) => {
             label: (
                 <span {...props}>
                     <div className="average-votes-mark">
-                        <span style={{ transform: 'rotate(-135deg)', display: 'block', lineHeight: '1.5', zIndex: 400 }} data-tip={"Community Sentiment"} data-for="cs" id="test" >CS</span>
+                        <span style={{ transform: 'rotate(-135deg)', display: 'block', lineHeight: '1.5', zIndex: 400 }} data-tip={`Community Sentiment (${numVotes} votes)`} data-for="cs" id="test" >CS</span>
                     </div>
                     <ReactTooltip place="bottom" delayShow={100} effect={"solid"} id="cs" />
                 </span>
