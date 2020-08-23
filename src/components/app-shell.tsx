@@ -18,9 +18,11 @@ import { useCookies } from 'react-cookie';
 import './app-shell.css';
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ items: Item[]; itemIndex: number; scrollPosition: number }>({
-    items: [],
-    itemIndex: 0,
+  const [state, setState] = useState<{ itemDetails: {items: Item[]; itemIndex: number}; scrollPosition: number }>({
+    itemDetails: {
+      items: [],
+      itemIndex: 0
+    },
     scrollPosition: window.innerHeight,
   });
 
@@ -34,6 +36,11 @@ export const AppShellComponent = (props: any) => {
   }, []);
 
   useEffect(() => {
+    const indexOfItemToFetch = state.itemDetails.items.findIndex(i => i.itemName === cookies.itemName);
+    if (indexOfItemToFetch >= 0) {
+      state.itemDetails.items = [state.itemDetails.items[indexOfItemToFetch]];
+      state.itemDetails.itemIndex = 0;
+    }
     fetchItems(cookies.itemName || undefined);// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessiontoken]);
 
@@ -41,7 +48,7 @@ export const AppShellComponent = (props: any) => {
     let body: any = { 
       "itemNames": itemTofetch ? [itemTofetch] : undefined, 
       "n": 3,
-      "excludedItems": state.items && state.items.length && !itemTofetch ? state.items.map((item) => item.itemName) : undefined,
+      "excludedItems": state.itemDetails.items && state.itemDetails.items.length && !itemTofetch ? state.itemDetails.items.map((item) => item.itemName) : undefined,
     };
     let additionalHeaders = {};
 
@@ -53,16 +60,16 @@ export const AppShellComponent = (props: any) => {
     const { data }: { status: number, data: Item[] } = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders, });
 
     if(itemTofetch) {
-      const indexOfItemToFetch = state.items.findIndex(i => i.itemName === itemTofetch);
+      const indexOfItemToFetch = state.itemDetails.items.findIndex(i => i.itemName === itemTofetch);
       if (indexOfItemToFetch >= 0) {
-        state.itemIndex = arrayMove(state.items, indexOfItemToFetch, state.itemIndex); // move item to current index if needed (for search)
-        state.items[state.itemIndex] = data[0]; // refresh item with new data from db
-        setState(s => ({ ...s, items: state.items })); // trigger re-render
+        state.itemDetails.itemIndex = arrayMove(state.itemDetails.items, indexOfItemToFetch, state.itemDetails.itemIndex); // move item to current index if needed (for search)
+        state.itemDetails.items[state.itemDetails.itemIndex] = data[0]; // refresh item with new data from db
+        setState(s => ({ ...s, itemDetails: {...s.itemDetails, items: state.itemDetails.items }})); // trigger re-render
       } else {
-        setState(s => ({ ...s, items: [...s.items.slice(0, s.itemIndex+1), ...data, ...s.items.slice(s.itemIndex+1)], itemIndex: s.items.length ? s.itemIndex+1 : 0 }));
+        setState(s => ({ ...s, itemDetails: {items: [...s.itemDetails.items.slice(0, s.itemDetails.itemIndex+1), ...data, ...s.itemDetails.items.slice(s.itemDetails.itemIndex+1)], itemIndex: s.itemDetails.items.length ? s.itemDetails.itemIndex+1 : 0 }}));
       }
     } else {
-      setState(s => ({ ...s, items: [...s.items, ...data] }));
+      setState(s => ({ ...s, itemDetails: {...s.itemDetails, items: [...s.itemDetails.items, ...data] }}));
     }
     if (data && data.length) setCookie('itemName', data[0].itemName);
     else {
@@ -71,16 +78,16 @@ export const AppShellComponent = (props: any) => {
   }
 
   const iterateItem = (iteration: number) => () => {
-    if ((state.itemIndex + iteration) < state.items.length && (state.itemIndex + iteration) >= 0) {
-      setState({ ...state, itemIndex: state.itemIndex + iteration });
-      setCookie("itemName", state.items[state.itemIndex + iteration].itemName);
-    } else if ((state.itemIndex + iteration) === state.items.length) {
+    if ((state.itemDetails.itemIndex + iteration) < state.itemDetails.items.length && (state.itemDetails.itemIndex + iteration) >= 0) {
+      setState({ ...state, itemDetails: {...state.itemDetails, itemIndex: state.itemDetails.itemIndex + iteration }});
+      setCookie("itemName", state.itemDetails.items[state.itemDetails.itemIndex + iteration].itemName);
+    } else if ((state.itemDetails.itemIndex + iteration) === state.itemDetails.items.length) {
       fetchItems();
-      setState({ ...state, itemIndex: state.itemIndex + iteration });
+      setState({ ...state, itemDetails: {...state.itemDetails, itemIndex: state.itemDetails.itemIndex + iteration }});
     }
   };
 
-  const item = state.items.length > 0 ? state.items[state.itemIndex] : undefined;
+  const item = state.itemDetails.items.length > 0 ? state.itemDetails.items[state.itemDetails.itemIndex] : undefined;
   const itemName = item?.itemName !== undefined ? item.itemName : "";
   const halalPoints = item?.halalPoints !== undefined ? item.halalPoints : 0;
   const haramPoints = item?.haramPoints !== undefined ? item.haramPoints : 0;
