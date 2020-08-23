@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 import ReactTooltip from 'react-tooltip';
+import { useCookies } from 'react-cookie';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -90,9 +91,12 @@ type VotingSliderProps = {
 };
 export const VotingSlider = (props: VotingSliderProps) => {
     const classes = useStyles();
+    const [cookies] = useCookies(['username', 'sessiontoken']);
+    const [state, setState] = useState<{ value: number | undefined }>({ value: 0 });
+
+    const { username, sessiontoken } = cookies;
     const { userVote, halalPoints, haramPoints, numVotes } = props;
 
-    const [state, setState] = useState<{ value: number | undefined }>({ value: 0 });
 
     useEffect(() => {
         if (userVote !== undefined) {
@@ -123,7 +127,7 @@ export const VotingSlider = (props: VotingSliderProps) => {
     ];
 
     const onChangeCommitted = (event: Object, value: number | number[]) => {
-        if (value < 10 && value > -10) {
+        if ((value < 10 && value > -10) || !(username && sessiontoken)) {
             setState({ value: 0 });
             props.submitVote(0);
         } else {
