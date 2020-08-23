@@ -11,6 +11,7 @@ import './index.css';
 ReactDOM.render(
   <CookiesProvider >
     <AppShellComponent/>
+    <div id="login-portal"></div>
     <div id="portal"></div>
   </CookiesProvider>,
   document.getElementById('root')

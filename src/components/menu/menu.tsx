@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ModalComponent } from '../modal/modal';
 import { useMedia } from '../../hooks/useMedia';
 import { useCookies } from 'react-cookie';
+import { Portal } from '../../index';
 
 // type imports
 import { ModalType, MenuLocation } from '../../types';
@@ -265,10 +266,10 @@ export const MenuComponent = (props: MenuComponentProps) => {
     return (
         <div id={menuId} className={menuId}>
             { state.loginDisplayed &&
-                <ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchItems={null} itemName={null}/>
+                <Portal><ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchItems={null} itemName={null}/></Portal>
             }
             { state.addItemDisplayed &&
-                <ModalComponent removeModal={() => setAddItemDisplayed(false)} modalType={ModalType.ADD_ITEM} fetchItems={fetchItems} itemName={null}/>
+                <Portal><ModalComponent removeModal={() => setAddItemDisplayed(false)} modalType={ModalType.ADD_ITEM} fetchItems={fetchItems} itemName={null}/></Portal>
             }
             {
                 state.menuLocation !== MenuLocation.NONE && 

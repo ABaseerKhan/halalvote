@@ -5,6 +5,7 @@ import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
 import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
 import { useMedia } from '../../hooks/useMedia';
 import { ModalComponent } from '../modal/modal';
+import { Portal } from '../../index';
 
 // type imports
 import { ModalType } from '../../types';
@@ -58,7 +59,7 @@ export const ItemCarouselComponent = (props: ItemCarouselComponentProps) => {
     return (
         <div id={id} style={props.style} className='item-carousel'>
             { state.descriptionDisplayed &&
-                <ModalComponent removeModal={() => {setDescriptionDisplayed(false)}} modalType={ModalType.DESCRIPTION} fetchItems={null} itemName={props.itemName}/>
+                <Portal><ModalComponent removeModal={() => {setDescriptionDisplayed(false)}} modalType={ModalType.DESCRIPTION} fetchItems={null} itemName={props.itemName}/></Portal>
             }
             <div className="item-navigator">
                 <button id={leftCarouselButtonId} onClick={iterateItem(-1)} className='carousel-button'>

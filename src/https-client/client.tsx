@@ -90,7 +90,7 @@ const handle401 = async ({ data, additionalHeaders }: Request) => {
 }
 
 const handle400 = ({ setCookie }: Request) => {
-    const portal = document.getElementById('portal');
+    const portal = document.getElementById('login-portal');
     const setLoginCookies = () => {
         setCookie('username', getCookie('username'), { path: '/' }); 
         setCookie('sessiontoken', getCookie('sessiontoken'), { path: '/' }); 
