@@ -37,6 +37,9 @@ const PrettoSlider = withStyles({
         '&:focus, &:hover, &$active': {
             boxShadow: '#ccc 3px',
         },
+        '&:after': {
+            content: 'unset',
+        },
         '& .voter': {
             display: 'table',
             lineHeight: '2.3',
