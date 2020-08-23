@@ -26,9 +26,11 @@
 }
 
 .login-switch-button {
-    width: 100%;
+    width: 80%;
     text-align: center;
-    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
     cursor: pointer;
     color: var(--gray);
 }

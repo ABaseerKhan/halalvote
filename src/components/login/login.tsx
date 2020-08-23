@@ -179,7 +179,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 <input id="username-input" className="login-input" type="text" placeholder="Username" onChange={checkLoginInputs} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                 <input id="password-input" className="login-input" type="password" placeholder="Password" onChange={checkLoginInputs} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                 <button id="login-submit-button" className="login-submit-button disabled-button" onClick={ () => { login() } } disabled={state.isLoginButtonDisabled}>Log In</button>
-                <div className="login-switch-button" onClick={() => setLogin(false)}>New user? Create account here.</div>
+                <div className="login-switch-button" onClick={() => setLogin(false)}>New user? <br/>Create account</div>
             </div> :
             <div className="login-body">
                 <div className="login-section-text">Register</div>
