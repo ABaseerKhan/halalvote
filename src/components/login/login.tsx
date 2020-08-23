@@ -178,7 +178,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 <div className="login-section-text">Log In</div>
                 <input id="username-input" className="login-input" type="text" placeholder="Username" onChange={checkLoginInputs} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                 <input id="password-input" className="login-input" type="password" placeholder="Password" onChange={checkLoginInputs} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
-                <button id="login-submit-button" className="login-submit-button disabled-button" onClick={ () => { login() } } disabled={state.isLoginButtonDisabled}>Log In</button>
+                <button id="login-submit-button" className="button disabled-button" onClick={ () => { login() } } disabled={state.isLoginButtonDisabled}>Log In</button>
                 <div className="login-switch-button" onClick={() => setLogin(false)}>New user? <br/>Create account</div>
             </div> :
             <div className="login-body">
@@ -186,7 +186,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 <input id="register-email-input" className="login-input" type="text" placeholder="Email" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                 <input id="register-username-input" className="login-input" type="text" placeholder="Username" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                 <input id="register-password-input" className="login-input" type="password" placeholder="Password" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
-                <button id="register-submit-button" className="login-submit-button disabled-button" onClick={ () => { registerUser() } } disabled={state.isRegisterButtonDisabled}>Register</button>
+                <button id="register-submit-button" className="button disabled-button" onClick={ () => { registerUser() } } disabled={state.isRegisterButtonDisabled}>Register</button>
                 <div className="login-switch-button" onClick={() => setLogin(true)}>Already have an account? Log in here.</div>
             </div> 
         }

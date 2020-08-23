@@ -50,17 +50,22 @@ input[type=text], input[type=password] {
   box-sizing: border-box;
 }
 
-button {
-  background-color: var(--button-background-color);
-  border-radius: 4px;
-  border: 1px solid #dfe1e5;
+.button {
+  width: 80%;
+  padding: 6px;
+  margin: 10% 0 0 10%;
+  border-radius: 24px;
+  color: var(--site-background-color);
+  background-color: var(--gray);
+  border: none;
   outline: none;
   font-size: 16px;
 }
 
-button:hover {
-  cursor: pointer;
-  border: 1px solid black;
+.button:hover {
+  border: none !important;
+  background-color: var(--light-neutral-color);
+  cursor: pointer !important;
 }
 
 .disabled-button:hover {

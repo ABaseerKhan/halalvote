@@ -52,13 +52,13 @@
   bottom: -80px;
   left: calc(50% - 36px);
   border-radius: 36px;
-  background-color: var(--light-neutral-color);
+  background-color: var(--neutral-color);
   color: var(--site-background-color);
   cursor: pointer;
 }
 
 .show-add-item-button:hover {
-  background-color: var(--neutral-color);
+  background-color: var(--light-neutral-color);
 }
 
 .add-description-body {
@@ -82,12 +82,6 @@
   margin: 10px 0 10px 10%;
 }
 
-.add-description-submit-button {
-  width: 80%;
-  padding: 6px;
-  margin: 10px 0 0 10%;
-}
-
 .add-description-back-button {
   position: absolute;
   height: 60px;
@@ -101,6 +95,7 @@
 }
 
 .add-description-back-button:hover {
-  background: var(--neutral-color);
+  background: var(--light-neutral-color);
   border: none;
+  outline: none;
 }

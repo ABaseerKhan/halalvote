@@ -86,7 +86,7 @@ export const AddItemComponent = (props: AddItemComponentProps) => {
             <div className="add-item-section-text">Add Item</div>
             <input id={addItemNameInputId} className="add-item-input" type="text" placeholder="Name" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
             <input id={addItemDescriptionInputId} className="add-item-input" type="text" placeholder="Description" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
-            <button id="add-item-submit-button" className="add-item-submit-button disabled-button" onClick={addItem} disabled={state.isAddItemButtonDisabled}>Add Item</button>
+            <button id="button" className="button disabled-button" onClick={addItem} disabled={state.isAddItemButtonDisabled}>Add Item</button>
         </div>
     );
 }
