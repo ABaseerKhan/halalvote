@@ -49,7 +49,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     const submitComment = (event: any) => {
         if (value !== "") {
             event.preventDefault();
-            value = value.replace(new RegExp('<img '), '<img style="max-width: 100%;max-height: 75vh;"');
+            value = value.replace(new RegExp('<img '), '<img style="max-width: 100%;max-height: 65vh;border: 3px solid gray;border-radius: 5px;"');
             props.submitComment(value);
             setValue('');
         }
@@ -119,9 +119,10 @@ class CustomLink extends Link {
         let value = super.sanitize(url);
         if(value)
         {
-            for(let i=0;i<CustomLink.PROTOCOL_WHITELIST.length;i++)
-            if(value.startsWith(CustomLink.PROTOCOL_WHITELIST[i]))
-                return value;
+            for(let i=0;i<CustomLink.PROTOCOL_WHITELIST.length;i++) {
+                if(value.startsWith(CustomLink.PROTOCOL_WHITELIST[i]))
+                    return value;
+            }
             return `http://${value}`
         }
         return value;

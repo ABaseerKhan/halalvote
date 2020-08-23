@@ -6,7 +6,7 @@ import { CommentsComponent } from './comments/comments';
 import { AnalyticsComponent } from './analytics/analytics';
 import { MenuComponent } from './menu/menu';
 import { Item } from '../types';
-import { postData } from '../https-client/post-data';
+import { postData } from '../https-client/client';
 import { itemsConfig } from '../https-client/config';
 import { vhToPixelsWithMax, arrayMove } from "../utils";
 import { elementStyles } from "../index";
@@ -47,7 +47,7 @@ export const AppShellComponent = (props: any) => {
       additionalHeaders = { ...additionalHeaders, "sessiontoken": sessiontoken };
     }
 
-    const { data }: { data: Item[] } = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders, });
+    const { data }: { status: number, data: Item[] } = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders, });
 
     if(itemTofetch) {
       const indexOfItemToFetch = state.items.findIndex(i => i.itemName === itemTofetch);

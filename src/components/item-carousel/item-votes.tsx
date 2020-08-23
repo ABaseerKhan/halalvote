@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import { postData } from '../../https-client/post-data';
+import { postData } from '../../https-client/client';
 import { itemsConfig } from '../../https-client/config';
 
 //type imports
