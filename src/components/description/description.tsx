@@ -121,25 +121,29 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
     const DescriptionNavigator = (
         <table className="description">
             <tbody>
-                <tr>
-                    <td className='description-navigator-button-column'>
-                        {
-                            state.currentIndex > 0 &&
-                                <button onClick={() => {iterateDescription(-1)}} className='description-navigator-button'> 
-                                    <ChevronLeftSVG className={"arrow-icon-left"}/>
-                                </button>
-                        }
+                <tr className='item-description-name-row'>
+                    <td>
+                        <div className='item-description-name'>{props.itemName}</div>
                     </td>
+                </tr>
+                <tr>
                     <td>
                         <div>
-                            <div className='item-description-name'>{props.itemName}</div>
                             {
-                                state.itemDescriptions.length > 0 ? 
-                                    <div className='item-description'>
-                                        <span>{state.itemDescriptions[state.currentIndex].description}</span>
-                                        <br/>
-                                        <br/>
-                                        <span>{"-" + state.itemDescriptions[state.currentIndex].username}</span>
+                                state.itemDescriptions.length > 0 ?
+                                    <div>
+                                        <div className='description-navigator-button description-navigator-button-left' onClick={() => {iterateDescription(-1)}}>
+                                            <ChevronLeftSVG className="description-navigator-button-icon"/>
+                                        </div>
+                                        <div className='description-navigator-button description-navigator-button-right' onClick={() => {iterateDescription(1)}}>
+                                            <ChevronRightSVG className="description-navigator-button-icon"/>
+                                        </div>
+                                        <div className='item-description'>
+                                            <span>{state.itemDescriptions[state.currentIndex].description}</span>
+                                            <br/>
+                                            <br/>
+                                            <span>{"-" + state.itemDescriptions[state.currentIndex].username}</span>
+                                        </div>
                                     </div> :
                                     <div className='no-item-description-text'>No Descriptions</div>
                             }
@@ -147,14 +151,6 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
                                 <AddButtonSVG/>
                             </div>
                         </div>
-                    </td>
-                    <td className='description-navigator-button-column'>
-                        {
-                            state.currentIndex < state.itemDescriptions.length - 1 &&
-                                <button onClick={() => {iterateDescription(1)}} className='description-navigator-button'>
-                                    <ChevronRightSVG className={"arrow-icon-right"}/>
-                                </button>
-                        }
                     </td>
                 </tr>
             </tbody>
