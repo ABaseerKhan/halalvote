@@ -34,7 +34,7 @@ export const AppShellComponent = (props: any) => {
   }, []);
 
   useEffect(() => {
-    fetchItems(cookies.itemName || undefined);
+    fetchItems(cookies.itemName || undefined);// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessiontoken]);
 
   const fetchItems = async (itemTofetch?: string) => {
