@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { getData } from '../../https-client/post-data';
+import { getData } from '../../https-client/client';
 import { useCookies } from 'react-cookie';
 import { itemsConfig } from '../../https-client/config';
 import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
 import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
-import { postData } from '../../https-client/post-data';
+import { postData } from '../../https-client/client';
 
 // type imports
 import { ItemDescription } from '../../types';
