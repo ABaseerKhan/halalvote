@@ -226,7 +226,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onTouchStart={doubleTap(+(!judgment))} className={commentsCardId} >
                 {!isMobile && <div id={commentsCardCoverId} className="comments-card-cover" onClick={props.switchCards(judgment)}></div>}
                 <div id={commentsContainerId} className="comments-container">
-                    <div style={{ paddingBottom: '2em' }}>
+                    <div className={"comments-container-padding-div"}>
                         {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
                             state.comments.map((comment: Comment, i: number) => {
                                 return <CommentComponent 
