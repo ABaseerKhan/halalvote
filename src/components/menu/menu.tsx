@@ -16,7 +16,8 @@ interface MenuComponentProps {
 interface MenuComponentState {
     menuLocation: MenuLocation, 
     loginDisplayed: boolean, 
-    addTopicDisplayed: boolean
+    addTopicDisplayed: boolean,
+    accountDisplayed: boolean,
 }
 export const MenuComponent = (props: MenuComponentProps) => {
     const { fetchTopics } = props;
@@ -27,7 +28,8 @@ export const MenuComponent = (props: MenuComponentProps) => {
     const [state, setState] = useState<MenuComponentState>({
         menuLocation: MenuLocation.NONE,
         loginDisplayed: false,
-        addTopicDisplayed: false
+        addTopicDisplayed: false,
+        accountDisplayed: false,
     });
 
     const isMobile = useMedia(
@@ -40,7 +42,6 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
     const menuHeight = 72;
     const menuWidth = 72;
-    const menuHeightExpanded = 200;
     const menuWidthExpanded = 150;
     const menuButtonWidth = 40;
     const menuButtonInteriorWidth = 24;
@@ -72,7 +73,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 });
             }
             menu.animate([
-                {height: menuHeightExpanded + "px", width: menuWidthExpanded + "px"}
+                {height: 'unset', width: menuWidthExpanded + "px"}
             ], {
                 duration: 50,
                 fill: "forwards"
@@ -90,6 +91,10 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
     const setAddTopicDisplayed = (addTopicDisplayed: boolean) => {
         closeMenu({...state, menuLocation: MenuLocation.NONE, addTopicDisplayed: addTopicDisplayed}, () => {});
+    }
+
+    const setAccountDisplayed = (accountDisplayed: boolean) => {
+        closeMenu({...state, menuLocation: MenuLocation.NONE, accountDisplayed: accountDisplayed}, () => {});
     }
 
     const setMenuLocation = (menuLocation: MenuLocation) => {
@@ -271,13 +276,17 @@ export const MenuComponent = (props: MenuComponentProps) => {
             { state.addTopicDisplayed &&
                 <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_ITEM} fetchTopics={fetchTopics} topicTitle={null}/></Portal>
             }
+            { state.accountDisplayed &&
+                <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT} fetchTopics={null} topicTitle={null}/></Portal>
+            }
             {
                 state.menuLocation !== MenuLocation.NONE && 
                     <ul className="menu-items-list">
-                        <li className="menu-item" style={{marginTop: state.menuLocation === MenuLocation.BOTTOM_LEFT || state.menuLocation === MenuLocation.BOTTOM_RIGHT ? "75px" : "30px"}} onClick={login}>
+                        <li className="menu-item" style={{marginTop: state.menuLocation === MenuLocation.BOTTOM_LEFT || state.menuLocation === MenuLocation.BOTTOM_RIGHT ? "75px" : "30px"}} onClick={() => {setAddTopicDisplayed(true)}}>Add Topic</li>
+                        {usernameExists() && <li className="menu-item" onClick={() => {setAccountDisplayed(true)}}>Account</li>}
+                        <li className="menu-item" onClick={login}>
                             { usernameExists() ? "Logout" : "Login" }
                         </li>
-                        <li className="menu-item" onClick={() => {setAddTopicDisplayed(true)}}>Add Topic</li>
                     </ul>
             }
             <div id={menuButtonId} className={menuButtonId} onClick={pressButton}>

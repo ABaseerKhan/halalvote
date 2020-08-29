@@ -65,7 +65,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 <button id={leftCarouselButtonId} onClick={iterateTopic(-1)} className='carousel-button'>
                     <ChevronLeftSVG className={"arrow-icon-left"}/>
                 </button>
-                <div className='topic-title' onClick={() => {setDescriptionDisplayed(true)}} >
+                <div id="topic-title" className='topic-title' onClick={() => {setDescriptionDisplayed(true)}} >
                     <Linkify>{topicTitle}</Linkify>
                 </div>
                 <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button'>

@@ -28,6 +28,7 @@
     overflow-x: auto;
     cursor: pointer;
     white-space: nowrap;
+    scroll-behavior: smooth;
 }
 
 .carousel-button {

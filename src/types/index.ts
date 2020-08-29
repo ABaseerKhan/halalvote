@@ -46,7 +46,8 @@ export enum Vote {
 export enum ModalType {
     LOGIN,
     ADD_ITEM,
-    DESCRIPTION
+    DESCRIPTION,
+    ACCOUNT,
 }
 
 export enum MenuLocation {

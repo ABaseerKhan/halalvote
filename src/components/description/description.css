@@ -45,10 +45,10 @@
 }
 
 .topic-description-name {
-  width: 100%;
   text-align: center;
   font-size: 24px;
   color: var(--site-background-color);
+  padding: 2em;
 }
 
 .topic-description-name-row {
@@ -73,8 +73,8 @@
 }
 
 .add-description-body {
+  padding: 2em;
   position: absolute;
-  width: 100%;
   display: block;
   top: 50%;
   transform: translateY(-50%);
@@ -121,6 +121,6 @@
 }
 
 .add-description-image {
-  max-width: 300px;
-  max-height: 300px;
+  max-width: 250px;
+  max-height: 250px;
 }

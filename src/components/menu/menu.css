@@ -1,4 +1,5 @@
 .menu {
+    display: flex;
     position: fixed;
     height: 72px;
     width: 72px;
@@ -52,10 +53,9 @@
 
 .menu-items-list {
     width: 100%;
-    height: 100px;
     list-style-type: none;
     margin: 0;
-    padding: 0;
+    padding: 0 0 72px 0;
 }
 
 li.menu-item {

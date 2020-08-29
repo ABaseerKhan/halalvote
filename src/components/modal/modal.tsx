@@ -9,6 +9,7 @@ import { useMedia } from '../../hooks/useMedia';
 // styles
 import './modal.css';
 import { DescriptionComponent } from '../description/description';
+import { AccountComponent } from '../account/account';
 
 interface ModalComponentProps {
     removeModal: any,
@@ -86,6 +87,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
                 { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> }
                 { modalType === ModalType.ADD_ITEM && <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> }
                 { modalType === ModalType.DESCRIPTION && topicTitle != null && <DescriptionComponent topicTitle={topicTitle} /> }
+                { modalType === ModalType.ACCOUNT && <AccountComponent /> }
             </div>
         </div>
     );
