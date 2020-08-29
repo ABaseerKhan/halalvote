@@ -16,8 +16,8 @@ export interface EnvConfig {
 export const config = (): EnvConfig => {
     const qaConfig = {
         topics: {
-            apiKey: '0idjsdWPR62EQoEPW8Wh46tw2TYNgpU36VLHGQpu',
-            url: 'https://3qhzg4cerc.execute-api.us-east-1.amazonaws.com/qa/',
+            apiKey: 'HsRUdQh7tO96y4IPwD5xd6wZZAq9qklS4kUt2YTk',
+            url: 'https://da6u798b7k.execute-api.us-east-1.amazonaws.com/qa/',
         },
         comments: {
             apiKey: 'wQeeD3fsZ5yvo5E74WeW64pB0rPPOWm4AXdEF4zc',
@@ -30,8 +30,8 @@ export const config = (): EnvConfig => {
     };
     const prodConfig = {
         topics: {
-            apiKey: '0idjsdWPR62EQoEPW8Wh46tw2TYNgpU36VLHGQpu',
-            url: 'https://3qhzg4cerc.execute-api.us-east-1.amazonaws.com/qa/',
+            apiKey: 'HsRUdQh7tO96y4IPwD5xd6wZZAq9qklS4kUt2YTk',
+            url: 'https://da6u798b7k.execute-api.us-east-1.amazonaws.com/qa/',
         },
         comments: {
             apiKey: 'wQeeD3fsZ5yvo5E74WeW64pB0rPPOWm4AXdEF4zc',

@@ -86,7 +86,7 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
     return (
         <div className="add-topic-body">
             <div className="add-topic-section-text">Add Topic</div>
-            <input id={addTopicTitleInputId} className="add-topic-input" type="text" placeholder="Name" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
+            <input id={addTopicTitleInputId} className="add-topic-input" type="text" placeholder="Title" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
             <input id={addTopicDescriptionInputId} className="add-topic-input" type="text" placeholder="Description" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
             <button id={addTopicSubmitButtonId} className="button disabled-button" onClick={addTopic} disabled={state.isAddTopicButtonDisabled}>Add Topic</button>
         </div>

@@ -62,6 +62,8 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             state.comments = [];
             state.pathToHighlightedComment = undefined;
             fetchComments([]);
+        } else {
+            setState(prevState => ({ ...prevState, loading: false, commentsShowable: true }));
         }
     }, 500, [topicTitle, judgment]);
 
