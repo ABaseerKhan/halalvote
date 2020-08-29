@@ -226,26 +226,28 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onTouchStart={doubleTap(+(!judgment))} className={commentsCardId} >
                 {!isMobile && <div id={commentsCardCoverId} className="comments-card-cover" onClick={props.switchCards(judgment)}></div>}
                 <div id={commentsContainerId} className="comments-container">
-                    {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
-                        state.comments.map((comment: Comment, i: number) => {
-                            return <CommentComponent 
-                                        key={comment.id} 
-                                        comment={comment} 
-                                        path={[i]} 
-                                        pathToHighlightedComment={state.pathToHighlightedComment} 
-                                        highlightComment={highlightComment} 
-                                        fetchMoreReplies={fetchComments}
-                                        deleteComment={deleteComment}
-                                        judgment={judgment}
-                                    />
-                        })
-                    }
-                    {
-                        (moreComments > 0 && state.comments.length &&
-                        <div className={judgment ? "show-more-comments-1" : "show-more-comments-0"} onClick={(e) => { e.stopPropagation(); fetchComments([]);  }}>
-                            {moreComments + (moreComments > 1 ? " more comments" : " more comment")}
-                        </div>) || null
-                    }
+                    <div style={{ paddingBottom: '2em' }}>
+                        {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
+                            state.comments.map((comment: Comment, i: number) => {
+                                return <CommentComponent 
+                                            key={comment.id} 
+                                            comment={comment} 
+                                            path={[i]} 
+                                            pathToHighlightedComment={state.pathToHighlightedComment} 
+                                            highlightComment={highlightComment} 
+                                            fetchMoreReplies={fetchComments}
+                                            deleteComment={deleteComment}
+                                            judgment={judgment}
+                                        />
+                            })
+                        }
+                        {
+                            (moreComments > 0 && state.comments.length &&
+                            <div className={judgment ? "show-more-comments-1" : "show-more-comments-0"} onClick={(e) => { e.stopPropagation(); fetchComments([]);  }}>
+                                {moreComments + (moreComments > 1 ? " more comments" : " more comment")}
+                            </div>) || null
+                        }
+                    </div>
                 </div>
                 <CommentMakerComponent 
                     ref={commentMakerRef}
