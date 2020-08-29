@@ -18,3 +18,17 @@
     width: 80% !important;
     margin: 10px 0 10px 10%;
 }
+
+.add-topic-image-uploader-button:hover {
+    text-decoration: underline;
+}
+
+.add-topic-image-container {
+    width: 100%;
+    text-align: center;
+}
+
+.add-topic-image {
+    max-width: 200px;
+    max-height: 200px;
+}

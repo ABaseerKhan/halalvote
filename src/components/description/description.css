@@ -110,3 +110,17 @@
   border: none;
   outline: none;
 }
+
+.add-description-image-uploader-button:hover {
+  text-decoration: underline;
+}
+
+.add-description-image-container {
+  width: 100%;
+  text-align: center;
+}
+
+.add-description-image {
+  max-width: 300px;
+  max-height: 300px;
+}

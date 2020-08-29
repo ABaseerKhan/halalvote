@@ -7,6 +7,7 @@ import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as LeftArrowSVG } from '../../icons/left-arrow.svg';
 import { postData } from '../../https-client/client';
+import ImageUploader from 'react-images-upload';
 
 // type imports
 import { TopicDescription } from '../../types';
@@ -21,7 +22,7 @@ interface DescriptionComponentState {
     addTopicDisplayed: boolean,
     topicDescriptions: TopicDescription[],
     currentIndex: number,
-    isAddTopicButtonDisabled: boolean
+    picture: string | null
 };
 export const DescriptionComponent = (props: DescriptionComponentProps) => {
     const { topicTitle } = props;
@@ -29,7 +30,7 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
         addTopicDisplayed: false,
         topicDescriptions: [],
         currentIndex: 0,
-        isAddTopicButtonDisabled: true
+        picture: null
     });
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken', 'topicTitle']);
     const { username, sessiontoken } = cookies;
@@ -38,16 +39,7 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
         fetchDescriptions(); // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const addDescriptionInputId = "add-description-input";
     const addDescriptionSubmitId = "add-description-submit-button";
-
-    const getDescriptionInput = (): HTMLInputElement => {
-        return document.getElementById(addDescriptionInputId) as HTMLInputElement;
-    }
-
-    const getSubmitButton = (): HTMLButtonElement => {
-        return document.getElementById(addDescriptionSubmitId) as HTMLButtonElement;
-    }
 
     const fetchDescriptions = async () => {
         let queryParams: any = { 
@@ -62,20 +54,18 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
             additionalHeaders: additionalHeaders, 
         });
 
-        setState({...state, topicDescriptions: data, currentIndex: 0, addTopicDisplayed: false, isAddTopicButtonDisabled: true});
+        setState({...state, topicDescriptions: data, currentIndex: 0, addTopicDisplayed: false});
     }
 
     const addDescription = async () => {
-        const descriptionInput = getDescriptionInput();
-        
-        if (descriptionInput) {
+        if (state.picture) {
             const { status, data } = await postData({
                 baseUrl: topicsConfig.url,
                 path: 'add-topic-description',
                 data: {
                     "username": username,
                     "topicTitle": props.topicTitle,
-                    "description": descriptionInput.value
+                    "description": state.picture
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken
@@ -94,28 +84,11 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
     }
 
     const showAddTopic = (addTopicDisplayed: boolean) => {
-        setState({...state, addTopicDisplayed: addTopicDisplayed, isAddTopicButtonDisabled: true})
+        setState({...state, addTopicDisplayed: addTopicDisplayed})
     }
 
-    const checkInput = () => {
-        const descriptionInput = getDescriptionInput();
-        const submitButton = getSubmitButton();
-
-        if (descriptionInput && submitButton) {
-            if (descriptionInput.value === "") {
-                submitButton.classList.add("disabled-button");
-                setState({...state, isAddTopicButtonDisabled: true});
-            } else {
-                submitButton.classList.remove("disabled-button");
-                setState({...state, isAddTopicButtonDisabled: false});
-            }
-        }
-    }
-
-    const handleKeyPress = (event: any) => {
-        if (!state.isAddTopicButtonDisabled && event.charCode === 13) {
-            addDescription();
-        }
+    const onDrop = (files: File[], picture: string[]) => {
+        setState({...state, picture: picture[0]});
     }
 
     const DescriptionNavigator = (
@@ -139,13 +112,13 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
                                             <ChevronRightSVG className="description-navigator-button-icon"/>
                                         </div>
                                         <div className='topic-description'>
-                                            <span>{state.topicDescriptions[state.currentIndex].description}</span>
+                                            <img style={{maxHeight:"350px", maxWidth:"350px"}} alt={props.topicTitle} src={state.topicDescriptions[state.currentIndex].description}/>
                                             <br/>
                                             <br/>
                                             <span>{"-" + state.topicDescriptions[state.currentIndex].username}</span>
                                         </div>
                                     </div> :
-                                    <div className='no-topic-description-text'>No Descriptions</div>
+                                    <div className='no-topic-description-text'>No images to show</div>
                             }
                             <div className="show-add-topic-button" onClick={() => {showAddTopic(true)}}>
                                 <AddButtonSVG/>
@@ -164,8 +137,21 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
             </button>
             <div className="add-description-body">
                 <div className="add-description-section-text">{props.topicTitle}</div>
-                <input id={addDescriptionInputId} className="add-description-input" type="text" placeholder="Description" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
-                <button id={addDescriptionSubmitId} className="button disabled-button" onClick={addDescription} disabled={state.isAddTopicButtonDisabled}>Add Description</button>
+                {
+                    state.picture && <div className="add-description-image-container"><img className="add-description-image" alt="Topic" src={state.picture}/></div>
+                }
+                <ImageUploader 
+                    fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
+                    buttonClassName="add-description-image-uploader-button"
+                    buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0"}}
+                    withIcon={false} 
+                    buttonText={state.picture ? "Upload New Image" : "Upload Image"}
+                    onChange={onDrop} 
+                    imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                    maxFileSize={5242880} 
+                    singleImage={true}
+                />
+                <button id={addDescriptionSubmitId} className="button disabled-button" onClick={addDescription} >Add Description</button>
             </div>
         </div>
     );

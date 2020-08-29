@@ -22,7 +22,8 @@
     "react-tooltip": "^4.2.7",
     "typescript": "^3.8.3",
     "use-constant": "^1.0.0",
-    "use-debounce": "^3.4.2"
+    "use-debounce": "^3.4.2",
+    "react-images-upload": "^1.2.8"
   },
   "devDependencies": {},
   "scripts": {

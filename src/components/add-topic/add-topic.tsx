@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { postData } from '../../https-client/client';
 import { topicsConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
+import ImageUploader from 'react-images-upload';
 
 // styles
 import './add-topic.css';
@@ -14,20 +15,16 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
     const { closeModal, fetchTopics } = props;
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
-    const [state, setState] = useState<{ isAddTopicButtonDisabled: boolean }>({
+    const [state, setState] = useState<{ isAddTopicButtonDisabled: boolean, picture: string | null }>({
         isAddTopicButtonDisabled: true,
+        picture: null
     });
 
     const addTopicTitleInputId = "add-topic-title-input";
-    const addTopicDescriptionInputId = "add-topic-description-input";
     const addTopicSubmitButtonId = "add-topic-submit-button";
 
-    const getNameInput = (): HTMLInputElement => {
+    const getTitleInput = (): HTMLInputElement => {
         return document.getElementById(addTopicTitleInputId) as HTMLInputElement;
-    }
-
-    const getDescriptionInput = (): HTMLInputElement => {
-        return document.getElementById(addTopicDescriptionInputId) as HTMLInputElement;
     }
 
     const getSubmitButton = (): HTMLButtonElement => {
@@ -35,17 +32,16 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
     }
 
     const addTopic = async () => {
-        const nameInput = getNameInput();
-        const descriptionInput = getDescriptionInput();
+        const titleInput = getTitleInput();
         
-        if (nameInput) {
+        if (titleInput && state.picture) {
             const { status, data } = await postData({
                 baseUrl: topicsConfig.url,
                 path: 'add-topic',
                 data: {
                     "username": username,
-                    "topicTitle": nameInput.value,
-                    "description": descriptionInput.value
+                    "topicTitle": titleInput.value,
+                    "description": state.picture
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken
@@ -53,8 +49,8 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
                 setCookie: setCookie
             });
 
-            if (status === 200 && nameInput.value === data) {
-                fetchTopics(nameInput.value);
+            if (status === 200 && titleInput.value === data) {
+                fetchTopics(titleInput.value);
                 closeModal();
                 document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
             }
@@ -62,12 +58,11 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
     }
 
     const checkInput = () => {
-        const nameInput = getNameInput();
-        const descriptionInput = getDescriptionInput();
+        const titleInput = getTitleInput();
         const submitButton = getSubmitButton();
 
-        if (nameInput && descriptionInput && submitButton) {
-            if (nameInput.value === "" || descriptionInput.value === "") {
+        if (titleInput && submitButton) {
+            if (titleInput.value === "") {
                 submitButton.classList.add("disabled-button");
                 setState({...state, isAddTopicButtonDisabled: true});
             } else {
@@ -83,11 +78,28 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
         }
     }
 
+    const onDrop = (files: File[], picture: string[]) => {
+        setState({...state, picture: picture[0]});
+    }
+
     return (
         <div className="add-topic-body">
             <div className="add-topic-section-text">Add Topic</div>
             <input id={addTopicTitleInputId} className="add-topic-input" type="text" placeholder="Title" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
-            <input id={addTopicDescriptionInputId} className="add-topic-input" type="text" placeholder="Description" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
+            {
+                state.picture && <div className="add-topic-image-container"><img className="add-topic-image" alt="Topic" src={state.picture}/></div>
+            }
+            <ImageUploader 
+                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
+                buttonClassName="add-topic-image-uploader-button"
+                buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0"}}
+                withIcon={false} 
+                buttonText={state.picture ? "Upload New Image" : "Upload Image"}
+                onChange={onDrop} 
+                imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                maxFileSize={5242880} 
+                singleImage={true}
+            />
             <button id={addTopicSubmitButtonId} className="button disabled-button" onClick={addTopic} disabled={state.isAddTopicButtonDisabled}>Add Topic</button>
         </div>
     );
