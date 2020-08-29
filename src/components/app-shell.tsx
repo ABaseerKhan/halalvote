@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { PageScrollerComponent } from './page-scroller/page-scroller';
-import { ItemCarouselComponent } from './item-carousel/item-carousel';
+import { TopicCarouselComponent } from './topic-carousel/topic-carousel';
 import { SearchComponent } from './search/search';
 import { CommentsComponent } from './comments/comments';
 import { AnalyticsComponent } from './analytics/analytics';
 import { MenuComponent } from './menu/menu';
-import { Item } from '../types';
+import { Topic } from '../types';
 import { postData } from '../https-client/client';
-import { itemsConfig } from '../https-client/config';
+import { topicsConfig } from '../https-client/config';
 import { vhToPixelsWithMax, arrayMove } from "../utils";
 import { elementStyles } from "../index";
 import { useCookies } from 'react-cookie';
@@ -18,15 +18,15 @@ import { useCookies } from 'react-cookie';
 import './app-shell.css';
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ itemDetails: {items: Item[]; itemIndex: number}; scrollPosition: number }>({
-    itemDetails: {
-      items: [],
-      itemIndex: 0
+  const [state, setState] = useState<{ topicDetails: {topics: Topic[]; topicIndex: number}; scrollPosition: number }>({
+    topicDetails: {
+      topics: [],
+      topicIndex: 0
     },
     scrollPosition: window.innerHeight,
   });
 
-  const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken', 'itemName']);
+  const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken', 'topicTitle']);
   const { username, sessiontoken } = cookies;
 
   useEffect(() => {
@@ -36,19 +36,19 @@ export const AppShellComponent = (props: any) => {
   }, []);
 
   useEffect(() => {
-    const indexOfItemToFetch = state.itemDetails.items.findIndex(i => i.itemName === cookies.itemName);
-    if (indexOfItemToFetch >= 0) {
-      state.itemDetails.items = [state.itemDetails.items[indexOfItemToFetch]];
-      state.itemDetails.itemIndex = 0;
+    const indexOfTopicToFetch = state.topicDetails.topics.findIndex(i => i.topicTitle === cookies.topicTitle);
+    if (indexOfTopicToFetch >= 0) {
+      state.topicDetails.topics = [state.topicDetails.topics[indexOfTopicToFetch]];
+      state.topicDetails.topicIndex = 0;
     }
-    fetchItems(cookies.itemName || undefined);// eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchTopics(cookies.topicTitle || undefined);// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessiontoken]);
 
-  const fetchItems = async (itemTofetch?: string) => {
+  const fetchTopics = async (topicTofetch?: string) => {
     let body: any = { 
-      "itemNames": itemTofetch ? [itemTofetch] : undefined, 
+      "topicTitles": topicTofetch ? [topicTofetch] : undefined, 
       "n": 3,
-      "excludedItems": state.itemDetails.items && state.itemDetails.items.length && !itemTofetch ? state.itemDetails.items.map((item) => item.itemName) : undefined,
+      "excludedTopics": state.topicDetails.topics && state.topicDetails.topics.length && !topicTofetch ? state.topicDetails.topics.map((topic) => topic.topicTitle) : undefined,
     };
     let additionalHeaders = {};
 
@@ -57,46 +57,46 @@ export const AppShellComponent = (props: any) => {
       additionalHeaders = { ...additionalHeaders, "sessiontoken": sessiontoken };
     }
 
-    const { data }: { status: number, data: Item[] } = await postData({ baseUrl: itemsConfig.url, path: 'get-items', data: body, additionalHeaders: additionalHeaders, });
+    const { data }: { status: number, data: Topic[] } = await postData({ baseUrl: topicsConfig.url, path: 'get-topics', data: body, additionalHeaders: additionalHeaders, });
 
-    if(itemTofetch) {
-      const indexOfItemToFetch = state.itemDetails.items.findIndex(i => i.itemName === itemTofetch);
-      if (indexOfItemToFetch >= 0) {
-        state.itemDetails.itemIndex = arrayMove(state.itemDetails.items, indexOfItemToFetch, state.itemDetails.itemIndex); // move item to current index if needed (for search)
-        state.itemDetails.items[state.itemDetails.itemIndex] = data[0]; // refresh item with new data from db
-        setState(s => ({ ...s, itemDetails: {...s.itemDetails, items: state.itemDetails.items }})); // trigger re-render
+    if(topicTofetch) {
+      const indexOfTopicToFetch = state.topicDetails.topics.findIndex(i => i.topicTitle === topicTofetch);
+      if (indexOfTopicToFetch >= 0) {
+        state.topicDetails.topicIndex = arrayMove(state.topicDetails.topics, indexOfTopicToFetch, state.topicDetails.topicIndex); // move topic to current index if needed (for search)
+        state.topicDetails.topics[state.topicDetails.topicIndex] = data[0]; // refresh topic with new data from db
+        setState(s => ({ ...s, topicDetails: {...s.topicDetails, topics: state.topicDetails.topics }})); // trigger re-render
       } else {
-        setState(s => ({ ...s, itemDetails: {items: [...s.itemDetails.items.slice(0, s.itemDetails.itemIndex+1), ...data, ...s.itemDetails.items.slice(s.itemDetails.itemIndex+1)], itemIndex: s.itemDetails.items.length ? s.itemDetails.itemIndex+1 : 0 }}));
+        setState(s => ({ ...s, topicDetails: {topics: [...s.topicDetails.topics.slice(0, s.topicDetails.topicIndex+1), ...data, ...s.topicDetails.topics.slice(s.topicDetails.topicIndex+1)], topicIndex: s.topicDetails.topics.length ? s.topicDetails.topicIndex+1 : 0 }}));
       }
     } else {
-      setState(s => ({ ...s, itemDetails: {...s.itemDetails, items: [...s.itemDetails.items, ...data] }}));
+      setState(s => ({ ...s, topicDetails: {...s.topicDetails, topics: [...s.topicDetails.topics, ...data] }}));
     }
-    if (data && data.length) setCookie('itemName', data[0].itemName);
+    if (data && data.length) setCookie('topicTitle', data[0].topicTitle);
     else {
-      removeCookie("itemName");
+      removeCookie("topicTitle");
     }
   }
 
-  const iterateItem = (iteration: number) => () => {
-    if ((state.itemDetails.itemIndex + iteration) < state.itemDetails.items.length && (state.itemDetails.itemIndex + iteration) >= 0) {
-      setState({ ...state, itemDetails: {...state.itemDetails, itemIndex: state.itemDetails.itemIndex + iteration }});
-      setCookie("itemName", state.itemDetails.items[state.itemDetails.itemIndex + iteration].itemName);
-    } else if ((state.itemDetails.itemIndex + iteration) === state.itemDetails.items.length) {
-      fetchItems();
-      setState({ ...state, itemDetails: {...state.itemDetails, itemIndex: state.itemDetails.itemIndex + iteration }});
+  const iterateTopic = (iteration: number) => () => {
+    if ((state.topicDetails.topicIndex + iteration) < state.topicDetails.topics.length && (state.topicDetails.topicIndex + iteration) >= 0) {
+      setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
+      setCookie("topicTitle", state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle);
+    } else if ((state.topicDetails.topicIndex + iteration) === state.topicDetails.topics.length) {
+      fetchTopics();
+      setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
     }
   };
 
-  const item = state.itemDetails.items.length > 0 ? state.itemDetails.items[state.itemDetails.itemIndex] : undefined;
-  const itemName = item?.itemName !== undefined ? item.itemName : "";
-  const halalPoints = item?.halalPoints !== undefined ? item.halalPoints : 0;
-  const haramPoints = item?.haramPoints !== undefined ? item.haramPoints : 0;
-  const numItemVotes = item?.numVotes !== undefined ? item.numVotes : 0;
-  const numHalalComments = item?.numHalalComments !== undefined ? item.numHalalComments : 0;
-  const numHaramComments = item?.numHaramComments !== undefined ? item.numHaramComments : 0;
+  const topic = state.topicDetails.topics.length > 0 ? state.topicDetails.topics[state.topicDetails.topicIndex] : undefined;
+  const topicTitle = topic?.topicTitle !== undefined ? topic.topicTitle : "";
+  const halalPoints = topic?.halalPoints !== undefined ? topic.halalPoints : 0;
+  const haramPoints = topic?.haramPoints !== undefined ? topic.haramPoints : 0;
+  const numTopicVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
+  const numHalalComments = topic?.numHalalComments !== undefined ? topic.numHalalComments : 0;
+  const numHaramComments = topic?.numHaramComments !== undefined ? topic.numHaramComments : 0;
 
   const appShellId = "app-shell";
-  const itemCarouselId = "itemCarousel";
+  const topicCarouselId = "topicCarousel";
   const pageZeroId = "Search";
   const pageOneId = "Comments";
   const pageTwoId = "Analytics";
@@ -106,26 +106,26 @@ export const AppShellComponent = (props: any) => {
   const analyticsId = "analytics";
 
   const appShell = document.getElementById(appShellId);
-  const itemCarousel = document.getElementById(itemCarouselId);
+  const topicCarousel = document.getElementById(topicCarouselId);
   const pageZero = document.getElementById(pageZeroId);
   const pageOne = document.getElementById(pageOneId);
   const pageTwo = document.getElementById(pageTwoId);
 
-  if (appShell && itemCarousel) {
+  if (appShell && topicCarousel) {
     appShell.onscroll = () => {
-      const { itemCarouselHeightVh, maxItemCarouselHeightPx } = elementStyles;
-      const itemCarouselHeightPx = vhToPixelsWithMax(itemCarouselHeightVh, maxItemCarouselHeightPx);
+      const { topicCarouselHeightVh, maxTopicCarouselHeightPx } = elementStyles;
+      const topicCarouselHeightPx = vhToPixelsWithMax(topicCarouselHeightVh, maxTopicCarouselHeightPx);
       const halfWindowHeight = window.innerHeight / 2.0;
   
       if (appShell.scrollTop > halfWindowHeight) {
-        itemCarousel.style.visibility = "visible";
-        itemCarousel.style.opacity = "1.0";
-      } else if (appShell.scrollTop > itemCarouselHeightPx) {
-        itemCarousel.style.visibility = "visible";
-        itemCarousel.style.opacity = ((appShell.scrollTop - itemCarouselHeightPx)/(halfWindowHeight - itemCarouselHeightPx)).toString();
+        topicCarousel.style.visibility = "visible";
+        topicCarousel.style.opacity = "1.0";
+      } else if (appShell.scrollTop > topicCarouselHeightPx) {
+        topicCarousel.style.visibility = "visible";
+        topicCarousel.style.opacity = ((appShell.scrollTop - topicCarouselHeightPx)/(halfWindowHeight - topicCarouselHeightPx)).toString();
       } else {
-        itemCarousel.style.opacity = "0.0";
-        itemCarousel.style.visibility = "hidden";
+        topicCarousel.style.opacity = "0.0";
+        topicCarousel.style.visibility = "hidden";
       }
 
       const scrollRatio = parseFloat((appShell.scrollTop / window.innerHeight).toFixed(1));
@@ -156,13 +156,13 @@ export const AppShellComponent = (props: any) => {
 
   return (
       <div id={appShellId} className={appShellId} >
-        <SearchComponent id={searchId} onSuggestionClick={fetchItems} />
-        <CommentsComponent id={commentsId} itemName={itemName} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshItem={fetchItems} />
+        <SearchComponent id={searchId} onSuggestionClick={fetchTopics} />
+        <CommentsComponent id={commentsId} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshTopic={fetchTopics} />
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">
-          <ItemCarouselComponent id={itemCarouselId} iterateItem={iterateItem} itemName={itemName} userVote={item?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numItemVotes} />
+          <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} scrollToPage={scrollToPage} />
-          <MenuComponent fetchItems={fetchItems}/>
+          <MenuComponent fetchTopics={fetchTopics}/>
         </div>
       </div>
   )

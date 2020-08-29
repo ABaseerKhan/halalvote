@@ -8,8 +8,8 @@ export const judgementToTextMap = {
     1: "HARAM"
 };
 
-export interface Item {
-    itemName: string;
+export interface Topic {
+    topicTitle: string;
     username: string;
     haramPoints: number;
     halalPoints: number;
@@ -20,7 +20,7 @@ export interface Item {
     vote: number | undefined;
 }
 
-export interface ItemDescription {
+export interface TopicDescription {
     username: string;
     description: string;
 }

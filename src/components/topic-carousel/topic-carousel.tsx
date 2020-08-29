@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Linkify from 'react-linkify';
-import { ItemVotesComponent } from './item-votes';
+import { TopicVotesComponent } from './topic-votes';
 import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
 import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
 import { useMedia } from '../../hooks/useMedia';
@@ -11,24 +11,24 @@ import { Portal } from '../../index';
 import { ModalType } from '../../types';
 
 // styles
-import './item-carousel.css';
+import './topic-carousel.css';
 
-interface ItemCarouselComponentProps {
+interface TopicCarouselComponentProps {
     id: string,
-    iterateItem: any,
-    itemName: string,
+    iterateTopic: any,
+    topicTitle: string,
     userVote: number | undefined,
     halalPoints: number,
     haramPoints: number,
     numVotes: number,
     style?: any;
 };
-interface ItemCarouselComponentState {
+interface TopicCarouselComponentState {
     descriptionDisplayed: boolean
 }
-export const ItemCarouselComponent = (props: ItemCarouselComponentProps) => {
-    const { id, iterateItem, itemName, userVote, halalPoints, haramPoints, numVotes } = props;
-    const [state, setState] = useState<ItemCarouselComponentState>({
+export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
+    const { id, iterateTopic, topicTitle, userVote, halalPoints, haramPoints, numVotes } = props;
+    const [state, setState] = useState<TopicCarouselComponentState>({
         descriptionDisplayed: false
     });
 
@@ -57,22 +57,22 @@ export const ItemCarouselComponent = (props: ItemCarouselComponentProps) => {
     }
 
     return (
-        <div id={id} style={props.style} className='item-carousel'>
+        <div id={id} style={props.style} className='topic-carousel'>
             { state.descriptionDisplayed &&
-                <Portal><ModalComponent removeModal={() => {setDescriptionDisplayed(false)}} modalType={ModalType.DESCRIPTION} fetchItems={null} itemName={props.itemName}/></Portal>
+                <Portal><ModalComponent removeModal={() => {setDescriptionDisplayed(false)}} modalType={ModalType.DESCRIPTION} fetchTopics={null} topicTitle={props.topicTitle}/></Portal>
             }
-            <div className="item-navigator">
-                <button id={leftCarouselButtonId} onClick={iterateItem(-1)} className='carousel-button'>
+            <div className="topic-navigator">
+                <button id={leftCarouselButtonId} onClick={iterateTopic(-1)} className='carousel-button'>
                     <ChevronLeftSVG className={"arrow-icon-left"}/>
                 </button>
-                <div className='item-text' onClick={() => {setDescriptionDisplayed(true)}}>
-                    <Linkify>{itemName}</Linkify>
+                <div className='topic-text' onClick={() => {setDescriptionDisplayed(true)}}>
+                    <Linkify>{topicTitle}</Linkify>
                 </div>
-                <button id={rightCarouselButtonId} onClick={iterateItem(1)} className='carousel-button'>
+                <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button'>
                     <ChevronRightSVG className={"arrow-icon-right"}/>
                 </button>
             </div>
-            <ItemVotesComponent itemName={itemName} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />
+            <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />
         </div>
     );
 }

@@ -17,10 +17,10 @@ import { useMedia } from '../../hooks/useMedia';
 
 interface CommentsCardComponentProps {
     judgment: Judgment,
-    itemName: string, 
+    topicTitle: string, 
     numHalalComments: number,
     numHaramComments: number,
-    refreshItem: (itemTofetch: string) => any,
+    refreshTopic: (topicTofetch: string) => any,
     switchCards: (judgement: Judgment) => any,
 };
 
@@ -39,7 +39,7 @@ const initialState = {
 }
 var clickTimer: any = null;
 const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
-    const { judgment, itemName, numHalalComments, numHaramComments, refreshItem } = props;
+    const { judgment, topicTitle, numHalalComments, numHaramComments, refreshTopic } = props;
     const totalTopLevelComments = (judgment === Judgment.HALAL ? numHalalComments : numHaramComments) || 0;
 
     const isMobile = useMedia(
@@ -58,19 +58,19 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const commentMakerRef = useRef<any>(null);
 
     useDebouncedEffect(() => {
-        if (itemName) {
+        if (topicTitle) {
             state.comments = [];
             state.pathToHighlightedComment = undefined;
             fetchComments([]);
         }
-    }, 500, [itemName, judgment]);
+    }, 500, [topicTitle, judgment]);
 
     useEffect(() => {
         if (!state.loading) {
             setTimeout(() => { setState(prevState => ({ ...prevState, commentsShowable: true })) }, 300);
             setState(prevState => ({ ...prevState, loading: true, commentsShowable: false }));
         } // eslint-disable-next-line
-    }, [itemName]);
+    }, [topicTitle]);
 
     const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
@@ -79,7 +79,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             path: 'get-comments', 
             data: { 
                 "commentType": judgementToTextMap[judgment],
-                "itemName": itemName,
+                "topicTitle": topicTitle,
                 "username": username,
                 "parentId": parentComment?.id,
                 "depth": 2, 
@@ -103,7 +103,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             path: 'add-comment', 
             data: { 
                 "parentId": highlightedComment?.id,
-                "itemName": itemName, 
+                "topicTitle": topicTitle, 
                 "username": username,
                 "comment": commentText,
                 "commentType": judgementToTextMap[judgment],
@@ -129,7 +129,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         };
 
         if (!highlightedComment) {
-            refreshItem(itemName);
+            refreshTopic(topicTitle);
         }
         
         const updatedComments = addCommentsLocally(state.comments, [commentObject], highlightedComment && state.pathToHighlightedComment);
@@ -144,7 +144,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             baseUrl: commentsConfig.url,
             path: 'delete-comment', 
             data: { 
-                "itemName": itemName,
+                "topicTitle": topicTitle,
                 "id": commentToDelete?.id,
                 "username": username,
                 "commentType": commentToDelete?.commentType,
@@ -155,7 +155,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         });
         
         if (pathToComment.length === 1) {
-            await refreshItem(itemName);
+            await refreshTopic(topicTitle);
         }
 
         const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.data?.psuedoDelete);
@@ -303,7 +303,7 @@ const deleteCommentLocally = (comments: Comment[], pathToComment: number[], psue
 }
 
 const areCommentsCardPropsEqual = (prevProps: CommentsCardComponentProps, nextProps: CommentsCardComponentProps) => {
-    return prevProps.itemName === nextProps.itemName && 
+    return prevProps.topicTitle === nextProps.topicTitle && 
         prevProps.numHalalComments === nextProps.numHalalComments && 
         prevProps.numHaramComments === nextProps.numHaramComments
 }

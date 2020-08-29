@@ -1051,8 +1051,8 @@ For example:
 #### `src/setupTests.js`
 ```js
 const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
+  getTopic: jest.fn(),
+  setTopic: jest.fn(),
   clear: jest.fn()
 };
 global.localStorage = localStorageMock

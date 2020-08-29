@@ -1,5 +1,5 @@
 export interface EnvConfig {
-    items: {
+    topics: {
         apiKey: string,
         url: string
     };
@@ -15,7 +15,7 @@ export interface EnvConfig {
 
 export const config = (): EnvConfig => {
     const qaConfig = {
-        items: {
+        topics: {
             apiKey: '0idjsdWPR62EQoEPW8Wh46tw2TYNgpU36VLHGQpu',
             url: 'https://3qhzg4cerc.execute-api.us-east-1.amazonaws.com/qa/',
         },
@@ -29,7 +29,7 @@ export const config = (): EnvConfig => {
         }
     };
     const prodConfig = {
-        items: {
+        topics: {
             apiKey: '0idjsdWPR62EQoEPW8Wh46tw2TYNgpU36VLHGQpu',
             url: 'https://3qhzg4cerc.execute-api.us-east-1.amazonaws.com/qa/',
         },
@@ -54,5 +54,5 @@ export const config = (): EnvConfig => {
 };
 
 export const commentsConfig = config().comments
-export const itemsConfig = config().items
+export const topicsConfig = config().topics
 export const usersConfig = config().users

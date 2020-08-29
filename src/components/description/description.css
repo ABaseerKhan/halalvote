@@ -33,29 +33,29 @@
   margin-top: -8px;
 }
 
-.item-description {
+.topic-description {
   width: 100%;
   text-align: center;
   overflow: scroll;
   color: var(--site-background-color);
 }
 
-.no-item-description-text {
+.no-topic-description-text {
   color: var(--site-background-color);
 }
 
-.item-description-name {
+.topic-description-name {
   width: 100%;
   text-align: center;
   font-size: 24px;
   color: var(--site-background-color);
 }
 
-.item-description-name-row {
+.topic-description-name-row {
   height: 60px;
 }
 
-.show-add-item-button {
+.show-add-topic-button {
   position: absolute;
   height: 40px;
   width: 40px;
@@ -68,7 +68,7 @@
   cursor: pointer;
 }
 
-.show-add-item-button:hover {
+.show-add-topic-button:hover {
   background-color: var(--light-neutral-color);
 }
 

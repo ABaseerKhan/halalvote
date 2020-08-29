@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getData } from '../../https-client/client';
-import { itemsConfig } from '../../https-client/config';
+import { topicsConfig } from '../../https-client/config';
 import { useDebouncedSearch } from '../../hooks/useDebouncedSearch';
 
 // styles
@@ -8,11 +8,11 @@ import './search.css';
 
 interface SearchComponentProps {
     id: string,
-    onSuggestionClick: (itemTofetch?: string) => void;
+    onSuggestionClick: (topicTofetch?: string) => void;
 };
 export const SearchComponent = (props: SearchComponentProps) => {
     const { id } = props;
-    const { inputText, setInputText, searchResults } = useItemsSearch();
+    const { inputText, setInputText, searchResults } = useTopicsSearch();
     const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
     const [autoCompleteIndex, setAutoCompleteIndex] = useState<number>(-1);
 
@@ -24,8 +24,8 @@ export const SearchComponent = (props: SearchComponentProps) => {
         }
     }, [searchResults]);
 
-    const onClickSuggestion = (itemName: string) => () => {
-        props.onSuggestionClick(itemName)
+    const onClickSuggestion = (topicTitle: string) => () => {
+        props.onSuggestionClick(topicTitle)
         document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
     };
 
@@ -43,7 +43,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
                 setAutoCompleteIndex( prevIndex => (prevIndex + 1));
             }
         } 
-        // enter key should execute itemClick
+        // enter key should execute topicClick
         else if (e.keyCode === 13) {
             onClickSuggestion(searchResults.result.data[autoCompleteIndex][0])();
         }
@@ -66,10 +66,10 @@ export const SearchComponent = (props: SearchComponentProps) => {
                     {searchResults.result && searchResults.result.data && !!searchResults.result.data.length && (
                         <ul className={"autocomplete-list"}>
                             {
-                                searchResults.result.data.map((itemName: [string], index: number) => (
-                                    <li className={index===autoCompleteIndex ? "autocomplete-list-item-highlighted" : "autocomplete-list-item"} key={itemName[0]}>
-                                        <div onClick={onClickSuggestion(itemName[0])} className={"suggestions-inner-container"}>
-                                            <div className={"option"}>{itemName[0]}</div>
+                                searchResults.result.data.map((topicTitle: [string], index: number) => (
+                                    <li className={index===autoCompleteIndex ? "autocomplete-list-item-highlighted" : "autocomplete-list-item"} key={topicTitle[0]}>
+                                        <div onClick={onClickSuggestion(topicTitle[0])} className={"suggestions-inner-container"}>
+                                            <div className={"option"}>{topicTitle[0]}</div>
                                         </div>
                                     </li>
                                 ))
@@ -82,4 +82,4 @@ export const SearchComponent = (props: SearchComponentProps) => {
     );
 }
 
-const useItemsSearch = () => useDebouncedSearch((text: string) => getData({ baseUrl: itemsConfig.url, path: 'search-items', queryParams: { 'searchTerm': text }, additionalHeaders: {}}));
+const useTopicsSearch = () => useDebouncedSearch((text: string) => getData({ baseUrl: topicsConfig.url, path: 'search-topics', queryParams: { 'searchTerm': text }, additionalHeaders: {}}));

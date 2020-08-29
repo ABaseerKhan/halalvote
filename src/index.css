@@ -31,8 +31,8 @@ html, body {
 
   --toolbar-height-vh: 10vh;
   --max-toolbar-height-px: 60px;
-  --item-carousel-height-vh: 20vh;
-  --max-item-carousel-height-px: 120px;
+  --topic-carousel-height-vh: 20vh;
+  --max-topic-carousel-height-px: 120px;
 
   --highlight-color: #8fb4ff;
 

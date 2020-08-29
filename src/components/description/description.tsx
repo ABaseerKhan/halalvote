@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getData } from '../../https-client/client';
 import { useCookies } from 'react-cookie';
-import { itemsConfig } from '../../https-client/config';
+import { topicsConfig } from '../../https-client/config';
 import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
 import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
@@ -9,29 +9,29 @@ import { ReactComponent as LeftArrowSVG } from '../../icons/left-arrow.svg';
 import { postData } from '../../https-client/client';
 
 // type imports
-import { ItemDescription } from '../../types';
+import { TopicDescription } from '../../types';
 
 // styles
 import './description.css';
 
 interface DescriptionComponentProps {
-    itemName: string
+    topicTitle: string
 };
 interface DescriptionComponentState {
-    addItemDisplayed: boolean,
-    itemDescriptions: ItemDescription[],
+    addTopicDisplayed: boolean,
+    topicDescriptions: TopicDescription[],
     currentIndex: number,
-    isAddItemButtonDisabled: boolean
+    isAddTopicButtonDisabled: boolean
 };
 export const DescriptionComponent = (props: DescriptionComponentProps) => {
-    const { itemName } = props;
+    const { topicTitle } = props;
     const [state, setState] = useState<DescriptionComponentState>({
-        addItemDisplayed: false,
-        itemDescriptions: [],
+        addTopicDisplayed: false,
+        topicDescriptions: [],
         currentIndex: 0,
-        isAddItemButtonDisabled: true
+        isAddTopicButtonDisabled: true
     });
-    const [cookies, setCookie] = useCookies(['username', 'sessiontoken', 'itemName']);
+    const [cookies, setCookie] = useCookies(['username', 'sessiontoken', 'topicTitle']);
     const { username, sessiontoken } = cookies;
 
     useEffect(() => {
@@ -51,18 +51,18 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
 
     const fetchDescriptions = async () => {
         let queryParams: any = { 
-            "itemName": itemName
+            "topicTitle": topicTitle
         };
         let additionalHeaders = {};
 
-        const { data }: { data: ItemDescription[] } = await getData({ 
-            baseUrl: itemsConfig.url, 
-            path: 'get-item-descriptions', 
+        const { data }: { data: TopicDescription[] } = await getData({ 
+            baseUrl: topicsConfig.url, 
+            path: 'get-topic-descriptions', 
             queryParams: queryParams, 
             additionalHeaders: additionalHeaders, 
         });
 
-        setState({...state, itemDescriptions: data, currentIndex: 0, addItemDisplayed: false, isAddItemButtonDisabled: true});
+        setState({...state, topicDescriptions: data, currentIndex: 0, addTopicDisplayed: false, isAddTopicButtonDisabled: true});
     }
 
     const addDescription = async () => {
@@ -70,11 +70,11 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
         
         if (descriptionInput) {
             const { status, data } = await postData({
-                baseUrl: itemsConfig.url,
-                path: 'add-item-description',
+                baseUrl: topicsConfig.url,
+                path: 'add-topic-description',
                 data: {
                     "username": username,
-                    "itemName": props.itemName,
+                    "topicTitle": props.topicTitle,
                     "description": descriptionInput.value
                 },
                 additionalHeaders: {
@@ -83,18 +83,18 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
                 setCookie: setCookie,
             });
 
-            if (status === 200 && props.itemName === data) {
+            if (status === 200 && props.topicTitle === data) {
                 fetchDescriptions();
             }
         }
     }
 
     const iterateDescription = (value: number) => {
-        setState({...state, currentIndex: Math.min(Math.max(state.currentIndex + value, 0), state.itemDescriptions.length - 1)})
+        setState({...state, currentIndex: Math.min(Math.max(state.currentIndex + value, 0), state.topicDescriptions.length - 1)})
     }
 
-    const showAddItem = (addItemDisplayed: boolean) => {
-        setState({...state, addItemDisplayed: addItemDisplayed, isAddItemButtonDisabled: true})
+    const showAddTopic = (addTopicDisplayed: boolean) => {
+        setState({...state, addTopicDisplayed: addTopicDisplayed, isAddTopicButtonDisabled: true})
     }
 
     const checkInput = () => {
@@ -104,16 +104,16 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
         if (descriptionInput && submitButton) {
             if (descriptionInput.value === "") {
                 submitButton.classList.add("disabled-button");
-                setState({...state, isAddItemButtonDisabled: true});
+                setState({...state, isAddTopicButtonDisabled: true});
             } else {
                 submitButton.classList.remove("disabled-button");
-                setState({...state, isAddItemButtonDisabled: false});
+                setState({...state, isAddTopicButtonDisabled: false});
             }
         }
     }
 
     const handleKeyPress = (event: any) => {
-        if (!state.isAddItemButtonDisabled && event.charCode === 13) {
+        if (!state.isAddTopicButtonDisabled && event.charCode === 13) {
             addDescription();
         }
     }
@@ -121,16 +121,16 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
     const DescriptionNavigator = (
         <table className="description">
             <tbody>
-                <tr className='item-description-name-row'>
+                <tr className='topic-description-name-row'>
                     <td>
-                        <div className='item-description-name'>{props.itemName}</div>
+                        <div className='topic-description-name'>{props.topicTitle}</div>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <div>
                             {
-                                state.itemDescriptions.length > 0 ?
+                                state.topicDescriptions.length > 0 ?
                                     <div>
                                         <div className='description-navigator-button description-navigator-button-left' onClick={() => {iterateDescription(-1)}}>
                                             <ChevronLeftSVG className="description-navigator-button-icon"/>
@@ -138,16 +138,16 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
                                         <div className='description-navigator-button description-navigator-button-right' onClick={() => {iterateDescription(1)}}>
                                             <ChevronRightSVG className="description-navigator-button-icon"/>
                                         </div>
-                                        <div className='item-description'>
-                                            <span>{state.itemDescriptions[state.currentIndex].description}</span>
+                                        <div className='topic-description'>
+                                            <span>{state.topicDescriptions[state.currentIndex].description}</span>
                                             <br/>
                                             <br/>
-                                            <span>{"-" + state.itemDescriptions[state.currentIndex].username}</span>
+                                            <span>{"-" + state.topicDescriptions[state.currentIndex].username}</span>
                                         </div>
                                     </div> :
-                                    <div className='no-item-description-text'>No Descriptions</div>
+                                    <div className='no-topic-description-text'>No Descriptions</div>
                             }
-                            <div className="show-add-item-button" onClick={() => {showAddItem(true)}}>
+                            <div className="show-add-topic-button" onClick={() => {showAddTopic(true)}}>
                                 <AddButtonSVG/>
                             </div>
                         </div>
@@ -159,16 +159,16 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
 
     const DescriptionAdder = (
         <div>
-            <button className="add-description-back-button" onClick={() => {showAddItem(false)}}>
+            <button className="add-description-back-button" onClick={() => {showAddTopic(false)}}>
                 <LeftArrowSVG/>
             </button>
             <div className="add-description-body">
-                <div className="add-description-section-text">{props.itemName}</div>
+                <div className="add-description-section-text">{props.topicTitle}</div>
                 <input id={addDescriptionInputId} className="add-description-input" type="text" placeholder="Description" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
-                <button id={addDescriptionSubmitId} className="button disabled-button" onClick={addDescription} disabled={state.isAddItemButtonDisabled}>Add Description</button>
+                <button id={addDescriptionSubmitId} className="button disabled-button" onClick={addDescription} disabled={state.isAddTopicButtonDisabled}>Add Description</button>
             </div>
         </div>
     );
 
-    return !state.addItemDisplayed ? DescriptionNavigator : DescriptionAdder;
+    return !state.addTopicDisplayed ? DescriptionNavigator : DescriptionAdder;
 }

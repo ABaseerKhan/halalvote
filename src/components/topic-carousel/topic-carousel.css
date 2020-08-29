@@ -1,24 +1,24 @@
-.item-carousel {
+.topic-carousel {
     position: fixed;
-    height: var(--max-item-carousel-height-px);
+    height: var(--max-topic-carousel-height-px);
     width: 100%;
     top: 0;
     opacity: 0.0;
     visibility: hidden;
 }
 
-.item-navigator {
+.topic-navigator {
     height: var(--max-toolbar-height-px);
     background: var(--neutral-color-transparent);
     width: 100%;
     display: flex;
 }
 
-.item-text::-webkit-scrollbar {
+.topic-text::-webkit-scrollbar {
     display: none;
 }
 
-.item-text {
+.topic-text {
     margin-right: auto;
     margin-left: auto;
     padding-top: 1vh;
@@ -50,7 +50,7 @@
     background-color: var(--light-neutral-color);
 }
 
-.item-votes-container {
+.topic-votes-container {
     width: 100%;
     height: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
     color: var(--gray);
@@ -92,7 +92,7 @@
     width: 100%;
 }
 
-.item-vote-text-left, .item-vote-text-right {
+.topic-vote-text-left, .topic-vote-text-right {
     position: absolute;
     display: flex;
     align-items: center;
@@ -101,20 +101,20 @@
     padding-top: 3px;
 }
 
-.item-vote-text-left {
+.topic-vote-text-left {
     left: 26vw;
     border-radius: 50px 10px 10px 50px;
     color: #602d86;
 }
 
-.item-vote-text-right {
+.topic-vote-text-right {
     right: 26vw;
     border-radius: 10px 50px 50px 10px;
     color: #1c4d44;
 }
 
 @media only screen and (max-width: 600px) {
-    .item-vote-text {
+    .topic-vote-text {
         margin-left: 5px !important;
         margin-right: 5px !important;
     }

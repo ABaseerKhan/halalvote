@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AddItemComponent } from '../add-item/add-item';
+import { AddTopicComponent } from '../add-topic/add-topic';
 import { ModalType } from '../../types';
 import { LoginComponent } from '../login/login';
 import { useMedia } from '../../hooks/useMedia';
@@ -13,12 +13,12 @@ import { DescriptionComponent } from '../description/description';
 interface ModalComponentProps {
     removeModal: any,
     modalType: ModalType;
-    fetchItems?: any;
-    itemName?: string | null;
+    fetchTopics?: any;
+    topicTitle?: string | null;
     onLogin?: any;
 };
 export const ModalComponent = (props: ModalComponentProps) => {
-    const { removeModal, modalType, fetchItems, itemName } = props;
+    const { removeModal, modalType, fetchTopics, topicTitle } = props;
 
     const isMobile = useMedia(
         // Media queries
@@ -84,8 +84,8 @@ export const ModalComponent = (props: ModalComponentProps) => {
             <div id={modalCoverId} className={modalCoverId} onClick={ closeModal }></div>
             <div id={modalId} className={modalId}>
                 { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> }
-                { modalType === ModalType.ADD_ITEM && <AddItemComponent closeModal={closeModal} fetchItems={fetchItems} /> }
-                { modalType === ModalType.DESCRIPTION && itemName != null && <DescriptionComponent itemName={itemName} /> }
+                { modalType === ModalType.ADD_ITEM && <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> }
+                { modalType === ModalType.DESCRIPTION && topicTitle != null && <DescriptionComponent topicTitle={topicTitle} /> }
             </div>
         </div>
     );

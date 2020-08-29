@@ -11,15 +11,15 @@ import { ModalType, MenuLocation } from '../../types';
 import './menu.css';
 
 interface MenuComponentProps {
-    fetchItems: any
+    fetchTopics: any
 };
 interface MenuComponentState {
     menuLocation: MenuLocation, 
     loginDisplayed: boolean, 
-    addItemDisplayed: boolean
+    addTopicDisplayed: boolean
 }
 export const MenuComponent = (props: MenuComponentProps) => {
-    const { fetchItems } = props;
+    const { fetchTopics } = props;
     // eslint-disable-next-line
     const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken']);
     const { username } = cookies;
@@ -27,7 +27,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
     const [state, setState] = useState<MenuComponentState>({
         menuLocation: MenuLocation.NONE,
         loginDisplayed: false,
-        addItemDisplayed: false
+        addTopicDisplayed: false
     });
 
     const isMobile = useMedia(
@@ -88,8 +88,8 @@ export const MenuComponent = (props: MenuComponentProps) => {
         closeMenu({...state, menuLocation: MenuLocation.NONE, loginDisplayed: loginDisplayed}, () => {});
     }
 
-    const setAddItemDisplayed = (addItemDisplayed: boolean) => {
-        closeMenu({...state, menuLocation: MenuLocation.NONE, addItemDisplayed: addItemDisplayed}, () => {});
+    const setAddTopicDisplayed = (addTopicDisplayed: boolean) => {
+        closeMenu({...state, menuLocation: MenuLocation.NONE, addTopicDisplayed: addTopicDisplayed}, () => {});
     }
 
     const setMenuLocation = (menuLocation: MenuLocation) => {
@@ -266,10 +266,10 @@ export const MenuComponent = (props: MenuComponentProps) => {
     return (
         <div id={menuId} className={menuId}>
             { state.loginDisplayed &&
-                <Portal><ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchItems={null} itemName={null}/></Portal>
+                <Portal><ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchTopics={null} topicTitle={null}/></Portal>
             }
-            { state.addItemDisplayed &&
-                <Portal><ModalComponent removeModal={() => setAddItemDisplayed(false)} modalType={ModalType.ADD_ITEM} fetchItems={fetchItems} itemName={null}/></Portal>
+            { state.addTopicDisplayed &&
+                <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_ITEM} fetchTopics={fetchTopics} topicTitle={null}/></Portal>
             }
             {
                 state.menuLocation !== MenuLocation.NONE && 
@@ -277,7 +277,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                         <li className="menu-item" style={{marginTop: state.menuLocation === MenuLocation.BOTTOM_LEFT || state.menuLocation === MenuLocation.BOTTOM_RIGHT ? "75px" : "30px"}} onClick={login}>
                             { usernameExists() ? "Logout" : "Login" }
                         </li>
-                        <li className="menu-item" onClick={() => {setAddItemDisplayed(true)}}>Add Item</li>
+                        <li className="menu-item" onClick={() => {setAddTopicDisplayed(true)}}>Add Topic</li>
                     </ul>
             }
             <div id={menuButtonId} className={menuButtonId} onClick={pressButton}>

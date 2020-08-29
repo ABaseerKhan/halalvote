@@ -1,29 +1,29 @@
 import React, {memo} from 'react';
 import { postData } from '../../https-client/client';
-import { itemsConfig } from '../../https-client/config';
+import { topicsConfig } from '../../https-client/config';
 
 //type imports
 
 //style imports
-import './item-carousel.css';
+import './topic-carousel.css';
 import { useCookies } from 'react-cookie';
 import { VotingSlider } from './voting-slider';
 
-interface ItemVotesComponentProps {
-    itemName: string,
+interface TopicVotesComponentProps {
+    topicTitle: string,
     userVote: number | undefined,
     halalPoints: number,
     haramPoints: number,
     numVotes: number,
 };
 
-const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
-    const { itemName, userVote, halalPoints, haramPoints, numVotes } = props;
+const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
+    const { topicTitle, userVote, halalPoints, haramPoints, numVotes } = props;
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
     const submitVote = async (value: number) => {
-        if (itemName) {
+        if (topicTitle) {
             if (value > 0) {
                 document.body.style.backgroundColor = 'var(--halal-color)';
                 setTimeout(() => {
@@ -36,10 +36,10 @@ const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
                 }, 500);
             }
             await postData({
-                baseUrl: itemsConfig.url,
-                path: 'vote-item',
+                baseUrl: topicsConfig.url,
+                path: 'vote-topic',
                 data: {
-                    "itemName": itemName,
+                    "topicTitle": topicTitle,
                     "username": username,
                     "vote": value,
                 },
@@ -52,7 +52,7 @@ const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
     };
 
     return (
-        <div className={"item-votes-container"}>
+        <div className={"topic-votes-container"}>
             <div className={"voting-slider"} >
                 <VotingSlider 
                     submitVote={submitVote}
@@ -66,4 +66,4 @@ const ItemVotesImplementation = (props: ItemVotesComponentProps) => {
     )
 };
 
-export const ItemVotesComponent = memo(ItemVotesImplementation);
+export const TopicVotesComponent = memo(TopicVotesImplementation);

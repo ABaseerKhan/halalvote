@@ -1,4 +1,4 @@
-.add-item-body {
+.add-topic-body {
     position: absolute;
     width: 100%;
     display: block;
@@ -6,7 +6,7 @@
     transform: translateY(-50%);
 }
 
-.add-item-section-text {
+.add-topic-section-text {
     width: 100%;
     text-align: center;
     margin-bottom: 10px;
@@ -14,7 +14,7 @@
     color: var(--site-background-color);
 }
 
-.add-item-input {
+.add-topic-input {
     width: 80% !important;
     margin: 10px 0 10px 10%;
 }
