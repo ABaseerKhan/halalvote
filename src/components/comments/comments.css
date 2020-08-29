@@ -43,10 +43,23 @@
         border-radius: 0 48px 0 0;
     }
     .comments-container {
-        margin: 10px 25px 0 10px !important;
-        padding: 0 0 10px 0px !important;
         width: 100%;
     }
+    .comments-container-padding-div {
+        padding: 0.5em 0.5em 0.4em 0.5em !important;
+    }
+}
+
+.comments-container {
+    position: relative;
+    height: calc(100% - 4em - 20px);
+    border-radius: 25px 25px 25px 0px;
+    overflow: scroll;
+    scroll-behavior: smooth;
+}
+
+.comments-container-padding-div {
+    padding: 1.2em 1.2em 0.8em 1.2em;
 }
 
 .card-flip {
@@ -71,15 +84,6 @@
 
 .comments-card-0 {
     background-color: var(--halal-color);
-}
-
-.comments-container {
-    position: relative;
-    height: calc(100% - 4em - 20px);
-    padding: 10px 25px 10px 25px;
-    border-radius: 25px 25px 25px 0px;
-    overflow: scroll;
-    scroll-behavior: smooth;
 }
 
 .comments-container::-webkit-scrollbar {
