@@ -73,7 +73,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 });
             }
             menu.animate([
-                {height: 'unset', width: menuWidthExpanded + "px"}
+                {height: '250px', width: menuWidthExpanded + "px"}
             ], {
                 duration: 50,
                 fill: "forwards"
