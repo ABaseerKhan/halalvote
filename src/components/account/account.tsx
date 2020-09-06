@@ -14,7 +14,7 @@ export const AccountComponent = (props: AccountComponentProps) => {
 
     return (
         <div className="account-container">
-            {`Account - ${username}`}
+            <div className="account-title">{`${username}`}</div>
         </div>
     );
 }
