@@ -8,6 +8,8 @@ import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as LeftArrowSVG } from '../../icons/left-arrow.svg';
 import { postData } from '../../https-client/client';
 import ImageUploader from 'react-images-upload';
+import { css } from "@emotion/core";
+import ClipLoader from "react-spinners/ClipLoader";
 
 // type imports
 import { TopicDescription } from '../../types';
@@ -22,7 +24,8 @@ interface DescriptionComponentState {
     addTopicDisplayed: boolean,
     topicDescriptions: TopicDescription[],
     currentIndex: number,
-    picture: string | null
+    picture: string | null,
+    loading: boolean
 };
 export const DescriptionComponent = (props: DescriptionComponentProps) => {
     const { topicTitle } = props;
@@ -30,7 +33,8 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
         addTopicDisplayed: false,
         topicDescriptions: [],
         currentIndex: 0,
-        picture: null
+        picture: null,
+        loading: true
     });
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken', 'topicTitle']);
     const { username, sessiontoken } = cookies;
@@ -54,7 +58,7 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
             additionalHeaders: additionalHeaders, 
         });
 
-        setState({...state, topicDescriptions: data, currentIndex: 0, addTopicDisplayed: false});
+        setState({...state, topicDescriptions: data, currentIndex: 0, addTopicDisplayed: false, loading: false});
     }
 
     const addDescription = async () => {
@@ -91,6 +95,10 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
         setState({...state, picture: picture[0]});
     }
 
+    const loaderCssOverride = css`
+        margin: auto;
+    `;
+
     const DescriptionNavigator = (
         <div className="description">
             {
@@ -103,11 +111,12 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
                         <ChevronRightSVG className="description-navigator-button-icon"/>
                     </div>
                     <img className='topic-description' alt={props.topicTitle} src={state.topicDescriptions[state.currentIndex].description}/>
-                    <div className="topic-description-username">
-                        {state.topicDescriptions[state.currentIndex].username}
-                    </div>
+                    <div className="topic-description-username">{state.topicDescriptions[state.currentIndex].username}</div>
                 </div> :
-                <div className='no-topic-description-text'>No images to show</div>
+
+                state.loading ?
+                    <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
+                    <div className='no-topic-description-text'>No images to show</div>
             }
             <div className="show-add-topic-button" onClick={() => {showAddTopic(true)}}>
                 <AddButtonSVG/>
