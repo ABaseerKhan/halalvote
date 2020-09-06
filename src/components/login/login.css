@@ -20,7 +20,7 @@
 }
 
 .login-switch-button {
-    width: 80%;
+    width: fit-content;
     text-align: center;
     margin-left: auto;
     margin-right: auto;

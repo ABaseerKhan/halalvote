@@ -126,27 +126,40 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
 
     const DescriptionAdder = (
         <div>
+            <div className="add-description-body">
+                {
+                    state.picture ? 
+                        <div>
+                            <img className="add-description-image" alt="Topic" src={state.picture}/>
+                            <ImageUploader 
+                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
+                                buttonClassName="add-description-image-uploader-button"
+                                buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0"}}
+                                withIcon={false} 
+                                buttonText={state.picture ? "Choose New Image" : "Choose Image"}
+                                onChange={onDrop} 
+                                imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                maxFileSize={5242880} 
+                                singleImage={true}
+                            />
+                            <button id={addDescriptionSubmitId} className={`button disabled-button ${addDescriptionSubmitId}`} onClick={addDescription} >Add Description</button>
+                        </div>:
+                        <ImageUploader 
+                            fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
+                            buttonClassName="button"
+                            buttonStyles={{width: "auto", transition: "none"}}
+                            withIcon={false}
+                            buttonText={state.picture ? "Choose New Image" : "Choose Image"}
+                            onChange={onDrop} 
+                            imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                            maxFileSize={5242880} 
+                            singleImage={true}
+                        />
+                }
+            </div>
             <button className="add-description-back-button" onClick={() => {showAddTopic(false)}}>
                 <LeftArrowSVG/>
             </button>
-            <div className="add-description-body">
-                <div className="add-description-section-text">{props.topicTitle}</div>
-                {
-                    state.picture && <div className="add-description-image-container"><img className="add-description-image" alt="Topic" src={state.picture}/></div>
-                }
-                <ImageUploader 
-                    fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
-                    buttonClassName="add-description-image-uploader-button"
-                    buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0"}}
-                    withIcon={false} 
-                    buttonText={state.picture ? "Upload New Image" : "Upload Image"}
-                    onChange={onDrop} 
-                    imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                    maxFileSize={5242880} 
-                    singleImage={true}
-                />
-                <button id={addDescriptionSubmitId} className="button disabled-button" onClick={addDescription} >Add Description</button>
-            </div>
         </div>
     );
 
