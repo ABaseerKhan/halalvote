@@ -2,3 +2,7 @@
     text-align: center;
     color: var(--site-background-color);
 }
+
+.account-title {
+    padding-top: 1em;
+}
