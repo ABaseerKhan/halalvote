@@ -40,7 +40,21 @@
 .topic-description {
   max-height: 100%;
   max-width: 100%;
-  margin: auto;
+}
+
+.topic-description-username {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: var(--neutral-color);
+  color: var(--site-background-color);
+  padding: 10px;
+  border-radius: 20px 20px 20px 20px;
+  cursor: pointer;
+}
+
+.topic-description-username:hover {
+  background-color: var(--light-neutral-color);
 }
 
 .no-topic-description-text {
@@ -48,17 +62,6 @@
   width: 100%;
   margin: auto;
   color: var(--site-background-color);
-}
-
-.topic-description-name {
-  text-align: center;
-  font-size: 24px;
-  color: var(--site-background-color);
-  padding: 2em;
-}
-
-.topic-description-name-row {
-  height: 60px;
 }
 
 .show-add-topic-button {
@@ -92,11 +95,6 @@
   margin-bottom: 10px;
   font-size: 24px;
   color: var(--site-background-color);
-}
-
-.add-description-input {
-  width: 80% !important;
-  margin: 10px 0 10px 10%;
 }
 
 .add-description-back-button {
