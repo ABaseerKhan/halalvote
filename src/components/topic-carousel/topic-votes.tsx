@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, {memo, useState} from 'react';
 import { postData } from '../../https-client/client';
 import { topicsConfig } from '../../https-client/config';
 
@@ -19,6 +19,7 @@ interface TopicVotesComponentProps {
 
 const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
     const { topicTitle, userVote, halalPoints, haramPoints, numVotes } = props;
+    const [state, setState] = useState({ halalPoints: halalPoints, haramPoints: haramPoints, numVotes: numVotes });
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
@@ -35,7 +36,7 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                     document.body.style.backgroundColor = 'var(--site-background-color)'
                 }, 500);
             }
-            await postData({
+            const { data } = await postData({
                 baseUrl: topicsConfig.url,
                 path: 'vote-topic',
                 data: {
@@ -48,6 +49,7 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                 },
                 setCookie: setCookie,
             });
+            setState(prevState => ({ ...prevState, numVotes: data.numVotes, halalPoints: data.halalPoints, haramPoints: data.haramPoints }));
         }
     };
 
@@ -57,9 +59,9 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                 <VotingSlider 
                     submitVote={submitVote}
                     userVote={userVote}
-                    halalPoints={halalPoints}
-                    haramPoints={haramPoints}
-                    numVotes={numVotes}
+                    halalPoints={state.halalPoints}
+                    haramPoints={state.haramPoints}
+                    numVotes={state.numVotes}
                 />
             </div>
         </div>
