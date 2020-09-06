@@ -149,6 +149,8 @@ const UserComment = (props: UserCommentProps) => {
             <div className={"user-comment-time-stamp"} >
                 <span>{timeSince(props.comment.timeStamp)}</span>
             </div>
+            <span className={"user-comment-bullet-separator"}>&bull;</span>
+            <span className="user-comment-time-stamp">{comment.numReplies === 1 ? `(${comment.numReplies} reply)` : `(${comment.numReplies} replies)`}</span>
         </div>
     );
     return (
