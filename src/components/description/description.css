@@ -1,6 +1,10 @@
 .description {
+  display: flex;
   height: 100%;
   width: 100%;
+  border-radius: 25px 25px 25px 25px;
+  overflow: hidden;
+  background: black;
   text-align: center;
 }
 
@@ -34,13 +38,15 @@
 }
 
 .topic-description {
-  width: 100%;
-  text-align: center;
-  overflow: scroll;
-  color: var(--site-background-color);
+  max-height: 100%;
+  max-width: 100%;
+  margin: auto;
 }
 
 .no-topic-description-text {
+  height: auto;
+  width: 100%;
+  margin: auto;
   color: var(--site-background-color);
 }
 
@@ -73,7 +79,7 @@
 }
 
 .add-description-body {
-  padding: 2em;
+  width: 100%;
   position: absolute;
   display: block;
   top: 50%;

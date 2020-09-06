@@ -92,42 +92,27 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
     }
 
     const DescriptionNavigator = (
-        <table className="description">
-            <tbody>
-                <tr className='topic-description-name-row'>
-                    <td>
-                        <div className='topic-description-name'>{props.topicTitle}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div>
-                            {
-                                state.topicDescriptions.length > 0 ?
-                                    <div>
-                                        <div className='description-navigator-button description-navigator-button-left' onClick={() => {iterateDescription(-1)}}>
-                                            <ChevronLeftSVG className="description-navigator-button-icon"/>
-                                        </div>
-                                        <div className='description-navigator-button description-navigator-button-right' onClick={() => {iterateDescription(1)}}>
-                                            <ChevronRightSVG className="description-navigator-button-icon"/>
-                                        </div>
-                                        <div className='topic-description'>
-                                            <img style={{maxHeight:"350px", maxWidth:"350px"}} alt={props.topicTitle} src={state.topicDescriptions[state.currentIndex].description}/>
-                                            <br/>
-                                            <br/>
-                                            <span>{"-" + state.topicDescriptions[state.currentIndex].username}</span>
-                                        </div>
-                                    </div> :
-                                    <div className='no-topic-description-text'>No images to show</div>
-                            }
-                            <div className="show-add-topic-button" onClick={() => {showAddTopic(true)}}>
-                                <AddButtonSVG/>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div className="description">
+            {
+                state.topicDescriptions.length > 0 ?
+                    <img className='topic-description' alt={props.topicTitle} src={state.topicDescriptions[state.currentIndex].description}/> :
+                    <div className='no-topic-description-text'>No images to show</div>
+            }
+            {
+                state.topicDescriptions.length > 0 &&
+                <div>
+                    <div className='description-navigator-button description-navigator-button-left' onClick={() => {iterateDescription(-1)}}>
+                        <ChevronLeftSVG className="description-navigator-button-icon"/>
+                    </div>
+                    <div className='description-navigator-button description-navigator-button-right' onClick={() => {iterateDescription(1)}}>
+                        <ChevronRightSVG className="description-navigator-button-icon"/>
+                    </div>
+                </div>
+            }
+            <div className="show-add-topic-button" onClick={() => {showAddTopic(true)}}>
+                <AddButtonSVG/>
+            </div>
+        </div>
     );
 
     const DescriptionAdder = (

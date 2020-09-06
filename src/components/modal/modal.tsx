@@ -42,17 +42,20 @@ export const ModalComponent = (props: ModalComponentProps) => {
                 modalCover.style.zIndex = "5";
             }
 
-            let height = "min(60vh, 500px)";
-            let marginTop = "max(-30vh, -250px)";
-            let width = "min(50vw, 500px)";
-            let marginLeft = "max(-25vw, -250px)";
+            let heightVh = 60;
+            let widthVh = 50;
+            const maxHeight = 750;
+            const maxWidth = 500;
 
             if (isMobile) {
-                height = "50vh";
-                marginTop = "-25vh";
-                width = "70vw";
-                marginLeft = "-35vw";
+                heightVh = 50;
+                widthVh = 70;
             }
+
+            const height = `min(${heightVh}vh, ${maxHeight}px)`;
+            const marginTop = `max(-${heightVh/2}vh, -${maxHeight/2}px)`;
+            const width = `min(${widthVh}vw, ${maxWidth}px)`;
+            const marginLeft = `max(-${widthVh/2}vw, -${maxWidth/2}px)`;
 
             modal.animate([
                 {height: height, marginTop: marginTop, width: width, marginLeft: marginLeft}
