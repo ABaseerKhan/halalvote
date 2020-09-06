@@ -23,9 +23,8 @@
 
 .account-tabs {
     display: flex;
-    width: 80%;
     margin: 0 auto 0 auto;
-    padding: 1em 0 1em 0;
+    padding: 1em 1em 1em 1em;
 }
 
 .account-tab, .account-tab-selected {

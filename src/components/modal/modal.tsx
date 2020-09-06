@@ -49,8 +49,8 @@ export const ModalComponent = (props: ModalComponentProps) => {
             const maxWidth = 500;
 
             if (isMobile) {
-                heightVh = 50;
-                widthVh = 70;
+                heightVh = 60;
+                widthVh = 90;
             }
 
             const height = `min(${heightVh}vh, ${maxHeight}px)`;
