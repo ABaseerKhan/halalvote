@@ -1,4 +1,4 @@
-.description {
+.description-body {
   display: flex;
   height: 100%;
   width: 100%;
@@ -36,12 +36,12 @@
   margin-top: -8px;
 }
 
-.topic-description {
+.description {
   max-height: 100%;
   max-width: 100%;
 }
 
-.topic-description-username {
+.description-username {
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -52,18 +52,18 @@
   cursor: pointer;
 }
 
-.topic-description-username:hover {
+.description-username:hover {
   background-color: var(--light-neutral-color);
 }
 
-.no-topic-description-text {
+.no-description-text {
   height: auto;
   width: 100%;
   margin: auto;
   color: var(--site-background-color);
 }
 
-.show-add-topic-button {
+.show-add-description-button {
   position: absolute;
   height: 40px;
   width: 40px;
@@ -76,7 +76,7 @@
   cursor: pointer;
 }
 
-.show-add-topic-button:hover {
+.show-add-description-button:hover {
   background-color: var(--light-neutral-color);
 }
 
@@ -107,11 +107,11 @@
   outline: none;
 }
 
-.add-description-image-uploader-button:hover {
+.add-description-choose-button:hover {
   text-decoration: underline;
 }
 
-.add-description-image {
+.adding-image {
   max-width: 250px;
   max-height: 250px;
 }

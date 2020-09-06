@@ -100,7 +100,7 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
     `;
 
     const DescriptionNavigator = (
-        <div className="description" style={{background: state.topicDescriptions.length > 0 && !state.loading ? "black" : "none"}}>
+        <div className="description-body" style={{background: state.topicDescriptions.length > 0 && !state.loading ? "black" : "none"}}>
             {
                 state.topicDescriptions.length > 0 ?
                 <div style={{margin: "auto"}}>
@@ -110,15 +110,15 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
                     <div className='description-navigator-button description-navigator-button-right' onClick={() => {iterateDescription(1)}}>
                         <ChevronRightSVG className="description-navigator-button-icon"/>
                     </div>
-                    <img className='topic-description' alt={props.topicTitle} src={state.topicDescriptions[state.currentIndex].description}/>
-                    <div className="topic-description-username">{state.topicDescriptions[state.currentIndex].username}</div>
+                    <img className='description' alt={props.topicTitle} src={state.topicDescriptions[state.currentIndex].description}/>
+                    <div className="description-username">{state.topicDescriptions[state.currentIndex].username}</div>
                 </div> :
 
                 state.loading ?
                     <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
-                    <div className='no-topic-description-text'>No images to show</div>
+                    <div className='no-description-text'>No images to show</div>
             }
-            <div className="show-add-topic-button" onClick={() => {showAddTopic(true)}}>
+            <div className="show-add-description-button" onClick={() => {showAddTopic(true)}}>
                 <AddButtonSVG/>
             </div>
         </div>
@@ -130,10 +130,10 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
                 {
                     state.picture ? 
                         <div>
-                            <img className="add-description-image" alt="Topic" src={state.picture}/>
+                            <img className="adding-image" alt="Topic" src={state.picture}/>
                             <ImageUploader 
                                 fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
-                                buttonClassName="add-description-image-uploader-button"
+                                buttonClassName="add-description-choose-button"
                                 buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0"}}
                                 withIcon={false} 
                                 buttonText={state.picture ? "Choose New Image" : "Choose Image"}
