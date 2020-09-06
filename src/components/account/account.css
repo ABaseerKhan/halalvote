@@ -9,7 +9,7 @@
 }
 
 .account-header-section {
-    border-radius: 25px 25px 25px 25px;
+    border-radius: 25px 25px 0 0;
     position: absolute;
     width: 100%;
     background-color: var(--neutral-color);
