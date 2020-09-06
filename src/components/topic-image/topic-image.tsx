@@ -144,17 +144,20 @@ export const TopicImageComponent = (props: TopicImageComponentProps) => {
                             />
                             <button id={addImageSubmitId} className={`button ${addImageSubmitId}`} onClick={addImage} >Add Image</button>
                         </div>:
-                        <ImageUploader 
-                            fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
-                            buttonClassName="button"
-                            buttonStyles={{width: "auto", transition: "none"}}
-                            withIcon={false}
-                            buttonText="Choose Image"
-                            onChange={onDrop} 
-                            imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                            maxFileSize={5242880} 
-                            singleImage={true}
-                        />
+                        <div>
+                            <div className="add-image-section-text">Add Image</div>
+                            <ImageUploader 
+                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
+                                buttonClassName="button"
+                                buttonStyles={{width: "auto", transition: "none"}}
+                                withIcon={false}
+                                buttonText="Choose Image"
+                                onChange={onDrop} 
+                                imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                maxFileSize={5242880} 
+                                singleImage={true}
+                            />
+                        </div>
                 }
             </div>
             <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>

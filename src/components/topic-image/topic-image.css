@@ -101,6 +101,14 @@
   border-radius: 30px;
 }
 
+.add-image-section-text {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 24px;
+  color: var(--site-background-color);
+}
+
 .add-image-back-button:hover {
   background: var(--light-neutral-color);
   border: none;
