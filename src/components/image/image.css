@@ -1,4 +1,4 @@
-.description-body {
+.image-body {
   display: flex;
   height: 100%;
   width: 100%;
@@ -7,7 +7,7 @@
   text-align: center;
 }
 
-.description-navigator-button {
+.image-navigator-button {
   position: absolute;
   height: 40px;
   width: 40px;
@@ -19,29 +19,29 @@
   overflow: hidden;
 }
 
-.description-navigator-button-left {
+.image-navigator-button-left {
   left: calc(50% - 84px);
 }
 
-.description-navigator-button-right {
+.image-navigator-button-right {
   right: calc(50% - 84px);
 }
 
-.description-navigator-button:hover {
+.image-navigator-button:hover {
   background-color: var(--light-neutral-color);
 }
 
-.description-navigator-button-icon {
+.image-navigator-button-icon {
   margin-left: -29px;
   margin-top: -8px;
 }
 
-.description {
+.image {
   max-height: 100%;
   max-width: 100%;
 }
 
-.description-username {
+.image-username {
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -52,18 +52,18 @@
   cursor: pointer;
 }
 
-.description-username:hover {
+.image-username:hover {
   background-color: var(--light-neutral-color);
 }
 
-.no-description-text {
+.no-image-text {
   height: auto;
   width: 100%;
   margin: auto;
   color: var(--site-background-color);
 }
 
-.show-add-description-button {
+.show-add-image-button {
   position: absolute;
   height: 40px;
   width: 40px;
@@ -76,11 +76,11 @@
   cursor: pointer;
 }
 
-.show-add-description-button:hover {
+.show-add-image-button:hover {
   background-color: var(--light-neutral-color);
 }
 
-.add-description-body {
+.add-image-body {
   width: 100%;
   position: absolute;
   display: block;
@@ -89,7 +89,7 @@
   text-align: center;
 }
 
-.add-description-back-button {
+.add-image-back-button {
   position: absolute;
   height: 60px;
   width: 60px;
@@ -101,13 +101,13 @@
   border-radius: 30px;
 }
 
-.add-description-back-button:hover {
+.add-image-back-button:hover {
   background: var(--light-neutral-color);
   border: none;
   outline: none;
 }
 
-.add-description-choose-button:hover {
+.add-image-choose-button:hover {
   text-decoration: underline;
 }
 
@@ -116,6 +116,6 @@
   max-height: 250px;
 }
 
-.add-description-submit-button {
+.add-image-submit-button {
   margin: 0 !important;
 }

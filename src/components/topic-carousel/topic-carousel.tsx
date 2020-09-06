@@ -24,12 +24,12 @@ interface TopicCarouselComponentProps {
     style?: any;
 };
 interface TopicCarouselComponentState {
-    descriptionDisplayed: boolean
+    imageDisplayed: boolean
 }
 export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
     const { id, iterateTopic, topicTitle, userVote, halalPoints, haramPoints, numVotes } = props;
     const [state, setState] = useState<TopicCarouselComponentState>({
-        descriptionDisplayed: false
+        imageDisplayed: false
     });
 
     const isMobile = useMedia(
@@ -52,20 +52,20 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
         }
     }
 
-    const setDescriptionDisplayed = (descriptionDisplayed: boolean) => {
-        setState({...state, descriptionDisplayed: descriptionDisplayed})
+    const setImageDisplayed = (imageDisplayed: boolean) => {
+        setState({...state, imageDisplayed: imageDisplayed})
     }
 
     return (
         <div id={id} style={props.style} className='topic-carousel'>
-            { state.descriptionDisplayed &&
-                <Portal><ModalComponent removeModal={() => {setDescriptionDisplayed(false)}} modalType={ModalType.DESCRIPTION} fetchTopics={null} topicTitle={props.topicTitle}/></Portal>
+            { state.imageDisplayed &&
+                <Portal><ModalComponent removeModal={() => {setImageDisplayed(false)}} modalType={ModalType.DESCRIPTION} fetchTopics={null} topicTitle={props.topicTitle}/></Portal>
             }
             <div className="topic-navigator">
                 <button id={leftCarouselButtonId} onClick={iterateTopic(-1)} className='carousel-button'>
                     <ChevronLeftSVG className={"arrow-icon-left"}/>
                 </button>
-                <div id="topic-title" className='topic-title' onClick={() => {setDescriptionDisplayed(true)}} >
+                <div id="topic-title" className='topic-title' onClick={() => {setImageDisplayed(true)}} >
                     <Linkify>{topicTitle}</Linkify>
                 </div>
                 <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button'>

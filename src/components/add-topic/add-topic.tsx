@@ -41,7 +41,7 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
                 data: {
                     "username": username,
                     "topicTitle": titleInput.value,
-                    "description": state.picture
+                    "image": state.picture
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken

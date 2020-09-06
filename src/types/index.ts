@@ -20,9 +20,9 @@ export interface Topic {
     vote: number | undefined;
 }
 
-export interface TopicDescription {
+export interface TopicImage {
     username: string;
-    description: string;
+    image: string;
 }
 
 export interface Comment {
