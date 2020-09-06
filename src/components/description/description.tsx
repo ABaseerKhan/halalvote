@@ -100,7 +100,7 @@ export const DescriptionComponent = (props: DescriptionComponentProps) => {
     `;
 
     const DescriptionNavigator = (
-        <div className="description">
+        <div className="description" style={{background: state.topicDescriptions.length > 0 && !state.loading ? "black" : "none"}}>
             {
                 state.topicDescriptions.length > 0 ?
                 <div style={{margin: "auto"}}>
