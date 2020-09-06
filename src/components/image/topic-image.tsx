@@ -15,21 +15,21 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { TopicImage } from '../../types';
 
 // styles
-import './image.css';
+import './topic-image.css';
 
-interface ImageComponentProps {
+interface TopicImageComponentProps {
     topicTitle: string
 };
-interface ImageComponentState {
+interface TopicImageComponentState {
     addTopicDisplayed: boolean,
     topicImages: TopicImage[],
     currentIndex: number,
     picture: string | null,
     loading: boolean
 };
-export const ImageComponent = (props: ImageComponentProps) => {
+export const TopicImageComponent = (props: TopicImageComponentProps) => {
     const { topicTitle } = props;
-    const [state, setState] = useState<ImageComponentState>({
+    const [state, setState] = useState<TopicImageComponentState>({
         addTopicDisplayed: false,
         topicImages: [],
         currentIndex: 0,
