@@ -8,7 +8,7 @@ import { useMedia } from '../../hooks/useMedia';
 
 // styles
 import './modal.css';
-import { TopicImageComponent } from '../image/topic-image';
+import { TopicImageComponent } from '../topic-image/topic-image';
 import { AccountComponent } from '../account/account';
 
 interface ModalComponentProps {
