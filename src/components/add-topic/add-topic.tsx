@@ -84,23 +84,40 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
 
     return (
         <div className="add-topic-body">
-            <div className="add-topic-section-text">Add Topic</div>
-            <input id={addTopicTitleInputId} className="add-topic-input" type="text" placeholder="Title" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
             {
-                state.picture && <div className="add-topic-image-container"><img className="add-topic-image" alt="Topic" src={state.picture}/></div>
+                state.picture ?
+                    <div>
+                        <input id={addTopicTitleInputId} className="add-topic-input" type="text" placeholder="Title" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
+                        <img className="add-topic-image" alt="Topic" src={state.picture}/>
+                        <ImageUploader 
+                            fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
+                            buttonClassName="add-topic-image-choose-button"
+                            buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0"}}
+                            withIcon={false} 
+                            buttonText="Choose New Image"
+                            onChange={onDrop} 
+                            imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                            maxFileSize={5242880} 
+                            singleImage={true}
+                        />
+                        <button id={addTopicSubmitButtonId} className={`button disabled-button ${addTopicSubmitButtonId}`} onClick={addTopic} disabled={state.isAddTopicButtonDisabled}>Add Topic</button>
+                    </div> :
+                    <div>
+                        <div className="add-topic-section-text">Add Topic</div>
+                        <input id={addTopicTitleInputId} className="add-topic-input" type="text" placeholder="Title" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
+                        <ImageUploader 
+                            fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
+                            buttonClassName="button"
+                            buttonStyles={{width: "auto", transition: "none"}}
+                            withIcon={false} 
+                            buttonText="Choose Image"
+                            onChange={onDrop} 
+                            imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                            maxFileSize={5242880} 
+                            singleImage={true}
+                        />
+                    </div>
             }
-            <ImageUploader 
-                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
-                buttonClassName="add-topic-image-uploader-button"
-                buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0"}}
-                withIcon={false} 
-                buttonText={state.picture ? "Upload New Image" : "Upload Image"}
-                onChange={onDrop} 
-                imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                maxFileSize={5242880} 
-                singleImage={true}
-            />
-            <button id={addTopicSubmitButtonId} className="button disabled-button" onClick={addTopic} disabled={state.isAddTopicButtonDisabled}>Add Topic</button>
         </div>
     );
 }
