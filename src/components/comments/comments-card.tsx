@@ -20,7 +20,7 @@ interface CommentsCardComponentProps {
     topicTitle: string, 
     numHalalComments: number,
     numHaramComments: number,
-    specificCommentId?: number,
+    specificComment?: Comment,
     refreshTopic: (topicTofetch: string) => any,
     switchCards: (judgement: Judgment) => any,
 };
@@ -40,7 +40,7 @@ const initialState = {
 }
 var clickTimer: any = null;
 const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
-    const { judgment, topicTitle, numHalalComments, numHaramComments, specificCommentId, refreshTopic } = props;
+    const { judgment, topicTitle, numHalalComments, numHaramComments, specificComment, refreshTopic } = props;
     const totalTopLevelComments = (judgment === Judgment.HALAL ? numHalalComments : numHaramComments) || 0;
 
     const isMobile = useMedia(
@@ -76,13 +76,18 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     }, [topicTitle]);
 
     useEffect(() => {
-        console.log("specificCommentId");
-        if (topicTitle) {
+        if (topicTitle && specificComment && (topicTitle === specificComment.topicTitle) && (specificComment.commentType === judgementToTextMap[judgment])) {
             state.comments = [];
             state.pathToHighlightedComment = undefined;
-            fetchComments([], undefined, specificCommentId);
+            fetchComments([], undefined, specificComment?.id);
         } // eslint-disable-next-line
-    }, [specificCommentId]);
+    }, [specificComment]);
+
+    useEffect(() => {
+        if(state.pathToHighlightedComment) {
+            scrollToHighlightedComment(getCommentFromPath(state.comments, state.pathToHighlightedComment));
+        } // eslint-disable-next-line
+    }, [state.pathToHighlightedComment])
 
     const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number, specificCommentId?: number) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
@@ -94,7 +99,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                 "topicTitle": topicTitle,
                 "username": username,
                 "parentId": parentComment?.id,
-                "specificComment": specificCommentId,
+                "singleCommentId": specificCommentId,
                 "depth": 2, 
                 "n": 5,
                 "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : state.comments?.map((r) => r.id),
@@ -108,8 +113,8 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             setState(prevState => ({ ...prevState, comments: updatedComments, loading: false }));
         }
         if (specificCommentId) {
-            const pathToSpecificComment = getPathFromId(updatedComments, specificCommentId, [0]);
-            setTimeout(() => highlightComment(pathToSpecificComment), 500);
+            const pathToSpecificComment = getPathFromId(updatedComments, specificCommentId, []);
+            setState(prevState => ({ ...prevState, pathToHighlightedComment: pathToSpecificComment }));
         }
     }
 
@@ -193,8 +198,6 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                 commentMakerRef.current.focus();
             };
         } else {
-            let highlightedComment = getCommentFromPath(state.comments, path);
-            scrollToHighlightedComment(highlightedComment);
             if (commentMakerRef.current) {
                 //commentMakerRef.current.focus();
             };
@@ -277,7 +280,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
 const getCommentFromPath = (comments: Comment[], path: number[] | undefined): Comment | undefined => {
     // base cases
-    if (!path || path.length < 1) {
+    if (!path || (path.length < 1) || !comments) {
         return undefined;
     }
     if (path.length === 1) {
@@ -336,7 +339,8 @@ const getPathFromId = (comments: Comment[], commentId: number, accumulator: numb
 const areCommentsCardPropsEqual = (prevProps: CommentsCardComponentProps, nextProps: CommentsCardComponentProps) => {
     return prevProps.topicTitle === nextProps.topicTitle && 
         prevProps.numHalalComments === nextProps.numHalalComments && 
-        prevProps.numHaramComments === nextProps.numHaramComments
+        prevProps.numHaramComments === nextProps.numHaramComments &&
+        prevProps.specificComment === nextProps.specificComment
 }
 
 export const CommentsCardComponent = memo(CommentsCardImplementation, areCommentsCardPropsEqual);
