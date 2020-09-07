@@ -20,6 +20,7 @@ interface CommentsCardComponentProps {
     topicTitle: string, 
     numHalalComments: number,
     numHaramComments: number,
+    singleCommentId?: number,
     refreshTopic: (topicTofetch: string) => any,
     switchCards: (judgement: Judgment) => any,
 };

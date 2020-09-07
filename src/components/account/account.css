@@ -1,8 +1,99 @@
 .account-container {
-    text-align: center;
     color: var(--site-background-color);
+    height: 60vh;
+    overflow: auto;
+}
+
+.account-container::-webkit-scrollbar {
+    display: none;
+}
+
+.account-header-section {
+    border-radius: 25px 25px 0 0;
+    position: absolute;
+    width: 100%;
+    background-color: var(--neutral-color);
+    box-shadow: 0 5px 50px 0 rgba(32,33,36,0.28);
 }
 
 .account-title {
+    text-align: center;
     padding-top: 1em;
+}
+
+.account-tabs {
+    display: flex;
+    margin: 0 auto 0 auto;
+    padding: 1em 1em 1em 1em;
+}
+
+.account-tab, .account-tab-selected {
+    margin: 0 auto 0 auto;
+}
+
+.account-tab:hover, .account-tab-selected:hover {
+    cursor: pointer;
+}
+
+.account-tab {
+
+}
+
+.account-tab-selected {
+    font-weight: 600;
+    color: white;
+}
+
+.account-body {
+    padding-top: 6em;
+}
+
+.user-topic-container {
+    padding: 0.5em 0 0.5em 0;
+}
+
+.user-topic-container:hover {
+    color: white;
+    cursor: pointer;
+}
+
+.topic-meta-info-container {
+    font-size: 11px;
+}
+
+.topic-meta-info-item {
+    margin-right: 1em;
+}
+
+.user-comment-container {
+    padding: 1em 0 1em 0;
+    margin-right: 2em;
+    border-bottom: 1px dashed var(--site-background-color);
+}
+
+.user-comment-container:hover {
+    color: white;
+    cursor: pointer;
+}
+
+.user-comment-bullet-separator {
+    margin-top: 0.4em;
+    font-size: xx-small;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.user-comment {
+    margin-left: 1.6em;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.user-comment p {
+    margin: 0.2em 0 0.2em 0;
+}
+
+.user-comment-time-stamp {
+    padding-top: 0.15em;
 }
