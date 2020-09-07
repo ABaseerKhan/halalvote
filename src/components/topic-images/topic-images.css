@@ -117,7 +117,6 @@
 .add-image-section-text {
   width: 100%;
   text-align: center;
-  margin-bottom: 10px;
   font-size: 24px;
   color: var(--site-background-color);
 }
@@ -138,5 +137,5 @@
 }
 
 .add-image-submit-button {
-  margin: 0 !important;
+  margin: 20px 0 0 0 !important;
 }

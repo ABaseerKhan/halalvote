@@ -10,14 +10,13 @@
 .add-topic-section-text {
     width: 100%;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     font-size: 24px;
     color: var(--site-background-color);
 }
 
 .add-topic-input {
     width: 80% !important;
-    margin: 10px 0 10px 0;
 }
 
 .add-topic-image-choose-button:hover {
@@ -27,8 +26,9 @@
 .add-topic-image {
     max-width: 200px;
     max-height: 200px;
+    margin-top: 20px;
 }
 
 .add-topic-submit-button {
-    margin: 0 !important;
+    margin: 20px 0 0 0 !important;
 }
