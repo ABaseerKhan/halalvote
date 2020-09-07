@@ -47,6 +47,10 @@ export const vhToPixelsWithMax = (vh: number, max: number) => {
     return Math.min((vh / 100.0) * window.innerHeight, max);
 }
 
+export const vwToPixelsWithMax = (vw: number, max: number) => {
+    return Math.min((vw / 100.0) * window.innerWidth, max);
+}
+
 // Move array element from an old_index to a new_index+1 and return the new_index+1
 // Note that this mutates the array (in place operation)
 export const arrayMove = (arr: Array<any>, old_index: number, new_index: number): number => {

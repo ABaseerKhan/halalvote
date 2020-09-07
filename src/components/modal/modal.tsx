@@ -3,13 +3,14 @@ import { AddTopicComponent } from '../add-topic/add-topic';
 import { ModalType } from '../../types';
 import { LoginComponent } from '../login/login';
 import { useMedia } from '../../hooks/useMedia';
+import { TopicImagesComponent } from '../topic-images/topic-images';
+import { AccountComponent } from '../account/account';
+import { vhToPixelsWithMax, vwToPixelsWithMax } from "../../utils";
 
 // type imports
 
 // styles
 import './modal.css';
-import { TopicImagesComponent } from '../topic-images/topic-images';
-import { AccountComponent } from '../account/account';
 
 interface ModalComponentProps {
     removeModal: any,
@@ -34,6 +35,19 @@ export const ModalComponent = (props: ModalComponentProps) => {
     const modalId = "modal";
     const modalCoverId = "modal-cover";
 
+    const heightVh = 60;
+    const widthVh = isMobile ? 90 : 50;
+    const maxHeight = 750;
+    const maxWidth = 500;
+
+    const getModalHeight = () => {
+        return vhToPixelsWithMax(heightVh, maxHeight);
+    }
+
+    const getModalWidth = () => {
+        return vwToPixelsWithMax(widthVh, maxWidth);
+    }
+
     useEffect(() => {
         const modal = document.getElementById(modalId);
         const modalCover = document.getElementById(modalCoverId);
@@ -44,19 +58,9 @@ export const ModalComponent = (props: ModalComponentProps) => {
                 modalCover.style.zIndex = "5";
             }
 
-            let heightVh = 60;
-            let widthVh = 50;
-            const maxHeight = 750;
-            const maxWidth = 500;
-
-            if (isMobile) {
-                heightVh = 60;
-                widthVh = 90;
-            }
-
-            const height = `min(${heightVh}vh, ${maxHeight}px)`;
+            const height = getModalHeight() + "px";
             const marginTop = `max(-${heightVh/2}vh, -${maxHeight/2}px)`;
-            const width = `min(${widthVh}vw, ${maxWidth}px)`;
+            const width = getModalWidth() + "px";
             const marginLeft = `max(-${widthVh/2}vw, -${maxWidth/2}px)`;
 
             modal.animate([
@@ -90,8 +94,8 @@ export const ModalComponent = (props: ModalComponentProps) => {
             <div id={modalCoverId} className={modalCoverId} onClick={ closeModal }></div>
             <div id={modalId} className={modalId}>
                 { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> }
-                { modalType === ModalType.ADD_ITEM && <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> }
-                { modalType === ModalType.DESCRIPTION && topicTitle != null && <TopicImagesComponent topicTitle={topicTitle} /> }
+                { modalType === ModalType.ADD_TOPIC && <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> }
+                { modalType === ModalType.TOPIC_IMAGE && topicTitle != null && <TopicImagesComponent topicTitle={topicTitle} maxHeight={getModalHeight()} maxWidth={getModalWidth()} /> }
                 { modalType === ModalType.ACCOUNT && <AccountComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> }
             </div>
         </div>

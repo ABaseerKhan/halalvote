@@ -46,8 +46,8 @@ export enum Vote {
 
 export enum ModalType {
     LOGIN,
-    ADD_ITEM,
-    DESCRIPTION,
+    ADD_TOPIC,
+    TOPIC_IMAGE,
     ACCOUNT,
 }
 

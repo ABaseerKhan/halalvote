@@ -19,7 +19,9 @@ import { TopicImages } from '../../types';
 import './topic-images.css';
 
 interface TopicImagesComponentProps {
-    topicTitle: string
+    topicTitle: string,
+    maxHeight: number,
+    maxWidth: number
 };
 interface TopicImagesComponentState {
     addTopicDisplayed: boolean,
@@ -29,7 +31,7 @@ interface TopicImagesComponentState {
     loading: boolean
 };
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
-    const { topicTitle } = props;
+    const { topicTitle, maxHeight, maxWidth } = props;
     const [state, setState] = useState<TopicImagesComponentState>({
         addTopicDisplayed: false,
         topicImages: [],
@@ -132,7 +134,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     <div className='image-navigator-button image-navigator-button-right' onClick={() => {iterateImage(1)}}>
                         <ChevronRightSVG className="image-navigator-button-icon"/>
                     </div>
-                    <img className='image' alt={props.topicTitle} src={state.topicImages[state.currentIndex].image}/>
+                    <img className='image' style={{maxHeight:maxHeight + "px", maxWidth: maxWidth + "px"}} alt={props.topicTitle} src={state.topicImages[state.currentIndex].image}/>
                     <div className="image-username">{state.topicImages[state.currentIndex].username}</div>
                     <TrashButtonSVG className="image-delete-button" onClick={deleteImage}/>
                 </div> :

@@ -59,7 +59,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
     return (
         <div id={id} style={props.style} className='topic-carousel'>
             { state.imageDisplayed &&
-                <Portal><ModalComponent removeModal={() => {setImageDisplayed(false)}} modalType={ModalType.DESCRIPTION} fetchTopics={null} topicTitle={props.topicTitle}/></Portal>
+                <Portal><ModalComponent removeModal={() => {setImageDisplayed(false)}} modalType={ModalType.TOPIC_IMAGE} fetchTopics={null} topicTitle={props.topicTitle}/></Portal>
             }
             <div className="topic-navigator">
                 <button id={leftCarouselButtonId} onClick={iterateTopic(-1)} className='carousel-button'>

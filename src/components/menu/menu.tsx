@@ -281,7 +281,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 <Portal><ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchTopics={null} topicTitle={null}/></Portal>
             }
             { state.addTopicDisplayed &&
-                <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_ITEM} fetchTopics={fetchTopics} topicTitle={null}/></Portal>
+                <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_TOPIC} fetchTopics={fetchTopics} topicTitle={null}/></Portal>
             }
             { state.accountDisplayed &&
                 <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT} fetchTopics={fetchTopics} topicTitle={null} showSpecificComment={props.showSpecificComment} accountUsername={username}/></Portal>
