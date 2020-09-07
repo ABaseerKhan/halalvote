@@ -16,6 +16,8 @@ enum Tab {
 
 interface AccountComponentProps {
     username: string,
+    fetchTopics: (topicTofetch?: string) => void;
+    closeModal: any;
 };
 
 interface State {
@@ -103,10 +105,10 @@ export const AccountComponent = (props: AccountComponentProps) => {
             <div className="account-body">
                 <ul style={{ listStyleType: 'none', paddingInlineStart: '2em' }}>
                     {state.selectedTab===Tab.CREATEDTOPICS && state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => (
-                        <UserTopic topic={topic} />
+                        <UserTopic topic={topic} fetchTopics={props.fetchTopics} closeModal={props.closeModal}/>
                     ))}
                     {state.selectedTab===Tab.VOTEDTOPICS && state.userVotedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => (
-                        <UserTopic topic={topic} />
+                        <UserTopic topic={topic} fetchTopics={props.fetchTopics} closeModal={props.closeModal}/>
                     ))}
                     {state.selectedTab===Tab.COMMENTS && state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
                         <UserComment comment={comment} />
@@ -117,10 +119,10 @@ export const AccountComponent = (props: AccountComponentProps) => {
     );
 }
 
-const UserTopic = ({ topic }: { topic: Topic}) => {
+const UserTopic = ({ topic, fetchTopics, closeModal }: { topic: Topic, fetchTopics: (topicTofetch?: string) => void, closeModal: any }) => {
     return (
             <li>
-                <div className="user-topic-container">
+                <div className="user-topic-container" onClick={() => { fetchTopics(topic.topicTitle); closeModal(); }}>
                     <span>{topic.topicTitle}</span>
                     <div className="topic-meta-info-container">
                         <span className="topic-meta-info-item">({topic.numVotes} votes)</span>

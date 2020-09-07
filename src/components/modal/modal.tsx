@@ -91,7 +91,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
                 { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> }
                 { modalType === ModalType.ADD_ITEM && <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> }
                 { modalType === ModalType.DESCRIPTION && topicTitle != null && <TopicImageComponent topicTitle={topicTitle} /> }
-                { modalType === ModalType.ACCOUNT && <AccountComponent username={accountUsername!} /> }
+                { modalType === ModalType.ACCOUNT && <AccountComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} /> }
             </div>
         </div>
     );

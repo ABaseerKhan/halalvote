@@ -22,10 +22,11 @@ interface CommentsComponentProps {
     topicTitle: string,
     numHalalComments: number,
     numHaramComments: number,
+    singleCommentId?: number,
     refreshTopic: (topicTofetch: string) => any,
 };
 export const CommentsComponent = (props: CommentsComponentProps) => {
-    const { id, topicTitle, numHalalComments, numHaramComments, refreshTopic } = props;
+    const { id, topicTitle, numHalalComments, numHaramComments, singleCommentId, refreshTopic } = props;
 
     const [cardToShow, setCardToShow] = useState<{ judgment: Judgment }>({ judgment: getRandomJudment() });
 
@@ -223,16 +224,16 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     const MobileView = (
       <div id={id} className="comments-body">
           <ReactCardFlip isFlipped={cardToShow.judgment === Judgment.HALAL} flipDirection="horizontal" infinite={true} >
-            {<CommentsCardComponent judgment={Judgment.HARAM} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshTopic={refreshTopic} switchCards={switchCards}/>}
-            {<CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshTopic={refreshTopic} switchCards={switchCards}/>}
+            {<CommentsCardComponent judgment={Judgment.HARAM} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} singleCommentId={singleCommentId} refreshTopic={refreshTopic} switchCards={switchCards}/>}
+            {<CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} singleCommentId={singleCommentId} refreshTopic={refreshTopic} switchCards={switchCards}/>}
           </ReactCardFlip>
         </div>
     )
 
     return isMobile ? MobileView : (
         <div id={id} className="comments-body">
-            <CommentsCardComponent judgment={Judgment.HARAM} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshTopic={refreshTopic} switchCards={switchCards}/>
-            <CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshTopic={refreshTopic} switchCards={switchCards}/>
+            <CommentsCardComponent judgment={Judgment.HARAM} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} singleCommentId={singleCommentId} refreshTopic={refreshTopic} switchCards={switchCards}/>
+            <CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} singleCommentId={singleCommentId} refreshTopic={refreshTopic} switchCards={switchCards}/>
         </div>
     );
 }
