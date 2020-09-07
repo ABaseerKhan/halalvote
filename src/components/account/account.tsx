@@ -6,7 +6,7 @@ import './account.css';
 import { getData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
 import { Topic, Comment } from '../../types';
-import { timeSince } from '../../utils';
+import { timeSince, vhToPixels } from '../../utils';
 
 enum Tab {
     CREATEDTOPICS,
@@ -94,7 +94,7 @@ export const AccountComponent = (props: AccountComponentProps) => {
     }
 
     return (
-        <div className="account-container">
+        <div className="account-container" style={{ height: `${vhToPixels(70)}px`}}>
             <div className="account-header-section">
                 <div className="account-title">{`${props.username}`}</div>
                 <div className="account-tabs">
