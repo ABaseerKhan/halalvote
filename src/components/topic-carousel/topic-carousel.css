@@ -31,6 +31,10 @@
     scroll-behavior: smooth;
 }
 
+.topic-title:hover {
+    color: white;
+}
+
 .carousel-button {
     padding: 0;
     cursor: pointer;
