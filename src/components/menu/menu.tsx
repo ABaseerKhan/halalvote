@@ -173,6 +173,19 @@ export const MenuComponent = (props: MenuComponentProps) => {
         }
     }
 
+    document.onclick = (event: MouseEvent) => {
+        if (state.menuLocation !== MenuLocation.NONE) {
+            const path = event.composedPath();
+            let menuFound = false;
+            for (let i in path) {
+                if ((path[i] as HTMLElement).id === menuId) {
+                    menuFound = true;
+                }
+            }
+            if (!menuFound) setMenuLocation(MenuLocation.NONE);
+        }
+    }
+
     if (menu && menuButton) {
         if (isMobile) {
             menuButton.ontouchmove = (event: TouchEvent) => {
