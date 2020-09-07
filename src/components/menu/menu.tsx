@@ -182,88 +182,94 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
                 switch(state.menuLocation) {
                     case MenuLocation.UPPER_LEFT:
-                        menu.style.top = "";
+                        menu.style.top = "unset";
                         menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - xOffset) + "px";
                         menu.style.bottom = Math.round(window.innerHeight - touchLocation.pageY - yOffset) + "px";
-                        menu.style.left = "";
+                        menu.style.left = "unset";
                         break;
                     case MenuLocation.UPPER_RIGHT:
-                        menu.style.top = "";
-                        menu.style.right = "";
+                        menu.style.top = "unset";
+                        menu.style.right = "unset";
                         menu.style.bottom = Math.round(window.innerHeight - touchLocation.pageY - yOffset) + "px";
                         menu.style.left = touchLocation.pageX - xOffset + "px";
                         break;
                     case MenuLocation.BOTTOM_LEFT:
                         menu.style.top = touchLocation.pageY - yOffset + "px";
                         menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - xOffset) + "px";
-                        menu.style.bottom = "";
-                        menu.style.left = "";
+                        menu.style.bottom = "unset";
+                        menu.style.left = "unset";
                         break;
                     case MenuLocation.BOTTOM_RIGHT:
                         menu.style.top = touchLocation.pageY - yOffset + "px";
-                        menu.style.right = "";
-                        menu.style.bottom = "";
+                        menu.style.right = "unset";
+                        menu.style.bottom = "unset";
                         menu.style.left = touchLocation.pageX - xOffset + "px";
                         break;
                     case MenuLocation.NONE:
-                        menu.style.top = "";
+                        menu.style.top = "unset";
                         menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - (menuWidth / 2)) + "px";
                         menu.style.bottom = Math.round(window.innerHeight - touchLocation.pageY - yOffset) + "px";
-                        menu.style.left = "";
+                        menu.style.left = "unset";
                         break;
                 }
             }
-        } else {
-            menuButton.classList.add("menu-button-computer");
         }
 
         const rect = menuButton.getBoundingClientRect();
         switch(state.menuLocation) {
             case MenuLocation.UPPER_LEFT:
-                menu.style.top = "";
+                menu.style.top = "unset";
                 menu.style.right = Math.round(window.innerWidth - rect.x - menuWidth) + "px";
                 menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
-                menu.style.left = "";
+                menu.style.left = "unset";
                 menu.style.animation = "unset";
+                menuButton.style.top = "unset";
+                menuButton.style.left = "unset";
                 menuButton.style.bottom = "0";
                 menuButton.style.right = "0";
                 break;
             case MenuLocation.UPPER_RIGHT:
-                menu.style.top = "";
-                menu.style.right = "";
+                menu.style.top = "unset";
+                menu.style.right = "unset";
                 menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
                 menu.style.left = rect.x + "px";
                 menu.style.animation = "unset";
+                menuButton.style.top = "unset";
+                menuButton.style.right = "unset";
                 menuButton.style.bottom = "0";
                 menuButton.style.left = "0";
                 break;
             case MenuLocation.BOTTOM_LEFT:
                 menu.style.top = rect.y + "px";
                 menu.style.right = Math.round(window.innerWidth - rect.x - menuWidth) + "px";
-                menu.style.bottom = "";
-                menu.style.left = "";
+                menu.style.bottom = "unset";
+                menu.style.left = "unset";
                 menu.style.animation = "unset";
+                menuButton.style.bottom = "unset";
+                menuButton.style.left = "unset";
                 menuButton.style.top = "0";
                 menuButton.style.right = "0";
                 break;
             case MenuLocation.BOTTOM_RIGHT:
                 menu.style.top = rect.y + "px";
-                menu.style.right = "";
-                menu.style.bottom = "";
+                menu.style.right = "unset";
+                menu.style.bottom = "unset";
                 menu.style.left = rect.x + "px";
                 menu.style.animation = "unset";
+                menuButton.style.bottom = "unset";
+                menuButton.style.right = "unset";
                 menuButton.style.top = "0";
                 menuButton.style.left = "0";
                 break;
             case MenuLocation.NONE:
-                menu.style.top = "";
+                menu.style.top = "unset";
                 menu.style.right = Math.round(window.innerWidth - rect.x - menuWidth) + "px";
                 menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
-                menu.style.left = "";
-                menuButton.style.top = "";
-                menuButton.style.right = "";
-                menuButton.style.bottom = "";
-                menuButton.style.left = "";
+                menu.style.left = "unset";
+                menuButton.style.top = "unset";
+                menuButton.style.right = "unset";
+                menuButton.style.bottom = "unset";
+                menuButton.style.left = "unset";
                 break;
         }
     }
@@ -281,8 +287,8 @@ export const MenuComponent = (props: MenuComponentProps) => {
             }
             {
                 state.menuLocation !== MenuLocation.NONE && 
-                    <ul className="menu-items-list">
-                        <li className="menu-item" style={{marginTop: state.menuLocation === MenuLocation.BOTTOM_LEFT || state.menuLocation === MenuLocation.BOTTOM_RIGHT ? "75px" : "30px"}} onClick={() => {setAddTopicDisplayed(true)}}>Add Topic</li>
+                    <ul className="menu-items-list" style={{padding: state.menuLocation === MenuLocation.UPPER_LEFT || state.menuLocation === MenuLocation.UPPER_RIGHT ? "24px 0 72px 0" : "72px 0 24px 0"}}>
+                        <li className="menu-item" onClick={() => {setAddTopicDisplayed(true)}}>Add Topic</li>
                         {usernameExists() && <li className="menu-item" onClick={() => {setAccountDisplayed(true)}}>Account</li>}
                         <li className="menu-item" onClick={login}>
                             { usernameExists() ? "Logout" : "Login" }

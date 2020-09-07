@@ -12,9 +12,6 @@
     animation: pulse 3s infinite cubic-bezier(.16,-0.02,0,1.31);
 }
 
-.menu-button-computer:hover {
-}
-
 @keyframes pulse {to {box-shadow: 0 0 0 20px rgba(106, 124, 138, 0.0);}}
 
 .menu-button {
@@ -54,7 +51,7 @@
     width: 100%;
     list-style-type: none;
     margin: 0;
-    padding: 0 0 72px 0;
+    padding: 0 0 60px 0;
 }
 
 li.menu-item {
