@@ -6,30 +6,31 @@ import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
 import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as LeftArrowSVG } from '../../icons/left-arrow.svg';
+import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { postData } from '../../https-client/client';
 import ImageUploader from 'react-images-upload';
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 
 // type imports
-import { TopicImage } from '../../types';
+import { TopicImages } from '../../types';
 
 // styles
-import './topic-image.css';
+import './topic-images.css';
 
-interface TopicImageComponentProps {
+interface TopicImagesComponentProps {
     topicTitle: string
 };
-interface TopicImageComponentState {
+interface TopicImagesComponentState {
     addTopicDisplayed: boolean,
-    topicImages: TopicImage[],
+    topicImages: TopicImages[],
     currentIndex: number,
     picture: string | null,
     loading: boolean
 };
-export const TopicImageComponent = (props: TopicImageComponentProps) => {
+export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const { topicTitle } = props;
-    const [state, setState] = useState<TopicImageComponentState>({
+    const [state, setState] = useState<TopicImagesComponentState>({
         addTopicDisplayed: false,
         topicImages: [],
         currentIndex: 0,
@@ -51,7 +52,7 @@ export const TopicImageComponent = (props: TopicImageComponentProps) => {
         };
         let additionalHeaders = {};
 
-        const { data }: { data: TopicImage[] } = await getData({ 
+        const { data }: { data: TopicImages[] } = await getData({ 
             baseUrl: topicsConfig.url, 
             path: 'get-topic-images', 
             queryParams: queryParams, 
@@ -78,6 +79,27 @@ export const TopicImageComponent = (props: TopicImageComponentProps) => {
             });
 
             if (status === 200 && props.topicTitle === data) {
+                fetchImages();
+            }
+        }
+    }
+
+    const deleteImage = async () => {
+        if (state.topicImages && state.topicImages.length > 0 && state.topicImages[state.currentIndex].username === username) {
+            const { status } = await postData({
+                baseUrl: topicsConfig.url,
+                path: 'delete-topic-image',
+                data: {
+                    "username": username,
+                    "topicTitle": props.topicTitle
+                },
+                additionalHeaders: {
+                    "sessiontoken": sessiontoken
+                },
+                setCookie: setCookie,
+            });
+
+            if (status === 200) {
                 fetchImages();
             }
         }
@@ -112,6 +134,7 @@ export const TopicImageComponent = (props: TopicImageComponentProps) => {
                     </div>
                     <img className='image' alt={props.topicTitle} src={state.topicImages[state.currentIndex].image}/>
                     <div className="image-username">{state.topicImages[state.currentIndex].username}</div>
+                    <TrashButtonSVG className="image-delete-button" onClick={deleteImage}/>
                 </div> :
 
                 state.loading ?
