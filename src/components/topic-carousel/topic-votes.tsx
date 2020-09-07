@@ -1,4 +1,4 @@
-import React, {memo, useState} from 'react';
+import React, {memo, useState, useEffect} from 'react';
 import { postData } from '../../https-client/client';
 import { topicsConfig } from '../../https-client/config';
 
@@ -23,6 +23,10 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
+    useEffect(() => {
+        setState(prevState => ({ ...prevState, numVotes: numVotes, halalPoints: halalPoints, haramPoints: haramPoints }));
+    }, [halalPoints, haramPoints, numVotes]);
+    
     const submitVote = async (value: number) => {
         if (topicTitle) {
             if (value > 0) {
