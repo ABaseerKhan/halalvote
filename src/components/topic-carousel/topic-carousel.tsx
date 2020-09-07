@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Linkify from 'react-linkify';
 import { TopicVotesComponent } from './topic-votes';
 import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
 import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
@@ -66,8 +65,8 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     <ChevronLeftSVG className={"arrow-icon-left"}/>
                 </button>
                 <div id="topic-title" className='topic-title' onClick={() => {setImageDisplayed(true)}} >
-                    <div>
-                        <Linkify>{topicTitle}</Linkify>
+                    <div style={{ width: 'max-content' }}>
+                        {topicTitle}
                         <div className="under-bar"></div>
                     </div>
                 </div>

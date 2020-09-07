@@ -24,33 +24,32 @@
     line-height: 2.5;
     text-align: center;
     font-size: 1.5em;
-    color: white;
+    color: var(--site-background-color);
     overflow-x: auto;
     cursor: pointer;
     white-space: nowrap;
     scroll-behavior: smooth;
-    text-shadow: 1px 1px 1px var(--gray);
+    overflow-y: hidden;
 }
 
 .under-bar {
     position: sticky;
     background-color: var(--site-background-color);
-    box-shadow: 0.5px 0.5px 1px 0 black;
     border-radius: 5em;
-    height: 3px;
-    width: 90%;
+    height: 5px;
+    width: 100%;
     margin: auto;
-    bottom: 0.6em;
-    animation: jump 2s infinite cubic-bezier(.16,-0.02,0,1.31) alternate;
+    bottom: 0.55em;
+    animation: jump 2s infinite cubic-bezier(0,.47,.26,1.01) alternate;
 }
 @keyframes jump {
     to {
-        transform: translate(0, 0.2em);
+        transform: translate(0, 0.3em);
     }
 }
 
 .topic-title:hover {
-    color: var(--site-background-color);
+    color: white;
 }
 
 .carousel-button {

@@ -1,5 +1,5 @@
 .account-container {
-    color: white;
+    color: var(--site-background-color);
     overflow: auto;
 }
 
@@ -41,7 +41,7 @@
 
 .account-tab:hover, .account-tab-selected:hover {
     cursor: pointer;
-    color: var(--site-background-color);
+    color: white;
 }
 
 .account-tab {
@@ -49,7 +49,7 @@
 }
 
 .account-tab-selected {
-    color: var(--site-background-color);
+    color: white;
     box-shadow: inset 0 0 10px var(--gray);
 }
 
@@ -64,7 +64,7 @@
 }
 
 .user-topic-container:hover {
-    color: var(--site-background-color);
+    color: white;
     cursor: pointer;
 }
 
@@ -83,7 +83,7 @@
 }
 
 .user-comment-container:hover {
-    color: var(--site-background-color);
+    color: white;
     cursor: pointer;
 }
 
