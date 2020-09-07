@@ -87,7 +87,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     }
 
     const deleteImage = async () => {
-        if (state.topicImages && state.topicImages.length > 0 && state.topicImages[state.currentIndex].username === username) {
+        if (isUserImage()) {
             const { status } = await postData({
                 baseUrl: topicsConfig.url,
                 path: 'delete-topic-image',
@@ -119,6 +119,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         setState({...state, picture: picture[0]});
     }
 
+    const isUserImage = () => {
+        return state.topicImages.length > state.currentIndex && state.topicImages[state.currentIndex].username === username;
+    }
+
     const loaderCssOverride = css`
         margin: auto;
     `;
@@ -135,8 +139,15 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <ChevronRightSVG className="image-navigator-button-icon"/>
                     </div>
                     <img className='image' style={{maxHeight:maxHeight + "px", maxWidth: maxWidth + "px"}} alt={props.topicTitle} src={state.topicImages[state.currentIndex].image}/>
-                    <div className="image-username">{state.topicImages[state.currentIndex].username}</div>
-                    <TrashButtonSVG className="image-delete-button" onClick={deleteImage}/>
+                    
+                    {
+                        isUserImage() ?
+                            <div>
+                                <div className="image-username" style={{right: "60px"}}>{state.topicImages[state.currentIndex].username}</div>
+                                <TrashButtonSVG className="image-delete-button" style={{right: "20px"}} onClick={deleteImage}/>
+                            </div> :
+                            <div className="image-username" style={{right: "20px"}}>{state.topicImages[state.currentIndex].username}</div>
+                    }
                 </div> :
 
                 state.loading ?

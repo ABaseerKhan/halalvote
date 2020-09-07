@@ -44,7 +44,6 @@
 .image-username {
   position: absolute;
   bottom: 20px;
-  right: 60px;
   padding: 10px 15px 10px 15px;
   background: var(--neutral-color);
   color: var(--site-background-color);
@@ -61,7 +60,6 @@
   position: absolute;
   height: 40px;
   bottom: 20px;
-  right: 20px;
   color: var(--neutral-color);
   cursor: pointer;
   text-align: center;
