@@ -168,9 +168,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <div>
                             <img className="adding-image" alt="Topic" src={state.picture}/>
                             <ImageUploader 
-                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
+                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 
                                 buttonClassName="add-image-choose-button"
-                                buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0"}}
+                                buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0", margin: "20px 0 0 0"}}
                                 withIcon={false} 
                                 buttonText="Choose New Image"
                                 onChange={onDrop} 
@@ -183,9 +183,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <div>
                             <div className="add-image-section-text">Add Image</div>
                             <ImageUploader 
-                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
+                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 
                                 buttonClassName="button"
-                                buttonStyles={{width: "auto", transition: "none"}}
+                                buttonStyles={{width: "auto", transition: "none", margin: "20px 0 0 0"}}
                                 withIcon={false}
                                 buttonText="Choose Image"
                                 onChange={onDrop} 

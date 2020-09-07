@@ -173,6 +173,16 @@ export const MenuComponent = (props: MenuComponentProps) => {
         }
     }
 
+    const boundVertical = (position: number, element: HTMLElement) => {
+        const rect = element.getBoundingClientRect();
+        return Math.min(window.innerHeight - rect.height, Math.max(position, 0));
+    }
+
+    const boundHorizontal = (position: number, element: HTMLElement) => {
+        const rect = element.getBoundingClientRect();
+        return Math.min(window.innerWidth - rect.width, Math.max(position, 0));
+    }
+
     document.onclick = (event: MouseEvent) => {
         if (state.menuLocation !== MenuLocation.NONE) {
             const path = event.composedPath();
@@ -197,32 +207,32 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 switch(state.menuLocation) {
                     case MenuLocation.UPPER_LEFT:
                         menu.style.top = "unset";
-                        menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - xOffset) + "px";
-                        menu.style.bottom = Math.round(window.innerHeight - touchLocation.pageY - yOffset) + "px";
+                        menu.style.right = boundHorizontal(Math.round(window.innerWidth - touchLocation.pageX - xOffset), menu) + "px";
+                        menu.style.bottom = boundVertical(Math.round(window.innerHeight - touchLocation.pageY - yOffset), menu) + "px";
                         menu.style.left = "unset";
                         break;
                     case MenuLocation.UPPER_RIGHT:
                         menu.style.top = "unset";
                         menu.style.right = "unset";
-                        menu.style.bottom = Math.round(window.innerHeight - touchLocation.pageY - yOffset) + "px";
-                        menu.style.left = touchLocation.pageX - xOffset + "px";
+                        menu.style.bottom = boundVertical(Math.round(window.innerHeight - touchLocation.pageY - yOffset), menu) + "px";
+                        menu.style.left = boundHorizontal(touchLocation.pageX - xOffset, menu) + "px";
                         break;
                     case MenuLocation.BOTTOM_LEFT:
-                        menu.style.top = touchLocation.pageY - yOffset + "px";
-                        menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - xOffset) + "px";
+                        menu.style.top = boundVertical(touchLocation.pageY - yOffset, menu) + "px";
+                        menu.style.right = boundHorizontal(Math.round(window.innerWidth - touchLocation.pageX - xOffset), menu) + "px";
                         menu.style.bottom = "unset";
                         menu.style.left = "unset";
                         break;
                     case MenuLocation.BOTTOM_RIGHT:
-                        menu.style.top = touchLocation.pageY - yOffset + "px";
+                        menu.style.top = boundVertical(touchLocation.pageY - yOffset, menu) + "px";
                         menu.style.right = "unset";
                         menu.style.bottom = "unset";
-                        menu.style.left = touchLocation.pageX - xOffset + "px";
+                        menu.style.left = boundHorizontal(touchLocation.pageX - xOffset, menu) + "px";
                         break;
                     case MenuLocation.NONE:
                         menu.style.top = "unset";
-                        menu.style.right = Math.round(window.innerWidth - touchLocation.pageX - (menuWidth / 2)) + "px";
-                        menu.style.bottom = Math.round(window.innerHeight - touchLocation.pageY - yOffset) + "px";
+                        menu.style.right = boundHorizontal(Math.round(window.innerWidth - touchLocation.pageX - (menuWidth / 2)), menu) + "px";
+                        menu.style.bottom = boundVertical(Math.round(window.innerHeight - touchLocation.pageY - yOffset), menu) + "px";
                         menu.style.left = "unset";
                         break;
                 }

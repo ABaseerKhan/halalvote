@@ -29,15 +29,16 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
     const addTopic = async () => {
         const titleInput = getTitleInput();
         
-        if (titleInput && titleInput.value && titleInput.value !== "" && state.picture) {
+        if (titleInput && titleInput.value && titleInput.value !== "") {
+            const body: any = {
+                "username": username,
+                "topicTitle": titleInput.value
+            };
+            if (state.picture) body["image"] = state.picture;
             const { status, data } = await postData({
                 baseUrl: topicsConfig.url,
                 path: 'add-topic',
-                data: {
-                    "username": username,
-                    "topicTitle": titleInput.value,
-                    "image": state.picture
-                },
+                data: body,
                 additionalHeaders: {
                     "sessiontoken": sessiontoken
                 },
@@ -71,34 +72,21 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
             <input id={addTopicTitleInputId} className="add-topic-input" type="text" placeholder="Title" onKeyPress={(event: any) => handleKeyPress(event)}/>
             
             {
-                state.picture ?
-                    <div>
-                        <img className="add-topic-image" alt="Topic" src={state.picture}/>
-                        <ImageUploader 
-                            fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
-                            buttonClassName="add-topic-image-choose-button"
-                            buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0"}}
-                            withIcon={false} 
-                            buttonText="Choose New Image"
-                            onChange={onDrop} 
-                            imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
-                            maxFileSize={5242880} 
-                            singleImage={true}
-                        />
-                        <button id={addTopicSubmitButtonId} className={`button ${addTopicSubmitButtonId}`} onClick={addTopic}>Add Topic</button>
-                    </div> :
-                    <ImageUploader 
-                        fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
-                        buttonClassName="button"
-                        buttonStyles={{width: "auto", transition: "none"}}
-                        withIcon={false} 
-                        buttonText="Choose Image"
-                        onChange={onDrop} 
-                        imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
-                        maxFileSize={5242880} 
-                        singleImage={true}
-                    />
+                state.picture && <img className="add-topic-image" alt="Topic" src={state.picture}/>
             }
+
+            <ImageUploader 
+                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 
+                buttonClassName="add-topic-image-choose-button"
+                buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0", margin: "20px 0 0 0"}}
+                withIcon={false} 
+                buttonText={state.picture ? "Choose New Image" : "Choose Image"}
+                onChange={onDrop} 
+                imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
+                maxFileSize={5242880} 
+                singleImage={true}
+            />
+            <button id={addTopicSubmitButtonId} className={`button ${addTopicSubmitButtonId}`} onClick={addTopic}>Add Topic</button>
         </div>
     );
 }
