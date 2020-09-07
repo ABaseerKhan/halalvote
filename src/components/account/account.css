@@ -49,7 +49,9 @@
 }
 
 .user-topic-container {
-    padding: 0.5em 0 0.5em 0;
+    padding: 1em 0 1em 0;
+    margin-right: 2em;
+    border-bottom: 1px dashed var(--site-background-color);
 }
 
 .user-topic-container:hover {
