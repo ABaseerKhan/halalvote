@@ -61,7 +61,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 <Portal><ModalComponent removeModal={() => {setImageDisplayed(false)}} modalType={ModalType.TOPIC_IMAGE} fetchTopics={null} topicTitle={props.topicTitle}/></Portal>
             }
             <div className="topic-navigator">
-                <button id={leftCarouselButtonId} onClick={iterateTopic(-1)} className='carousel-button'>
+                <button id={leftCarouselButtonId} onClick={iterateTopic(-1)} className='carousel-button-left'>
                     <ChevronLeftSVG className={"arrow-icon-left"}/>
                 </button>
                 <div id="topic-title" className='topic-title' onClick={() => {setImageDisplayed(true)}} >
@@ -70,7 +70,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                         <div className="under-bar"></div>
                     </div>
                 </div>
-                <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button'>
+                <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button-right'>
                     <ChevronRightSVG className={"arrow-icon-right"}/>
                 </button>
             </div>

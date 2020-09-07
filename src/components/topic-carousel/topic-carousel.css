@@ -52,7 +52,7 @@
     color: white;
 }
 
-.carousel-button {
+.carousel-button-left, .carousel-button-right {
     padding: 0;
     cursor: pointer;
     width: 100px;
@@ -63,6 +63,14 @@
     border-radius: 0;
     color: var(--site-background-color);
     outline: none;
+}
+
+.carousel-button-left {
+    box-shadow: 1px -4px 5px -4px black;
+}
+
+.carousel-button-right {
+    box-shadow: -1px -4px 5px -4px black;
 }
 
 .carousel-button:hover {
