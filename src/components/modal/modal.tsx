@@ -35,10 +35,10 @@ export const ModalComponent = (props: ModalComponentProps) => {
     const modalId = "modal";
     const modalCoverId = "modal-cover";
 
-    const heightVh = 60;
+    const heightVh = 70;
     const widthVh = isMobile ? 90 : 50;
-    const maxHeight = 900;
-    const maxWidth = 700;
+    const maxHeight = 1000;
+    const maxWidth = 800;
 
     const getModalHeight = () => {
         return vhToPixelsWithMax(heightVh, maxHeight);
