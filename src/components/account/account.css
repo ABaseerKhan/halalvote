@@ -17,22 +17,32 @@
 }
 
 .account-title {
+    font-weight: 600;
+    font-size: 18px;
     text-align: center;
     padding-top: 1em;
 }
 
 .account-tabs {
+    padding-top: 1em;
     display: flex;
-    margin: 0 auto 0 auto;
-    padding: 1em 1em 1em 1em;
+    height: 3.5em;
 }
 
 .account-tab, .account-tab-selected {
-    margin: 0 auto 0 auto;
+    font-size: 14px;
+    line-height: 4em;
+    margin: auto;
+    height: 100%;
+    width: 33%;
+    text-align: center;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
 .account-tab:hover, .account-tab-selected:hover {
     cursor: pointer;
+    color: white;
 }
 
 .account-tab {
@@ -40,8 +50,8 @@
 }
 
 .account-tab-selected {
-    font-weight: 600;
     color: white;
+    background-color: var(--gray);
 }
 
 .account-body {
