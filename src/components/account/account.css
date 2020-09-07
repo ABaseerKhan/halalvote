@@ -60,7 +60,6 @@
 .user-topic-container {
     padding: 1em 0 1em 0;
     margin-right: 2em;
-    border-bottom: 1px dotted var(--site-background-color);
 }
 
 .user-topic-container:hover {
@@ -79,7 +78,6 @@
 .user-comment-container {
     padding: 1em 0 1em 0;
     margin-right: 2em;
-    border-bottom: 1px dotted var(--site-background-color);
 }
 
 .user-comment-container:hover {
