@@ -36,7 +36,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
     const modalCoverId = "modal-cover";
 
     const heightVh = 60;
-    const widthVh = isMobile ? 90 : 50;
+    const widthVw = isMobile ? 90 : 50;
     const maxHeight = 750;
     const maxWidth = 500;
 
@@ -45,7 +45,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
     }
 
     const getModalWidth = () => {
-        return vwToPixelsWithMax(widthVh, maxWidth);
+        return vwToPixelsWithMax(widthVw, maxWidth);
     }
 
     useEffect(() => {
@@ -61,7 +61,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
             const height = getModalHeight() + "px";
             const marginTop = `max(-${heightVh/2}vh, -${maxHeight/2}px)`;
             const width = getModalWidth() + "px";
-            const marginLeft = `max(-${widthVh/2}vw, -${maxWidth/2}px)`;
+            const marginLeft = `max(-${widthVw/2}vw, -${maxWidth/2}px)`;
 
             modal.animate([
                 {height: height, marginTop: marginTop, width: width, marginLeft: marginLeft}

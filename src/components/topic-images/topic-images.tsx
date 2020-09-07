@@ -174,7 +174,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                                 withIcon={false} 
                                 buttonText="Choose New Image"
                                 onChange={onDrop} 
-                                imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
                                 maxFileSize={5242880} 
                                 singleImage={true}
                             />
@@ -189,7 +189,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                                 withIcon={false}
                                 buttonText="Choose Image"
                                 onChange={onDrop} 
-                                imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
                                 maxFileSize={5242880} 
                                 singleImage={true}
                             />
