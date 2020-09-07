@@ -1,6 +1,5 @@
 .account-container {
     color: var(--site-background-color);
-    height: 70vh;
     overflow: auto;
 }
 
