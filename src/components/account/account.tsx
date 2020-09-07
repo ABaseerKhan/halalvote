@@ -98,9 +98,9 @@ export const AccountComponent = (props: AccountComponentProps) => {
             <div className="account-header-section">
                 <div className="account-title">{`${props.username}`}</div>
                 <div className="account-tabs">
-                    <span className={state.selectedTab===Tab.CREATEDTOPICS ? "account-tab-selected" : "account-tab"} onClick={onCreatedTopicsTab} >Created Topics</span>
-                    <span className={state.selectedTab===Tab.VOTEDTOPICS ? "account-tab-selected" : "account-tab"} onClick={onVotedTopicsTab} >Voted Topics</span>
-                    <span className={state.selectedTab===Tab.COMMENTS ? "account-tab-selected" : "account-tab"} onClick={onCommentsTab} >Comments</span>
+                    <div className={state.selectedTab===Tab.CREATEDTOPICS ? "account-tab-selected" : "account-tab"} onClick={onCreatedTopicsTab} >Created Topics</div>
+                    <div className={state.selectedTab===Tab.VOTEDTOPICS ? "account-tab-selected" : "account-tab"} onClick={onVotedTopicsTab} >Voted Topics</div>
+                    <div className={state.selectedTab===Tab.COMMENTS ? "account-tab-selected" : "account-tab"} onClick={onCommentsTab} >Comments</div>
                 </div>
             </div>
             <div className="account-body">
