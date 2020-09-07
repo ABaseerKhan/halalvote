@@ -8,7 +8,7 @@ import { useMedia } from '../../hooks/useMedia';
 
 // styles
 import './modal.css';
-import { TopicImageComponent } from '../topic-image/topic-image';
+import { TopicImagesComponent } from '../topic-images/topic-images';
 import { AccountComponent } from '../account/account';
 
 interface ModalComponentProps {
@@ -91,7 +91,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
             <div id={modalId} className={modalId}>
                 { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> }
                 { modalType === ModalType.ADD_ITEM && <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> }
-                { modalType === ModalType.DESCRIPTION && topicTitle != null && <TopicImageComponent topicTitle={topicTitle} /> }
+                { modalType === ModalType.DESCRIPTION && topicTitle != null && <TopicImagesComponent topicTitle={topicTitle} /> }
                 { modalType === ModalType.ACCOUNT && <AccountComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> }
             </div>
         </div>

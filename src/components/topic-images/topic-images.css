@@ -44,16 +44,31 @@
 .image-username {
   position: absolute;
   bottom: 20px;
-  right: 20px;
+  right: 60px;
+  padding: 10px 15px 10px 15px;
   background: var(--neutral-color);
   color: var(--site-background-color);
-  padding: 10px;
   border-radius: 20px 20px 20px 20px;
   cursor: pointer;
+  text-align: center;
 }
 
 .image-username:hover {
   background-color: var(--light-neutral-color);
+}
+
+.image-delete-button {
+  position: absolute;
+  height: 40px;
+  bottom: 20px;
+  right: 20px;
+  color: var(--neutral-color);
+  cursor: pointer;
+  text-align: center;
+}
+
+.image-delete-button:hover {
+  color: var(--light-neutral-color);
 }
 
 .no-image-text {
