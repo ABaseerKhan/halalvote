@@ -15,12 +15,13 @@ interface ModalComponentProps {
     removeModal: any,
     modalType: ModalType;
     accountUsername?: string;
+    showSpecificComment?: any;
     fetchTopics?: any;
     topicTitle?: string | null;
     onLogin?: any;
 };
 export const ModalComponent = (props: ModalComponentProps) => {
-    const { removeModal, modalType, accountUsername, fetchTopics, topicTitle } = props;
+    const { removeModal, modalType, accountUsername, fetchTopics, topicTitle, showSpecificComment } = props;
 
     const isMobile = useMedia(
         // Media queries
@@ -91,7 +92,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
                 { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> }
                 { modalType === ModalType.ADD_ITEM && <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> }
                 { modalType === ModalType.DESCRIPTION && topicTitle != null && <TopicImageComponent topicTitle={topicTitle} /> }
-                { modalType === ModalType.ACCOUNT && <AccountComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} /> }
+                { modalType === ModalType.ACCOUNT && <AccountComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> }
             </div>
         </div>
     );

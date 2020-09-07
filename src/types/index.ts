@@ -27,6 +27,7 @@ export interface TopicImage {
 
 export interface Comment {
     id: number,
+    topicTitle?: string,
     commentType: string,
     username: string,
     comment: string,

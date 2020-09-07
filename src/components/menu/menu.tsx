@@ -11,7 +11,8 @@ import { ModalType, MenuLocation } from '../../types';
 import './menu.css';
 
 interface MenuComponentProps {
-    fetchTopics: any
+    fetchTopics: any,
+    showSpecificComment?: any,
 };
 interface MenuComponentState {
     menuLocation: MenuLocation, 
@@ -283,7 +284,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_ITEM} fetchTopics={fetchTopics} topicTitle={null}/></Portal>
             }
             { state.accountDisplayed &&
-                <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT} fetchTopics={fetchTopics} topicTitle={null} accountUsername={username}/></Portal>
+                <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT} fetchTopics={fetchTopics} topicTitle={null} showSpecificComment={props.showSpecificComment} accountUsername={username}/></Portal>
             }
             {
                 state.menuLocation !== MenuLocation.NONE && 

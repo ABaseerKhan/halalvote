@@ -16,7 +16,8 @@ enum Tab {
 
 interface AccountComponentProps {
     username: string,
-    fetchTopics: (topicTofetch?: string) => void;
+    fetchTopics: (topicTofetch?: string) => Promise<void>;
+    showSpecificComment: any;
     closeModal: any;
 };
 
@@ -111,7 +112,7 @@ export const AccountComponent = (props: AccountComponentProps) => {
                         <UserTopic topic={topic} fetchTopics={props.fetchTopics} closeModal={props.closeModal}/>
                     ))}
                     {state.selectedTab===Tab.COMMENTS && state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
-                        <UserComment comment={comment} />
+                        <UserComment comment={comment} fetchTopics={props.fetchTopics} showSpecificComment={props.showSpecificComment} closeModal={props.closeModal} />
                     ))}
                 </ul>
             </div>
@@ -119,7 +120,13 @@ export const AccountComponent = (props: AccountComponentProps) => {
     );
 }
 
-const UserTopic = ({ topic, fetchTopics, closeModal }: { topic: Topic, fetchTopics: (topicTofetch?: string) => void, closeModal: any }) => {
+interface UserTopicProps {
+    topic: Topic,
+    fetchTopics: (topicTofetch?: string) => Promise<void>,
+    closeModal: any,
+};
+const UserTopic = (props: UserTopicProps) => {
+    const { topic, fetchTopics, closeModal } = props;
     return (
             <li>
                 <div className="user-topic-container" onClick={() => { fetchTopics(topic.topicTitle); closeModal(); }}>
@@ -135,9 +142,12 @@ const UserTopic = ({ topic, fetchTopics, closeModal }: { topic: Topic, fetchTopi
 
 interface UserCommentProps {
     comment: Comment,
+    showSpecificComment: any,
+    fetchTopics: (topicTofetch?: string) => Promise<void>,
+    closeModal: any,
 }
 const UserComment = (props: UserCommentProps) => {
-    const { comment } = props;
+    const { comment, showSpecificComment, fetchTopics, closeModal } = props;
 
     const CommentHeader = (
         <div className={"comment-header"}>
@@ -156,7 +166,7 @@ const UserComment = (props: UserCommentProps) => {
         </div>
     );
     return (
-        <div id={`comment-${comment.id}`} onClick={(e) => { e.stopPropagation(); }} className={"user-comment-container"}>
+        <div id={`comment-${comment.id}`} onClick={async (e) => { await fetchTopics(comment.topicTitle); showSpecificComment(comment.id); closeModal(); }} className={"user-comment-container"}>
             {CommentHeader}
             <div className="user-comment">
                 <div dangerouslySetInnerHTML={{__html: comment.comment}}/>

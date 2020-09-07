@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CommentsCardComponent } from './comments-card';
-import { Judgment } from '../../types';
+import { Judgment, Comment } from '../../types';
 import { getRandomJudment } from '../../utils';
 import { useMedia } from '../../hooks/useMedia';
 import ReactCardFlip from '../../card-flip/card-flip';
@@ -22,13 +22,13 @@ interface CommentsComponentProps {
     topicTitle: string,
     numHalalComments: number,
     numHaramComments: number,
-    singleCommentId?: number,
+    specificComment?: Comment,
     refreshTopic: (topicTofetch: string) => any,
 };
 export const CommentsComponent = (props: CommentsComponentProps) => {
-    const { id, topicTitle, numHalalComments, numHaramComments, singleCommentId, refreshTopic } = props;
+    const { id, topicTitle, numHalalComments, numHaramComments, specificComment, refreshTopic } = props;
 
-    const [cardToShow, setCardToShow] = useState<{ judgment: Judgment }>({ judgment: getRandomJudment() });
+    const [cardToShow, setCardToShow] = useState<{ judgment: Judgment; specificCommentId?: number }>({ judgment: getRandomJudment(), specificCommentId: undefined });
 
     const isMobile = useMedia(
       // Media queries
@@ -37,6 +37,12 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
       // default value
       false
     );
+
+    useEffect(() => {
+      if (specificComment) {
+        setCardToShow({ judgment: specificComment.commentType === "HALAL" ? Judgment.HALAL : Judgment.HARAM, specificCommentId: specificComment.id });
+      }
+    }, [specificComment])
     
     const halalCard = document.getElementById("comments-card-0");
     const haramCard = document.getElementById("comments-card-1");
@@ -224,16 +230,16 @@ export const CommentsComponent = (props: CommentsComponentProps) => {
     const MobileView = (
       <div id={id} className="comments-body">
           <ReactCardFlip isFlipped={cardToShow.judgment === Judgment.HALAL} flipDirection="horizontal" infinite={true} >
-            {<CommentsCardComponent judgment={Judgment.HARAM} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} singleCommentId={singleCommentId} refreshTopic={refreshTopic} switchCards={switchCards}/>}
-            {<CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} singleCommentId={singleCommentId} refreshTopic={refreshTopic} switchCards={switchCards}/>}
+            {<CommentsCardComponent judgment={Judgment.HARAM} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificCommentId={cardToShow.specificCommentId} refreshTopic={refreshTopic} switchCards={switchCards}/>}
+            {<CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificCommentId={cardToShow.specificCommentId} refreshTopic={refreshTopic} switchCards={switchCards}/>}
           </ReactCardFlip>
         </div>
     )
 
     return isMobile ? MobileView : (
         <div id={id} className="comments-body">
-            <CommentsCardComponent judgment={Judgment.HARAM} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} singleCommentId={singleCommentId} refreshTopic={refreshTopic} switchCards={switchCards}/>
-            <CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} singleCommentId={singleCommentId} refreshTopic={refreshTopic} switchCards={switchCards}/>
+            <CommentsCardComponent judgment={Judgment.HARAM} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificCommentId={cardToShow.specificCommentId} refreshTopic={refreshTopic} switchCards={switchCards}/>
+            <CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificCommentId={cardToShow.specificCommentId} refreshTopic={refreshTopic} switchCards={switchCards}/>
         </div>
     );
 }

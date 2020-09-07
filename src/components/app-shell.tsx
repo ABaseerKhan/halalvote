@@ -5,7 +5,7 @@ import { SearchComponent } from './search/search';
 import { CommentsComponent } from './comments/comments';
 import { AnalyticsComponent } from './analytics/analytics';
 import { MenuComponent } from './menu/menu';
-import { Topic } from '../types';
+import { Topic, Comment } from '../types';
 import { postData } from '../https-client/client';
 import { topicsConfig } from '../https-client/config';
 import { vhToPixelsWithMax, arrayMove } from "../utils";
@@ -18,12 +18,13 @@ import { useCookies } from 'react-cookie';
 import './app-shell.css';
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ topicDetails: {topics: Topic[]; topicIndex: number}; scrollPosition: number }>({
+  const [state, setState] = useState<{ topicDetails: {topics: Topic[]; topicIndex: number}; scrollPosition: number, specificComment?: Comment }>({
     topicDetails: {
       topics: [],
       topicIndex: 0
     },
     scrollPosition: window.innerHeight,
+    specificComment: undefined,
   });
 
   const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken', 'topicTitle']);
@@ -89,6 +90,10 @@ export const AppShellComponent = (props: any) => {
       fetchTopics();
       setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
     }
+  };
+
+  const showSpecificComment = (comment: Comment) => {
+    setState(prevState => ({ ...prevState, specificComment: comment }));
   };
 
   const topic = state.topicDetails.topics.length > 0 ? state.topicDetails.topics[state.topicDetails.topicIndex] : undefined;
@@ -161,12 +166,12 @@ export const AppShellComponent = (props: any) => {
   return (
       <div id={appShellId} className={appShellId} >
         <SearchComponent id={searchId} onSuggestionClick={fetchTopics} />
-        <CommentsComponent id={commentsId} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} refreshTopic={fetchTopics} />
+        <CommentsComponent id={commentsId} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={state.specificComment} refreshTopic={fetchTopics} />
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">
           <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} scrollToPage={scrollToPage} />
-          <MenuComponent fetchTopics={fetchTopics}/>
+          <MenuComponent fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
         </div>
       </div>
   )

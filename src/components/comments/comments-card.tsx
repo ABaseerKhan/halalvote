@@ -20,7 +20,7 @@ interface CommentsCardComponentProps {
     topicTitle: string, 
     numHalalComments: number,
     numHaramComments: number,
-    singleCommentId?: number,
+    specificCommentId?: number,
     refreshTopic: (topicTofetch: string) => any,
     switchCards: (judgement: Judgment) => any,
 };
@@ -40,7 +40,7 @@ const initialState = {
 }
 var clickTimer: any = null;
 const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
-    const { judgment, topicTitle, numHalalComments, numHaramComments, refreshTopic } = props;
+    const { judgment, topicTitle, numHalalComments, numHaramComments, specificCommentId, refreshTopic } = props;
     const totalTopLevelComments = (judgment === Judgment.HALAL ? numHalalComments : numHaramComments) || 0;
 
     const isMobile = useMedia(
@@ -75,7 +75,16 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         } // eslint-disable-next-line
     }, [topicTitle]);
 
-    const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number) => {
+    useEffect(() => {
+        console.log("specificCommentId");
+        if (topicTitle) {
+            state.comments = [];
+            state.pathToHighlightedComment = undefined;
+            fetchComments([], undefined, specificCommentId);
+        } // eslint-disable-next-line
+    }, [specificCommentId]);
+
+    const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number, specificCommentId?: number) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
         const { data: comments }: { data: Comment[]} = await postData({ 
             baseUrl: commentsConfig.url,
@@ -85,6 +94,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                 "topicTitle": topicTitle,
                 "username": username,
                 "parentId": parentComment?.id,
+                "specificComment": specificCommentId,
                 "depth": 2, 
                 "n": 5,
                 "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : state.comments?.map((r) => r.id),
@@ -96,6 +106,10 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             setState(prevState => ({ ...prevState, comments: updatedComments, totalTopLevelComments: totalTopLevelComments, loading: false }));
         } else {
             setState(prevState => ({ ...prevState, comments: updatedComments, loading: false }));
+        }
+        if (specificCommentId) {
+            const pathToSpecificComment = getPathFromId(updatedComments, specificCommentId, [0]);
+            setTimeout(() => highlightComment(pathToSpecificComment), 500);
         }
     }
 
@@ -305,6 +319,18 @@ const deleteCommentLocally = (comments: Comment[], pathToComment: number[], psue
     const updatedReplies = deleteCommentLocally(comments[pathToComment[0]].replies, pathToComment.splice(1), psuedoDelete);
     comments[pathToComment[0]].replies = updatedReplies;
     return comments;
+}
+
+const getPathFromId = (comments: Comment[], commentId: number, accumulator: number[]): number[] => {
+    if (comments && comments[0]) {
+        accumulator.push(0);
+        if (comments[0].id === commentId) {
+            return accumulator;
+        }
+        return getPathFromId(comments[0].replies, commentId, accumulator);
+    } else {
+        return accumulator;
+    }
 }
 
 const areCommentsCardPropsEqual = (prevProps: CommentsCardComponentProps, nextProps: CommentsCardComponentProps) => {
