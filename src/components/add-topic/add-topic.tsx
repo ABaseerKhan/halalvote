@@ -15,8 +15,7 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
     const { closeModal, fetchTopics } = props;
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
-    const [state, setState] = useState<{ isAddTopicButtonDisabled: boolean, picture: string | null }>({
-        isAddTopicButtonDisabled: true,
+    const [state, setState] = useState<{ picture: string | null }>({
         picture: null
     });
 
@@ -27,14 +26,10 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
         return document.getElementById(addTopicTitleInputId) as HTMLInputElement;
     }
 
-    const getSubmitButton = (): HTMLButtonElement => {
-        return document.getElementById(addTopicSubmitButtonId) as HTMLButtonElement;
-    }
-
     const addTopic = async () => {
         const titleInput = getTitleInput();
         
-        if (titleInput && state.picture) {
+        if (titleInput && titleInput.value && titleInput.value !== "" && state.picture) {
             const { status, data } = await postData({
                 baseUrl: topicsConfig.url,
                 path: 'add-topic',
@@ -57,23 +52,8 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
         }
     }
 
-    const checkInput = () => {
-        const titleInput = getTitleInput();
-        const submitButton = getSubmitButton();
-
-        if (titleInput && submitButton) {
-            if (titleInput.value === "") {
-                submitButton.classList.add("disabled-button");
-                setState({...state, isAddTopicButtonDisabled: true});
-            } else {
-                submitButton.classList.remove("disabled-button");
-                setState({...state, isAddTopicButtonDisabled: false});
-            }
-        }
-    }
-
     const handleKeyPress = (event: any) => {
-        if (!state.isAddTopicButtonDisabled && event.charCode === 13) {
+        if (event.charCode === 13) {
             addTopic();
         }
     }
@@ -88,7 +68,7 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
                 !state.picture && <div className="add-topic-section-text">Add Topic</div>
             }
 
-            <input id={addTopicTitleInputId} className="add-topic-input" type="text" placeholder="Title" onChange={checkInput} onKeyPress={(event: any) => handleKeyPress(event)}/>
+            <input id={addTopicTitleInputId} className="add-topic-input" type="text" placeholder="Title" onKeyPress={(event: any) => handleKeyPress(event)}/>
             
             {
                 state.picture ?
@@ -105,7 +85,7 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
                             maxFileSize={5242880} 
                             singleImage={true}
                         />
-                        <button id={addTopicSubmitButtonId} className={`button disabled-button ${addTopicSubmitButtonId}`} onClick={addTopic} disabled={state.isAddTopicButtonDisabled}>Add Topic</button>
+                        <button id={addTopicSubmitButtonId} className={`button ${addTopicSubmitButtonId}`} onClick={addTopic}>Add Topic</button>
                     </div> :
                     <ImageUploader 
                         fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "0"}} 
