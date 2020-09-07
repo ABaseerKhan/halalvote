@@ -1,6 +1,6 @@
 .account-container {
     color: var(--site-background-color);
-    height: 60vh;
+    height: 70vh;
     overflow: auto;
 }
 
@@ -51,6 +51,7 @@
 
 .account-tab-selected {
     color: white;
+    font-weight: 600;
     background-color: var(--gray);
 }
 
@@ -61,12 +62,14 @@
 .user-topic-container {
     padding: 1em 0 1em 0;
     margin-right: 2em;
-    border-bottom: 1px dashed var(--site-background-color);
+    border-bottom: 1px dotted var(--site-background-color);
+    transition: all .15s ease-in-out;
 }
 
 .user-topic-container:hover {
     color: white;
     cursor: pointer;
+    transform: scale(1.02);
 }
 
 .topic-meta-info-container {
@@ -80,12 +83,14 @@
 .user-comment-container {
     padding: 1em 0 1em 0;
     margin-right: 2em;
-    border-bottom: 1px dashed var(--site-background-color);
+    border-bottom: 1px dotted var(--site-background-color);
+    transition: all .15s ease-in-out;
 }
 
 .user-comment-container:hover {
     color: white;
     cursor: pointer;
+    transform: scale(1.02);
 }
 
 .user-comment-bullet-separator {
