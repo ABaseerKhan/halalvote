@@ -166,7 +166,7 @@ const UserComment = (props: UserCommentProps) => {
         </div>
     );
     return (
-        <div id={`comment-${comment.id}`} onClick={async (e) => { await fetchTopics(comment.topicTitle); showSpecificComment(comment.id); closeModal(); }} className={"user-comment-container"}>
+        <div id={`comment-${comment.id}`} onClick={async (e) => { await fetchTopics(comment.topicTitle); showSpecificComment(comment); closeModal(); }} className={"user-comment-container"}>
             {CommentHeader}
             <div className="user-comment">
                 <div dangerouslySetInnerHTML={{__html: comment.comment}}/>
