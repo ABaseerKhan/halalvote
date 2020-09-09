@@ -334,7 +334,6 @@
 .comment-maker-input {
     width: 100%;
     font-size: 18px;
-    border-top: 1px dotted var(--gray);
     resize: none;
     color: var(--gray);
 }

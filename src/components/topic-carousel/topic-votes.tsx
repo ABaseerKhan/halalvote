@@ -26,7 +26,7 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
     useEffect(() => {
         setState(prevState => ({ ...prevState, numVotes: numVotes, halalPoints: halalPoints, haramPoints: haramPoints }));
     }, [halalPoints, haramPoints, numVotes]);
-    
+
     const submitVote = async (value: number) => {
         if (topicTitle) {
             if (value > 0) {
@@ -40,7 +40,7 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                     document.body.style.backgroundColor = 'var(--site-background-color)'
                 }, 500);
             }
-            const { data } = await postData({
+            const { status, data } = await postData({
                 baseUrl: topicsConfig.url,
                 path: 'vote-topic',
                 data: {
@@ -53,7 +53,9 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                 },
                 setCookie: setCookie,
             });
-            setState(prevState => ({ ...prevState, numVotes: data.numVotes, halalPoints: data.halalPoints, haramPoints: data.haramPoints }));
+            if (status === 200) {
+                setState(prevState => ({ ...prevState, numVotes: data.numVotes, halalPoints: data.halalPoints, haramPoints: data.haramPoints }));
+            }
         }
     };
 
