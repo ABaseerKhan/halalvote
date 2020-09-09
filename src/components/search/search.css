@@ -24,7 +24,7 @@
 }
 
 .search-header {
-    font-size: 64px;
+    font-size: 5em;
     color: var(--gray);
 }
 
@@ -39,7 +39,7 @@
 .search-bar-input,
 .search-bar-input-autocomplete-open {
     margin: 8px 0 0 0 !important;
-    padding: 12px 2.3em !important;
+    padding: 0.9em 2.3em !important;
     border: none !important;
 }
 
@@ -105,5 +105,5 @@
 
 .search-icon-container {
     position: absolute;
-    padding: 21px 12px;
+    padding: 1.35em 12px;
 }

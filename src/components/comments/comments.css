@@ -48,6 +48,48 @@
     .comments-container-padding-div {
         padding: 0.5em 0.5em 0.4em 0.5em !important;
     }
+    .comment {
+        font-size: 1.05em !important;
+    }
+    .comment-header .vote-buttons {
+        padding-top: 0.25em !important;
+    }
+    .comment-header .vote-buttons .up-vote-button {
+        height: 12px !important;
+        width: 12px !important;
+    }
+    .comment-header .vote-buttons .down-vote-button {
+        height: 12px !important;
+        width: 12px !important;
+    }
+    .comment-header {
+        font-size: 12px !important;
+    }
+    .comment-header .vote-counts {
+        font-size: 10px;
+        margin-left: 5px;
+    }
+    .comment-header .username {
+        padding-top: 0.5em;
+    }
+    
+    .comment-header .time-stamp {
+        padding-top: 0.5em;
+    }
+    .comment-actions {
+        font-size: 11px !important;
+    }
+    .comment-header .bullet-separator {
+        margin-top: 0.9em !important;
+    }
+    .comment-header .vote-counts .up-votes {
+        font-size: 10px;
+        padding-top: 0.2em !important;
+    }
+    
+    .comment-header .vote-counts .down-votes {
+        font-size: 10px !important;
+    }
 }
 
 .comments-container {
@@ -129,7 +171,7 @@
 
 .comment-header {
     display: flex;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .comment-header .expand-button-0 {
@@ -156,7 +198,7 @@
 
 .comment-header .bullet-separator {
     color: var(--gray);
-    margin-top: 5px;
+    margin-top: 1em;
     font-size: xx-small;
     margin-left: 5px;
     margin-right: 5px;
@@ -167,13 +209,13 @@
 }
 
 .comment-header .vote-buttons .up-vote-button {
-    height: 12px;
-    width: 12px;
+    height: 13px;
+    width: 13px;
 }
 
 .comment-header .vote-buttons .up-vote-button-clicked {
-    height: 12px;
-    width: 12px;
+    height: 13px;
+    width: 13px;
     fill: green;
 }
 
@@ -184,13 +226,13 @@
 
 
 .comment-header .vote-buttons .down-vote-button {
-    height: 12px;
-    width: 12px;
+    height: 13px;
+    width: 13px;
 }
 
 .comment-header .vote-buttons .down-vote-button-clicked {
-    height: 12px;
-    width: 12px;
+    height: 13px;
+    width: 13px;
     fill: var(--haram-compliment-color);
 }
 
@@ -201,7 +243,7 @@
 
 .comment-header .vote-counts {
     display: grid;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
     margin-left: 5px;
 }
@@ -218,13 +260,13 @@
 
 .comment-header .username {
     float: left;
-    padding-top: 2px;
+    padding-top: 0.5em;
     overflow-wrap: break-word;
     word-wrap: break-word;
 }
 
 .comment-header .time-stamp {
-    padding-top: 1px;
+    padding-top: 0.5em;
 }
 
 .comment-header .time-stamp:hover {
@@ -239,7 +281,7 @@
     white-space: pre-wrap;
     overflow-wrap: break-word;
     word-wrap: break-word;
-    font-size: 16px;
+    font-size: 1.2em;
     color: var(--gray);
 }
 
@@ -251,7 +293,7 @@
     margin-left: 16px;
     margin-bottom: 5px;
     color: gray;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 550;
 }
 
@@ -283,7 +325,7 @@
     margin-left: 12px;
     margin-bottom: 10px;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
 }
 
@@ -297,7 +339,7 @@
 
 .show-more-comments-0, .show-more-comments-1 {
     cursor: pointer;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
 }
 
@@ -345,7 +387,7 @@
 
 .comment-maker-input .ql-container {
     border: none;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .comment-maker-input .ql-editor {

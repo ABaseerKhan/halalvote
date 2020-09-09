@@ -29,10 +29,10 @@ html, body {
 
   --site-background-color: #d4d4d4;
 
-  --toolbar-height-vh: 10vh;
-  --max-toolbar-height-px: 60px;
-  --topic-carousel-height-vh: 20vh;
-  --max-topic-carousel-height-px: 120px;
+  --toolbar-height-vh: 12vh;
+  --max-toolbar-height-px: 65px;
+  --topic-carousel-height-vh: 22vh;
+  --max-topic-carousel-height-px: 130px;
 
   --highlight-color: #8fb4ff;
 

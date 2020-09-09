@@ -43,9 +43,9 @@ const PrettoSlider = withStyles({
         },
         '& .voter': {
             display: 'table',
-            lineHeight: '2.3',
-            width: '50px',
-            height: '50px',
+            lineHeight: '2.5',
+            width: '55px',
+            height: '55px',
             borderRadius: '50%',
             fontSize: '20px',
             color: 'var(--site-background-color)',
@@ -80,7 +80,7 @@ const PrettoSlider = withStyles({
     markLabel: {
         height: '50%',
         top: 'unset',
-        fontSize: '16px',
+        fontSize: '2vh',
         lineHeight: 'unset',
         fontWeight: 600,
     }
