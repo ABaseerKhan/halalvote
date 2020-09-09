@@ -40,6 +40,7 @@
 .search-bar-input-autocomplete-open {
     margin: 8px 0 0 0 !important;
     padding: 12px 2.3em !important;
+    border: none !important;
 }
 
 .search-bar-input:hover {
