@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getData } from '../../https-client/client';
 import { topicsConfig } from '../../https-client/config';
 import { useDebouncedSearch } from '../../hooks/useDebouncedSearch';
+import { ReactComponent as SearchSVG } from '../../icons/search.svg';
 
 // styles
 import './search.css';
@@ -56,6 +57,9 @@ export const SearchComponent = (props: SearchComponentProps) => {
                     <span className="search-header-haram">H</span>
                     <span className="search-header-halal">V</span>
                 </span>
+                <div className="search-icon-container">
+                    <SearchSVG width='18px'/>
+                </div>
                 <input 
                     className={autoCompleteOpen ? "search-bar-input-autocomplete-open" : "search-bar-input"} 
                     type="text" value={inputText} 

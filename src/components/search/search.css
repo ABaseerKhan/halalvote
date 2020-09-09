@@ -39,6 +39,7 @@
 .search-bar-input,
 .search-bar-input-autocomplete-open {
     margin: 8px 0 0 0 !important;
+    padding: 12px 2.3em !important;
 }
 
 .search-bar-input:hover {
@@ -99,4 +100,9 @@
     flex-direction: column;
     min-width: 0;
     padding: 6px 0;
+}
+
+.search-icon-container {
+    position: absolute;
+    padding: 21px 12px;
 }
