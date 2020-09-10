@@ -86,3 +86,48 @@ export function getCookie(cname: string) {
     }
     return "";
 }
+
+// Tune deltaMin according to your needs. Near 0 it will almost
+// always trigger, with a big value it can never trigger.
+export function detectSwipe(el: any, func: any, deltaMin = 90) {
+    const swipe_det = {
+      sX: 0,
+      sY: 0,
+      eX: 0,
+      eY: 0
+    }
+    // Directions enumeration
+    const directions = Object.freeze({
+      UP: 'up',
+      DOWN: 'down',
+      RIGHT: 'right',
+      LEFT: 'left'
+    })
+    let direction = null
+    el.addEventListener('touchstart', function(e: any) {
+      const t = e.touches[0]
+      swipe_det.sX = t.screenX;
+      swipe_det.sY = t.screenY;
+    }, false)
+    el.addEventListener('touchmove', function(e: any) {
+      // Prevent default will stop user from scrolling, use with care
+      const t = e.touches[0]
+      if (Math.abs(t.screenX - swipe_det.sX) > (Math.abs(t.screenY - swipe_det.sY))/2) e.preventDefault();
+    }, false)
+    const touchendCb = function(e: any) {
+        const deltaX = swipe_det.eX - swipe_det.sX
+        const deltaY = swipe_det.eY - swipe_det.sY
+        // Min swipe distance, you could use absolute value rather
+        // than square. It just felt better for personnal use
+        if (deltaX ** 2 + deltaY ** 2 < deltaMin ** 2) return
+        // horizontal
+        if (deltaY === 0 || Math.abs(deltaX / deltaY) > 1)
+          direction = deltaX > 0 ? directions.RIGHT : directions.LEFT
+        else // vertical
+          direction = deltaY > 0 ? directions.UP : directions.DOWN
+    
+        if (direction && typeof func === 'function') { el.removeEventListener('touchend', touchendCb); func(el, direction); console.log('called func') };
+        direction = null;
+    };
+    el.addEventListener('touchend', touchendCb, false);
+  }
