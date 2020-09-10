@@ -39,7 +39,7 @@
 .search-bar-input,
 .search-bar-input-autocomplete-open {
     margin: 8px 0 0 0 !important;
-    padding: 0.9em 2.3em !important;
+    padding: 1em 3em !important;
     border: none !important;
 }
 
@@ -92,7 +92,7 @@
     display: flex;
     margin: 0 20px;
     align-items: center;
-    margin: 0 20px 0 14px;
+    margin: 0 20px 0 3em;
 }
 
 .option {
@@ -105,5 +105,5 @@
 
 .search-icon-container {
     position: absolute;
-    padding: 1.35em 12px;
+    padding: 1.55em 1.2em;
 }
