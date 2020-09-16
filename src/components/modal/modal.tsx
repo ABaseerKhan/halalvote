@@ -36,7 +36,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
     const modalId = "modal";
     const modalCoverId = "modal-cover";
 
-    const heightVh = 70;
+    const heightVh = 80;
     const widthVw = isMobile ? 90 : 50;
     const maxHeight = window.innerHeight - (Math.max(elementStyles.maxTopicCarouselHeightPx, vhToPixels(elementStyles.topicCarouselHeightVh)) + vhToPixels(10));
     const maxWidth = 800;
@@ -55,7 +55,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
 
         if (modal && modalCover) {
             if (modalType === ModalType.LOGIN) {
-                modal.style.zIndex = "6";
+                modal.style.zIndex = "4";
             }
 
             const height = getModalHeight() + "px";

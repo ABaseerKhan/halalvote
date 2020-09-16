@@ -287,6 +287,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 break;
             case MenuLocation.NONE:
                 menu.style.top = "unset";
+                menu.style.right = Math.round(window.innerWidth - rect.x - menuWidth) + "px";
                 menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
                 menu.style.left = "unset";
                 menuButton.style.top = "unset";

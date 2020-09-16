@@ -118,7 +118,7 @@ export const VotingSlider = (props: VotingSliderProps) => {
                     <div className="average-votes-mark-label">
                         <span style={{ transform: 'rotate(-135deg)', display: 'block', lineHeight: '1.5', zIndex: 400 }} data-tip={`Community Sentiment (${numVotes} votes)`} data-for="cs" id="test" >CS</span>
                     </div>
-                    <ReactTooltip place="bottom" delayShow={100} effect={"solid"} id="cs" />
+                    <ReactTooltip place="right" delayShow={100} effect={"solid"} id="cs" />
                 </span>
             ),
         },

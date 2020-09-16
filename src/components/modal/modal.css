@@ -8,14 +8,13 @@
     margin-left: 0;
     border-radius: 25px 25px 25px 25px;
     background-color: var(--neutral-color);
-    z-index: 4;
+    z-index: 2;
     overflow: hidden;
 }
 
 .modal-cover {
     height: calc(100vh);
     bottom: 0;
-    left: 12vw;
     width: 100vw;
     position: fixed;
     background-color: #D3D3D3;

@@ -3,7 +3,7 @@
     height: 72px;
     width: 72px;
     bottom: 5%;
-    right: calc(12vw - 36px);
+    right: 5%;
     border-radius: 36px;
     background: var(--neutral-color);
     color: var(--site-background-color);
