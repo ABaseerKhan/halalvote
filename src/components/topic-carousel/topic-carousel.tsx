@@ -15,6 +15,8 @@ import './topic-carousel.css';
 interface TopicCarouselComponentProps {
     id: string,
     iterateTopic: any,
+    prevTopicTitle: string | undefined,
+    nextTopicTitle: string | undefined,
     topicTitle: string,
     userVote: number | undefined,
     halalPoints: number,
@@ -62,7 +64,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
             }
             <div className="topic-navigator">
                 <button id={leftCarouselButtonId} onClick={iterateTopic(-1)} className='carousel-button-left'>
-                    <ChevronLeftSVG className={"arrow-icon-left"}/>
+                    <ChevronLeftSVG color={'gray'} transform={"translate(0 -45)"}/>
                 </button>
                 <div id="topic-title" className='topic-title' onClick={() => {setImageDisplayed(true)}} >
                     <div style={{ width: 'max-content' }}>
@@ -71,7 +73,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     </div>
                 </div>
                 <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button-right'>
-                    <ChevronRightSVG className={"arrow-icon-right"}/>
+                    <ChevronRightSVG color={'gray'} transform={"translate(0 -45)"}/>
                 </button>
             </div>
             <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />

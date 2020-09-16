@@ -53,11 +53,12 @@
 }
 
 .carousel-button-left, .carousel-button-right {
+    position: absolute;
     padding: 0;
     cursor: pointer;
-    width: 100px;
-    min-width: 100px;
-    height: 100%;
+    top: var(--max-toolbar-height-px);
+    width: 13vw;
+    height: 100vh;
     background: transparent;
     border: none;
     border-radius: 0;
@@ -66,11 +67,13 @@
 }
 
 .carousel-button-left {
-    box-shadow: 1px -4px 5px -4px black;
+    box-shadow: 1px 4px 5px -4px black;
+    left: 0;
 }
 
 .carousel-button-right {
-    box-shadow: -1px -4px 5px -4px black;
+    box-shadow: -1px 4px 5px -4px black;
+    right: 0;
 }
 
 .carousel-button:hover {
@@ -142,6 +145,10 @@
     right: 26vw;
     border-radius: 10px 50px 50px 10px;
     color: #1c4d44;
+}
+
+.prev-next-topic {
+    color: gray;
 }
 
 @media only screen and (max-width: 600px) {

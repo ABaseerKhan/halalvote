@@ -97,6 +97,8 @@ export const AppShellComponent = (props: any) => {
   };
 
   const topic = state.topicDetails.topics.length > 0 ? state.topicDetails.topics[state.topicDetails.topicIndex] : undefined;
+  const nextTopic = (state.topicDetails.topics.length > 0) && (state.topicDetails.topicIndex < state.topicDetails.topics.length) ? state.topicDetails.topics[state.topicDetails.topicIndex + 1] : undefined;
+  const prevTopic = (state.topicDetails.topics.length > 0) && (state.topicDetails.topicIndex >= 0) ? state.topicDetails.topics[state.topicDetails.topicIndex - 1] : undefined;
   const topicTitle = topic?.topicTitle !== undefined ? topic.topicTitle : "";
   const halalPoints = topic?.halalPoints !== undefined ? topic.halalPoints : 0;
   const haramPoints = topic?.haramPoints !== undefined ? topic.haramPoints : 0;
@@ -169,7 +171,7 @@ export const AppShellComponent = (props: any) => {
         <CommentsComponent id={commentsId} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={state.specificComment} refreshTopic={fetchTopics} />
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">
-          <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
+          <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} scrollToPage={scrollToPage} />
           <MenuComponent fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
         </div>
