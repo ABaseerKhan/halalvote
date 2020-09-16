@@ -12,11 +12,14 @@
   height: 40px;
   width: 40px;
   bottom: -64px;
-  border-radius: 20px;
+  padding: 12px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: 30px;
   background-color: var(--neutral-color);
   color: var(--site-background-color);
-  cursor: pointer;
-  overflow: hidden;
+  outline: none;
 }
 
 .image-navigator-button-left {
@@ -29,11 +32,6 @@
 
 .image-navigator-button:hover {
   background-color: var(--light-neutral-color);
-}
-
-.image-navigator-button-icon {
-  margin-left: -29px;
-  margin-top: -8px;
 }
 
 .image {
@@ -108,10 +106,12 @@
   width: 60px;
   top: 8px;
   left: 8px;
+  padding: 18px;
   cursor: pointer;
   background: transparent;
   border: none;
   border-radius: 30px;
+  color: var(--site-background-color)
 }
 
 .add-image-section-text {

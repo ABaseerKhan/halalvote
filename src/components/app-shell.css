@@ -12,3 +12,8 @@
   width: 100%;
   z-index: 3;
 }
+
+.fixed-content-below-cover {
+  position: fixed;
+  width: 100%;
+}

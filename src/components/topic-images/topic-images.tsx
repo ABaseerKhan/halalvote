@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { getData } from '../../https-client/client';
 import { useCookies } from 'react-cookie';
 import { topicsConfig } from '../../https-client/config';
-import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
-import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as LeftArrowSVG } from '../../icons/left-arrow.svg';
+import { ReactComponent as RightArrowSVG } from '../../icons/right-arrow.svg';
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { postData } from '../../https-client/client';
 import ImageUploader from 'react-images-upload';
@@ -133,12 +132,12 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             {
                 state.topicImages.length > 0 ?
                 <div style={{margin: "auto"}}>
-                    <div className='image-navigator-button image-navigator-button-left' onClick={() => {iterateImage(-1)}}>
-                        <ChevronLeftSVG className="image-navigator-button-icon"/>
-                    </div>
-                    <div className='image-navigator-button image-navigator-button-right' onClick={() => {iterateImage(1)}}>
-                        <ChevronRightSVG className="image-navigator-button-icon"/>
-                    </div>
+                    <button className='image-navigator-button image-navigator-button-left' onClick={() => {iterateImage(-1)}}>
+                        <LeftArrowSVG />
+                    </button>
+                    <button className='image-navigator-button image-navigator-button-right' onClick={() => {iterateImage(1)}}>
+                        <RightArrowSVG />
+                    </button>
                     <img className='image' style={{maxHeight:maxHeight + "px", maxWidth: maxWidth + "px"}} alt={props.topicTitle} src={state.topicImages[state.currentIndex].image}/>
                     
                     {

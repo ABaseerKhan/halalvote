@@ -180,8 +180,10 @@ export const AppShellComponent = (props: any) => {
         <AnalyticsComponent id={analyticsId} />
         <div className="fixed-content">
           <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
-          <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} scrollToPage={scrollToPage} />
           <MenuComponent fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
+        </div>
+        <div className="fixed-content-below-cover">
+          <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} scrollToPage={scrollToPage} />
         </div>
       </div>
   )
