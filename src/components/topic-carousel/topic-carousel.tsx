@@ -67,9 +67,8 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     <ChevronLeftSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>
                 </button>
                 <div id="topic-title" className='topic-title' onClick={() => {setImageDisplayed(true)}} >
-                    <div style={{ width: 'max-content' }}>
+                    <div className="linear-wipe">
                         {topicTitle}
-                        <div className="under-bar"></div>
                     </div>
                 </div>
                 <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button-right'>

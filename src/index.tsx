@@ -18,10 +18,10 @@ ReactDOM.render(
 );
 
 export const elementStyles = {
-  toolbarHeightVh: 10,
-  maxToolbarHeightPx: 60,
-  topicCarouselHeightVh: 20,
-  maxTopicCarouselHeightPx: 120
+  toolbarHeightVh: 12,
+  maxToolbarHeightPx: 65,
+  topicCarouselHeightVh: 14,
+  maxTopicCarouselHeightPx: 135
 }
 
 export const Portal = ({children} : {children: ReactNode}) => ReactDOM.createPortal(children, document.getElementById("portal") || document.createElement("portal"));

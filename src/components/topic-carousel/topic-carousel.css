@@ -10,7 +10,7 @@
 .topic-navigator {
     height: var(--max-toolbar-height-px);
     width: max-content;
-    display: flex;
+    display: contents;
     margin-left: auto;
     margin-right: auto;
     margin-top: 0.5em;
@@ -22,11 +22,11 @@
 }
 
 .topic-title {
-    margin-right: auto;
-    margin-left: auto;
+    min-height: calc(var(--max-toolbar-height-px));
+    min-width: 100%;
     line-height: 2.1;
     text-align: center;
-    font-size: 1.75em;
+    font-size: 2em;
     color: var(--neutral-color);
     overflow-x: auto;
     cursor: pointer;
@@ -35,16 +35,43 @@
     overflow-y: hidden;
 }
 
+.linear-wipe {
+    text-align: center;
+    width: fit-content;
+    margin: auto;
+    background: linear-gradient(to right, var(--light-neutral-color) 0%, var(--neutral-color) 10%, var(--neutral-color) 90%, var(--light-neutral-color) 100%);
+    background-size: 200% auto;
+    
+    color: #000;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    animation: shine 2s infinite linear;
+}
+
+.linear-wipe:hover {
+    -webkit-text-fill-color: unset;
+    color: var(--light-neutral-color) !important;
+}
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+
 .under-bar {
     position: sticky;
     background-color: var(--neutral-color);
     border-radius: 5em;
     height: 5px;
     width: 100%;
+    max-width: 95vw;
     margin: auto;
     bottom: 0.55em;
     animation: jump 2s infinite cubic-bezier(0,.47,.26,1.01) alternate;
 }
+
 @keyframes jump {
     to {
         transform: translate(0, 0.3em);
@@ -82,7 +109,9 @@
 }
 
 .carousel-button-computer:hover {
-    background-color: var(--neutral-color-transparent);
+    background: transparent;
+    -webkit-box-shadow: inset 0 0 100px 20px var(--light-neutral-color);
+    box-shadow: inset 0 0 100px 20px var(--light-neutral-color);
 }
 
 .topic-votes-container {

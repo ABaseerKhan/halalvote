@@ -76,11 +76,10 @@
 
 .show-add-image-button {
   position: absolute;
-  height: 40px;
-  width: 40px;
-  padding: 16px;
-  bottom: -80px;
-  left: calc(50% - 36px);
+  height: 8vh;
+  width: 8vh;
+  bottom: -9vh;
+  left: calc(50% - 4vh);
   border-radius: 36px;
   background-color: var(--neutral-color);
   color: var(--site-background-color);

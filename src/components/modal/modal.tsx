@@ -5,12 +5,13 @@ import { LoginComponent } from '../login/login';
 import { useMedia } from '../../hooks/useMedia';
 import { TopicImagesComponent } from '../topic-images/topic-images';
 import { AccountComponent } from '../account/account';
-import { vhToPixelsWithMax, vwToPixelsWithMax } from "../../utils";
+import { vhToPixelsWithMax, vwToPixelsWithMax, vhToPixels } from "../../utils";
 
 // type imports
 
 // styles
 import './modal.css';
+import { elementStyles } from '../..';
 
 interface ModalComponentProps {
     removeModal: any,
@@ -37,7 +38,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
 
     const heightVh = 70;
     const widthVw = isMobile ? 90 : 50;
-    const maxHeight = 1000;
+    const maxHeight = window.innerHeight - (Math.max(elementStyles.maxTopicCarouselHeightPx, vhToPixels(elementStyles.topicCarouselHeightVh)) + vhToPixels(10));
     const maxWidth = 800;
 
     const getModalHeight = () => {

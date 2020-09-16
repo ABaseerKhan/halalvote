@@ -1,8 +1,8 @@
 .comments-body {
     position: relative;
-    height: max(calc(100% - var(--topic-carousel-height-vh)), 100% - var(--max-topic-carousel-height-px));
+    height: min(calc(100% - var(--topic-carousel-height-vh)), 100% - var(--max-topic-carousel-height-px));
     width: 100%;
-    padding-top: min(var(--topic-carousel-height-vh), var(--max-topic-carousel-height-px));
+    padding-top: max(var(--topic-carousel-height-vh), var(--max-topic-carousel-height-px));
     scroll-snap-align: start;
     left: 0;
 }
