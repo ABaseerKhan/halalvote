@@ -82,7 +82,31 @@ export const AppShellComponent = (props: any) => {
     }
   }
 
+  const appShellId = "app-shell";
+  const topicCarouselId = "topicCarousel";
+  const pageZeroId = "Search";
+  const pageOneId = "Comments";
+  const pageTwoId = "Analytics";
+
+  const searchId = "search";
+  const commentsId = "comments";
+  const analyticsId = "analytics";
+
+  const appShell = document.getElementById(appShellId);
+  const topicCarousel = document.getElementById(topicCarouselId);
+  const pageZero = document.getElementById(pageZeroId);
+  const pageOne = document.getElementById(pageOneId);
+  const pageTwo = document.getElementById(pageTwoId);
+  const commentsBody = document.getElementById(commentsId);
+
   const iterateTopic = (iteration: number) => () => {
+    if (iteration === 1) {
+      animateNextTopic(commentsBody);
+    }
+    if (iteration === -1) {
+      animatePrevTopic(commentsBody);
+    }
+
     if ((state.topicDetails.topicIndex + iteration) < state.topicDetails.topics.length && (state.topicDetails.topicIndex + iteration) >= 0) {
       setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
       setCookie("topicTitle", state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle);
@@ -105,22 +129,6 @@ export const AppShellComponent = (props: any) => {
   const numTopicVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
   const numHalalComments = topic?.numHalalComments !== undefined ? topic.numHalalComments : 0;
   const numHaramComments = topic?.numHaramComments !== undefined ? topic.numHaramComments : 0;
-
-  const appShellId = "app-shell";
-  const topicCarouselId = "topicCarousel";
-  const pageZeroId = "Search";
-  const pageOneId = "Comments";
-  const pageTwoId = "Analytics";
-
-  const searchId = "search";
-  const commentsId = "comments";
-  const analyticsId = "analytics";
-
-  const appShell = document.getElementById(appShellId);
-  const topicCarousel = document.getElementById(topicCarouselId);
-  const pageZero = document.getElementById(pageZeroId);
-  const pageOne = document.getElementById(pageOneId);
-  const pageTwo = document.getElementById(pageTwoId);
 
   if (appShell && topicCarousel) {
     appShell.onscroll = () => {
@@ -177,4 +185,70 @@ export const AppShellComponent = (props: any) => {
         </div>
       </div>
   )
+}
+
+const animateNextTopic = (commentsBody: any) => {
+  if(!!commentsBody) {
+    commentsBody.animate([
+      {
+        left: '-90vw',
+      }
+    ], {
+      duration: 300,
+      easing: 'ease-in',
+      fill: 'forwards',
+    }).onfinish = () => {
+      commentsBody.animate([
+        {
+          left: '90vw',
+        }
+      ], {
+        duration: 0,
+        fill: "forwards"
+      }).onfinish = () => {
+        commentsBody.animate([
+          {
+            left: '0',
+          }
+        ], {
+          duration: 300,
+          easing: 'ease-out',
+          fill: "forwards"
+        })
+      }
+    }
+  };
+}
+
+const animatePrevTopic = (commentsBody: any) => {
+  if(!!commentsBody) {
+    commentsBody.animate([
+      {
+        left: '90vw',
+      }
+    ], {
+      duration: 300,
+      easing: 'ease-in',
+      fill: 'forwards',
+    }).onfinish = () => {
+      commentsBody.animate([
+        {
+          left: '-90vw',
+        }
+      ], {
+        duration: 0,
+        fill: "forwards"
+      }).onfinish = () => {
+        commentsBody.animate([
+          {
+            left: '0',
+          }
+        ], {
+          duration: 300,
+          easing: 'ease-out',
+          fill: "forwards"
+        })
+      }
+    }
+  };
 }

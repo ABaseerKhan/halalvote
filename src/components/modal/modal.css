@@ -13,11 +13,12 @@
 }
 
 .modal-cover {
-    height: 100%;
-    width: 100%;
+    height: calc(100vh);
+    bottom: 0;
+    left: 12vw;
+    width: 100vw;
     position: fixed;
     background-color: #D3D3D3;
     opacity: 0.8;
-    top: 0;
-    z-index: 3;
+    z-index: 2;
 }

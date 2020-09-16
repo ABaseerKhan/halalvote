@@ -2,10 +2,10 @@
     position: fixed;
     height: 80px;
     width: 20px;
-    margin-right: calc(13vw - 9px);
+    margin-right: 0.25em;
     margin-top: -40px;
     right: 0;
-    top: 53%;
+    top: 51vh;
 }
 
 .page-scroller-button-container {

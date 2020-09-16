@@ -1,8 +1,10 @@
 .comments-body {
+    position: relative;
     height: max(calc(100% - var(--topic-carousel-height-vh)), 100% - var(--max-topic-carousel-height-px));
     width: 100%;
     padding-top: min(var(--topic-carousel-height-vh), var(--max-topic-carousel-height-px));
     scroll-snap-align: start;
+    left: 0;
 }
 
 .comments-card-cover {
@@ -26,7 +28,7 @@
         justify-content: center;
     }
     .comments-card-1, .comments-card-0 {
-        width: 95vw !important;
+        width: 85vw !important;
         display: flex !important;
         margin-left: unset !important;
         margin-right: unset !important;

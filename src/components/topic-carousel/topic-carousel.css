@@ -9,9 +9,12 @@
 
 .topic-navigator {
     height: var(--max-toolbar-height-px);
-    background: var(--neutral-color-transparent);
-    width: 100%;
+    width: max-content;
     display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0.5em;
+    border-radius: 5em;
 }
 
 .topic-title::-webkit-scrollbar {
@@ -24,7 +27,7 @@
     line-height: 2.1;
     text-align: center;
     font-size: 1.75em;
-    color: var(--site-background-color);
+    color: var(--neutral-color);
     overflow-x: auto;
     cursor: pointer;
     white-space: nowrap;
@@ -34,7 +37,7 @@
 
 .under-bar {
     position: sticky;
-    background-color: var(--site-background-color);
+    background-color: var(--neutral-color);
     border-radius: 5em;
     height: 5px;
     width: 100%;
@@ -49,15 +52,15 @@
 }
 
 .topic-title:hover {
-    color: white;
+    color: var(--light-neutral-color);
 }
 
 .carousel-button-left, .carousel-button-right {
     position: absolute;
+    top: 0;
     padding: 0;
     cursor: pointer;
-    top: var(--max-toolbar-height-px);
-    width: 13vw;
+    width: 12vw;
     height: 100vh;
     background: transparent;
     border: none;
@@ -67,12 +70,10 @@
 }
 
 .carousel-button-left {
-    box-shadow: 1px 4px 5px -4px black;
     left: 0;
 }
 
 .carousel-button-right {
-    box-shadow: -1px 4px 5px -4px black;
     right: 0;
 }
 
@@ -81,7 +82,7 @@
 }
 
 .carousel-button-computer:hover {
-    background-color: var(--light-neutral-color);
+    background-color: var(--neutral-color-transparent);
 }
 
 .topic-votes-container {
@@ -91,7 +92,7 @@
 }
 
 .voting-slider {
-    margin-top: 1em;
+    margin-top: 0.5em;
     display: flex;
     align-items: center;
     justify-content: center;

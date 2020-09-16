@@ -55,7 +55,6 @@ export const ModalComponent = (props: ModalComponentProps) => {
         if (modal && modalCover) {
             if (modalType === ModalType.LOGIN) {
                 modal.style.zIndex = "6";
-                modalCover.style.zIndex = "5";
             }
 
             const height = getModalHeight() + "px";

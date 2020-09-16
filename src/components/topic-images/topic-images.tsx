@@ -44,11 +44,12 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 
     useEffect(() => {
         fetchImages(); // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [topicTitle]);
 
     const addImageSubmitId = "add-image-submit-button";
 
     const fetchImages = async () => {
+        setState(prevState => ({ ...prevState, topicImages: [], currentIndex: 0, picture: null, loading: true }));
         let queryParams: any = { 
             "topicTitle": topicTitle
         };
