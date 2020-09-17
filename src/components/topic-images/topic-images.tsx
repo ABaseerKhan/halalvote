@@ -92,8 +92,8 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 baseUrl: topicsConfig.url,
                 path: 'delete-topic-image',
                 data: {
-                    "username": username,
-                    "topicTitle": props.topicTitle
+                    "id": state.topicImages[state.currentIndex].id,
+                    "username": username
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken

@@ -21,6 +21,7 @@ export interface Topic {
 }
 
 export interface TopicImages {
+    id: number;
     username: string;
     image: string;
 }
