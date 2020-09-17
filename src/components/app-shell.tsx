@@ -100,19 +100,20 @@ export const AppShellComponent = (props: any) => {
   const commentsBody = document.getElementById(commentsId);
 
   const iterateTopic = (iteration: number) => () => {
+    const animationCallback = (state: any, iteration: any, setState: any, setCookie: any, fetchTopics: any) => () => {
+      if ((state.topicDetails.topicIndex + iteration) < state.topicDetails.topics.length && (state.topicDetails.topicIndex + iteration) >= 0) {
+        setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
+        setCookie("topicTitle", state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle);
+      } else if ((state.topicDetails.topicIndex + iteration) === state.topicDetails.topics.length) {
+        fetchTopics();
+        setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
+      }
+    };
     if (iteration === 1) {
-      animateNextTopic(commentsBody);
+      animateNextTopic(commentsBody, animationCallback(state, iteration, setState, setCookie, fetchTopics));
     }
     if (iteration === -1) {
-      animatePrevTopic(commentsBody);
-    }
-
-    if ((state.topicDetails.topicIndex + iteration) < state.topicDetails.topics.length && (state.topicDetails.topicIndex + iteration) >= 0) {
-      setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
-      setCookie("topicTitle", state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle);
-    } else if ((state.topicDetails.topicIndex + iteration) === state.topicDetails.topics.length) {
-      fetchTopics();
-      setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
+      animatePrevTopic(commentsBody, animationCallback(state, iteration, setState, setCookie, fetchTopics));
     }
   };
 
@@ -189,20 +190,22 @@ export const AppShellComponent = (props: any) => {
   )
 }
 
-const animateNextTopic = (commentsBody: any) => {
+const prevNextTopicAnimationDuration = 300;
+const animateNextTopic = (commentsBody: HTMLElement | null, callback: () => void) => {
   if(!!commentsBody) {
     commentsBody.animate([
       {
-        left: '-90vw',
+        transform: 'translate(-80%)'
       }
     ], {
-      duration: 300,
+      duration: prevNextTopicAnimationDuration,
       easing: 'ease-in',
       fill: 'forwards',
     }).onfinish = () => {
+      callback();
       commentsBody.animate([
         {
-          left: '90vw',
+          transform: 'translate(80%)'
         }
       ], {
         duration: 0,
@@ -210,10 +213,10 @@ const animateNextTopic = (commentsBody: any) => {
       }).onfinish = () => {
         commentsBody.animate([
           {
-            left: '0',
+            transform: 'translate(0)'
           }
         ], {
-          duration: 300,
+          duration: prevNextTopicAnimationDuration,
           easing: 'ease-out',
           fill: "forwards"
         })
@@ -222,20 +225,21 @@ const animateNextTopic = (commentsBody: any) => {
   };
 }
 
-const animatePrevTopic = (commentsBody: any) => {
+const animatePrevTopic = (commentsBody: any, callback: () => void) => {
   if(!!commentsBody) {
     commentsBody.animate([
       {
-        left: '90vw',
+        transform: 'translate(80%)'
       }
     ], {
-      duration: 300,
+      duration: prevNextTopicAnimationDuration,
       easing: 'ease-in',
       fill: 'forwards',
     }).onfinish = () => {
+      callback();
       commentsBody.animate([
         {
-          left: '-90vw',
+          transform: 'translate(-80%)'
         }
       ], {
         duration: 0,
@@ -243,10 +247,10 @@ const animatePrevTopic = (commentsBody: any) => {
       }).onfinish = () => {
         commentsBody.animate([
           {
-            left: '0',
+            transform: 'translate(0)'
           }
         ], {
-          duration: 300,
+          duration: prevNextTopicAnimationDuration,
           easing: 'ease-out',
           fill: "forwards"
         })
