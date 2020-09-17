@@ -147,11 +147,11 @@
 }
 
 .add-image-body {
+  border-radius: 25px 25px 25px 25px;
   width: 100%;
+  height: 100%;
   position: absolute;
   display: block;
-  top: 50%;
-  transform: translateY(-50%);
   text-align: center;
 }
 
@@ -176,10 +176,20 @@
   color: var(--site-background-color);
 }
 
+.file-uploader {
+    width: 200px;
+    left: calc(50% - 100px);
+    position: absolute;
+}
+
 .add-image-back-button:hover {
   background: var(--light-neutral-color);
   border: none;
   outline: none;
+}
+
+.add-image-choose-button {
+  color: white;
 }
 
 .add-image-choose-button:hover {
@@ -192,5 +202,10 @@
 }
 
 .add-image-submit-button {
-  margin: 20px 0 0 0 !important;
+  width: 200px !important;
+  left: calc(50% - 100px);
+  position: absolute;
+  margin: 0 0 1em 0 !important;
+  bottom: 0;
+  color: white;
 }

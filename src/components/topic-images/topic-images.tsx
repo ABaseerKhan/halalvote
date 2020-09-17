@@ -23,11 +23,13 @@ interface TopicImagesComponentProps {
     maxHeight: number,
     maxWidth: number
 };
+
+interface BasicPicture { src: string; width: number; height: number; };
 interface TopicImagesComponentState {
     addTopicDisplayed: boolean,
     topicImages: TopicImages[],
     currentIndex: number,
-    picture: string | null,
+    picture: BasicPicture | null,
     loading: boolean
 };
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
@@ -149,8 +151,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         setState({...state, addTopicDisplayed: addTopicDisplayed})
     }
 
-    const onDrop = (files: File[], picture: string[]) => {
-        setState({...state, picture: picture[0]});
+    const onDrop = async (files: File[], picture: string[]) => {
+        const imgDimensions = await getImageDimensionsFromSource(picture[0]);
+        const basicPicture: BasicPicture = { src: picture[0], height: imgDimensions.height, width: imgDimensions.width };
+        setState({...state, picture: basicPicture});
     }
 
     const isUserImage = (idx: number) => {
@@ -215,13 +219,14 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 
     const ImageAdder = (
         <div>
-            <div className="add-image-body">
+            <div className="add-image-body" style={{ background: state.picture ? 'black' : 'unset'}}>
                 {
                     state.picture ? 
-                        <div>
-                            <img className="adding-image" alt="Topic" src={state.picture}/>
+                        <div className="image-container" style={{ flexDirection: (state.picture?.width || 0) > (state.picture?.height || 0) ? 'unset' : 'column' }}>
+                            <img className='image' style={{maxHeight: (maxHeight) + "px", maxWidth: maxWidth + "px", margin: "auto"}} alt="Topic" src={state.picture.src}/>
                             <ImageUploader 
-                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 
+                                className={"file-uploader"}
+                                fileContainerStyle={{padding: '5px', background: "rgba(0,0,0,0.4)", boxShadow: "none", color: "white"}} 
                                 buttonClassName="add-image-choose-button"
                                 buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0", margin: "20px 0 0 0"}}
                                 withIcon={false} 
@@ -230,10 +235,11 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                                 imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
                                 maxFileSize={5242880} 
                                 singleImage={true}
+                                label={"Image Preview"}
                             />
                             <button id={addImageSubmitId} className={`button ${addImageSubmitId}`} onClick={addImage} >Add Image</button>
                         </div>:
-                        <div>
+                        <div style={{ height: '100px', width: '100%', position: 'absolute', top: 'calc(50% - 100px)'}}>
                             <div className="add-image-section-text">Add Image</div>
                             <ImageUploader 
                                 fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 
