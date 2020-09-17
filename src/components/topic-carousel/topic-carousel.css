@@ -186,4 +186,17 @@
         margin-left: 5px !important;
         margin-right: 5px !important;
     }
+    .carousel-button-left, .carousel-button-right {
+        position: absolute;
+        top: 0;
+        padding: 0;
+        cursor: pointer;
+        width: 5vw;
+        height: 100vh;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        color: var(--site-background-color);
+        outline: none;
+    }
 }
