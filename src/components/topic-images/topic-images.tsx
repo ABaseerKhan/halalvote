@@ -223,19 +223,20 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 {
                     state.picture ? 
                         <div className="image-container" style={{ flexDirection: (state.picture?.width || 0) > (state.picture?.height || 0) ? 'unset' : 'column' }}>
+                            <div className="image-preview-title">Image Preview</div>
                             <img className='image' style={{maxHeight: (maxHeight) + "px", maxWidth: maxWidth + "px", margin: "auto"}} alt="Topic" src={state.picture.src}/>
                             <ImageUploader 
                                 className={"file-uploader"}
                                 fileContainerStyle={{padding: '5px', background: "rgba(0,0,0,0.4)", boxShadow: "none", color: "white"}} 
                                 buttonClassName="add-image-choose-button"
-                                buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0", margin: "20px 0 0 0"}}
+                                buttonStyles={{background: "none", width: "auto", color: "white", fontStyle: 'italic', transition: "none", padding: "0", margin: "20px 0 0 0"}}
                                 withIcon={false} 
                                 buttonText="Choose New Image"
                                 onChange={onDrop} 
                                 imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
                                 maxFileSize={5242880} 
                                 singleImage={true}
-                                label={"Image Preview"}
+                                label={""}
                             />
                             <button id={addImageSubmitId} className={`button ${addImageSubmitId}`} onClick={addImage} >Add Image</button>
                         </div>:

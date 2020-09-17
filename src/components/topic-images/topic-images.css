@@ -176,9 +176,19 @@
   color: var(--site-background-color);
 }
 
+.image-preview-title {
+  position: absolute;
+  top: 4%;
+  background: rgba(0,0,0,0.4);
+  color: white;
+  width: 200px;
+  left: calc(50% - 100px);
+}
+
 .file-uploader {
     width: 200px;
     left: calc(50% - 100px);
+    bottom: 50px;
     position: absolute;
 }
 
