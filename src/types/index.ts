@@ -24,6 +24,7 @@ export interface TopicImages {
     id: number;
     username: string;
     image: string;
+    likes: number
 }
 
 export interface Comment {

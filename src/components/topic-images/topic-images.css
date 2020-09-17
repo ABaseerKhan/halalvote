@@ -42,8 +42,9 @@
 .image-username {
   position: absolute;
   bottom: 20px;
+  left: 20px;
   padding: 10px 15px 10px 15px;
-  background: var(--neutral-color);
+  background: none;
   color: var(--site-background-color);
   border-radius: 20px 20px 20px 20px;
   cursor: pointer;
@@ -51,14 +52,33 @@
 }
 
 .image-username:hover {
-  background-color: var(--light-neutral-color);
+  color: var(--light-neutral-color);
+}
+
+.image-actions-container {
+  position: absolute;
+  bottom: 20px;
+  color: var(--site-background-color);
+  text-align: center;
+}
+
+.image-likes {
+  height: 20px;
+}
+
+.image-heart {
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+
+.image-heart:hover {
+  color: var(--light-neutral-color);
 }
 
 .image-delete-button {
-  position: absolute;
   height: 40px;
-  bottom: 20px;
-  color: var(--neutral-color);
+  color: var(--site-background-color);
   cursor: pointer;
   text-align: center;
 }

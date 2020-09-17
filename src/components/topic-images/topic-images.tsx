@@ -6,6 +6,7 @@ import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as LeftArrowSVG } from '../../icons/left-arrow.svg';
 import { ReactComponent as RightArrowSVG } from '../../icons/right-arrow.svg';
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
+import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { postData } from '../../https-client/client';
 import ImageUploader from 'react-images-upload';
 import { css } from "@emotion/core";
@@ -52,7 +53,11 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         let queryParams: any = { 
             "topicTitle": topicTitle
         };
-        let additionalHeaders = {};
+        let additionalHeaders: any = {};
+        if (username && username !== "" && sessiontoken && sessiontoken !== "") {
+            queryParams['username'] = username;
+            additionalHeaders['sessiontoken'] = sessiontoken;
+        }
 
         const { data }: { data: TopicImages[] } = await getData({ 
             baseUrl: topicsConfig.url, 
@@ -139,15 +144,14 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <RightArrowSVG />
                     </button>
                     <img className='image' style={{maxHeight:maxHeight + "px", maxWidth: maxWidth + "px"}} alt={props.topicTitle} src={state.topicImages[state.currentIndex].image}/>
-                    
-                    {
-                        isUserImage() ?
-                            <div>
-                                <div className="image-username" style={{right: "60px"}}>{state.topicImages[state.currentIndex].username}</div>
-                                <TrashButtonSVG className="image-delete-button" style={{right: "20px"}} onClick={deleteImage}/>
-                            </div> :
-                            <div className="image-username" style={{right: "20px"}}>{state.topicImages[state.currentIndex].username}</div>
-                    }
+                    <div className="image-username">{"@" + state.topicImages[state.currentIndex].username}</div>
+                    <div className="image-actions-container" style={{right: "20px"}}>
+                        <HeartButtonSVG className="image-heart" />
+                        <div className="image-likes">{state.topicImages[state.currentIndex].likes}</div>
+                        {
+                            isUserImage() && <TrashButtonSVG className="image-delete-button" style={{right: "20px"}} onClick={deleteImage}/>
+                        }
+                    </div>
                 </div> :
 
                 state.loading ?
