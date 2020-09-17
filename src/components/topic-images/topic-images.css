@@ -78,10 +78,10 @@
 
 .image-delete-button {
   position: absolute;
-  bottom: 0;
+  bottom: 60px;
   margin-bottom: 1em;
   height: 40px;
-  left: calc(50% - 16px);
+  right: calc(16px);
   cursor: pointer;
   text-align: center;
 }
