@@ -27,6 +27,7 @@ export interface TopicImages {
     likes: number;
     width?: number;
     height?: number;
+    userLike: number;
 }
 
 export interface Comment {
