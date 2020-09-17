@@ -61,12 +61,14 @@
 }
 
 .image-username {
+  background: rgba(0,0,0,0.4);
+  border-radius: 10px;
+  padding: 5px;
   position: absolute;
   bottom: 0;
   margin: 0 0 1em 1em;
   height: fit-content;
   width: fit-content;
-  background: none;
   color: white;
   cursor: pointer;
   text-align: center;
@@ -77,9 +79,12 @@
 }
 
 .image-delete-button {
+  padding: 5px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 10px;
   position: absolute;
   bottom: 60px;
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
   height: 40px;
   right: calc(16px);
   cursor: pointer;
@@ -87,6 +92,9 @@
 }
 
 .image-likes-container {
+  padding: 5px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 10px;
   position: absolute;
   display: table-cell;
   right: 0;
