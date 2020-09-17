@@ -111,6 +111,29 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }
     }
 
+    const updateImageLike = async () => {
+        const topicImage = state.topicImages[state.currentIndex];
+        const { status, data } = await postData({
+            baseUrl: topicsConfig.url,
+            path: 'update-topic-image-like',
+            data: {
+                "username": username,
+                "imageId": topicImage.id,
+                "like": topicImage.userLike === 0
+            },
+            additionalHeaders: {
+                "sessiontoken": sessiontoken
+            },
+            setCookie: setCookie,
+        });
+
+        if (status === 200) {
+            state.topicImages[state.currentIndex].likes = data.likes;
+            state.topicImages[state.currentIndex].userLike = topicImage.userLike === 0 ? 1 : 0;
+            setState({...state, topicImages: state.topicImages});
+        }
+    }
+
     const showAddTopic = (addTopicDisplayed: boolean) => {
         setState({...state, addTopicDisplayed: addTopicDisplayed})
     }
@@ -143,7 +166,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <>
                             <div className="image-username">{"@" + topicImg.username}</div>
                             <div className="image-actions-container">
-                                <HeartButtonSVG className="image-heart" />
+                                <HeartButtonSVG className="image-heart" onClick={updateImageLike} />
                                 <div className="image-likes">{topicImg.likes}</div>
                                 {
                                     isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
