@@ -164,10 +164,14 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     `;
 
     const imagesBody = document.getElementById("images-body");
+    var isScrolling: any;
     if (imagesBody) {
         imagesBody.onscroll = () => {
-            const imgIndex = Math.floor(imagesBody.scrollHeight / imagesBody.clientHeight);
-            setState({...state, currentIndex: Math.min(Math.max(imgIndex, 0), state.topicImages.length - 1)})
+            clearTimeout( isScrolling );
+            isScrolling = setTimeout(function() {
+                const imgIndex = Math.floor(imagesBody.scrollTop / imagesBody.clientHeight);
+                setState({...state, currentIndex: Math.min(Math.max(imgIndex, 0), state.topicImages.length - 1)})
+            }, 66);
         }
     }
 
