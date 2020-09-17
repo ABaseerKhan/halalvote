@@ -4,7 +4,6 @@ import { useCookies } from 'react-cookie';
 import { topicsConfig } from '../../https-client/config';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as LeftArrowSVG } from '../../icons/left-arrow.svg';
-import { ReactComponent as RightArrowSVG } from '../../icons/right-arrow.svg';
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { postData } from '../../https-client/client';
@@ -62,8 +61,8 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         const { data }: { data: TopicImages[] } = await getData({ 
             baseUrl: topicsConfig.url, 
             path: 'get-topic-images', 
-            queryParams: queryParams, 
-            additionalHeaders: additionalHeaders, 
+            queryParams: queryParams,
+            additionalHeaders: additionalHeaders,
         });
 
         setState({...state, topicImages: data, currentIndex: 0, addTopicDisplayed: false, loading: false});
@@ -91,8 +90,8 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }
     }
 
-    const deleteImage = async () => {
-        if (isUserImage()) {
+    const deleteImage = (idx: number) => async () => {
+        if (isUserImage(idx)) {
             const { status } = await postData({
                 baseUrl: topicsConfig.url,
                 path: 'delete-topic-image',
@@ -112,10 +111,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }
     }
 
-    const iterateImage = (value: number) => {
-        setState({...state, currentIndex: Math.min(Math.max(state.currentIndex + value, 0), state.topicImages.length - 1)})
-    }
-
     const showAddTopic = (addTopicDisplayed: boolean) => {
         setState({...state, addTopicDisplayed: addTopicDisplayed})
     }
@@ -124,36 +119,48 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         setState({...state, picture: picture[0]});
     }
 
-    const isUserImage = () => {
-        return state.topicImages.length > state.currentIndex && state.topicImages[state.currentIndex].username === username;
+    const isUserImage = (idx: number) => {
+        return state.topicImages.length > state.currentIndex && state.topicImages[idx].username === username;
     }
 
     const loaderCssOverride = css`
         margin: auto;
     `;
 
+    const imagesBody = document.getElementById("images-body");
+    if (imagesBody) {
+        imagesBody.onscroll = () => {
+            const imgIndex = Math.floor(imagesBody.scrollHeight / imagesBody.clientHeight);
+            setState({...state, currentIndex: Math.min(Math.max(imgIndex, 0), state.topicImages.length - 1)})
+        }
+    }
     const ImageNavigator = (
-        <div className="image-body" style={{background: state.topicImages.length > 0 && !state.loading ? "black" : "none"}}>
+        <div id="images-body" className="images-body" style={{background: state.topicImages.length > 0 && !state.loading ? "black" : "none"}}>
             {
                 state.topicImages.length > 0 ?
-                <div style={{margin: "auto"}}>
-                    <button className='image-navigator-button image-navigator-button-left' onClick={() => {iterateImage(-1)}}>
-                        <LeftArrowSVG />
-                    </button>
-                    <button className='image-navigator-button image-navigator-button-right' onClick={() => {iterateImage(1)}}>
-                        <RightArrowSVG />
-                    </button>
-                    <img className='image' style={{maxHeight:maxHeight + "px", maxWidth: maxWidth + "px"}} alt={props.topicTitle} src={state.topicImages[state.currentIndex].image}/>
-                    <div className="image-username">{"@" + state.topicImages[state.currentIndex].username}</div>
-                    <div className="image-actions-container" style={{right: "20px"}}>
-                        <HeartButtonSVG className="image-heart" />
-                        <div className="image-likes">{state.topicImages[state.currentIndex].likes}</div>
-                        {
-                            isUserImage() && <TrashButtonSVG className="image-delete-button" style={{right: "20px"}} onClick={deleteImage}/>
-                        }
-                    </div>
-                </div> :
+                    state.topicImages.map((topicImg, idx) => {
+                        const ImgStats = 
+                        <>
+                            <div className="image-username">{"@" + topicImg.username}</div>
+                            <div className="image-actions-container">
+                                <HeartButtonSVG className="image-heart" />
+                                <div className="image-likes">{topicImg.likes}</div>
+                                {
+                                    isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
+                                }
+                            </div>
+                        </>
 
+                        const Img = (
+                            <div className="image-container">
+                                <img className='image' style={{maxHeight: maxHeight + "px", maxWidth: maxWidth + "px", margin: "auto"}} alt={props.topicTitle} src={topicImg.image}/>
+                                {ImgStats}
+                            </div>
+                        )
+
+                        return Img;
+                    })
+                :
                 state.loading ?
                     <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                     <div className='no-image-text'>No images to show</div>

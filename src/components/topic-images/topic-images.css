@@ -1,10 +1,19 @@
-.image-body {
-  display: flex;
+.images-body {
+  display: block;
   height: 100%;
   width: 100%;
   border-radius: 25px 25px 25px 25px;
-  overflow: hidden;
+  overflow: auto;
   text-align: center;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
+.image-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  scroll-snap-align: start;
 }
 
 .image-navigator-button {
@@ -40,12 +49,13 @@
 }
 
 .image-username {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
+  position: relative;
+  height: fit-content;
+  bottom: -92%;
+  left: -100%;
   padding: 10px 15px 10px 15px;
   background: none;
-  color: var(--site-background-color);
+  color: white;
   border-radius: 20px 20px 20px 20px;
   cursor: pointer;
   text-align: center;
@@ -56,9 +66,11 @@
 }
 
 .image-actions-container {
-  position: absolute;
-  bottom: 20px;
-  color: var(--site-background-color);
+  position: relative;
+  height: fit-content;
+  bottom: -85%;
+  right: 18%;
+  color: white;
   text-align: center;
 }
 
@@ -78,7 +90,6 @@
 
 .image-delete-button {
   height: 40px;
-  color: var(--site-background-color);
   cursor: pointer;
   text-align: center;
 }

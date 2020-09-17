@@ -27,7 +27,7 @@
         justify-content: center;
     }
     .comments-card-1, .comments-card-0 {
-        width: 85vw !important;
+        width: 90vw !important;
         display: flex !important;
         margin-left: unset !important;
         margin-right: unset !important;
