@@ -137,7 +137,13 @@ export const VotingSlider = (props: VotingSliderProps) => {
             setState({ value: 0 });
             props.submitVote(0);
         } else {
-            props.submitVote(value as number);
+            if (value > 0) {
+                setState({ value: 100 });
+                props.submitVote(100);
+            } else {
+                setState({ value: -100 });
+                props.submitVote(-100);
+            }
         }
     };
 
