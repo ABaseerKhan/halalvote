@@ -180,16 +180,21 @@
   position: absolute;
   top: 4%;
   background: rgba(0,0,0,0.4);
+  border-radius: 10px;
+  padding: 5px;
   color: white;
-  width: 200px;
-  left: calc(50% - 100px);
+  width: fit-content;
+  font-size: 1.5vh;
+  left: calc(50% - 7vh);
 }
 
 .file-uploader {
-    width: 200px;
-    left: calc(50% - 100px);
-    bottom: 50px;
+    width: fit-content;
+    height: fit-content;
+    bottom: 60px;
     position: absolute;
+    font-size: 1.5vh !important;
+    left: calc(50% - 7vh);
 }
 
 .add-image-back-button:hover {
@@ -217,5 +222,5 @@
   position: absolute;
   margin: 0 0 1em 0 !important;
   bottom: 0;
-  color: white;
+  color: white !important;
 }
