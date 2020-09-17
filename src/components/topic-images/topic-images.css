@@ -7,10 +7,12 @@
   text-align: center;
   scroll-behavior: smooth;
   scroll-snap-type: y mandatory;
+  background: black;
 }
 
 .image-container {
   display: flex;
+  position: relative;
   height: 100%;
   width: 100%;
   scroll-snap-align: start;
@@ -48,15 +50,24 @@
   max-width: 100%;
 }
 
-.image-username {
-  position: relative;
+.image-actions-container {
+  position: absolute;
+  display: block;
   height: fit-content;
-  bottom: -92%;
-  left: -100%;
-  padding: 10px 15px 10px 15px;
+  width: 100%;
+  bottom: 0;
+  color: white;
+  text-align: center;
+}
+
+.image-username {
+  position: absolute;
+  bottom: 0;
+  margin: 0 0 1em 1em;
+  height: fit-content;
+  width: fit-content;
   background: none;
   color: white;
-  border-radius: 20px 20px 20px 20px;
   cursor: pointer;
   text-align: center;
 }
@@ -65,13 +76,23 @@
   color: var(--light-neutral-color);
 }
 
-.image-actions-container {
-  position: relative;
-  height: fit-content;
-  bottom: -85%;
-  right: 18%;
-  color: white;
+.image-delete-button {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 1em;
+  height: 40px;
+  left: calc(50% - 16px);
+  cursor: pointer;
   text-align: center;
+}
+
+.image-likes-container {
+  position: absolute;
+  display: table-cell;
+  right: 0;
+  bottom: 0;
+  width: fit-content;
+  margin: 0 1em 1em 0;
 }
 
 .image-likes {
@@ -88,17 +109,13 @@
   color: var(--light-neutral-color);
 }
 
-.image-delete-button {
-  height: 40px;
-  cursor: pointer;
-  text-align: center;
-}
-
 .image-delete-button:hover {
   color: var(--light-neutral-color);
 }
 
 .no-image-text {
+  top: calc(50% - 0.5em);
+  position: absolute;
   height: auto;
   width: 100%;
   margin: auto;

@@ -16,6 +16,7 @@ import { TopicImages } from '../../types';
 
 // styles
 import './topic-images.css';
+import { getImageDimensionsFromSource } from '../../utils';
 
 interface TopicImagesComponentProps {
     topicTitle: string,
@@ -59,13 +60,23 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }
 
         const { data }: { data: TopicImages[] } = await getData({ 
-            baseUrl: topicsConfig.url, 
-            path: 'get-topic-images', 
+            baseUrl: topicsConfig.url,
+            path: 'get-topic-images',
             queryParams: queryParams,
             additionalHeaders: additionalHeaders,
         });
-
-        setState({...state, topicImages: data, currentIndex: 0, addTopicDisplayed: false, loading: false});
+        if (data.length) {
+            data.forEach(async (img, idx) => { 
+                const imgDimensions = await getImageDimensionsFromSource(img.image);
+                img.height = imgDimensions.height;
+                img.width = imgDimensions.width;
+                if (idx === data.length - 1) {
+                    setState({...state, topicImages: data, currentIndex: 0, addTopicDisplayed: false, loading: false});
+                }
+            });
+        } else {
+            setState({...state, topicImages: data, currentIndex: 0, addTopicDisplayed: false, loading: false});
+        }
     }
 
     const addImage = async () => {
@@ -124,7 +135,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     }
 
     const loaderCssOverride = css`
-        margin: auto;
+        position: absolute;
+        top: calc(50% - 25px);
+        left: calc(50% - 25px);
     `;
 
     const imagesBody = document.getElementById("images-body");
@@ -134,30 +147,32 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             setState({...state, currentIndex: Math.min(Math.max(imgIndex, 0), state.topicImages.length - 1)})
         }
     }
+
     const ImageNavigator = (
-        <div id="images-body" className="images-body" style={{background: state.topicImages.length > 0 && !state.loading ? "black" : "none"}}>
+        <div id="images-body" className="images-body">
             {
+
                 state.topicImages.length > 0 ?
                     state.topicImages.map((topicImg, idx) => {
                         const ImgStats = 
                         <>
-                            <div className="image-username">{"@" + topicImg.username}</div>
                             <div className="image-actions-container">
-                                <HeartButtonSVG className="image-heart" />
-                                <div className="image-likes">{topicImg.likes}</div>
+                                <div className="image-username">{"@" + topicImg.username}</div>
                                 {
                                     isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
                                 }
+                                <div className="image-likes-container">
+                                    <HeartButtonSVG className="image-heart" />
+                                    <div className="image-likes">{topicImg.likes}</div>
+                                </div>
                             </div>
                         </>
-
                         const Img = (
-                            <div className="image-container">
-                                <img className='image' style={{maxHeight: maxHeight + "px", maxWidth: maxWidth + "px", margin: "auto"}} alt={props.topicTitle} src={topicImg.image}/>
+                            <div className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
+                                <img id="image" className='image' style={{maxHeight: (maxHeight) + "px", maxWidth: maxWidth + "px", margin: "auto"}} alt={props.topicTitle} src={topicImg.image}/>
                                 {ImgStats}
                             </div>
                         )
-
                         return Img;
                     })
                 :

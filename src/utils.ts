@@ -131,3 +131,12 @@ export function detectSwipe(el: any, func: any, deltaMin = 90) {
     };
     el.addEventListener('touchend', touchendCb, false);
   }
+
+export function getImageDimensionsFromSource(src: string) {
+    return new Promise<{ height: number, width: number }>((resolve, reject) => {
+        let img = new Image()
+        img.onload = () => resolve({ height: img.height, width: img.width });
+        img.onerror = reject
+        img.src = src
+    })
+}
