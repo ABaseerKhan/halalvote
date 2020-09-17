@@ -195,7 +195,7 @@ const animateNextTopic = (commentsBody: HTMLElement | null, callback: () => void
   if(!!commentsBody) {
     commentsBody.animate([
       {
-        transform: 'translate(-80%)'
+        transform: 'translate(-100%)'
       }
     ], {
       duration: prevNextTopicAnimationDuration,
@@ -203,9 +203,10 @@ const animateNextTopic = (commentsBody: HTMLElement | null, callback: () => void
       fill: 'forwards',
     }).onfinish = () => {
       callback();
+      commentsBody.style.transform = "translate(100%)";
       commentsBody.animate([
         {
-          transform: 'translate(80%)'
+          transform: 'translate(100%)'
         }
       ], {
         duration: 0,
@@ -219,7 +220,9 @@ const animateNextTopic = (commentsBody: HTMLElement | null, callback: () => void
           duration: prevNextTopicAnimationDuration,
           easing: 'ease-out',
           fill: "forwards"
-        })
+        }).onfinish = () => {
+          commentsBody.style.transform = "translate(0)";
+        }
       }
     }
   };
@@ -229,7 +232,7 @@ const animatePrevTopic = (commentsBody: any, callback: () => void) => {
   if(!!commentsBody) {
     commentsBody.animate([
       {
-        transform: 'translate(80%)'
+        transform: 'translate(100%)'
       }
     ], {
       duration: prevNextTopicAnimationDuration,
@@ -237,9 +240,10 @@ const animatePrevTopic = (commentsBody: any, callback: () => void) => {
       fill: 'forwards',
     }).onfinish = () => {
       callback();
+      commentsBody.style.transform = "translate(-100%)";
       commentsBody.animate([
         {
-          transform: 'translate(-80%)'
+          transform: 'translate(-100%)'
         }
       ], {
         duration: 0,
@@ -253,7 +257,9 @@ const animatePrevTopic = (commentsBody: any, callback: () => void) => {
           duration: prevNextTopicAnimationDuration,
           easing: 'ease-out',
           fill: "forwards"
-        })
+        }).onfinish = () => {
+          commentsBody.style.transform = "translate(0)";
+        }
       }
     }
   };
