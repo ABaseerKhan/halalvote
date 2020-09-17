@@ -64,7 +64,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
             }
             <div className="topic-navigator">
                 <button id={leftCarouselButtonId} onClick={iterateTopic(-1)} className='carousel-button-left'>
-                    <ChevronLeftSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>
+                    {!isMobile && <ChevronLeftSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>}
                 </button>
                 <div id="topic-title" className='topic-title' onClick={() => {setImageDisplayed(true)}} >
                     <div className="linear-wipe">
@@ -72,7 +72,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     </div>
                 </div>
                 <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button-right'>
-                    <ChevronRightSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>
+                    {!isMobile && <ChevronRightSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>}
                 </button>
             </div>
             <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />
