@@ -1,11 +1,11 @@
 .page-scroller {
     position: fixed;
-    height: 80px;
+    height: 40px;
     width: 20px;
     margin-right: 0.25em;
-    margin-top: -40px;
+    margin-top: -20px;
     right: 0;
-    top: 51vh;
+    top: 50vh;
 }
 
 .page-scroller-button-container {

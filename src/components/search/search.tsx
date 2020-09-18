@@ -8,11 +8,9 @@ import { ReactComponent as SearchSVG } from '../../icons/search.svg';
 import './search.css';
 
 interface SearchComponentProps {
-    id: string,
     onSuggestionClick: (topicTofetch?: string) => void;
 };
 export const SearchComponent = (props: SearchComponentProps) => {
-    const { id } = props;
     const { inputText, setInputText, searchResults } = useTopicsSearch();
     const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
     const [autoCompleteIndex, setAutoCompleteIndex] = useState<number>(-1);
@@ -51,7 +49,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
     }
 
     return (
-        <div id={id} className='search-page'>
+        <div className='search-page'>
             <div className={"search-bar"}>
                 <span className="search-header">
                     <span className="search-header-haram">H</span>
