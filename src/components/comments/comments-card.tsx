@@ -40,8 +40,7 @@ const initialState = {
 }
 var clickTimer: any = null;
 const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
-    const { judgment, topicTitle, numHalalComments, numHaramComments, specificComment, refreshTopic } = props;
-    const totalTopLevelComments = (judgment === Judgment.HALAL ? numHalalComments : numHaramComments) || 0;
+    const { judgment, topicTitle, specificComment, refreshTopic } = props;
 
     // const isMobile = useMedia(
     //     // Media queries
@@ -89,9 +88,9 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         } // eslint-disable-next-line
     }, [state.pathToHighlightedComment])
 
-    const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number, specificCommentId?: number) => {
+    const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number, specificCommentId?: number, depth=1) => {
         const parentComment = getCommentFromPath(state.comments, pathToParentComment);
-        const { data: comments }: { data: Comment[]} = await postData({ 
+        const { data: comments }: { data: Comment[]} = await postData({
             baseUrl: commentsConfig.url,
             path: 'get-comments', 
             data: { 
@@ -100,8 +99,8 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                 "username": username,
                 "parentId": parentComment?.id,
                 "singleCommentId": specificCommentId,
-                "depth": 2, 
-                "n": 5,
+                "depth": depth,
+                "n": 50,
                 "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : state.comments?.map((r) => r.id),
             },
             additionalHeaders: { },
@@ -222,10 +221,9 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         }
     }
 
-    const moreComments = totalTopLevelComments - state.comments.length;
     const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
-    const commentsContainerId = `comments-container-${judgment.toString()}`;
-    const commentsCardId = "comments-card-" + judgment.toString();
+    const commentsContainerId = `comments-container`;
+    const commentsCardId = "comments-card";
 
     const doubleTap = (judgmentMemo: any) => (() => {
         if (clickTimer == null) {
@@ -256,12 +254,6 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                                             judgment={judgment}
                                         />
                             })
-                        }
-                        {
-                            (moreComments > 0 && state.comments.length &&
-                            <div className={judgment ? "show-more-comments-1" : "show-more-comments-0"} onClick={(e) => { e.stopPropagation(); fetchComments([]);  }}>
-                                {moreComments + (moreComments > 1 ? " more comments" : " more comment")}
-                            </div>) || null
                         }
                     </div>
                 </div>
