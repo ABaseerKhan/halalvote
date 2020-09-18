@@ -5,5 +5,4 @@
   text-align: center;
   padding-top: min(var(--topic-carousel-height-vh), var(--max-topic-carousel-height-px));
   padding-bottom: 0px;
-  scroll-snap-align: start;
 }

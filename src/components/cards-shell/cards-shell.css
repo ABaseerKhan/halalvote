@@ -3,7 +3,7 @@
     height: min(calc(100% - var(--topic-carousel-height-vh)), 100% - var(--max-topic-carousel-height-px));
     width: 100%;
     padding-top: max(var(--topic-carousel-height-vh), var(--max-topic-carousel-height-px));
-    margin-left: 20vw;
+    margin-left: 27.5vw;
     scroll-snap-align: start;
 }
 
