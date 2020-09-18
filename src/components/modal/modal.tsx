@@ -3,7 +3,6 @@ import { AddTopicComponent } from '../add-topic/add-topic';
 import { ModalType } from '../../types';
 import { LoginComponent } from '../login/login';
 import { useMedia } from '../../hooks/useMedia';
-import { TopicImagesComponent } from '../topic-images/topic-images';
 import { AccountComponent } from '../account/account';
 import { vhToPixelsWithMax, vwToPixelsWithMax, vhToPixels } from "../../utils";
 
@@ -19,11 +18,10 @@ interface ModalComponentProps {
     accountUsername?: string;
     showSpecificComment?: any;
     fetchTopics?: any;
-    topicTitle?: string | null;
     onLogin?: any;
 };
 export const ModalComponent = (props: ModalComponentProps) => {
-    const { removeModal, modalType, accountUsername, fetchTopics, topicTitle, showSpecificComment } = props;
+    const { removeModal, modalType, accountUsername, fetchTopics, showSpecificComment } = props;
 
     const isMobile = useMedia(
         // Media queries
@@ -95,7 +93,6 @@ export const ModalComponent = (props: ModalComponentProps) => {
             <div id={modalId} className={modalId}>
                 { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> }
                 { modalType === ModalType.ADD_TOPIC && <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> }
-                { modalType === ModalType.TOPIC_IMAGE && topicTitle != null && <TopicImagesComponent topicTitle={topicTitle} maxHeight={getModalHeight()} maxWidth={getModalWidth()} /> }
                 { modalType === ModalType.ACCOUNT && <AccountComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> }
             </div>
         </div>

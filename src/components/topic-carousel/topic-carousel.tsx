@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TopicVotesComponent } from './topic-votes';
 import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
 import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
 import { useMedia } from '../../hooks/useMedia';
-import { ModalComponent } from '../modal/modal';
-import { Portal } from '../../index';
 
 // type imports
-import { ModalType } from '../../types';
 
 // styles
 import './topic-carousel.css';
@@ -24,14 +21,8 @@ interface TopicCarouselComponentProps {
     numVotes: number,
     style?: any;
 };
-interface TopicCarouselComponentState {
-    imageDisplayed: boolean
-}
 export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
     const { id, iterateTopic, topicTitle, userVote, halalPoints, haramPoints, numVotes } = props;
-    const [state, setState] = useState<TopicCarouselComponentState>({
-        imageDisplayed: false
-    });
 
     const isMobile = useMedia(
         // Media queries
@@ -53,20 +44,13 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
         }
     }
 
-    const setImageDisplayed = (imageDisplayed: boolean) => {
-        setState({...state, imageDisplayed: imageDisplayed})
-    }
-
     return (
         <div id={id} style={props.style} className='topic-carousel'>
-            { state.imageDisplayed &&
-                <Portal><ModalComponent removeModal={() => {setImageDisplayed(false)}} modalType={ModalType.TOPIC_IMAGE} fetchTopics={null} topicTitle={props.topicTitle}/></Portal>
-            }
             <div className="topic-navigator">
                 <button id={leftCarouselButtonId} onClick={iterateTopic(-1)} className='carousel-button-left'>
                     {!isMobile && <ChevronLeftSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>}
                 </button>
-                <div id="topic-title" className='topic-title' onClick={() => {setImageDisplayed(true)}} >
+                <div id="topic-title" className='topic-title' >
                     <div className="linear-wipe">
                         {topicTitle}
                     </div>

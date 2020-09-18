@@ -29,7 +29,6 @@
     font-size: 2em;
     color: var(--neutral-color);
     overflow-x: auto;
-    cursor: pointer;
     white-space: nowrap;
     scroll-behavior: smooth;
     overflow-y: hidden;
@@ -50,10 +49,6 @@
     animation: shine 2s infinite linear;
 }
 
-.linear-wipe:hover {
-    -webkit-text-fill-color: unset;
-    color: var(--light-neutral-color) !important;
-}
 @keyframes shine {
     to {
         background-position: 200% center;

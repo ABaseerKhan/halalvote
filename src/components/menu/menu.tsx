@@ -301,13 +301,13 @@ export const MenuComponent = (props: MenuComponentProps) => {
     return (
         <div id={menuId} className={menuId}>
             { state.loginDisplayed &&
-                <Portal><ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchTopics={null} topicTitle={null}/></Portal>
+                <Portal><ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchTopics={null}/></Portal>
             }
             { state.addTopicDisplayed &&
-                <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_TOPIC} fetchTopics={fetchTopics} topicTitle={null}/></Portal>
+                <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_TOPIC} fetchTopics={fetchTopics}/></Portal>
             }
             { state.accountDisplayed &&
-                <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT} fetchTopics={fetchTopics} topicTitle={null} showSpecificComment={props.showSpecificComment} accountUsername={username}/></Portal>
+                <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT} fetchTopics={fetchTopics} showSpecificComment={props.showSpecificComment} accountUsername={username}/></Portal>
             }
             {
                 state.menuLocation !== MenuLocation.NONE && 
