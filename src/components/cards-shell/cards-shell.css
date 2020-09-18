@@ -36,15 +36,12 @@
 
 .card-shell-cover-label {
     position:absolute;
+    height: 100%;
     width: 0;
-    right: 2vw;
-    top: 50%;
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    transform: rotate(-90deg);
+    right: 1vw;
     color: white;
     z-index: 2;
     pointer-events: none;
+    writing-mode: vertical-rl;
+    text-align: center;
 }

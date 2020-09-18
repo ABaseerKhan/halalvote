@@ -176,9 +176,9 @@ export const AppShellComponent = (props: any) => {
       <div id={appShellId} className={appShellId} >
         <SearchComponent onSuggestionClick={fetchTopics} />
         <CardsShellComponent id={cardsShellId} cards={[
-          { label: "Media", body: <TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> },
-          { label: "Arguments", body: <CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/> }, 
-          { label: "Analytics", body: <AnalyticsCardComponent id={"analytics"}/> }, 
+          { label: "MEDIA", body: <TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> },
+          { label: "ARGUMENTS", body: <CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/> }, 
+          { label: "ANALYTICS", body: <AnalyticsCardComponent id={"analytics"}/> }, 
           ]}/>
         <div className="fixed-content">
           <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
