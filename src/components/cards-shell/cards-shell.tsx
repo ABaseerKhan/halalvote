@@ -130,7 +130,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
           }).onfinish = onfinish;
           cover.animate([
             {
-              opacity: position === 0 ? '0' : `${0.5 / ((positions.current.length) - position)}`
+              opacity: position === 0 ? '0' : '1'
             }
           ], {
             duration: DURATION,
@@ -158,7 +158,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
         }).onfinish = onfinish;
         cover.animate([
           {
-            opacity: `${0.25 / ((positions.current.length) - position)}`
+            opacity: `0.5`
           }
         ], {
             duration: DURATION,
