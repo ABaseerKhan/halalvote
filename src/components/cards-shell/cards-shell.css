@@ -33,3 +33,18 @@
 .card-shell-cover:hover{
     background-color: var(--highlight-color);
 }
+
+.card-shell-cover-label {
+    position:absolute;
+    width: 0;
+    right: 2vw;
+    top: 50%;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+    color: white;
+    z-index: 2;
+    pointer-events: none;
+}

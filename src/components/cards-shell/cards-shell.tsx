@@ -33,6 +33,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
     const createCardElement = (id: string, body: ReactElement, index: number) => {
       return (
         <div id={id} className="card-shell" style={{zIndex: cards.length - index.valueOf() - 1}}>
+          <div id={`${id}-label`} className="card-shell-cover-label" style={{display: positions.current[index] !== 0 ? 'unset' : 'none'}}>{cards[index].label}</div>
           <div id={`${id}-cover`} className="card-shell-cover" onClick={() => {selectCard(index)}} style={{display: positions.current[index] !== 0 ? 'unset' : 'none'}}></div>
           {body}
         </div>
@@ -89,10 +90,13 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
     const setCoverDisplays = () => {
       for (let i = 0; i < cards.length; i++) {
         const cover = document.getElementById(`card-element-${i}-cover`);
+        const coverLabel = document.getElementById(`card-element-${i}-label`);
         const position = positions.current[i];
 
-        if (cover) {
-          cover.style.display = position === 0 ? 'none' : 'unset';
+        if (cover && coverLabel) {
+          const display = position === 0 ? 'none' : 'unset';
+          cover.style.display = display;
+          coverLabel.style.display = display;
         }
       }
     }
