@@ -135,7 +135,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
       if (card && cover) {
         card.animate([
           {
-            marginLeft: `${((position === 0 ? 0 : ((position - 1) * 5) + (40 * (.95 ** (position - 1)))))}vw`
+            marginLeft: `${((position === 0 ? 0 : ((position - 1) * 5) + (45 * (.95 ** (position - 1)))))}vw`
           }
         ], {
             duration: DURATION,

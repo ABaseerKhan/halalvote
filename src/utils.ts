@@ -43,6 +43,10 @@ export const vhToPixels = (vh: number) => {
     return (vh / 100.0) * window.innerHeight;
 }
 
+export const vwToPixels = (vw: number) => {
+    return (vw / 100.0) * window.innerWidth;
+}
+
 export const vhToPixelsWithMax = (vh: number, max: number) => {
     return Math.min((vh / 100.0) * window.innerHeight, max);
 }

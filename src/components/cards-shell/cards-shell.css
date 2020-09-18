@@ -3,7 +3,7 @@
     height: min(calc(100% - var(--topic-carousel-height-vh)), 100% - var(--max-topic-carousel-height-px));
     width: 100%;
     padding-top: max(var(--topic-carousel-height-vh), var(--max-topic-carousel-height-px));
-    margin-left: 27.5vw;
+    margin-left: 20vw;
     scroll-snap-align: start;
 }
 
@@ -11,7 +11,7 @@
     display: flex;
     position: absolute;
     height: 75vh;
-    width: 40vw;
+    width: 45vw;
     border-radius: 25px;
     margin-left: unset;
     margin-right: unset;

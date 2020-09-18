@@ -7,7 +7,7 @@ import { MenuComponent } from './menu/menu';
 import { Topic, Comment, Judgment } from '../types';
 import { postData } from '../https-client/client';
 import { topicsConfig } from '../https-client/config';
-import { vhToPixelsWithMax, arrayMove } from "../utils";
+import { vhToPixelsWithMax, arrayMove, vhToPixels, vwToPixels } from "../utils";
 import { elementStyles } from "../index";
 import { useCookies } from 'react-cookie';
 import { CardsShellComponent } from './cards-shell/cards-shell';
@@ -17,6 +17,7 @@ import { CommentsCardComponent } from './comments/comments-card';
 
 // style imports
 import './app-shell.css';
+import { TopicImagesComponent } from './topic-images/topic-images';
 
 export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<{ topicDetails: {topics: Topic[]; topicIndex: number}; scrollPosition: number, specificComment?: Comment }>({
@@ -175,13 +176,15 @@ export const AppShellComponent = (props: any) => {
     }
   }
 
+  const cardShellHeight = vhToPixels(75);
+  const cardShellWidth = vwToPixels(45);
   return (
       <div id={appShellId} className={appShellId} >
         <SearchComponent id={searchId} onSuggestionClick={fetchTopics} />
         <CardsShellComponent id="" cards={[
+          { label: "Media", body: <TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> },
           { label: "Arguments", body: <CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/> }, 
           { label: "Analytics", body: <AnalyticsCardComponent id={analyticsId}/> }, 
-          { label: "Analytics2", body: <AnalyticsCardComponent id="analytics2"/> }
           ]}/>
         <div className="fixed-content">
           <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
