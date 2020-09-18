@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, ReactElement } from 'react';
+import React, { useEffect, useRef, ReactElement, useState } from 'react';
 // import { useMedia } from '../../hooks/useMedia';
 
 // type imports
@@ -27,6 +27,8 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
     const commentsCardId = "ARGUMENTS";
     const analyticsCardId = "ANALYTICS";
 
+    // eslint-disable-next-line
+    const [state, setState] = useState({});
     let positions = useRef<string[]>([mediaCardId, commentsCardId, analyticsCardId]);
     let canFlip = useRef<boolean>(false);
 
@@ -40,7 +42,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
       );
     };
 
-    const mediaCardElement = createCardElement(mediaCardId, mediaCard, 0);
+    const mediaCardElement = createCardElement(mediaCardId, React.cloneElement(mediaCard, { shown: positions.current[0] === mediaCardId }), 0);
     const commentsCardElement = createCardElement(commentsCardId, commentsCard, 1);
     const analyticsCardElement = createCardElement(analyticsCardId, analyticsCard, 2);
 
@@ -124,6 +126,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
         makeRoom(cardId, () => {
           rotate(cardId, () => {
             canFlip.current = true;
+            setState(prevState => ({ ...prevState }));
           })
         });
       }
@@ -141,7 +144,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
       const selectedLabel = document.getElementById(`${cardId}-label`);
 
       if (selected && front && back && selectedCover && frontCover && selectedLabel) {
-        const marginLeftVw = 22;
+        const marginLeftVw = 23;
         back.style.zIndex = '0';
         selected.style.zIndex = '1';
         selectedLabel.style.display = 'none';

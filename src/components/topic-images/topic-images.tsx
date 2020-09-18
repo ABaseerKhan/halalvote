@@ -21,7 +21,8 @@ import { getImageDimensionsFromSource } from '../../utils';
 interface TopicImagesComponentProps {
     topicTitle: string,
     maxHeight: number,
-    maxWidth: number
+    maxWidth: number,
+    shown?: boolean,
 };
 
 interface BasicPicture { src: string; width: number; height: number; };
@@ -47,6 +48,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     useEffect(() => {
         fetchImages(); // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [topicTitle]);
+
+    useEffect(() => {
+        setState(prevState=> prevState)
+    }, [props.shown]);
 
     const addImageSubmitId = "add-image-submit-button";
 
@@ -211,9 +216,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                     <div className='no-image-text'>No images to show</div>
             }
+            {!!props.shown && 
             <div className="show-add-image-button" onClick={() => {showAddTopic(true)}}>
                 <AddButtonSVG/>
-            </div>
+            </div>}
         </div>
     );
 
@@ -255,7 +261,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                             />
                         </div>
                 }
-            </div>
+            </div> 
             <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
                 <LeftArrowSVG/>
             </button>

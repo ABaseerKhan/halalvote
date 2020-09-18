@@ -10,7 +10,7 @@
 .card-shell {
     display: flex;
     position: absolute;
-    height: 75vh;
+    height: min(calc(95% - var(--topic-carousel-height-vh)), 95% - var(--max-topic-carousel-height-px));
     width: 45vw;
     border-radius: 25px;
     margin-left: unset;
