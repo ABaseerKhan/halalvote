@@ -219,7 +219,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 
     const ImageAdder = (
         <div>
-            <div className="add-image-body" style={{ background: 'black'}}>
+            <div className="images-body" style={{ background: 'black'}}>
                 {
                     state.picture ? 
                         <div className="image-container" style={{ flexDirection: (state.picture?.width || 0) > (state.picture?.height || 0) ? 'unset' : 'column' }}>
