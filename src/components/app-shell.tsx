@@ -183,8 +183,6 @@ export const AppShellComponent = (props: any) => {
         <div className="fixed-content">
           <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
           <MenuComponent fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
-        </div>
-        <div className="fixed-content-below-cover">
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />
         </div>
       </div>
