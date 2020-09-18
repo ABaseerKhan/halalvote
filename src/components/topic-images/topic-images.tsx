@@ -173,7 +173,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         imagesBody.onscroll = () => {
             clearTimeout( isScrolling );
             isScrolling = setTimeout(function() {
-                console.log(imagesBody.clientHeight);
                 const imgIndex = Math.floor((imagesBody.scrollTop+10) / imagesBody.clientHeight);
                 setState(prevState => ({...prevState, currentIndex: Math.min(Math.max(imgIndex, 0), state.topicImages.length - 1)}));
             }, 66);
