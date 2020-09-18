@@ -23,7 +23,7 @@ interface CardsShellComponentProps {
 export const CardsShellComponent = (props: CardsShellComponentProps) => {
     const { id, mediaCard, commentsCard, analyticsCard } = props;
 
-    const mediaCardId = "MEDIA";
+    const mediaCardId = "CANVAS";
     const commentsCardId = "ARGUMENTS";
     const analyticsCardId = "ANALYTICS";
 
