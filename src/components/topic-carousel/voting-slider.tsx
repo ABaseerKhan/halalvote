@@ -6,8 +6,8 @@ import { useCookies } from 'react-cookie';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: '50%',
-        minWidth: '350px',
+        width: '10%',
+        minWidth: '300px',
     },
     margin: {
         height: theme.spacing(3),
@@ -128,7 +128,7 @@ export const VotingSlider = (props: VotingSliderProps) => {
         },
         {
             value: 99,
-            label: <span style={{ color: '#1f594f', position: 'absolute', transform: 'translate(-100%, -95%)' }}>{'halal (حلال)'}</span>
+            label: <span style={{ color: '#1f594f', position: 'absolute', transform: 'translate(-100%, -95%)' }}>{'(حلال) halal'}</span>
         },
     ];
 
@@ -137,7 +137,13 @@ export const VotingSlider = (props: VotingSliderProps) => {
             setState({ value: 0 });
             props.submitVote(0);
         } else {
-            props.submitVote(value as number);
+            if (value > 0) {
+                setState({ value: 100 });
+                props.submitVote(100);
+            } else {
+                setState({ value: -100 });
+                props.submitVote(-100);
+            }
         }
     };
 

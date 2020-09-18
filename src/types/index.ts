@@ -25,6 +25,8 @@ export interface TopicImages {
     username: string;
     image: string;
     likes: number;
+    width?: number;
+    height?: number;
     userLike: number;
 }
 

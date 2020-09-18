@@ -67,3 +67,8 @@ li.menu-item {
 li.menu-item:hover {
     background-color: var(--light-neutral-color);
 }
+
+@media only screen and (max-width: 600px) {
+    .menu {
+    }
+}

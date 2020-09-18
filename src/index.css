@@ -55,7 +55,7 @@ input[type=text], input[type=password] {
   padding: 6px;
   margin: 10% 0 0 10%;
   border-radius: 24px;
-  color: var(--site-background-color) !important;
+  color: var(--site-background-color);
   background-color: var(--gray) !important;
   border: none;
   outline: none;

@@ -16,17 +16,20 @@ import { TopicImages } from '../../types';
 
 // styles
 import './topic-images.css';
+import { getImageDimensionsFromSource } from '../../utils';
 
 interface TopicImagesComponentProps {
     topicTitle: string,
     maxHeight: number,
     maxWidth: number
 };
+
+interface BasicPicture { src: string; width: number; height: number; };
 interface TopicImagesComponentState {
     addTopicDisplayed: boolean,
     topicImages: TopicImages[],
     currentIndex: number,
-    picture: string | null,
+    picture: BasicPicture | null,
     loading: boolean
 };
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
@@ -59,13 +62,23 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }
 
         const { data }: { data: TopicImages[] } = await getData({ 
-            baseUrl: topicsConfig.url, 
-            path: 'get-topic-images', 
+            baseUrl: topicsConfig.url,
+            path: 'get-topic-images',
             queryParams: queryParams,
             additionalHeaders: additionalHeaders,
         });
-
-        setState({...state, topicImages: data, currentIndex: 0, addTopicDisplayed: false, loading: false});
+        if (data.length) {
+            data.forEach(async (img, idx) => { 
+                const imgDimensions = await getImageDimensionsFromSource(img.image);
+                img.height = imgDimensions.height;
+                img.width = imgDimensions.width;
+                if (idx === data.length - 1) {
+                    setState({...state, topicImages: data, currentIndex: 0, addTopicDisplayed: false, loading: false});
+                }
+            });
+        } else {
+            setState({...state, topicImages: data, currentIndex: 0, addTopicDisplayed: false, loading: false});
+        }
     }
 
     const addImage = async () => {
@@ -138,8 +151,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         setState({...state, addTopicDisplayed: addTopicDisplayed})
     }
 
-    const onDrop = (files: File[], picture: string[]) => {
-        setState({...state, picture: picture[0]});
+    const onDrop = async (files: File[], picture: string[]) => {
+        const imgDimensions = await getImageDimensionsFromSource(picture[0]);
+        const basicPicture: BasicPicture = { src: picture[0], height: imgDimensions.height, width: imgDimensions.width };
+        setState({...state, picture: basicPicture});
     }
 
     const isUserImage = (idx: number) => {
@@ -147,40 +162,48 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     }
 
     const loaderCssOverride = css`
-        margin: auto;
+        position: absolute;
+        top: calc(50% - 25px);
+        left: calc(50% - 25px);
     `;
 
     const imagesBody = document.getElementById("images-body");
+    var isScrolling: any;
     if (imagesBody) {
         imagesBody.onscroll = () => {
-            const imgIndex = Math.floor(imagesBody.scrollHeight / imagesBody.clientHeight);
-            setState({...state, currentIndex: Math.min(Math.max(imgIndex, 0), state.topicImages.length - 1)})
+            clearTimeout( isScrolling );
+            isScrolling = setTimeout(function() {
+                const imgIndex = Math.floor(imagesBody.scrollTop / imagesBody.clientHeight);
+                setState({...state, currentIndex: Math.min(Math.max(imgIndex, 0), state.topicImages.length - 1)})
+            }, 66);
         }
     }
+
     const ImageNavigator = (
-        <div id="images-body" className="images-body" style={{background: state.topicImages.length > 0 && !state.loading ? "black" : "none"}}>
+        <div id="images-body" className="images-body">
             {
+
                 state.topicImages.length > 0 ?
                     state.topicImages.map((topicImg, idx) => {
                         const ImgStats = 
                         <>
-                            <div className="image-username">{"@" + topicImg.username}</div>
                             <div className="image-actions-container">
-                                <HeartButtonSVG className="image-heart" onClick={updateImageLike} />
-                                <div className="image-likes">{topicImg.likes}</div>
+                                <div className="image-username">{"@" + topicImg.username}</div>
                                 {
                                     isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
                                 }
+                                <div className="image-likes-container">
+                                    <HeartButtonSVG className="image-heart" onClick={updateImageLike} />
+                                    <div className="image-likes">{topicImg.likes}</div>
+                                </div>
                             </div>
                         </>
-
                         const Img = (
-                            <div className="image-container">
-                                <img className='image' style={{maxHeight: maxHeight + "px", maxWidth: maxWidth + "px", margin: "auto"}} alt={props.topicTitle} src={topicImg.image}/>
+                            <div className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
+                                <img id="image" className='image' style={{maxHeight: (maxHeight) + "px", maxWidth: maxWidth + "px", margin: "auto"}} alt={props.topicTitle} src={topicImg.image}/>
                                 {ImgStats}
                             </div>
                         )
-
                         return Img;
                     })
                 :
@@ -195,26 +218,29 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     );
 
     const ImageAdder = (
-        <div>
-            <div className="add-image-body">
+        <div style={{ height: '100%' }}>
+            <div className="images-body" style={{ background: 'black'}}>
                 {
                     state.picture ? 
-                        <div>
-                            <img className="adding-image" alt="Topic" src={state.picture}/>
+                        <div className="image-container" style={{ flexDirection: (state.picture?.width || 0) > (state.picture?.height || 0) ? 'unset' : 'column' }}>
+                            <div className="image-preview-title">Image Preview</div>
+                            <img className='image' style={{maxHeight: (maxHeight) + "px", maxWidth: maxWidth + "px", margin: "auto"}} alt="Topic" src={state.picture.src}/>
                             <ImageUploader 
-                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 
+                                className={"file-uploader"}
+                                fileContainerStyle={{padding: '5px', background: "rgba(0,0,0,0.4)", height: 'fit-content', boxShadow: "none", color: "white", margin: '0', flexDirection: 'unset'}} 
                                 buttonClassName="add-image-choose-button"
-                                buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0", margin: "20px 0 0 0"}}
+                                buttonStyles={{background: "none", width: "auto", color: "white", fontStyle: 'italic', textDecoration: 'underline', fontSize: '1.5vh', transition: "none", padding: "0", margin: "0 0 0 0"}}
                                 withIcon={false} 
                                 buttonText="Choose New Image"
                                 onChange={onDrop} 
                                 imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
                                 maxFileSize={5242880} 
                                 singleImage={true}
+                                label={""}
                             />
                             <button id={addImageSubmitId} className={`button ${addImageSubmitId}`} onClick={addImage} >Add Image</button>
                         </div>:
-                        <div>
+                        <div style={{ height: '100px', width: '100%', position: 'absolute', top: 'calc(50% - 100px)'}}>
                             <div className="add-image-section-text">Add Image</div>
                             <ImageUploader 
                                 fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 

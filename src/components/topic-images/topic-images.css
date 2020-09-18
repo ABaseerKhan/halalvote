@@ -7,10 +7,12 @@
   text-align: center;
   scroll-behavior: smooth;
   scroll-snap-type: y mandatory;
+  background: black;
 }
 
 .image-container {
   display: flex;
+  position: relative;
   height: 100%;
   width: 100%;
   scroll-snap-align: start;
@@ -48,15 +50,26 @@
   max-width: 100%;
 }
 
-.image-username {
-  position: relative;
+.image-actions-container {
+  position: absolute;
+  display: block;
   height: fit-content;
-  bottom: -92%;
-  left: -100%;
-  padding: 10px 15px 10px 15px;
-  background: none;
+  width: 100%;
+  bottom: 0;
   color: white;
-  border-radius: 20px 20px 20px 20px;
+  text-align: center;
+}
+
+.image-username {
+  background: rgba(0,0,0,0.4);
+  border-radius: 10px;
+  padding: 5px;
+  position: absolute;
+  bottom: 0;
+  margin: 0 0 1em 1em;
+  height: fit-content;
+  width: fit-content;
+  color: white;
   cursor: pointer;
   text-align: center;
 }
@@ -65,13 +78,29 @@
   color: var(--light-neutral-color);
 }
 
-.image-actions-container {
-  position: relative;
-  height: fit-content;
-  bottom: -85%;
-  right: 18%;
-  color: white;
+.image-delete-button {
+  padding: 5px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 10px;
+  position: absolute;
+  bottom: 60px;
+  margin-bottom: 1.5em;
+  height: 40px;
+  right: calc(16px);
+  cursor: pointer;
   text-align: center;
+}
+
+.image-likes-container {
+  padding: 5px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 10px;
+  position: absolute;
+  display: table-cell;
+  right: 0;
+  bottom: 0;
+  width: fit-content;
+  margin: 0 1em 1em 0;
 }
 
 .image-likes {
@@ -88,17 +117,13 @@
   color: var(--light-neutral-color);
 }
 
-.image-delete-button {
-  height: 40px;
-  cursor: pointer;
-  text-align: center;
-}
-
 .image-delete-button:hover {
   color: var(--light-neutral-color);
 }
 
 .no-image-text {
+  top: calc(50% - 0.5em);
+  position: absolute;
   height: auto;
   width: 100%;
   margin: auto;
@@ -122,11 +147,11 @@
 }
 
 .add-image-body {
+  border-radius: 25px 25px 25px 25px;
   width: 100%;
+  height: 100%;
   position: absolute;
   display: block;
-  top: 50%;
-  transform: translateY(-50%);
   text-align: center;
 }
 
@@ -151,10 +176,35 @@
   color: var(--site-background-color);
 }
 
+.image-preview-title {
+  position: absolute;
+  top: 4%;
+  background: rgba(0,0,0,0.4);
+  border-radius: 10px;
+  padding: 5px;
+  color: white;
+  width: fit-content;
+  font-size: 1.5vh;
+  left: calc(50% - 7vh);
+}
+
+.file-uploader {
+    width: fit-content;
+    height: fit-content;
+    bottom: 60px;
+    position: absolute;
+    font-size: 1.5vh !important;
+    left: calc(50% - 7vh);
+}
+
 .add-image-back-button:hover {
   background: var(--light-neutral-color);
   border: none;
   outline: none;
+}
+
+.add-image-choose-button {
+  color: white;
 }
 
 .add-image-choose-button:hover {
@@ -167,5 +217,10 @@
 }
 
 .add-image-submit-button {
-  margin: 20px 0 0 0 !important;
+  width: 200px !important;
+  left: calc(50% - 100px);
+  position: absolute;
+  margin: 0 0 1em 0 !important;
+  bottom: 0;
+  color: white !important;
 }
