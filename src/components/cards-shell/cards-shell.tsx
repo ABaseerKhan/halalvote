@@ -13,36 +13,36 @@ const DURATION = 300;
 const EASEAPART = `cubic-bezier(${x1},${y1},${x2},${y2})`;
 const EASECLOSER = `cubic-bezier(${x1r},${y1r},${x2r},${y2r})`;
 
-interface Card {
-    label: string;
-    body: ReactElement;
-};
-
 interface CardsShellComponentProps {
     id: string,
-    cards: Card[]
+    mediaCard: ReactElement,
+    commentsCard: ReactElement,
+    analyticsCard: ReactElement
 };
 
 export const CardsShellComponent = (props: CardsShellComponentProps) => {
-    const { id, cards } = props;
+    const { id, mediaCard, commentsCard, analyticsCard } = props;
 
-    let positions = useRef<number[]>(cards.map( (value: Card, index: Number, array: Card[]) => {
-      return index.valueOf();
-    }));
+    const mediaCardId = "MEDIA";
+    const commentsCardId = "ARGUMENTS";
+    const analyticsCardId = "ANALYTICS";
+
+    let positions = useRef<string[]>([mediaCardId, commentsCardId, analyticsCardId]);
+    let canFlip = useRef<boolean>(false);
 
     const createCardElement = (id: string, body: ReactElement, index: number) => {
       return (
-        <div id={id} className="card-shell" style={{zIndex: cards.length - index.valueOf() - 1}}>
-          <div id={`${id}-label`} className="card-shell-cover-label" style={{display: positions.current[index] !== 0 ? 'unset' : 'none'}}>{cards[index].label}</div>
-          <div id={`${id}-cover`} className="card-shell-cover" onClick={() => {selectCard(index)}} style={{display: positions.current[index] !== 0 ? 'unset' : 'none'}}></div>
+        <div id={id} className="card-shell" style={{zIndex: 2 - index}}>
+          <div id={`${id}-label`} className="card-shell-cover-label" style={{display: index === 0 ? 'none' : 'unset'}}>{id}</div>
+          <div id={`${id}-cover`} className="card-shell-cover" onClick={() => {selectCard(id)}} style={{display: index === 0 ? 'none' : 'unset'}}></div>
           {body}
         </div>
       );
     };
 
-    const cardElements: ReactElement[] = cards.map( (value: Card, index: Number, array: Card[]) => {
-      return createCardElement(`card-element-${index}`, value.body, index.valueOf());
-    });
+    const mediaCardElement = createCardElement(mediaCardId, mediaCard, 0);
+    const commentsCardElement = createCardElement(commentsCardId, commentsCard, 1);
+    const analyticsCardElement = createCardElement(analyticsCardId, analyticsCard, 2);
 
     // const isMobile = useMedia(
     //   // Media queries
@@ -53,146 +53,298 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
     // );
 
     useEffect(() => {
-      setCards(() => {}); // eslint-disable-next-line react-hooks/exhaustive-deps
+      setCards(); // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const selectCard = (cardIndex: number) => {
-      const card = document.getElementById(`card-element-${cardIndex}`);
-      const cardCover = document.getElementById(`card-element-${cardIndex}-cover`);
+    const setCards = () => {
+      const commentsCard = document.getElementById(commentsCardId);
+      const analyticsCard = document.getElementById(analyticsCardId);
 
-      if (card && cardCover) {
-        separateCard(cardIndex, () => {
-          positions.current = positions.current.map( (value: number, index: number, array: number[]) => {
-            const position = array[cardIndex];
-            return value === position ? 0 : value < position ? value + 1 : value;;
-          });
+      const commentsCardCover = document.getElementById(`${commentsCardId}-cover`);
+      const analyticsCardCover = document.getElementById(`${analyticsCardId}-cover`);
 
-          setZIndices();
-          raiseCard(cardIndex, () => {
-            setCoverDisplays();
-            setCards(() => {
-              setLabelDisplays();
-            });
-          });
-        });
-      }
-    }
+      const commentsCardLabel = document.getElementById(`${commentsCardId}-label`);
+      const analyticsCardLabel = document.getElementById(`${analyticsCardId}-label`);
 
-    const setZIndices = () => {
-      for (let i = 0; i < cards.length; i++) {
-        const card = document.getElementById(`card-element-${i}`);
-        const position = positions.current[i];
+      if (commentsCard && analyticsCard && commentsCardCover && analyticsCardCover && commentsCardLabel && analyticsCardLabel) {
+        commentsCardLabel.style.right = 'unset';
+        commentsCardLabel.style.left = '1vw';
+        commentsCardLabel.style.transform = 'rotate(-180deg)';
 
-        if (card) {
-          card.style.zIndex = `${cards.length - position - 1}`;
-        }
-      }
-    }
+        analyticsCardLabel.style.right = '1vw';
+        analyticsCardLabel.style.left = 'unset';
+        analyticsCardLabel.style.transform = 'unset';
 
-    const setCoverDisplays = () => {
-      for (let i = 0; i < cards.length; i++) {
-        const cover = document.getElementById(`card-element-${i}-cover`);
-        const position = positions.current[i];
-
-        if (cover) {
-          cover.style.display = position === 0 ? 'none' : 'unset';
-        }
-      }
-    }
-
-    const setLabelDisplays = () => {
-      for (let i = 0; i < cards.length; i++) {
-        const coverLabel = document.getElementById(`card-element-${i}-label`);
-        const position = positions.current[i];
-
-        if (coverLabel) {
-          coverLabel.style.display = position === 0 ? 'none' : 'unset';
-        }
-      }
-    }
-
-    const setCards = (onfinish: () => void) => {
-      for (let i = 0; i < cards.length; i++) {
-        const card = document.getElementById(`card-element-${i}`);
-        const cover = document.getElementById(`card-element-${i}-cover`);
-        const position = positions.current[i];
-
-        if (card && cover) {
-          card.animate([
-            {
-              marginLeft: `${position * 5}vw`,
-              transform:`scale(${position > 0 ? .95 ** position : 1})`
-            }
-          ], {
-              duration: DURATION,
-              easing: EASECLOSER,
-              fill: "forwards"
-          }).onfinish = onfinish;
-          cover.animate([
-            {
-              opacity: position === 0 ? '0' : '1'
-            }
-          ], {
-            duration: DURATION,
-            easing: EASECLOSER,
-            fill: "forwards"
-          })
-        }
-      }
-    }
-
-    const separateCard = (cardIndex: number, onfinish: () => void) => {
-      const card = document.getElementById(`card-element-${cardIndex}`);
-      const cover = document.getElementById(`card-element-${cardIndex}-cover`);
-      const position = positions.current[cardIndex];
-
-      if (card && cover) {
-        card.animate([
+        commentsCard.animate([
           {
-            marginLeft: `${((position === 0 ? 0 : ((position - 1) * 5) + (45 * (.95 ** (position - 1)))))}vw`
+            marginLeft: `-5vw`,
+            transform:'scale(.95)'
           }
         ], {
             duration: DURATION,
             easing: EASEAPART,
             fill: "forwards"
-        }).onfinish = onfinish;
-        cover.animate([
+        }).onfinish = () => {
+          canFlip.current = true;
+        };
+        analyticsCard.animate([
           {
-            opacity: `0.5`
+            marginLeft: `5vw`,
+            transform:'scale(.95)'
+          }
+        ], {
+            duration: DURATION,
+            easing: EASEAPART,
+            fill: "forwards"
+        });
+        commentsCardCover.animate([
+          {
+            opacity: '1'
+          }
+        ], {
+            duration: DURATION,
+            easing: EASEAPART,
+            fill: "forwards"
+        });
+        analyticsCardCover.animate([
+          {
+            opacity: '1'
+          }
+        ], {
+            duration: DURATION,
+            easing: EASEAPART,
+            fill: "forwards"
+        });
+      }
+    }
+
+    const selectCard = (cardId: string) => {
+      if (canFlip.current) {
+        canFlip.current = false;
+        makeRoom(cardId, () => {
+          rotate(cardId, () => {
+            canFlip.current = true;
+          })
+        });
+      }
+    };
+
+    const makeRoom = (cardId: string, onfinish: () => void) => {
+      const position = positions.current.indexOf(cardId);
+      const selected = document.getElementById(cardId);
+      const front = document.getElementById(positions.current[0]);
+      const back = document.getElementById(positions.current[position === 1 ? 2 : 1]);
+
+      const selectedCover = document.getElementById(`${cardId}-cover`);
+      const frontCover = document.getElementById(`${positions.current[0]}-cover`);
+
+      const selectedLabel = document.getElementById(`${cardId}-label`);
+
+      if (selected && front && back && selectedCover && frontCover && selectedLabel) {
+        const marginLeftVw = 22;
+        back.style.zIndex = '0';
+        selected.style.zIndex = '1';
+        selectedLabel.style.display = 'none';
+
+        front.animate([
+          {
+            marginLeft: `${position === 1 ? marginLeftVw : position === 2 ? -marginLeftVw : 0}vw`,
+            transform:'scale(.975)'
+          }
+        ], {
+            duration: DURATION,
+            easing: EASEAPART,
+            fill: "forwards"
+        });
+        back.animate([
+          {
+            marginLeft: '0vw'
           }
         ], {
             duration: DURATION,
             easing: EASECLOSER,
             fill: "forwards"
         });
-      }
-    }
-
-    const raiseCard = (cardIndex: number, onfinish: () => void) => {
-      const card = document.getElementById(`card-element-${cardIndex}`);
-      const cover = document.getElementById(`card-element-${cardIndex}-cover`);
-
-      if (card && cover) {
-        card.animate([
+        selectedCover.animate([
           {
+            opacity: '0.5'
+          }
+        ], {
+            duration: DURATION,
+            easing: EASEAPART,
+            fill: "forwards"
+        });
+        frontCover.animate([
+          {
+            opacity: '0.5'
+          }
+        ], {
+            duration: DURATION,
+            easing: EASEAPART,
+            fill: "forwards"
+        });
+        switch (position) {
+          case 1:
+            selected.animate([
+              {
+                marginLeft: `-${marginLeftVw}vw`,
+                transform:'scale(.975)'
+              }
+            ], {
+                duration: DURATION,
+                easing: EASEAPART,
+                fill: "forwards"
+            }).onfinish = () => {
+              selected.style.zIndex = '2';
+              front.style.zIndex = '1';
+              selectedCover.style.display = 'none';
+              frontCover.style.display = 'unset';
+              onfinish();
+            }
+            break;
+          case 2:
+            selected.animate([
+              {
+                marginLeft: `${marginLeftVw}vw`,
+                transform:'scale(.975)'
+              }
+            ], {
+                duration: DURATION,
+                easing: EASEAPART,
+                fill: "forwards"
+            }).onfinish = () => {
+              selected.style.zIndex = '2';
+              front.style.zIndex = '1';
+              selectedCover.style.display = 'none';
+              frontCover.style.display = 'unset';
+              onfinish();
+            }
+            break;
+        }
+      }
+    };
+
+    const rotate = (cardId: string, onfinish: () => void) => {
+      const position = positions.current.indexOf(cardId);
+      const selected = document.getElementById(cardId);
+      const front = document.getElementById(positions.current[0]);
+      const back = document.getElementById(positions.current[position === 1 ? 2 : 1]);
+
+      const selectedCover = document.getElementById(`${cardId}-cover`);
+      const frontCover = document.getElementById(`${positions.current[0]}-cover`);
+
+      const frontLabel = document.getElementById(`${positions.current[0]}-label`);
+      const backLabel = document.getElementById(`${positions.current[position === 1 ? 2 : 1]}-label`);
+
+      if (selected && front && back && selectedCover && frontCover && frontLabel && backLabel) {
+        const marginLeftVw = 5;
+        
+        selected.animate([
+          {
+            marginLeft: '0vw',
             transform:'scale(1)'
           }
         ], {
             duration: DURATION,
             easing: EASECLOSER,
             fill: "forwards"
-        }).onfinish = onfinish;
-        cover.animate([
+        });
+        selectedCover.animate([
           {
             opacity: '0'
           }
         ], {
             duration: DURATION,
-            easing: EASECLOSER,
+            easing: EASEAPART,
             fill: "forwards"
         });
+        frontCover.animate([
+          {
+            opacity: '1'
+          }
+        ], {
+            duration: DURATION,
+            easing: EASEAPART,
+            fill: "forwards"
+        });
+        switch (position) {
+          case 1:
+            front.animate([
+              {
+                marginLeft: `${marginLeftVw}vw`,
+                transform:'scale(.95)'
+              }
+            ], {
+                duration: DURATION,
+                easing: EASECLOSER,
+                fill: "forwards"
+            }).onfinish = () => {
+              backLabel.style.right = 'unset';
+              backLabel.style.left = '1vw';
+              backLabel.style.transform = 'rotate(-180deg)';
+
+              frontLabel.style.right = '1vw';
+              frontLabel.style.left = 'unset';
+              frontLabel.style.transform = 'unset';
+              frontLabel.style.display = 'unset';
+
+              const first = positions.current[0];
+              positions.current.shift();
+              positions.current.push(first);
+
+              onfinish();
+            };
+            back.animate([
+              {
+                marginLeft: `-${marginLeftVw}vw`,
+                transform:'scale(.95)'
+              }
+            ], {
+                duration: DURATION,
+                easing: EASECLOSER,
+                fill: "forwards"
+            });
+            break;
+          case 2:
+            front.animate([
+              {
+                marginLeft: `-${marginLeftVw}vw`,
+                transform:'scale(.95)'
+              }
+            ], {
+                duration: DURATION,
+                easing: EASECLOSER,
+                fill: "forwards"
+            }).onfinish = () => {
+              backLabel.style.right = '1vw';
+              backLabel.style.left = 'unset';
+              backLabel.style.transform = 'unset';
+
+              frontLabel.style.right = 'unset';
+              frontLabel.style.left = '1vw';
+              frontLabel.style.transform = 'rotate(-180deg)';
+              frontLabel.style.display = 'unset';
+
+              const last = positions.current[positions.current.length - 1];
+              positions.current.pop();
+              positions.current.unshift(last);
+
+              onfinish();
+            };;
+            back.animate([
+              {
+                marginLeft: `${marginLeftVw}vw`,
+                transform:'scale(.95)'
+              }
+            ], {
+                duration: DURATION,
+                easing: EASECLOSER,
+                fill: "forwards"
+            });
+            break;
+        }
       }
-    }
+    };
 
     // const MobileView = (
     //   <div id={id} className="comments-body">
@@ -204,6 +356,6 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
     // )
 
     return /*isMobile ? MobileView :*/ (
-        <div id={id} className="cards-shell" children={cardElements}/>
+        <div id={id} className="cards-shell" children={[mediaCardElement, commentsCardElement, analyticsCardElement]}/>
     );
 }
