@@ -70,7 +70,9 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
           setZIndices();
           raiseCard(cardIndex, () => {
             setCoverDisplays();
-            setCards(() => {});
+            setCards(() => {
+              setLabelDisplays();
+            });
           });
         });
       }
@@ -90,13 +92,21 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
     const setCoverDisplays = () => {
       for (let i = 0; i < cards.length; i++) {
         const cover = document.getElementById(`card-element-${i}-cover`);
+        const position = positions.current[i];
+
+        if (cover) {
+          cover.style.display = position === 0 ? 'none' : 'unset';
+        }
+      }
+    }
+
+    const setLabelDisplays = () => {
+      for (let i = 0; i < cards.length; i++) {
         const coverLabel = document.getElementById(`card-element-${i}-label`);
         const position = positions.current[i];
 
-        if (cover && coverLabel) {
-          const display = position === 0 ? 'none' : 'unset';
-          cover.style.display = display;
-          coverLabel.style.display = display;
+        if (coverLabel) {
+          coverLabel.style.display = position === 0 ? 'none' : 'unset';
         }
       }
     }
@@ -120,7 +130,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
           }).onfinish = onfinish;
           cover.animate([
             {
-              opacity: position === 0 ? '0' : `${0.5 / ((positions.current.length) - position)}`
+              opacity: position === 0 ? '0' : '1'
             }
           ], {
             duration: DURATION,
@@ -148,7 +158,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
         }).onfinish = onfinish;
         cover.animate([
           {
-            opacity: `${0.25 / ((positions.current.length) - position)}`
+            opacity: `0.5`
           }
         ], {
             duration: DURATION,
