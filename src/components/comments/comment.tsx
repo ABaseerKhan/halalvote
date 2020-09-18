@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
-import { ReactComponent as UpArrowSVG } from '../../icons/up-arrow.svg';
-import { ReactComponent as DownArrowSVG } from '../../icons/down-arrow.svg';
-import { ReactComponent as ExpandSVG } from '../../icons/expand-button.svg';
+import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { Comment, Judgment } from '../../types';
 import { convertUTCDateToLocalDate, timeSince } from '../../utils';
-import Linkify from 'react-linkify'; 
 import { commentsConfig } from '../../https-client/config';
 import { postData } from '../../https-client/client';
 
@@ -40,6 +37,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         setState(prevState => ({ ...prevState, comment: props.comment }));
     }, [props.comment]);
 
+    // eslint-disable-next-line
     const toggleCollapse = () => {
         setState({
             ...state,
@@ -73,32 +71,6 @@ export const CommentComponent = (props: CommentComponentProps) => {
         }
     }
 
-    const downVote = async () => {
-        const { status } = await postData({
-            baseUrl: commentsConfig.url,
-            path: 'vote-comment', 
-            data: { 
-                "username": username,
-                "commentId": state.comment.id,
-                "vote": 0,
-            },
-            additionalHeaders: {
-                "sessiontoken": sessiontoken
-            },
-            setCookie: setCookie,
-        });
-
-        if (status === 200) {
-            const downVotes = (state.comment.userVote === Vote.DOWNVOTE) ? state.comment.downVotes - 1 : state.comment.downVotes + 1;
-            const upVotes = (state.comment.userVote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes;
-            const userVote = (state.comment.userVote === Vote.DOWNVOTE) ? undefined : Vote.DOWNVOTE;
-            setState(prevState => ({
-                ...prevState,
-                comment: { ...prevState.comment, downVotes: downVotes, upVotes: upVotes, userVote: userVote },
-            }));
-        }
-    }
-
     const { judgment } = props;
     const moreReplies = (props.comment.numReplies - props.comment.replies.length);
 
@@ -109,78 +81,40 @@ export const CommentComponent = (props: CommentComponentProps) => {
 
     let commentBorderClass = isHighlighted ? "comment-border-highlighted" : "comment-border-unhighlighted";
 
-    const CommentHeader = (
-        <div className={"comment-header"}>
-            {
-                state.collapsed ? 
-                    <div className={"toggle-collapse"} onClick={toggleCollapse}><ExpandSVG className={"expand-button-" + judgment}/></div> :
-                    <>
-                        <div className={"vote-buttons"}>
-                            <UpArrowSVG onClick={upVote} className={state.comment.userVote === Vote.UPVOTE ? "up-vote-button-clicked" : "up-vote-button"}/>
-                            <DownArrowSVG onClick={downVote} className={state.comment.userVote === Vote.DOWNVOTE ? "down-vote-button-clicked" : "down-vote-button"} />
-                        </div>
-                        <div className={"vote-counts"}>
-                            <div className="up-votes" >{state.comment.upVotes}</div>
-                            <div className="down-votes" >{state.comment.downVotes}</div>
-                        </div>
-                    </>
-            }
-            <span className={"bullet-separator"}>&bull;</span>
-            <div className="username">{props.comment.username}</div>
-            <span className={"bullet-separator"}>&bull;</span>
-            <div className={"time-stamp"} >
-                <span data-tip={convertUTCDateToLocalDate(props.comment.timeStamp)} data-for="comment">{timeSince(props.comment.timeStamp)}</span>
-                <ReactTooltip delayShow={400} effect={"solid"} id="comment"/>
-            </div>
-        </div>
-    );
-
     return (
-        state.collapsed ? <div id={`comment-${state.comment.id}`} className={commentBorderClass}>{CommentHeader}</div> : 
         <div id={`comment-${state.comment.id}`} onClick={(e) => { if (isHighlighted) e.stopPropagation(); }} className={commentBorderClass}>
-            {CommentHeader}
-            {!isHighlighted && <div className={"comment-tail-" + judgment} onClick={toggleCollapse}></div>}
-            <div className="comment">
-                <Linkify><div dangerouslySetInnerHTML={{__html: props.comment.comment}}/></Linkify>
+            <div className="comment-bubble-container">
+                <div className="comment-bubble"></div>
             </div>
-            <div className="comment-actions">
-                <span 
-                    className={"reply-button"} 
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        props.highlightComment(props.path);
-                    }}
-                >
-                    Reply
-                </span>
-                {
-                    props.comment.username === username &&
-                    !(props.comment.comment === "__deleted__" && props.comment.numReplies > 0) &&
-                    <span
-                        className={"delete-button"}
-                        onClick={() => props.deleteComment(props.path)}
-                        role={"img"}
-                        aria-label="trash"
-                    >
-                        🗑️
-                    </span>
-                }
+            <div className="comment-body">
+                <div className="username">{props.comment.username}</div>
+                <div className="comment">
+                    <div style={{ maxWidth: 'calc(100% - 50px)' }} dangerouslySetInnerHTML={{__html: props.comment.comment}}/>
+                </div>
+                <div className={"time-stamp"} >
+                    <span data-tip={convertUTCDateToLocalDate(props.comment.timeStamp)} data-for="comment">{timeSince(props.comment.timeStamp)}</span>
+                    <ReactTooltip delayShow={400} effect={"solid"} id="comment"/>
+                </div>
+                <div className="replies">
+                    {
+                        props.comment.replies.map((reply: Comment, i: number) => {
+                            return <CommentComponent 
+                                        key={reply.id} 
+                                        comment={reply} 
+                                        path={props.path.concat([i])} 
+                                        pathToHighlightedComment={props.pathToHighlightedComment} 
+                                        highlightComment={props.highlightComment} 
+                                        fetchMoreReplies={props.fetchMoreReplies}
+                                        deleteComment={props.deleteComment}
+                                        judgment={judgment}
+                                    />
+                        })
+                    }
+                </div>
             </div>
-            <div className="replies">
-                {
-                    props.comment.replies.map((reply: Comment, i: number) => {
-                        return <CommentComponent 
-                                    key={reply.id} 
-                                    comment={reply} 
-                                    path={props.path.concat([i])} 
-                                    pathToHighlightedComment={props.pathToHighlightedComment} 
-                                    highlightComment={props.highlightComment} 
-                                    fetchMoreReplies={props.fetchMoreReplies}
-                                    deleteComment={props.deleteComment}
-                                    judgment={judgment}
-                                />
-                    })
-                }
+            <div className="likes-container">
+                <HeartButtonSVG className="heart" onClick={upVote} />
+                <div className="likes">{state.comment.upVotes}</div>
             </div>
             {
                 moreReplies > 0 &&
