@@ -218,7 +218,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     );
 
     const ImageAdder = (
-        <div>
+        <div style={{ height: '100%' }}>
             <div className="images-body" style={{ background: 'black'}}>
                 {
                     state.picture ? 
