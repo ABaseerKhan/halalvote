@@ -87,16 +87,13 @@ export const AppShellComponent = (props: any) => {
   const topicCarouselId = "topicCarousel";
   const pageZeroId = "Search";
   const pageOneId = "Topics";
-
-  const searchId = "search";
-  const commentsId = "comments";
-  const analyticsId = "analytics";
+  const cardsShellId = "cards-shell";
 
   const appShell = document.getElementById(appShellId);
   const topicCarousel = document.getElementById(topicCarouselId);
   const pageZero = document.getElementById(pageZeroId);
   const pageOne = document.getElementById(pageOneId);
-  const commentsBody = document.getElementById(commentsId);
+  const cardsShell = document.getElementById(cardsShellId);
 
   const iterateTopic = (iteration: number) => () => {
     const animationCallback = (state: any, iteration: any, setState: any, setCookie: any, fetchTopics: any) => () => {
@@ -109,10 +106,10 @@ export const AppShellComponent = (props: any) => {
       }
     };
     if (iteration === 1) {
-      animateNextTopic(commentsBody, animationCallback(state, iteration, setState, setCookie, fetchTopics));
+      animateNextTopic(cardsShell, animationCallback(state, iteration, setState, setCookie, fetchTopics));
     }
     if (iteration === -1) {
-      animatePrevTopic(commentsBody, animationCallback(state, iteration, setState, setCookie, fetchTopics));
+      animatePrevTopic(cardsShell, animationCallback(state, iteration, setState, setCookie, fetchTopics));
     }
   };
 
@@ -174,10 +171,10 @@ export const AppShellComponent = (props: any) => {
 
   return (
       <div id={appShellId} className={appShellId} >
-        <SearchComponent id={searchId} onSuggestionClick={fetchTopics} />
-        <CardsShellComponent id="" cards={[
+        <SearchComponent onSuggestionClick={fetchTopics} />
+        <CardsShellComponent id={cardsShellId} cards={[
           { label: "Arguments", body: <CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/> }, 
-          { label: "Analytics", body: <AnalyticsCardComponent id={analyticsId}/> }, 
+          { label: "Analytics", body: <AnalyticsCardComponent id="analytics"/> }, 
           { label: "Analytics2", body: <AnalyticsCardComponent id="analytics2"/> }
           ]}/>
         <div className="fixed-content">
@@ -190,9 +187,9 @@ export const AppShellComponent = (props: any) => {
 }
 
 const prevNextTopicAnimationDuration = 300;
-const animateNextTopic = (commentsBody: HTMLElement | null, callback: () => void) => {
-  if(!!commentsBody) {
-    commentsBody.animate([
+const animateNextTopic = (cardsShell: HTMLElement | null, callback: () => void) => {
+  if(cardsShell) {
+    cardsShell.animate([
       {
         transform: 'translate(-100%)'
       }
@@ -202,8 +199,8 @@ const animateNextTopic = (commentsBody: HTMLElement | null, callback: () => void
       fill: 'forwards',
     }).onfinish = () => {
       callback();
-      commentsBody.style.transform = "translate(100%)";
-      commentsBody.animate([
+      cardsShell.style.transform = "translate(100%)";
+      cardsShell.animate([
         {
           transform: 'translate(100%)'
         }
@@ -211,7 +208,7 @@ const animateNextTopic = (commentsBody: HTMLElement | null, callback: () => void
         duration: 0,
         fill: "forwards"
       }).onfinish = () => {
-        commentsBody.animate([
+        cardsShell.animate([
           {
             transform: 'translate(0)'
           }
@@ -220,16 +217,16 @@ const animateNextTopic = (commentsBody: HTMLElement | null, callback: () => void
           easing: 'ease-out',
           fill: "forwards"
         }).onfinish = () => {
-          commentsBody.style.transform = "translate(0)";
+          cardsShell.style.transform = "translate(0)";
         }
       }
     }
   };
 }
 
-const animatePrevTopic = (commentsBody: any, callback: () => void) => {
-  if(!!commentsBody) {
-    commentsBody.animate([
+const animatePrevTopic = (cardsShell: any, callback: () => void) => {
+  if(cardsShell) {
+    cardsShell.animate([
       {
         transform: 'translate(100%)'
       }
@@ -239,8 +236,8 @@ const animatePrevTopic = (commentsBody: any, callback: () => void) => {
       fill: 'forwards',
     }).onfinish = () => {
       callback();
-      commentsBody.style.transform = "translate(-100%)";
-      commentsBody.animate([
+      cardsShell.style.transform = "translate(-100%)";
+      cardsShell.animate([
         {
           transform: 'translate(-100%)'
         }
@@ -248,7 +245,7 @@ const animatePrevTopic = (commentsBody: any, callback: () => void) => {
         duration: 0,
         fill: "forwards"
       }).onfinish = () => {
-        commentsBody.animate([
+        cardsShell.animate([
           {
             transform: 'translate(0)'
           }
@@ -257,7 +254,7 @@ const animatePrevTopic = (commentsBody: any, callback: () => void) => {
           easing: 'ease-out',
           fill: "forwards"
         }).onfinish = () => {
-          commentsBody.style.transform = "translate(0)";
+          cardsShell.style.transform = "translate(0)";
         }
       }
     }
