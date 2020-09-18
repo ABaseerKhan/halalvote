@@ -86,8 +86,7 @@ export const AppShellComponent = (props: any) => {
   const appShellId = "app-shell";
   const topicCarouselId = "topicCarousel";
   const pageZeroId = "Search";
-  const pageOneId = "Comments";
-  const pageTwoId = "Analytics";
+  const pageOneId = "Topics";
 
   const searchId = "search";
   const commentsId = "comments";
@@ -97,7 +96,6 @@ export const AppShellComponent = (props: any) => {
   const topicCarousel = document.getElementById(topicCarouselId);
   const pageZero = document.getElementById(pageZeroId);
   const pageOne = document.getElementById(pageOneId);
-  const pageTwo = document.getElementById(pageTwoId);
   const commentsBody = document.getElementById(commentsId);
 
   const iterateTopic = (iteration: number) => () => {
@@ -168,10 +166,9 @@ export const AppShellComponent = (props: any) => {
   }
 
   const selectPageScrollerButton = (page: number) => {
-    if (pageZero && pageOne && pageTwo) {
+    if (pageZero && pageOne) {
       pageZero.className = page === 0 ? 'page-scroller-button-selected' : 'page-scroller-button'
       pageOne.className = page === 1 ? 'page-scroller-button-selected' : 'page-scroller-button'
-      pageTwo.className = page === 2 ? 'page-scroller-button-selected' : 'page-scroller-button'
     }
   }
 
@@ -188,7 +185,7 @@ export const AppShellComponent = (props: any) => {
           <MenuComponent fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
         </div>
         <div className="fixed-content-below-cover">
-          <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} pageTwoId={pageTwoId} scrollToPage={scrollToPage} />
+          <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />
         </div>
       </div>
   )
