@@ -87,14 +87,6 @@
     float: left;
 }
 
-.comments-card-1 {
-    background-color: var(--haram-color);
-}
-
-.comments-card-0 {
-    background-color: var(--halal-color);
-}
-
 .comments-container::-webkit-scrollbar {
     display: none;
 }
@@ -380,14 +372,6 @@
     height: 4em;
     border-radius: 0px 0px 25px 25px;
     box-shadow: 0 5px 50px 0 rgba(32,33,36,0.28);
-}
-
-.comment-maker-card-0 {
-    background-color: var(--halal-color);
-}
-
-.comment-maker-card-1 {
-    background-color: var(--haram-color);
 }
 
 .comment-maker-input {
