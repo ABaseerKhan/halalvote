@@ -13,7 +13,7 @@ import { Judgment, judgementToTextMap } from '../../types';
 
 // style imports
 import './comments.css';
-import { useMedia } from '../../hooks/useMedia';
+// import { useMedia } from '../../hooks/useMedia';
 
 interface CommentsCardComponentProps {
     judgment: Judgment,
@@ -43,13 +43,13 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const { judgment, topicTitle, numHalalComments, numHaramComments, specificComment, refreshTopic } = props;
     const totalTopLevelComments = (judgment === Judgment.HALAL ? numHalalComments : numHaramComments) || 0;
 
-    const isMobile = useMedia(
-        // Media queries
-        ['(max-width: 600px)'],
-        [true],
-        // default value
-        false
-    );
+    // const isMobile = useMedia(
+    //     // Media queries
+    //     ['(max-width: 600px)'],
+    //     [true],
+    //     // default value
+    //     false
+    // );
 
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
@@ -226,7 +226,6 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
     const commentsContainerId = `comments-container-${judgment.toString()}`;
     const commentsCardId = "comments-card-" + judgment.toString();
-    const commentsCardCoverId = `comments-card-cover-${judgment.toString()}`
 
     const doubleTap = (judgmentMemo: any) => (() => {
         if (clickTimer == null) {
@@ -242,7 +241,6 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     });
     return(
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onTouchStart={doubleTap(+(!judgment))} className={commentsCardId} >
-                {!isMobile && <div id={commentsCardCoverId} className="comments-card-cover" onClick={props.switchCards(judgment)}></div>}
                 <div id={commentsContainerId} className="comments-container">
                     <div className={"comments-container-padding-div"}>
                         {state.loading || !state.commentsShowable ? <SkeletonComponent /> :

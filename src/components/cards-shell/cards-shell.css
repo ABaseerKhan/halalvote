@@ -1,0 +1,35 @@
+.cards-shell {
+    position: relative;
+    height: min(calc(100% - var(--topic-carousel-height-vh)), 100% - var(--max-topic-carousel-height-px));
+    width: 100%;
+    padding-top: max(var(--topic-carousel-height-vh), var(--max-topic-carousel-height-px));
+    margin-left: 27.5vw;
+    scroll-snap-align: start;
+}
+
+.card-shell {
+    display: flex;
+    position: absolute;
+    height: 75vh;
+    width: 40vw;
+    border-radius: 25px;
+    margin-left: unset;
+    margin-right: unset;
+    background: white;
+    box-shadow: 0 5px 50px 0 rgba(32,33,36,0.28);
+}
+
+.card-shell-cover {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 25px;
+    background-color: black;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.card-shell-cover:hover{
+    background-color: var(--highlight-color);
+}
