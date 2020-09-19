@@ -58,6 +58,12 @@ export const CommentComponent = (props: CommentComponentProps) => {
     };
 
     const upVote = async () => {
+        const upVotes = (state.comment.userVote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes + 1;
+        const userVote = (state.comment.userVote === Vote.UPVOTE) ? undefined : Vote.UPVOTE;
+        setState(prevState => ({
+            ...prevState,
+            comment: { ...prevState.comment, upVotes: upVotes, userVote: userVote },
+        }));
         const { status } = await postData({
             baseUrl: commentsConfig.url,
             path: 'vote-comment', 
@@ -73,12 +79,9 @@ export const CommentComponent = (props: CommentComponentProps) => {
         });
 
         if (status === 200){
-            const upVotes = (state.comment.userVote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes + 1;
-            const downVotes = (state.comment.userVote === Vote.DOWNVOTE) ? state.comment.downVotes - 1 : state.comment.downVotes;
-            const userVote = (state.comment.userVote === Vote.UPVOTE) ? undefined : Vote.UPVOTE;
             setState(prevState => ({
                 ...prevState,
-                comment: { ...prevState.comment, upVotes: upVotes, downVotes: downVotes, userVote: userVote },
+                comment: { ...prevState.comment, upVotes: upVotes, userVote: userVote },
             }));
         }
     }
@@ -111,7 +114,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                     <div className="comment">
                         <div style={{ maxWidth: 'calc(100% - 50px)' }} dangerouslySetInnerHTML={{__html: props.comment.comment}}/>
                     </div>
-                    <div>
+                    <div className="comment-extras">
                         <span className={"time-stamp"} data-tip={convertUTCDateToLocalDate(props.comment.timeStamp)} data-for="comment">{timeSince(props.comment.timeStamp)}</span>
                         <ReactTooltip delayShow={400} effect={"solid"} id="comment"/>
                         {

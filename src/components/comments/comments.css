@@ -16,11 +16,69 @@
     .comments-container-padding-div {
         padding: 0.5em 0.5em 0.4em 0.5em !important;
     }
-    .comment {
-        font-size: 1.05em !important;
+
+    .comment-extras {
+        font-size: 9px !important;
     }
-    .comment-actions {
+    
+    .time-stamp {
+        line-height: 5px !important;
+        font-size: 9px !important;
+    }
+    
+    .comment-body {
+        margin-left: 10px !important;
+        width: 100% !important;
+    }
+    
+    .comment-bubble {
+        height: 30px !important;
+        width: 30px !important;
+    }
+    
+    .username {
+        color: rgba(18, 18, 18, 0.5) !important;
         font-size: 11px !important;
+    }
+    
+    .comment {
+        color: black !important;
+        margin-top: 3px !important;
+        margin-bottom: 3px !important;
+        font-size: 12px !important;
+        line-height: 16px !important;
+    }
+
+    .comment p {
+        margin: 0em 0 0em 0 !important;
+    }
+    
+    .likes-container {
+        margin: 0em 0.5em 0 0 !important;
+    }
+    
+    .likes, .likes-liked {
+        line-height: 0.75em;
+        height: 10px !important;
+        font-size: 11px !important;
+    }
+    
+    .heart, .heart-liked {
+        height: 13px !important;
+        width: 15px !important;
+        stroke-width: 40px !important;
+    }
+    .replies {
+        margin-top: 0.5em !important;
+    }
+    
+    .show-or-hide-container {
+        margin: 0.5em 0 0.5em 0 !important;
+        font-size: 11px !important;
+    }
+
+    .delete-button {
+        font-size: 8px !important;
     }
 }
 
@@ -117,7 +175,7 @@
     display: table-cell;
     right: 0;
     width: fit-content;
-    margin: 0.5em 0.5em 0 0;
+    margin: 0em 0em 0 0;
 }
 
 .likes, .likes-liked {
@@ -195,11 +253,6 @@
     cursor: pointer;
     color: transparent;  
     text-shadow: 0 0 0 red;
-}
-
-.toggle-collapse {
-    cursor: pointer;
-    width: 15px;
 }
 
 .replies {

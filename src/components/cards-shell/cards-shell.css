@@ -46,3 +46,13 @@
     writing-mode: vertical-rl;
     text-align: center;
 }
+
+@media only screen and (max-width: 600px) {
+    .card-shell {
+        width: 75vw;
+    }
+    
+    .cards-shell {
+        margin-left: 13vw;
+    }
+}
