@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
+import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 
 // styles
 import './account.css';
@@ -94,7 +95,7 @@ export const AccountComponent = (props: AccountComponentProps) => {
     }
 
     return (
-        <div className="account-container" style={{ height: `${vhToPixels(70)}px`}}>
+        <div className="account-container" style={{ height: `${vhToPixels(75)}px`}}>
             <div className="account-header-section">
                 <div className="account-title">{`${props.username}`}</div>
                 <div className="account-tabs">
@@ -149,27 +150,30 @@ interface UserCommentProps {
 const UserComment = (props: UserCommentProps) => {
     const { comment, showSpecificComment, fetchTopics, closeModal } = props;
 
-    const CommentHeader = (
-        <div className={"comment-header"}>
-            <div className={"vote-counts"}>
-                <div className="up-votes" >{comment.upVotes}</div>
-                <div className="down-votes" >{comment.downVotes}</div>
-            </div>
-            <span className={"user-comment-bullet-separator"}>&bull;</span>
-            <div className="username">{props.comment.username}</div>
-            <span className={"user-comment-bullet-separator"}>&bull;</span>
-            <div className={"user-comment-time-stamp"} >
-                <span>{timeSince(props.comment.timeStamp)}</span>
-            </div>
-            <span className={"user-comment-bullet-separator"}>&bull;</span>
-            <span className="user-comment-time-stamp">{comment.numReplies === 1 ? `(${comment.numReplies} reply)` : `(${comment.numReplies} replies)`}</span>
-        </div>
-    );
     return (
-        <div id={`comment-${comment.id}`} onClick={async (e) => { await fetchTopics(comment.topicTitle); showSpecificComment(comment); closeModal(); }} className={"user-comment-container"}>
-            {CommentHeader}
-            <div className="user-comment">
-                <div dangerouslySetInnerHTML={{__html: comment.comment}}/>
+        <div className="user-comment-container">
+            <div id={`comment-${comment.id}`} className={"comment-container"}>
+                <div className="comment-bubble-container">
+                    <div className="comment-bubble"></div>
+                </div>
+                <div className="comment-body">
+                    <div 
+                        className={"comment-content"}
+                        onClick={async (e) => { await fetchTopics(comment.topicTitle); showSpecificComment(comment); closeModal(); }}
+                    >
+                        <div className="username" style={{ color: 'var(--site-background-color)' }}>{comment.username}</div>
+                        <div className="comment" style={{ color: 'var(--site-background-color)' }}>
+                            <div style={{ maxWidth: 'calc(100% - 50px)' }} dangerouslySetInnerHTML={{__html: comment.comment}}/>
+                        </div>
+                        <div>
+                            <span className={"time-stamp"} style={{ color: 'var(--site-background-color)' }} >{timeSince(comment.timeStamp)}</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="likes-container">
+                    <HeartButtonSVG className={"heart"} style={{ stroke: 'var(--site-background-color)' }} />
+                    <div className={"likes"} style={{ color: 'var(--site-background-color)' }}>{comment.upVotes}</div>
+                </div>
             </div>
         </div>
     )
