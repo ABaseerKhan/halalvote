@@ -7,6 +7,19 @@ import { CookiesProvider } from 'react-cookie';
 
 // style imports
 import './index.css';
+import { vhToPixels } from './utils';
+
+export const elementStyles = {
+  toolbarHeightVh: 12,
+  maxToolbarHeightPx: 65,
+  topicCarouselHeightVh: 14,
+  maxTopicCarouselHeightPx: 135
+}
+
+export const modalHeightVh = 70;
+export const modalWidthVw = (isMobile: boolean): number => isMobile ? 80 : 40;
+export const modalMaxHeight = window.innerHeight - (Math.max(elementStyles.maxTopicCarouselHeightPx, vhToPixels(elementStyles.topicCarouselHeightVh)) + vhToPixels(10));
+export const modalMaxWidth = 800;
 
 ReactDOM.render(
   <CookiesProvider >
@@ -16,12 +29,5 @@ ReactDOM.render(
   </CookiesProvider>,
   document.getElementById('root')
 );
-
-export const elementStyles = {
-  toolbarHeightVh: 12,
-  maxToolbarHeightPx: 65,
-  topicCarouselHeightVh: 14,
-  maxTopicCarouselHeightPx: 135
-}
 
 export const Portal = ({children} : {children: ReactNode}) => ReactDOM.createPortal(children, document.getElementById("portal") || document.createElement("portal"));

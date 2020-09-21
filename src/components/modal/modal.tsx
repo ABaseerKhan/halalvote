@@ -4,13 +4,13 @@ import { ModalType } from '../../types';
 import { LoginComponent } from '../login/login';
 import { useMedia } from '../../hooks/useMedia';
 import { AccountComponent } from '../account/account';
-import { vhToPixelsWithMax, vwToPixelsWithMax, vhToPixels } from "../../utils";
+import { vhToPixelsWithMax, vwToPixelsWithMax } from "../../utils";
 
 // type imports
 
 // styles
 import './modal.css';
-import { elementStyles } from '../..';
+import { modalHeightVh, modalMaxHeight, modalMaxWidth, modalWidthVw } from '../..';
 
 interface ModalComponentProps {
     removeModal: any,
@@ -34,17 +34,12 @@ export const ModalComponent = (props: ModalComponentProps) => {
     const modalId = "modal";
     const modalCoverId = "modal-cover";
 
-    const heightVh = 70;
-    const widthVw = isMobile ? 80 : 40;
-    const maxHeight = window.innerHeight - (Math.max(elementStyles.maxTopicCarouselHeightPx, vhToPixels(elementStyles.topicCarouselHeightVh)) + vhToPixels(10));
-    const maxWidth = 800;
-
     const getModalHeight = () => {
-        return vhToPixelsWithMax(heightVh, maxHeight);
+        return vhToPixelsWithMax(modalHeightVh, modalMaxHeight);
     }
 
     const getModalWidth = () => {
-        return vwToPixelsWithMax(widthVw, maxWidth);
+        return vwToPixelsWithMax(modalWidthVw(isMobile), modalMaxWidth);
     }
 
     useEffect(() => {
@@ -57,9 +52,9 @@ export const ModalComponent = (props: ModalComponentProps) => {
             }
 
             const height = getModalHeight() + "px";
-            const marginTop = `max(-${heightVh/2}vh, -${maxHeight/2}px)`;
+            const marginTop = `max(-${modalHeightVh/2}vh, -${modalMaxHeight/2}px)`;
             const width = getModalWidth() + "px";
-            const marginLeft = `max(-${widthVw/2}vw, -${maxWidth/2}px)`;
+            const marginLeft = `max(-${modalWidthVw(isMobile)/2}vw, -${modalMaxWidth/2}px)`;
 
             modal.animate([
                 {height: height, marginTop: marginTop, width: width, marginLeft: marginLeft}
@@ -97,4 +92,4 @@ export const ModalComponent = (props: ModalComponentProps) => {
             </div>
         </div>
     );
-}
+};

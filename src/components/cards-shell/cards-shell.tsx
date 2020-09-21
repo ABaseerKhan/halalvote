@@ -5,6 +5,7 @@ import React, { useEffect, useRef, ReactElement, useState } from 'react';
 
 // styles
 import './cards-shell.css';
+import { useMedia } from '../../hooks/useMedia';
 
 const x1 = .25, y1 = .1, x2 = .25, y2 = 1;
 const x1r = 1-x2, y1r = 1-y2, x2r = 1-x1, y2r = 1-y1;
@@ -46,13 +47,13 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
     const commentsCardElement = createCardElement(commentsCardId, commentsCard, 1);
     const analyticsCardElement = createCardElement(analyticsCardId, analyticsCard, 2);
 
-    // const isMobile = useMedia(
-    //   // Media queries
-    //   ['(max-width: 600px)'],
-    //   [true],
-    //   // default value
-    //   false
-    // );
+    const isMobile = useMedia(
+      // Media queries
+      ['(max-width: 600px)'],
+      [true],
+      // default value
+      false
+    );
 
     useEffect(() => {
       setCards(); // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -144,7 +145,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
       const selectedLabel = document.getElementById(`${cardId}-label`);
 
       if (selected && front && back && selectedCover && frontCover && selectedLabel) {
-        const marginLeftVw = 23;
+        const marginLeftVw = isMobile ? 40 : 23;
         back.style.zIndex = '0';
         selected.style.zIndex = '1';
         selectedLabel.style.display = 'none';

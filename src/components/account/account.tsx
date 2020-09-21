@@ -8,6 +8,7 @@ import { getData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
 import { Topic, Comment } from '../../types';
 import { timeSince, vhToPixels } from '../../utils';
+import { modalHeightVh, modalMaxHeight } from '../../';
 
 enum Tab {
     CREATEDTOPICS,
@@ -95,7 +96,7 @@ export const AccountComponent = (props: AccountComponentProps) => {
     }
 
     return (
-        <div className="account-container" style={{ height: `${vhToPixels(75)}px`}}>
+        <div className="account-container" style={{ height: `${vhToPixels(modalHeightVh)}px`, maxHeight: modalMaxHeight}}>
             <div className="account-header-section">
                 <div className="account-title">{`${props.username}`}</div>
                 <div className="account-tabs">

@@ -18,6 +18,7 @@ import { CommentsCardComponent } from './comments/comments-card';
 // style imports
 import './app-shell.css';
 import { TopicImagesComponent } from './topic-images/topic-images';
+import { useMedia } from '../hooks/useMedia';
 
 export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<{ topicDetails: {topics: Topic[]; topicIndex: number}; scrollPosition: number, specificComment?: Comment }>({
@@ -28,6 +29,14 @@ export const AppShellComponent = (props: any) => {
     scrollPosition: window.innerHeight,
     specificComment: undefined,
   });
+
+  const isMobile = useMedia(
+    // Media queries
+    ['(max-width: 600px)'],
+    [true],
+    // default value
+    false
+  );
 
   const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken', 'topicTitle']);
   const { username, sessiontoken } = cookies;
@@ -171,7 +180,7 @@ export const AppShellComponent = (props: any) => {
   }
 
   const cardShellHeight = vhToPixels(75);
-  const cardShellWidth = vwToPixels(45);
+  const cardShellWidth = isMobile ? vwToPixels(75) : vwToPixels(45);
   return (
       <div id={appShellId} className={appShellId} >
         <SearchComponent onSuggestionClick={fetchTopics} />
