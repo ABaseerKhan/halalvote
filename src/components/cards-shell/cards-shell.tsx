@@ -148,6 +148,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
         back.style.zIndex = '0';
         selected.style.zIndex = '1';
         selectedLabel.style.display = 'none';
+        frontCover.style.display = 'unset';
 
         front.animate([
           {
@@ -201,7 +202,6 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
               selected.style.zIndex = '2';
               front.style.zIndex = '1';
               selectedCover.style.display = 'none';
-              frontCover.style.display = 'unset';
               onfinish();
             }
             break;
@@ -219,7 +219,6 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
               selected.style.zIndex = '2';
               front.style.zIndex = '1';
               selectedCover.style.display = 'none';
-              frontCover.style.display = 'unset';
               onfinish();
             }
             break;
