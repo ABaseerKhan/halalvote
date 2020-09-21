@@ -34,8 +34,8 @@ export const ModalComponent = (props: ModalComponentProps) => {
     const modalId = "modal";
     const modalCoverId = "modal-cover";
 
-    const heightVh = 80;
-    const widthVw = isMobile ? 90 : 50;
+    const heightVh = 70;
+    const widthVw = isMobile ? 80 : 40;
     const maxHeight = window.innerHeight - (Math.max(elementStyles.maxTopicCarouselHeightPx, vhToPixels(elementStyles.topicCarouselHeightVh)) + vhToPixels(10));
     const maxWidth = 800;
 

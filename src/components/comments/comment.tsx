@@ -7,6 +7,7 @@ import { commentsConfig } from '../../https-client/config';
 import { postData } from '../../https-client/client';
 import { ReactComponent as UpSVG } from '../../icons/up-arrow.svg';
 import { ReactComponent as DownSVG } from '../../icons/down-arrow.svg';
+import ClipLoader from "react-spinners/ClipLoader";
 
 // type imports
 import { Vote } from '../../types';
@@ -21,7 +22,7 @@ interface CommentComponentProps {
     path: number[],
     pathToHighlightedComment: number[] | undefined,
     highlightComment: (path: number[] | undefined) => void,
-    fetchMoreReplies: (path: number[]) => void,
+    fetchMoreReplies: (pathToParentComment: number[], totalTopLevelComments?: number | undefined, specificCommentId?: number | undefined, depth?: number) => Promise<void>,
     deleteComment: (path: number[]) => void,
     judgment: Judgment;
     level2?: boolean;
@@ -32,6 +33,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
 
     const [state, setState] = useState({
         comment: props.comment,
+        fetchingReplies: false,
         canShowMore: true,
         collapsed: true,
     });
@@ -49,12 +51,13 @@ export const CommentComponent = (props: CommentComponentProps) => {
     };
 
     // eslint-disable-next-line
-    const showReplies = () => {
-        props.fetchMoreReplies(props.path);
-        setState({
-            ...state,
-            collapsed: false,
-        });
+    const showReplies = async () => {
+        setState(prevState => ({ ...prevState, collapsed: false, fetchingReplies: true }));
+        await props.fetchMoreReplies(props.path);
+        setState(prevState => ({
+            ...prevState,
+            fetchingReplies: false,
+        }));
     };
 
     const upVote = async () => {
@@ -131,9 +134,9 @@ export const CommentComponent = (props: CommentComponentProps) => {
                         }
                     </div>
                 </div>
-                <div className="replies">
+                {!state.collapsed && <div className="replies">
                     {
-                        !state.collapsed && props.comment.replies.map((reply: Comment, i: number) => {
+                        !!state.fetchingReplies ? <ClipLoader size={25} color={"var(--light-neutral-color)"} loading={state.fetchingReplies}/> : props.comment.replies.map((reply: Comment, i: number) => {
                             return <CommentComponent 
                                         key={reply.id} 
                                         comment={reply} 
@@ -147,7 +150,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                                     />
                         })
                     }
-                </div>
+                </div>}
                 {
                         (props.comment.numReplies > 0) && (!props.level2) &&
                         <div className={"show-or-hide-container"}>

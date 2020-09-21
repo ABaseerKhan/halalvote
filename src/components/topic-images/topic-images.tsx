@@ -216,10 +216,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                     <div className='no-image-text'>No images to show</div>
             }
-            {!!props.shown && 
-            <div className="show-add-image-button" onClick={() => {showAddTopic(true)}}>
+            <div className={!!props.shown ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
                 <AddButtonSVG/>
-            </div>}
+            </div>
         </div>
     );
 
