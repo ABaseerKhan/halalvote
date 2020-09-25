@@ -8,7 +8,6 @@ import { VotingSwitch } from './voting-switch';
 //style imports
 import './topic-carousel.css';
 import { useCookies } from 'react-cookie';
-import { VotingSlider } from './voting-slider';
 import { VotesBar } from './votes-bar';
 
 interface TopicVotesComponentProps {
@@ -72,15 +71,6 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                 haramPoints={state.haramPoints}
                 numVotes={state.numVotes}
             />
-            {/* <div className={"voting-slider"} >
-                <VotingSlider 
-                    submitVote={submitVote}
-                    userVote={userVote}
-                    halalPoints={state.halalPoints}
-                    haramPoints={state.haramPoints}
-                    numVotes={state.numVotes}
-                />
-            </div> */}
         </div>
     )
 };
