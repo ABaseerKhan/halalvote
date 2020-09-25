@@ -28,16 +28,71 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     const votingAreaFilledHaramId = "voting-area-filled-haram";
     const votingAreaFilledHalalId = "voting-area-filled-halal";
 
+    const votingSwitchContainerElement = document.getElementById(votingSwitchContainerId);
     const switchElement = document.getElementById(switchId);
     const votingAreaFilledHaramElement = document.getElementById(votingAreaFilledHaramId);
     const votingAreaFilledHalalElement = document.getElementById(votingAreaFilledHalalId);
     
     const switchTime = 50;
     const switchContainerWidth = 100; // pixels
-    const switchContainerHeight = Math.round(switchContainerWidth / 3) // pixels (also used for switch height/width + border radius)
+    const switchContainerHeight = Math.round(switchContainerWidth / 3) // pixels
     const totalSwitchMarginLeft = switchContainerWidth - switchContainerHeight; // pixels
     const halfSwitchMarginLeft = Math.round(totalSwitchMarginLeft / 2); // pixels
     const switchMargins = 2; // pixels
+    const switchDimension = switchContainerHeight - (switchMargins * 2);
+
+    if (switchElement && votingSwitchContainerElement && votingAreaFilledHalalElement && votingAreaFilledHaramElement) {
+        let containerRects = votingSwitchContainerElement.getClientRects();
+        let dragging = false;
+
+        switchElement.onmousedown = () => {
+            dragging = true;
+            containerRects = votingSwitchContainerElement.getClientRects();
+        }
+        document.onmouseup = (e: MouseEvent) => {
+            if (dragging && containerRects.length > 0) {
+                dragging = false;
+
+                const containerLeft = containerRects[0].x;
+                const containerLeftMid = containerLeft + (switchContainerWidth / 4);
+                const containerMid = containerLeft + (switchContainerWidth / 2);
+                const containerRightMid = containerMid + (switchContainerWidth / 4);
+
+                if (e.x <= containerLeftMid) {
+                    vote(Judgment.HARAM);
+                } else if (e.x >= containerRightMid) {
+                    vote(Judgment.HALAL);
+                } else {
+                    vote(undefined);
+                }
+            }
+        }
+        document.onmousemove = (e: MouseEvent) => {
+            if (dragging && containerRects.length > 0) {
+                const containerLeft = containerRects[0].x;
+                const containerMid = containerLeft + (switchContainerWidth / 2);
+                const switchCenterX = e.x - (switchDimension / 2);
+
+                switchElement.style.marginLeft = Math.min(totalSwitchMarginLeft + switchMargins, (Math.max(switchMargins, switchCenterX - containerLeft))) + "px";
+
+                if (e.x > containerMid) {
+                    const halalFillWidth = e.x + (switchDimension / 2) + switchMargins - containerMid;
+
+                    votingAreaFilledHalalElement.style.display = "unset";
+                    votingAreaFilledHaramElement.style.display = "none";
+                    votingAreaFilledHalalElement.style.width = Math.min(switchContainerWidth / 2, halalFillWidth) + "px";
+                } else {
+                    const haramFillWidth = containerMid - e.x + (switchDimension / 2) + switchMargins;
+                    const haramFillMarginLeft = e.x - (switchDimension / 2) - switchMargins - containerLeft;
+
+                    votingAreaFilledHalalElement.style.display = "none";
+                    votingAreaFilledHaramElement.style.display = "unset";
+                    votingAreaFilledHaramElement.style.width = Math.min(switchContainerWidth / 2, haramFillWidth) + "px";
+                    votingAreaFilledHaramElement.style.marginLeft = Math.max(0, haramFillMarginLeft) + "px";
+                }
+            }
+        }
+    }
 
     const moveSwitchToCenter = (onfinish: any) => {
         if (switchElement && votingAreaFilledHalalElement && votingAreaFilledHaramElement) {
@@ -49,7 +104,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                     duration: switchTime,
                     easing: 'linear',
                 }).onfinish = () => {
-                    switchElement.style.marginLeft = halfSwitchMarginLeft + "px";
+                    switchElement.style.marginLeft = halfSwitchMarginLeft + switchMargins + "px";
                     onfinish();
                 };
             
@@ -91,7 +146,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                     duration: switchTime,
                     easing: 'linear',
                 }).onfinish = () => {
-                    switchElement.style.marginLeft = totalSwitchMarginLeft + "px";
+                    switchElement.style.marginLeft = totalSwitchMarginLeft + switchMargins + "px";
                     onfinish();
                 };
             
@@ -194,7 +249,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
 
     const votingAreaWidthPx = Math.round(switchContainerWidth / 2) + "px";
 
-    const switchDimension = switchContainerHeight - (switchMargins * 2);
     const switchDimensionPx = switchDimension + "px";
     const switchMarginTopPx = switchMargins + "px";
     const switchMarginLeftPx = halfSwitchMarginLeft + switchMargins + "px";

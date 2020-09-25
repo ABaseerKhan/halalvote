@@ -55,7 +55,7 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                 },
                 setCookie: setCookie,
             });
-            if (status === 200) {
+            if (status === 200 && !("noUpdates" in data)) {
                 setState(prevState => ({ ...prevState, numVotes: data.numVotes, halalPoints: data.halalPoints, haramPoints: data.haramPoints }));
             }
         }
