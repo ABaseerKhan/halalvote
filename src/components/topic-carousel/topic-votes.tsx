@@ -1,6 +1,7 @@
 import React, {memo, useState, useEffect} from 'react';
 import { postData } from '../../https-client/client';
 import { topicsConfig } from '../../https-client/config';
+import { VotingSwitch } from './voting-switch';
 
 //type imports
 
@@ -8,6 +9,7 @@ import { topicsConfig } from '../../https-client/config';
 import './topic-carousel.css';
 import { useCookies } from 'react-cookie';
 import { VotingSlider } from './voting-slider';
+import { VotesBar } from './votes-bar';
 
 interface TopicVotesComponentProps {
     topicTitle: string,
@@ -61,7 +63,16 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
 
     return (
         <div className={"topic-votes-container"}>
-            <div className={"voting-slider"} >
+            <VotingSwitch
+                submitVote={submitVote}
+                userVote={userVote}
+            />
+            <VotesBar
+                halalPoints={state.halalPoints}
+                haramPoints={state.haramPoints}
+                numVotes={state.numVotes}
+            />
+            {/* <div className={"voting-slider"} >
                 <VotingSlider 
                     submitVote={submitVote}
                     userVote={userVote}
@@ -69,7 +80,7 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                     haramPoints={state.haramPoints}
                     numVotes={state.numVotes}
                 />
-            </div>
+            </div> */}
         </div>
     )
 };

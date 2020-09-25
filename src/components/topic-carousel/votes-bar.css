@@ -1,0 +1,15 @@
+.votes-bar {
+    position: relative;
+    display: flex;
+    background: gray;
+    margin: auto;
+    margin-top: 15px;
+}
+
+.voting-bar-haram {
+    background: var(--haram-color);
+}
+
+.voting-bar-halal {
+    background: var(--halal-color);
+}

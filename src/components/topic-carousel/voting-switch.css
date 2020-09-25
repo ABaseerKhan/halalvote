@@ -1,0 +1,46 @@
+.voting-container {
+    display: flex;
+    margin: auto;
+}
+
+.voting-switch-container {
+    position: relative;
+    background: gray;
+    margin: auto;
+}
+
+.voting-switch {
+    position: absolute;
+    background: white;
+    cursor: pointer;
+}
+
+.voting-switch-text {
+    text-align: center;
+}
+
+.voting-area {
+    position: absolute;
+    cursor: pointer;
+}
+
+.voting-area-filled-haram {
+    position: absolute;
+    cursor: pointer;
+    background: var(--haram-color);
+}
+
+.voting-area-filled-halal {
+    position: absolute;
+    cursor: pointer;
+    background: var(--halal-color);
+}
+
+.voting-label {
+    position: relative;
+    width: 100px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 5px;
+    margin-right: 5px;
+}
