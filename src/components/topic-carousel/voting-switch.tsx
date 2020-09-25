@@ -1,4 +1,7 @@
 import React, { useRef, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
+
+//type imports
 import { Judgment } from '../../types';
 
 //style imports
@@ -9,10 +12,13 @@ type VotingSwitchProps = {
     userVote: number | undefined,
 };
 export const VotingSwitch = (props: VotingSwitchProps) => {
+    const [cookies] = useCookies(['username', 'sessiontoken']);
+
+    const { username, sessiontoken } = cookies;
     const { submitVote, userVote } = props;
 
     useEffect(() => {
-        if (userVote === undefined || userVote === 0) {
+        if (userVote === undefined || userVote === 0 || !(username && sessiontoken)) {
             setVote(undefined);
         } else if (userVote < 0) {
             setVote(Judgment.HARAM);
@@ -233,13 +239,24 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
 
     const vote = (judgment: Judgment | undefined) => {
         if (judgment === Judgment.HARAM) {
-            submitVote(-100);
+            if (userVote !== undefined && userVote < 0) {
+                setVote(judgment);
+            } else {
+                submitVote(-100);
+            }
         } else if (judgment === Judgment.HALAL) {
-            submitVote(100);
+            if (userVote !== undefined && userVote > 0) {
+                setVote(judgment);
+            } else {
+                submitVote(100);
+            }
         } else {
-            submitVote(0);
+            if (userVote) {
+                submitVote(0);
+            } else {
+                setVote(judgment);
+            }
         }
-        setVote(judgment);
     }
 
     const votingContainerWidthPx = switchContainerWidth + 220 + "px";
