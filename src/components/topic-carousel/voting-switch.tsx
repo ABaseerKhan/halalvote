@@ -25,7 +25,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
         } else if (userVote > 0) {
             setVote(Judgment.HALAL);
         } // eslint-disable-next-line
-    }, [userVote]);
+    }, [userVote, username, sessiontoken]);
 
     let canSwitch = useRef<boolean>(true);
 
@@ -41,7 +41,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     
     const switchTime = 50;
     const switchContainerWidth = 100; // pixels
-    const switchContainerHeight = Math.round(switchContainerWidth / 3) // pixels
+    const switchContainerHeight = Math.round(switchContainerWidth * (2/5)) // pixels
     const totalSwitchMarginLeft = switchContainerWidth - switchContainerHeight; // pixels
     const halfSwitchMarginLeft = Math.round(totalSwitchMarginLeft / 2); // pixels
     const switchMargins = 2; // pixels
