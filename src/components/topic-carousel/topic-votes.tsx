@@ -43,7 +43,8 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                 },
                 setCookie: setCookie,
             });
-            if (status === 200 && !("noUpdates" in data)) {
+            
+            if (status === 200 && !("noUpdates" in data) && !("message" in data)) {
                 if (value > 0) {
                     document.body.style.backgroundColor = 'var(--halal-color)';
                     setTimeout(() => {

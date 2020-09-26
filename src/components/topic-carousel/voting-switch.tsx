@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 
 //type imports
@@ -27,8 +27,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
         } // eslint-disable-next-line
     }, [userVote, username, sessiontoken]);
 
-    let canSwitch = useRef<boolean>(true);
-
     const votingSwitchContainerId = "voting-switch-container";
     const switchId = "voting-switch";
     const votingAreaFilledHaramId = "voting-area-filled-haram";
@@ -40,8 +38,8 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     const votingAreaFilledHalalElement = document.getElementById(votingAreaFilledHalalId);
     
     const switchTime = 50;
-    const switchContainerWidth = 100; // pixels
-    const switchContainerHeight = Math.round(switchContainerWidth * (2/5)) // pixels
+    const switchContainerWidth = 120; // pixels
+    const switchContainerHeight = Math.round(switchContainerWidth * (1/3)) // pixels
     const totalSwitchMarginLeft = switchContainerWidth - switchContainerHeight; // pixels
     const halfSwitchMarginLeft = Math.round(totalSwitchMarginLeft / 2); // pixels
     const switchMargins = 2; // pixels
@@ -108,7 +106,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 }
                 ], {
                     duration: switchTime,
-                    easing: 'linear',
                 }).onfinish = () => {
                     switchElement.style.marginLeft = halfSwitchMarginLeft + switchMargins + "px";
                     onfinish();
@@ -120,7 +117,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                     }
                     ], {
                         duration: switchTime,
-                        easing: 'linear',
                     }).onfinish = () => {
                         votingAreaFilledHalalElement.style.width = "0";
                     };
@@ -133,7 +129,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                     }
                     ], {
                         duration: switchTime,
-                        easing: 'linear',
                     }).onfinish = () => {
                         votingAreaFilledHaramElement.style.marginLeft = haramVotingAreaMarginLeftPx;
                         votingAreaFilledHaramElement.style.width = "0";
@@ -150,7 +145,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 }
                 ], {
                     duration: switchTime,
-                    easing: 'linear',
                 }).onfinish = () => {
                     switchElement.style.marginLeft = totalSwitchMarginLeft + switchMargins + "px";
                     onfinish();
@@ -163,7 +157,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 }
                 ], {
                     duration: switchTime,
-                    easing: 'linear',
                 }).onfinish = () => {
                     votingAreaFilledHalalElement.style.width = votingAreaWidthPx;
                 };
@@ -178,7 +171,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 }
                 ], {
                     duration: switchTime,
-                    easing: 'linear',
                 }).onfinish = () => {
                     switchElement.style.marginLeft = switchMargins + "px";
                     onfinish();
@@ -192,7 +184,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 }
                 ], {
                     duration: switchTime,
-                    easing: 'linear',
                 }).onfinish = () => {
                     votingAreaFilledHaramElement.style.marginLeft = "0";
                     votingAreaFilledHaramElement.style.width = votingAreaWidthPx;
@@ -201,60 +192,77 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     }
 
     const setVote = (judgment: Judgment | undefined) => {
-        if (switchElement && votingAreaFilledHalalElement && votingAreaFilledHaramElement && canSwitch.current) {
-            canSwitch.current = false;
-            const switchMarginLeft = parseInt(switchElement.style.marginLeft);
+        if (switchElement && votingAreaFilledHalalElement && votingAreaFilledHaramElement) {
+            const switchMarginLeft = parseInt(switchElement.style.marginLeft) - switchMargins;
 
             if (judgment === Judgment.HALAL) {
                 if (switchMarginLeft >= halfSwitchMarginLeft) {
+                    votingAreaFilledHaramElement.style.display = "none";
                     votingAreaFilledHalalElement.style.display = "unset";
-                    moveSwitchToHalal(() => {canSwitch.current = true});
+                    moveSwitchToHalal(() => {});
                 } else {
                     moveSwitchToCenter(() => {
                         votingAreaFilledHaramElement.style.display = "none";
                         votingAreaFilledHalalElement.style.display = "unset";
-                        moveSwitchToHalal(() => {canSwitch.current = true});
+                        moveSwitchToHalal(() => {});
                     });
                 }
             } else if (judgment === Judgment.HARAM) {
                 if (switchMarginLeft <= halfSwitchMarginLeft) {
                     votingAreaFilledHaramElement.style.display = "unset";
-                    moveSwitchToHaram(() => {canSwitch.current = true});
+                    votingAreaFilledHalalElement.style.display = "none";
+                    moveSwitchToHaram(() => {});
                 } else {
                     moveSwitchToCenter(() => {
                         votingAreaFilledHaramElement.style.display = "unset";
                         votingAreaFilledHalalElement.style.display = "none";
-                        moveSwitchToHaram(() => {canSwitch.current = true});
+                        moveSwitchToHaram(() => {});
                     });
                 }
             } else {
                 moveSwitchToCenter(() => {
                     votingAreaFilledHaramElement.style.display = "none";
                     votingAreaFilledHalalElement.style.display = "none";
-                    canSwitch.current = true;
                 });
             }
         }
     }
 
     const vote = (judgment: Judgment | undefined) => {
-        if (judgment === Judgment.HARAM) {
-            if (userVote !== undefined && userVote < 0) {
-                setVote(judgment);
+        setVote(judgment);
+        if (judgment === Judgment.HARAM && (userVote === undefined || userVote >= 0)) {
+            submitVote(-100);
+        } else if (judgment === Judgment.HALAL && (userVote === undefined || userVote <= 0)) {
+            submitVote(100);
+        } else if (userVote) {
+            submitVote(0);
+        }
+    }
+
+    const clickHalalVotingArea = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (votingSwitchContainerElement) {
+            const containerRects = votingSwitchContainerElement.getClientRects();
+            const containerLeft = containerRects[0].x;
+            const containerMid = containerLeft + (switchContainerWidth / 2);
+
+            if (e.screenX < containerMid + (switchDimension / 2)) {
+                vote(undefined);
             } else {
-                submitVote(-100);
+                vote(Judgment.HALAL);
             }
-        } else if (judgment === Judgment.HALAL) {
-            if (userVote !== undefined && userVote > 0) {
-                setVote(judgment);
+        }
+    }
+
+    const clickHaramVotingArea = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (votingSwitchContainerElement) {
+            const containerRects = votingSwitchContainerElement.getClientRects();
+            const containerLeft = containerRects[0].x;
+            const containerMid = containerLeft + (switchContainerWidth / 2);
+
+            if (e.screenX > containerMid - (switchDimension / 2)) {
+                vote(undefined);
             } else {
-                submitVote(100);
-            }
-        } else {
-            if (userVote) {
-                submitVote(0);
-            } else {
-                setVote(judgment);
+                vote(Judgment.HARAM);
             }
         }
     }
@@ -279,8 +287,8 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
         <div className="voting-container" style={{width: votingContainerWidthPx}}>
             <div className="voting-label" style={{ color: '#452061' }}>{'haram (حرام)'}</div>
             <div id={votingSwitchContainerId} className="voting-switch-container" style={{height: switchContainerHeightPx, width: switchContainerWidthPx, borderRadius: switchContainerHeightPx}}>
-                <div className="voting-area" onClick={() => {vote(Judgment.HARAM)}} style={{height: switchContainerHeightPx, width: votingAreaWidthPx, borderRadius: `${switchContainerHeightPx} 0 0 ${switchContainerHeightPx}`}}></div>
-                <div className="voting-area" onClick={() => {vote(Judgment.HALAL)}} style={{height: switchContainerHeightPx, width: votingAreaWidthPx, borderRadius: `0 ${switchContainerHeightPx} ${switchContainerHeightPx} 0`, marginLeft: votingAreaWidthPx}}></div>
+                <div className="voting-area" onClick={clickHaramVotingArea} style={{height: switchContainerHeightPx, width: votingAreaWidthPx, borderRadius: `${switchContainerHeightPx} 0 0 ${switchContainerHeightPx}`}}></div>
+                <div className="voting-area" onClick={clickHalalVotingArea} style={{height: switchContainerHeightPx, width: votingAreaWidthPx, borderRadius: `0 ${switchContainerHeightPx} ${switchContainerHeightPx} 0`, marginLeft: votingAreaWidthPx}}></div>
                 <div id={votingAreaFilledHaramId} className="voting-area-filled-haram" onClick={() => {vote(undefined)}} style={{height: switchContainerHeightPx, width: 0, borderRadius: `${switchContainerHeightPx} 0 0 ${switchContainerHeightPx}`, display:"none", marginLeft: votingAreaWidthPx}}></div>
                 <div id={votingAreaFilledHalalId} className="voting-area-filled-halal" onClick={() => {vote(undefined)}} style={{height: switchContainerHeightPx, width: 0, borderRadius: `0 ${switchContainerHeightPx} ${switchContainerHeightPx} 0`, display:"none", marginLeft: votingAreaWidthPx}}></div>
                 <div id={switchId} className="voting-switch" style={{height: switchDimensionPx, width: switchDimensionPx, borderRadius: switchDimensionPx, marginLeft: switchMarginLeftPx, marginTop: switchMarginTopPx}}>

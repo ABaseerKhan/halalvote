@@ -34,13 +34,13 @@
 .voting-area-filled-haram {
     position: absolute;
     cursor: pointer;
-    background: var(--haram-color);
+    background: linear-gradient(to left, gray, var(--haram-color), var(--haram-color));
 }
 
 .voting-area-filled-halal {
     position: absolute;
     cursor: pointer;
-    background: var(--halal-color);
+    background: linear-gradient(to right, gray, var(--halal-color), var(--halal-color));
 }
 
 .voting-label {
