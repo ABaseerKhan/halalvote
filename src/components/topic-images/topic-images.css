@@ -134,8 +134,8 @@
   position: absolute;
   height: 8vh;
   width: 8vh;
-  top: -4vh;
-  left: -4vh;
+  bottom: -4vh;
+  left: calc(50% - 4vh);
   border-radius: 36px;
   background-color: var(--neutral-color);
   color: var(--site-background-color);
