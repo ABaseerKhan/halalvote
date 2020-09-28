@@ -267,7 +267,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
         }
     }
 
-    const votingContainerWidthPx = switchContainerWidth + 220 + "px";
+    const votingContainerWidthPx = switchContainerWidth + 240 + "px";
 
     const switchContainerWidthPx = switchContainerWidth + "px";
     const switchContainerHeightPx = switchContainerHeight + "px";
