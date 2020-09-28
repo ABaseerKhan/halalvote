@@ -12,7 +12,7 @@ type VotesBarProps = {
 export const VotesBar = (props: VotesBarProps) => {
     const {halalPoints, haramPoints, numVotes } = props;
     
-    const votesBarWidth = 340; // pixels
+    const votesBarWidth = 370; // pixels
     const votesBarHeight = Math.round(votesBarWidth / 50) // pixels
     let haramPercentage = 0;
     let halalPercentage = 0;
