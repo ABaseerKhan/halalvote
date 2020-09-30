@@ -38,8 +38,8 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     const votingAreaFilledHalalElement = document.getElementById(votingAreaFilledHalalId);
     
     const switchTime = 50;
-    const switchContainerWidth = 120; // pixels
-    const switchContainerHeight = Math.round(switchContainerWidth * (1/3)) // pixels
+    const switchContainerWidth = 150; // pixels
+    const switchContainerHeight = Math.round(switchContainerWidth / 4) // pixels
     const totalSwitchMarginLeft = switchContainerWidth - switchContainerHeight; // pixels
     const halfSwitchMarginLeft = Math.round(totalSwitchMarginLeft / 2); // pixels
     const switchMargins = 2; // pixels
