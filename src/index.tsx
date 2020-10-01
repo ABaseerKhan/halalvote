@@ -10,10 +10,10 @@ import './index.css';
 import { vhToPixels } from './utils';
 
 export const elementStyles = {
-  toolbarHeightVh: 12,
-  maxToolbarHeightPx: 65,
-  topicCarouselHeightVh: 14,
-  maxTopicCarouselHeightPx: 135
+  toolbarHeightVh: 13,
+  maxToolbarHeightPx: 70,
+  topicCarouselHeightVh: 15,
+  maxTopicCarouselHeightPx: 150
 }
 
 export const modalHeightVh = 70;

@@ -38,8 +38,8 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     const votingAreaFilledHalalElement = document.getElementById(votingAreaFilledHalalId);
     
     const switchTime = 50;
-    const switchContainerWidth = 150; // pixels
-    const switchContainerHeight = Math.round(switchContainerWidth / 4) // pixels
+    const switchContainerWidth = 225; // pixels
+    const switchContainerHeight = Math.round(switchContainerWidth / 5) // pixels
     const totalSwitchMarginLeft = switchContainerWidth - switchContainerHeight; // pixels
     const halfSwitchMarginLeft = Math.round(totalSwitchMarginLeft / 2); // pixels
     const switchMargins = 2; // pixels
@@ -267,7 +267,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
         }
     }
 
-    const votingContainerWidthPx = switchContainerWidth + 240 + "px";
+    const votingContainerWidthPx = switchContainerWidth + 200 + "px";
 
     const switchContainerWidthPx = switchContainerWidth + "px";
     const switchContainerHeightPx = switchContainerHeight + "px";
@@ -277,25 +277,20 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     const switchDimensionPx = switchDimension + "px";
     const switchMarginTopPx = switchMargins + "px";
     const switchMarginLeftPx = halfSwitchMarginLeft + switchMargins + "px";
-
-    const switchTextFontSize = ((switchContainerHeight - (switchMargins * 2)) / 4);
-    const switchTextMarginTop = (switchDimension / 2) - (switchTextFontSize / 2);
-    const switchTextFontSizePx = switchTextFontSize + "px";
-    const switchTextMarginTopPx = switchTextMarginTop + "px";
     
     return (
-        <div className="voting-container" style={{width: votingContainerWidthPx}}>
-            <div className="voting-label" style={{ color: '#452061' }}>{'haram (حرام)'}</div>
+        <div className="voting-container" style={{maxWidth: votingContainerWidthPx}}>
+            <div className="voting-label" style={{ color: '#452061' }}>{'Haram'}<br/>{'حرام'}</div>
             <div id={votingSwitchContainerId} className="voting-switch-container" style={{height: switchContainerHeightPx, width: switchContainerWidthPx, borderRadius: switchContainerHeightPx}}>
                 <div className="voting-area" onClick={clickHaramVotingArea} style={{height: switchContainerHeightPx, width: votingAreaWidthPx, borderRadius: `${switchContainerHeightPx} 0 0 ${switchContainerHeightPx}`}}></div>
                 <div className="voting-area" onClick={clickHalalVotingArea} style={{height: switchContainerHeightPx, width: votingAreaWidthPx, borderRadius: `0 ${switchContainerHeightPx} ${switchContainerHeightPx} 0`, marginLeft: votingAreaWidthPx}}></div>
                 <div id={votingAreaFilledHaramId} className="voting-area-filled-haram" onClick={() => {vote(undefined)}} style={{height: switchContainerHeightPx, width: 0, borderRadius: `${switchContainerHeightPx} 0 0 ${switchContainerHeightPx}`, display:"none", marginLeft: votingAreaWidthPx}}></div>
                 <div id={votingAreaFilledHalalId} className="voting-area-filled-halal" onClick={() => {vote(undefined)}} style={{height: switchContainerHeightPx, width: 0, borderRadius: `0 ${switchContainerHeightPx} ${switchContainerHeightPx} 0`, display:"none", marginLeft: votingAreaWidthPx}}></div>
                 <div id={switchId} className="voting-switch" style={{height: switchDimensionPx, width: switchDimensionPx, borderRadius: switchDimensionPx, marginLeft: switchMarginLeftPx, marginTop: switchMarginTopPx}}>
-                    <div className="voting-switch-text" style={{fontSize: switchTextFontSizePx, marginTop: switchTextMarginTopPx}}>VOTE</div>
+                    <div className="voting-switch-text">VOTE</div>
                 </div>
             </div>
-            <div className="voting-label" style={{ color: '#1f594f' }}>{'(حلال) halal'}</div>
+    <div className="voting-label" style={{ color: '#1f594f' }}>{'Halal'}<br/>{'حلال'}</div>
         </div>
     )
 }
