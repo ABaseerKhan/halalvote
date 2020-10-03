@@ -1,6 +1,6 @@
 .cards-shell {
     position: relative;
-    height: min(calc(100% - var(--topic-carousel-height-vh)), 100% - var(--max-topic-carousel-height-px));
+    height: min(calc(100% - var(--topic-carousel-height-vh)), calc(100% - var(--max-topic-carousel-height-px)));
     width: 100%;
     padding-top: max(var(--topic-carousel-height-vh), var(--max-topic-carousel-height-px));
     margin-left: 27.5vw;
@@ -10,7 +10,7 @@
 .card-shell {
     display: flex;
     position: absolute;
-    height: min(calc(95% - var(--topic-carousel-height-vh)), 95% - var(--max-topic-carousel-height-px));
+    height: min(calc(95% - var(--topic-carousel-height-vh)), calc(95% - var(--max-topic-carousel-height-px)));
     width: 45vw;
     border-radius: 25px;
     margin-left: unset;
