@@ -127,14 +127,14 @@ export const AppShellComponent = (props: any) => {
   };
 
   const topic = state.topicDetails.topics.length > 0 ? state.topicDetails.topics[state.topicDetails.topicIndex] : undefined;
+  const setTopic = (newTopic: Topic) => setState(prevState => ({ ...prevState, topicDetails: { ...prevState.topicDetails, topics: prevState.topicDetails.topics.map((topic, idx) => { if(idx === prevState.topicDetails.topicIndex) return newTopic; return topic; })}}))
   const nextTopic = (state.topicDetails.topics.length > 0) && (state.topicDetails.topicIndex < state.topicDetails.topics.length) ? state.topicDetails.topics[state.topicDetails.topicIndex + 1] : undefined;
   const prevTopic = (state.topicDetails.topics.length > 0) && (state.topicDetails.topicIndex >= 0) ? state.topicDetails.topics[state.topicDetails.topicIndex - 1] : undefined;
   const topicTitle = topic?.topicTitle !== undefined ? topic.topicTitle : "";
   const halalPoints = topic?.halalPoints !== undefined ? topic.halalPoints : 0;
   const haramPoints = topic?.haramPoints !== undefined ? topic.haramPoints : 0;
   const numTopicVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
-  const numHalalComments = topic?.numHalalComments !== undefined ? topic.numHalalComments : 0;
-  const numHaramComments = topic?.numHaramComments !== undefined ? topic.numHaramComments : 0;
+  const numComments = topic?.numComments !== undefined ? topic.numComments : 0;
 
   if (appShell && topicCarousel) {
     appShell.onscroll = () => {
@@ -168,14 +168,16 @@ export const AppShellComponent = (props: any) => {
   return (
       <div id={appShellId} className={appShellId} >
         <SearchComponent onSuggestionClick={fetchTopics} />
-        <div className="topic-content">
-          <CardsShellComponent id={cardsShellId}
-            mediaCard={<TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
-            commentsCard={<CommentsCardComponent userTopicVote={topic?.vote} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-            analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-          />
-          <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
-        </div>
+        <TopicContext.Provider value={{ topic: topic, setTopic: setTopic }}>
+          <div className="topic-content">
+            <CardsShellComponent id={cardsShellId}
+              mediaCard={<TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
+              commentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+              analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+            />
+            <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
+          </div>
+        </TopicContext.Provider>
         <div className="fixed-content">
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />
           <MenuComponent fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
@@ -258,3 +260,9 @@ const animatePrevTopic = (cardsShell: any, callback: () => void) => {
     }
   };
 }
+
+// set the defaults
+export const TopicContext = React.createContext<{topic: Topic | undefined; setTopic: (newTopic: Topic) => void}>({
+  topic: undefined,
+  setTopic: (newTopic) => undefined
+});

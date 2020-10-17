@@ -21,8 +21,7 @@ export interface Topic {
     haramPoints: number;
     halalPoints: number;
     numVotes: number;
-    numHalalComments: number;
-    numHaramComments: number;
+    numComments: number;
     timeStamp: string;
     vote: number | undefined;
 }

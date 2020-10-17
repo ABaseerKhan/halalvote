@@ -1,4 +1,4 @@
-import React, { useState, memo, useRef, useEffect } from 'react';
+import React, { useState, memo, useRef, useEffect, useContext } from 'react';
 import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
@@ -13,15 +13,13 @@ import { Judgment, userVoteToCommentType } from '../../types';
 
 // style imports
 import './comments.css';
+import { TopicContext } from '../app-shell';
 // import { useMedia } from '../../hooks/useMedia';
 
 interface CommentsCardComponentProps {
-    userTopicVote: number | undefined,
-    topicTitle: string,
-    numHalalComments: number,
-    numHaramComments: number,
+    numComments: number,
     specificComment?: Comment,
-    refreshTopic: (topicTofetch: string) => any,
+    refreshTopic: (topicTofetch: string | undefined) => any,
     switchCards: (judgement: Judgment) => any,
 };
 
@@ -39,7 +37,7 @@ const initialState = {
     pathToHighlightedComment: undefined,
 }
 const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
-    const { topicTitle, userTopicVote, specificComment, refreshTopic } = props;
+    const { specificComment, refreshTopic } = props;
 
     // const isMobile = useMedia(
     //     // Media queries
@@ -49,6 +47,8 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     //     false
     // );
 
+    // eslint-disable-next-line
+    const { topic, setTopic } = useContext(TopicContext);
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
@@ -57,24 +57,24 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const commentMakerRef = useRef<any>(null);
 
     useDebouncedEffect(() => {
-        if (topicTitle) {
+        if (topic?.topicTitle) {
             state.comments = [];
             state.pathToHighlightedComment = undefined;
             fetchComments([]);
         } else {
             setState(prevState => ({ ...prevState, loading: false, commentsShowable: true }));
         }
-    }, 500, [topicTitle]);
+    }, 500, [topic?.topicTitle]);
 
     useEffect(() => {
         if (!state.loading) {
             setTimeout(() => { setState(prevState => ({ ...prevState, commentsShowable: true })) }, 300);
             setState(prevState => ({ ...prevState, loading: true, commentsShowable: false }));
         } // eslint-disable-next-line
-    }, [topicTitle]);
+    }, [topic?.topicTitle]);
 
     useEffect(() => {
-        if (topicTitle && specificComment && (topicTitle === specificComment.topicTitle)) {
+        if (topic?.topicTitle && specificComment && (topic.topicTitle === specificComment.topicTitle)) {
             state.comments = [];
             state.pathToHighlightedComment = undefined;
             fetchComments([], undefined, specificComment?.id);
@@ -93,7 +93,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             baseUrl: commentsConfig.url,
             path: 'get-comments', 
             data: {
-                "topicTitle": topicTitle,
+                "topicTitle": topic?.topicTitle,
                 "username": username,
                 "parentId": parentComment?.id,
                 "singleCommentId": specificCommentId,
@@ -122,10 +122,10 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             path: 'add-comment', 
             data: {
                 "parentId": highlightedComment?.id,
-                "topicTitle": topicTitle, 
+                "topicTitle": topic?.topicTitle, 
                 "username": username,
                 "comment": commentText,
-                "commentType": userVoteToCommentType(userTopicVote), 
+                "commentType": userVoteToCommentType(topic?.vote),
             },
             additionalHeaders: {
                 "sessiontoken": sessiontoken
@@ -137,7 +137,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         }
         const commentObject: Comment = {
             id: comment.id,
-            commentType: userVoteToCommentType(userTopicVote),
+            commentType: userVoteToCommentType(topic?.vote),
             username: username,
             comment: commentText,
             replies: [],
@@ -148,7 +148,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         };
 
         if (!highlightedComment) {
-            refreshTopic(topicTitle);
+            refreshTopic(topic?.topicTitle);
         }
         
         const updatedComments = addCommentsLocally(state.comments, [commentObject], highlightedComment && state.pathToHighlightedComment);
@@ -163,7 +163,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             baseUrl: commentsConfig.url,
             path: 'delete-comment', 
             data: { 
-                "topicTitle": topicTitle,
+                "topicTitle": topic?.topicTitle,
                 "id": commentToDelete?.id,
                 "username": username,
                 "commentType": commentToDelete?.commentType,
@@ -174,7 +174,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         });
         
         if (pathToComment.length === 1) {
-            await refreshTopic(topicTitle);
+            await refreshTopic(topic?.topicTitle);
         }
 
         const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.data?.psuedoDelete);
@@ -311,9 +311,7 @@ const getPathFromId = (comments: Comment[], commentId: number, accumulator: numb
 }
 
 const areCommentsCardPropsEqual = (prevProps: CommentsCardComponentProps, nextProps: CommentsCardComponentProps) => {
-    return prevProps.topicTitle === nextProps.topicTitle && 
-        prevProps.numHalalComments === nextProps.numHalalComments && 
-        prevProps.numHaramComments === nextProps.numHaramComments &&
+    return prevProps.numComments === nextProps.numComments && 
         prevProps.specificComment === nextProps.specificComment
 }
 

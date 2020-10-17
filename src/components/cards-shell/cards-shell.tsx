@@ -349,15 +349,6 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
       }
     };
 
-    // const MobileView = (
-    //   <div id={id} className="comments-body">
-    //       <ReactCardFlip isFlipped={cardToShow.judgment === Judgment.HALAL} flipDirection="horizontal" infinite={true} >
-    //         {<CommentsCardComponent judgment={Judgment.HARAM} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={specificComment} refreshTopic={refreshTopic} switchCards={switchCards}/>}
-    //         {<CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={specificComment} refreshTopic={refreshTopic} switchCards={switchCards}/>}
-    //       </ReactCardFlip>
-    //     </div>
-    // )
-
     return /*isMobile ? MobileView :*/ (
         <div id={id} className="cards-shell" children={[mediaCardElement, commentsCardElement, analyticsCardElement]}/>
     );
