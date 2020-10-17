@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
-import { Comment, Judgment } from '../../types';
+import { Comment } from '../../types';
 import { convertUTCDateToLocalDate, timeSince } from '../../utils';
 import { commentsConfig } from '../../https-client/config';
 import { postData } from '../../https-client/client';
@@ -24,7 +24,6 @@ interface CommentComponentProps {
     highlightComment: (path: number[] | undefined) => void,
     fetchMoreReplies: (pathToParentComment: number[], totalTopLevelComments?: number | undefined, specificCommentId?: number | undefined, depth?: number) => Promise<void>,
     deleteComment: (path: number[]) => void,
-    judgment: Judgment;
     level2?: boolean;
 }
 export const CommentComponent = (props: CommentComponentProps) => {
@@ -89,7 +88,6 @@ export const CommentComponent = (props: CommentComponentProps) => {
         }
     }
 
-    const { judgment } = props;
     const moreReplies = (props.comment.numReplies - props.comment.replies.length);
     const viewMoreReplies = state.collapsed ? (props.comment.numReplies) : (moreReplies);
 
@@ -145,7 +143,6 @@ export const CommentComponent = (props: CommentComponentProps) => {
                                         highlightComment={props.highlightComment} 
                                         fetchMoreReplies={props.fetchMoreReplies}
                                         deleteComment={props.deleteComment}
-                                        judgment={judgment}
                                         level2={true}
                                     />
                         })

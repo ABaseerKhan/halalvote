@@ -4,14 +4,12 @@ import { ReactComponent as SendButtonSVG } from '../../icons/send-button.svg';
 import { useMedia } from '../../hooks/useMedia';
 
 //type imports
-import { Judgment } from '../../types';
 
 //style imports
 import 'react-quill/dist/quill.snow.css';
 import './comments.css';
 
 interface CommentMakerComponentProps {
-    judgment: Judgment,
     submitComment: (comment: any) => Promise<number>,
     replyToUsername?: string,
 };
@@ -84,7 +82,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     };
     
     return (
-        <div className={"comment-maker-card-" + props.judgment} onClick={(e) => { e.stopPropagation()}}>
+        <div className={"comment-maker-card"} onClick={(e) => { e.stopPropagation()}}>
             <ReactQuill
                 ref={quillEditor} 
                 className={"comment-maker-input"} 
@@ -97,7 +95,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
                 formats={formats} 
                 preserveWhitespace
             />
-            <SendButtonSVG className={"comment-maker-button-" + props.judgment} onClick={submitComment}/>
+            <SendButtonSVG className={"comment-maker-button"} onClick={submitComment}/>
         </div>
     )
 }

@@ -1,11 +1,18 @@
 export enum Judgment {
     HALAL,
     HARAM,
+    OTHER
 };
 
-export const judgementToTextMap = {
-    0: "HALAL",
-    1: "HARAM"
+export const userVoteToCommentType = (userVote: number | undefined) => {
+    switch(userVote) {
+        case 100:
+            return "HALAL";
+        case -100:
+            return "HARAM";
+        default:
+            return "OTHER";
+    }
 };
 
 export interface Topic {
