@@ -31,7 +31,7 @@
         width: 100% !important;
     }
     
-    .comment-bubble {
+    .comment-bubble-halal, .comment-bubble-haram {
         height: 30px !important;
         width: 30px !important;
     }
@@ -142,12 +142,23 @@
 
 }
 
-.comment-bubble {
+.comment-bubble-halal, .comment-bubble-haram, .comment-bubble-other {
     height: 40px;
     width: 40px;
-    background-color: #bbb;
     border-radius: 50%;
     display: inline-block;
+}
+
+.comment-bubble-halal {
+    background-color: var(--halal-color);
+}
+
+.comment-bubble-haram {
+    background-color: var(--haram-color);
+}
+
+.comment-bubble-other {
+    background-color: #bbb;
 }
 
 .username {

@@ -101,10 +101,10 @@ export const CommentComponent = (props: CommentComponentProps) => {
     return (
         <div id={`comment-${state.comment.id}`} className={"comment-container"}>
             <div className="comment-bubble-container">
-                <div className="comment-bubble"></div>
+                <div className={`comment-bubble-${state.comment.commentType.toLowerCase()}`}></div>
             </div>
             <div className="comment-body">
-                <div 
+                <div
                     className={commentContentClass} 
                     onClick={(e) => {
                         e.stopPropagation();
