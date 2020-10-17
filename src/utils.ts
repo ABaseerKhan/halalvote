@@ -1,4 +1,5 @@
 import { Judgment } from "./types";
+import imageCompression from 'browser-image-compression';
 
 const dateTimeOptions = { year: 'numeric', month: 'numeric', day: '2-digit', hour: 'numeric', minute:'2-digit'};
 
@@ -143,4 +144,14 @@ export function getImageDimensionsFromSource(src: string) {
         img.onerror = reject
         img.src = src
     })
+}
+
+export async function resizeImage(file: File) {
+    const options = { 
+        maxSizeMB: 1,
+        fileType: file.type
+    }
+    
+    const compressedImage = await imageCompression(file, options);
+    return imageCompression.getDataUrlFromFile(compressedImage);
 }
