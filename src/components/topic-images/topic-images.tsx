@@ -10,13 +10,14 @@ import { postData } from '../../https-client/client';
 import ImageUploader from 'react-images-upload';
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
+import { getImageDimensionsFromSource } from '../../utils';
+import { resizeImage } from '../../utils';
 
 // type imports
 import { TopicImages } from '../../types';
 
 // styles
 import './topic-images.css';
-import { getImageDimensionsFromSource } from '../../utils';
 
 interface TopicImagesComponentProps {
     topicTitle: string,
@@ -157,8 +158,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     }
 
     const onDrop = async (files: File[], picture: string[]) => {
-        const imgDimensions = await getImageDimensionsFromSource(picture[0]);
-        const basicPicture: BasicPicture = { src: picture[0], height: imgDimensions.height, width: imgDimensions.width };
+        const resizedImage = await resizeImage(files[0]);
+        const imgDimensions = await getImageDimensionsFromSource(resizedImage);
+        const basicPicture: BasicPicture = { src: resizedImage, height: imgDimensions.height, width: imgDimensions.width };
+
         setState({...state, picture: basicPicture});
     }
 
