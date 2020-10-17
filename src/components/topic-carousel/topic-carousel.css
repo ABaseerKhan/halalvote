@@ -1,10 +1,8 @@
 .topic-carousel {
-    position: fixed;
+    position: absolute;
     height: var(--max-topic-carousel-height-px);
     width: 100%;
     top: 0;
-    opacity: 0.0;
-    visibility: hidden;
 }
 
 .topic-navigator {
