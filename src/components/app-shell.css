@@ -14,6 +14,12 @@
   width: 100%;
 }
 
+.cards-shell-container {
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+}
+
 .fixed-content {
   position: fixed;
   height: 100%;

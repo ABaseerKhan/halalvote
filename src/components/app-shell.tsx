@@ -19,14 +19,21 @@ import './app-shell.css';
 import { TopicImagesComponent } from './topic-images/topic-images';
 import { useMedia } from '../hooks/useMedia';
 
+enum IncomingDirection {
+  LEFT,
+  RIGHT,
+  NONE
+}
+
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ topicDetails: {topics: Topic[]; topicIndex: number}; scrollPosition: number, specificComment?: Comment }>({
+  const [state, setState] = useState<{ topicDetails: {topics: Topic[]; topicIndex: number}; scrollPosition: number, specificComment?: Comment, incomingDirection: IncomingDirection }>({
     topicDetails: {
       topics: [],
       topicIndex: 0
     },
     scrollPosition: window.innerHeight,
     specificComment: undefined,
+    incomingDirection: IncomingDirection.NONE
   });
 
   const isMobile = useMedia(
@@ -42,7 +49,13 @@ export const AppShellComponent = (props: any) => {
 
   useEffect(() => {
     setTimeout(() => {
-      document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
+      const appShell = getAppShell();
+      const cardsShellContainer = getCardsShellContainer();
+      
+      if (appShell && cardsShellContainer) {
+        appShell.scrollTo(0, window.innerHeight);
+        cardsShellContainer.style.opacity = "1.0";
+      }
     }, 500) // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -73,6 +86,29 @@ export const AppShellComponent = (props: any) => {
       }
     } // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    const appShell = getAppShell();
+    const cardsShellContainer = getCardsShellContainer();
+
+    if (appShell && appShell.scrollTop === window.innerHeight && cardsShellContainer && state.incomingDirection !== IncomingDirection.NONE) {
+        cardsShellContainer.style.transform = state.incomingDirection === IncomingDirection.RIGHT ? "translate(100%)" : "translate(-100%)";
+        cardsShellContainer.style.opacity = "1.0";
+        cardsShellContainer.animate([
+          {
+            transform: 'translate(0)'
+          }
+        ], {
+          duration: prevNextTopicAnimationDuration,
+          easing: 'ease-out',
+          fill: "forwards"
+        }).onfinish = () => {
+          cardsShellContainer.style.transform = "translate(0)";
+        }
+    } else if (cardsShellContainer && state.incomingDirection !== IncomingDirection.NONE) {
+        cardsShellContainer.style.opacity = "1.0";
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.topicDetails]);
 
   const fetchTopics = async (topicTofetch?: string) => {
     let body: any = { 
@@ -111,36 +147,49 @@ export const AppShellComponent = (props: any) => {
     }
   }
 
+  const searchTopic = async (topicTofetch?: string) => {
+    await fetchTopics(topicTofetch);
+    const appShell = getAppShell();
+    const cardsShellContainer = getCardsShellContainer();
+    
+    if (appShell && cardsShellContainer) {
+      appShell.scrollTo(0, window.innerHeight);
+      cardsShellContainer.style.opacity = "1.0";
+    }
+  }
+
   const appShellId = "app-shell";
+  const topicContentId = "topic-content";
   const topicCarouselId = "topicCarousel";
   const pageZeroId = "Search";
   const pageOneId = "Topics";
-  const cardsShellId = "cards-shell";
+  const cardsShellContainerId = "cards-shell-container";
 
   const getAppShell = () => { return document.getElementById(appShellId); }
   const getTopicCarousel = () => { return document.getElementById(topicCarouselId); }
   const getPageZero = () => { return document.getElementById(pageZeroId); }
   const getPageOne = () => { return document.getElementById(pageOneId); }
-  const getCardsShell = () => { return document.getElementById(cardsShellId); }
+  const getCardsShellContainer = () => { return document.getElementById(cardsShellContainerId); }
 
   const iterateTopic = (iteration: number) => () => {
-    const cardsShell = getCardsShell();
+    const cardsShellContainer = getCardsShellContainer();
 
-    if (cardsShell) {
+    if (cardsShellContainer) {
       const animationCallback = (state: any, iteration: any, setState: any, setCookie: any, fetchTopics: any) => () => {
+        const incomingDirection = iteration === 0 ? IncomingDirection.NONE : iteration > 0 ? IncomingDirection.RIGHT : IncomingDirection.LEFT;
         if ((state.topicDetails.topicIndex + iteration) < state.topicDetails.topics.length && (state.topicDetails.topicIndex + iteration) >= 0) {
-          setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
+          setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }, incomingDirection: incomingDirection});
           setCookie("topicTitle", state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle);
         } else if ((state.topicDetails.topicIndex + iteration) === state.topicDetails.topics.length) {
           fetchTopics();
-          setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
+          setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }, incomingDirection: incomingDirection});
         }
       };
       if (iteration === 1) {
-        animateNextTopic(cardsShell, animationCallback(state, iteration, setState, setCookie, fetchTopics));
+        animateNextTopic(cardsShellContainer, animationCallback(state, iteration, setState, setCookie, fetchTopics));
       }
       if (iteration === -1) {
-        animatePrevTopic(cardsShell, animationCallback(state, iteration, setState, setCookie, fetchTopics));
+        animatePrevTopic(cardsShellContainer, animationCallback(state, iteration, setState, setCookie, fetchTopics));
       }
     }
   };
@@ -181,14 +230,16 @@ export const AppShellComponent = (props: any) => {
   const cardShellWidth = isMobile ? vwToPixels(75) : vwToPixels(45);
   return (
       <div id={appShellId} className={appShellId} >
-        <SearchComponent onSuggestionClick={fetchTopics} />
+        <SearchComponent onSuggestionClick={searchTopic} />
         <TopicContext.Provider value={{ topic: topic, setTopic: setTopic }}>
-          <div className="topic-content" key={topicTitle}>
-            <CardsShellComponent id={cardsShellId}
-              mediaCard={<TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
-              commentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-              analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-            />
+          <div id={topicContentId} className={topicContentId}>
+            <div key={topicTitle} id={cardsShellContainerId} className={cardsShellContainerId}>
+              <CardsShellComponent
+                mediaCard={<TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
+                commentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+              />
+            </div>
             <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
           </div>
         </TopicContext.Provider>
@@ -201,9 +252,10 @@ export const AppShellComponent = (props: any) => {
 }
 
 const prevNextTopicAnimationDuration = 300;
-const animateNextTopic = (cardsShell: HTMLElement | null, callback: () => void) => {
-  if(cardsShell) {
-    cardsShell.animate([
+const animateNextTopic = (cardsShellContainer: HTMLElement | null, callback: () => void) => {
+  if(cardsShellContainer) {
+    cardsShellContainer.style.transform = "translate(0)";
+    cardsShellContainer.animate([
       {
         transform: 'translate(-100%)'
       }
@@ -213,34 +265,14 @@ const animateNextTopic = (cardsShell: HTMLElement | null, callback: () => void) 
       fill: 'forwards',
     }).onfinish = () => {
       callback();
-      cardsShell.style.transform = "translate(100%)";
-      cardsShell.animate([
-        {
-          transform: 'translate(100%)'
-        }
-      ], {
-        duration: 0,
-        fill: "forwards"
-      }).onfinish = () => {
-        cardsShell.animate([
-          {
-            transform: 'translate(0)'
-          }
-        ], {
-          duration: prevNextTopicAnimationDuration,
-          easing: 'ease-out',
-          fill: "forwards"
-        }).onfinish = () => {
-          cardsShell.style.transform = "translate(0)";
-        }
-      }
     }
   };
 }
 
-const animatePrevTopic = (cardsShell: any, callback: () => void) => {
-  if(cardsShell) {
-    cardsShell.animate([
+const animatePrevTopic = (cardsShellContainer: any, callback: () => void) => {
+  if(cardsShellContainer) {
+    cardsShellContainer.style.transform = "translate(0)";
+    cardsShellContainer.animate([
       {
         transform: 'translate(100%)'
       }
@@ -250,27 +282,6 @@ const animatePrevTopic = (cardsShell: any, callback: () => void) => {
       fill: 'forwards',
     }).onfinish = () => {
       callback();
-      cardsShell.style.transform = "translate(-100%)";
-      cardsShell.animate([
-        {
-          transform: 'translate(-100%)'
-        }
-      ], {
-        duration: 0,
-        fill: "forwards"
-      }).onfinish = () => {
-        cardsShell.animate([
-          {
-            transform: 'translate(0)'
-          }
-        ], {
-          duration: prevNextTopicAnimationDuration,
-          easing: 'ease-out',
-          fill: "forwards"
-        }).onfinish = () => {
-          cardsShell.style.transform = "translate(0)";
-        }
-      }
     }
   };
 }

@@ -15,14 +15,13 @@ const EASEAPART = `cubic-bezier(${x1},${y1},${x2},${y2})`;
 const EASECLOSER = `cubic-bezier(${x1r},${y1r},${x2r},${y2r})`;
 
 interface CardsShellComponentProps {
-    id: string,
     mediaCard: ReactElement,
     commentsCard: ReactElement,
     analyticsCard: ReactElement
 };
 
 export const CardsShellComponent = (props: CardsShellComponentProps) => {
-    const { id, mediaCard, commentsCard, analyticsCard } = props;
+    const { mediaCard, commentsCard, analyticsCard } = props;
 
     const mediaCardId = "CANVAS";
     const commentsCardId = "ARGUMENTS";
@@ -56,7 +55,9 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
     );
 
     useEffect(() => {
-      setCards(); // eslint-disable-next-line react-hooks/exhaustive-deps
+      setTimeout(() => {
+        setCards();
+      }, 300) // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const setCards = () => {
@@ -350,6 +351,6 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
     };
 
     return /*isMobile ? MobileView :*/ (
-        <div id={id} className="cards-shell" children={[mediaCardElement, commentsCardElement, analyticsCardElement]}/>
+        <div className="cards-shell" children={[mediaCardElement, commentsCardElement, analyticsCardElement]}/>
     );
 }

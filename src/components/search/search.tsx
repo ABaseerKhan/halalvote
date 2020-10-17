@@ -26,7 +26,6 @@ export const SearchComponent = (props: SearchComponentProps) => {
     const onClickSuggestion = (topicTitle: string) => () => {
         props.onSuggestionClick(topicTitle);
         setInputText("");
-        document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
     };
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
