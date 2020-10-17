@@ -47,8 +47,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     //     false
     // );
 
-    // eslint-disable-next-line
-    const { topic, setTopic } = useContext(TopicContext);
+    const { topic } = useContext(TopicContext);
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
@@ -117,11 +116,14 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
     const createComment = async (commentText: string) => {
         const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
+        const isReplyToReply = (highlightedComment?.depth || 0) >= 2;
+        const parentOfhighlightedComment = isReplyToReply ? getCommentFromPath(state.comments, state.pathToHighlightedComment?.slice(0,-1)) : undefined;
+
         const { status, data: comment }: { status: number, data: Comment } = await postData({
             baseUrl: commentsConfig.url,
             path: 'add-comment', 
             data: {
-                "parentId": highlightedComment?.id,
+                "parentId": !isReplyToReply ? highlightedComment?.id : parentOfhighlightedComment?.id,
                 "topicTitle": topic?.topicTitle, 
                 "username": username,
                 "comment": commentText,
@@ -144,14 +146,15 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             upVotes: 0,
             downVotes: 0,
             numReplies: 0,
-            timeStamp: comment.timeStamp
+            timeStamp: comment.timeStamp,
+            depth: comment.depth,
         };
 
         if (!highlightedComment) {
             refreshTopic(topic?.topicTitle);
         }
         
-        const updatedComments = addCommentsLocally(state.comments, [commentObject], highlightedComment && state.pathToHighlightedComment);
+        const updatedComments = addCommentsLocally(state.comments, [commentObject], isReplyToReply ? parentOfhighlightedComment && state.pathToHighlightedComment?.slice(0,-1) : highlightedComment && state.pathToHighlightedComment);
         setState(prevState => ({ ...prevState, comments: updatedComments }));
         highlightComment(state.pathToHighlightedComment ? state.pathToHighlightedComment.concat(0) : [0]);
         return status;
@@ -231,7 +234,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                             state.comments.map((comment: Comment, i: number) => {
                                 return <CommentComponent 
                                             key={comment.id} 
-                                            comment={comment} 
+                                            comment={comment}
                                             path={[i]} 
                                             pathToHighlightedComment={state.pathToHighlightedComment} 
                                             highlightComment={highlightComment} 
@@ -274,6 +277,7 @@ const addCommentsLocally = (comments: Comment[], data: Comment[], pathToParentCo
     // recursive step
     const updatedReplies = addCommentsLocally(comments[pathToParentComment[0]].replies, data, pathToParentComment.slice(1), appendToEnd);
     comments[pathToParentComment[0]].replies = updatedReplies;
+    comments[pathToParentComment[0]].numReplies = updatedReplies.length;
     return comments;
 }
 

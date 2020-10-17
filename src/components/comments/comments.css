@@ -31,7 +31,7 @@
         width: 100% !important;
     }
     
-    .comment-bubble-halal, .comment-bubble-haram {
+    .comment-bubble-halal, .comment-bubble-haram, .comment-bubble-other {
         height: 30px !important;
         width: 30px !important;
     }
@@ -73,7 +73,7 @@
     }
     
     .show-or-hide-container {
-        margin: 0.5em 0 0.5em 0 !important;
+        margin: 0.5em 0 0 0 !important;
         font-size: 11px !important;
     }
 
@@ -113,7 +113,7 @@
 
 .comment-container {
     display: flex;
-    padding: 5px 0 0 0;
+    padding: 10px 0 0 0;
     position: relative;
 }
 
@@ -273,7 +273,7 @@
 
 .show-or-hide-container {
     display: flex;
-    margin: 1.75em 0 1em 0;
+    margin: 1.5em 0 0 0;
     font-family: proxima-semibold, PingFangSC, sans-serif;
     font-size: 14px;
     font-weight: 600;

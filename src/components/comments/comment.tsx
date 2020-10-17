@@ -52,7 +52,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
     // eslint-disable-next-line
     const showReplies = async () => {
         setState(prevState => ({ ...prevState, collapsed: false, fetchingReplies: true }));
-        await props.fetchMoreReplies(props.path);
+        if(props.comment.replies.length < props.comment.numReplies) await props.fetchMoreReplies(props.path);
         setState(prevState => ({
             ...prevState,
             fetchingReplies: false,
