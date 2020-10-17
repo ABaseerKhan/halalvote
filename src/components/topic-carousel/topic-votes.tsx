@@ -1,4 +1,4 @@
-import React, {memo, useState, useEffect, useContext} from 'react';
+import React, {memo, useContext} from 'react';
 import { postData } from '../../https-client/client';
 import { topicsConfig } from '../../https-client/config';
 import { VotingSwitch } from './voting-switch';
