@@ -1,4 +1,4 @@
-import React, {memo, useState, useEffect} from 'react';
+import React, {memo, useState, useEffect, useContext} from 'react';
 import { postData } from '../../https-client/client';
 import { topicsConfig } from '../../https-client/config';
 import { VotingSwitch } from './voting-switch';
@@ -9,6 +9,7 @@ import { VotingSwitch } from './voting-switch';
 import './topic-carousel.css';
 import { useCookies } from 'react-cookie';
 import { VotesBar } from './votes-bar';
+import { TopicContext } from '../app-shell';
 
 interface TopicVotesComponentProps {
     topicTitle: string,
@@ -20,6 +21,7 @@ interface TopicVotesComponentProps {
 
 const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
     const { topicTitle, userVote, halalPoints, haramPoints, numVotes } = props;
+    const { topic, setTopic } = useContext(TopicContext);
     const [state, setState] = useState({ halalPoints: halalPoints, haramPoints: haramPoints, numVotes: numVotes, userVote: userVote });
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
@@ -57,9 +59,11 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                     }, 500);
                 }
                 setState(prevState => ({ ...prevState, numVotes: data.numVotes, halalPoints: data.halalPoints, haramPoints: data.haramPoints, userVote: value }));
+                setTopic({ ...topic!, vote: value });
             } else {
                 const newUserVote = state.userVote === undefined ? 0 : undefined;
                 setState(prevState => ({ ...prevState, userVote: newUserVote }));
+                setTopic({ ...topic!, vote: newUserVote });
             }
         }
     };
