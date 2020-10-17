@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
+import "quill-mention";
 import { ReactComponent as SendButtonSVG } from '../../icons/send-button.svg';
 import { useMedia } from '../../hooks/useMedia';
 
@@ -8,6 +9,8 @@ import { useMedia } from '../../hooks/useMedia';
 //style imports
 import 'react-quill/dist/quill.snow.css';
 import './comments.css';
+import { getData } from '../../https-client/client';
+import { usersConfig } from '../../https-client/config';
 
 interface CommentMakerComponentProps {
     submitComment: (comment: any) => Promise<number>,
@@ -33,7 +36,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
         if (quillEditor.current) {
             const placeholderText = (props.replyToUsername && "Reply to " + props.replyToUsername) || "Comment";
             quillEditor.current.getEditor().root.dataset.placeholder = placeholderText;
-            setValue(`${props.replyToUsername ? '@'+props.replyToUsername + ' ' : ''}`);
+            setValue(`${props.replyToUsername ? '@'+props.replyToUsername : ''}`);
         }
     }, [props.replyToUsername])
 
@@ -59,7 +62,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
         switch (event.keyCode) {	
             case 13:
                 event.preventDefault();
-                if (!state.holdingDownShift && !isMobile) {
+                if (!state.holdingDownShift && !isMobile && false) {
                     value = value.replace(new RegExp('<p><br></p>$'), '');
                     submitComment(event as any);
                 }
@@ -103,14 +106,29 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
 
 export const CommentMakerComponent = forwardRef(_CommentMakerComponent);
 
+const suggestUsers = async (searchTerm: string) => {
+    const { data } = await getData({ baseUrl: usersConfig.url, path: 'get-users', queryParams: { 'searchTerm': searchTerm }, additionalHeaders: {}});
+    const allUsers = data.map((user: any, idx: number) => ({ id: idx++, value: user.username }));
+
+    return allUsers;
+};
+
 const modules = {
     toolbar: [
         [{'header': 1}, 'bold', 'italic', 'underline','strike', 'blockquote', 'code-block', 'link', 'image'],
     ],
+    mention: {
+        allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+        mentionDenotationChars: ["@"],
+        source: async function(searchTerm: any, renderList: any) {
+            const matchedUsers = await suggestUsers(searchTerm);
+            renderList(matchedUsers);
+        }
+    }
 };
 
 const formats = [
-    'header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block', 'link', 'image',
+    'header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block', 'link', 'image', 'mention',
 ];
 
 let Link = Quill.import('formats/link');

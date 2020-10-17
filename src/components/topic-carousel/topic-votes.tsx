@@ -59,7 +59,7 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                     }, 500);
                 }
                 setState(prevState => ({ ...prevState, numVotes: data.numVotes, halalPoints: data.halalPoints, haramPoints: data.haramPoints, userVote: value }));
-                setTopic({ ...topic!, vote: value });
+                setTopic({ ...topic!, vote: value, halalPoints: data.halalPoints, haramPoints: data.haramPoints, numVotes: data.numVotes });
             } else {
                 const newUserVote = state.userVote === undefined ? 0 : undefined;
                 setState(prevState => ({ ...prevState, userVote: newUserVote }));

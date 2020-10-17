@@ -149,10 +149,6 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             timeStamp: comment.timeStamp,
             depth: comment.depth,
         };
-
-        if (!highlightedComment) {
-            refreshTopic(topic?.topicTitle);
-        }
         
         const updatedComments = addCommentsLocally(state.comments, [commentObject], isReplyToReply ? parentOfhighlightedComment && state.pathToHighlightedComment?.slice(0,-1) : highlightedComment && state.pathToHighlightedComment);
         setState(prevState => ({ ...prevState, comments: updatedComments }));
