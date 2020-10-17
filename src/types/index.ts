@@ -47,6 +47,7 @@ export interface Comment {
     downVotes: number,
     numReplies: number,
     timeStamp: string,
+    depth: number,
     userVote?: number,
 };
 

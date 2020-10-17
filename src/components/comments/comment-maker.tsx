@@ -33,6 +33,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
         if (quillEditor.current) {
             const placeholderText = (props.replyToUsername && "Reply to " + props.replyToUsername) || "Comment";
             quillEditor.current.getEditor().root.dataset.placeholder = placeholderText;
+            setValue(`${props.replyToUsername ? '@'+props.replyToUsername + ' ' : ''}`);
         }
     }, [props.replyToUsername])
 
@@ -87,12 +88,12 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
                 ref={quillEditor} 
                 className={"comment-maker-input"} 
                 theme="snow" 
-                value={value} 
-                onChange={setValue} 
+                value={value}
+                onChange={setValue}
                 onKeyDown={onKeyDown}
                 onKeyUp={onKeyUp}
                 modules={modules} 
-                formats={formats} 
+                formats={formats}
                 preserveWhitespace
             />
             <SendButtonSVG className={"comment-maker-button"} onClick={submitComment}/>
