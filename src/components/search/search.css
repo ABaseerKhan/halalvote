@@ -83,10 +83,6 @@
     background: #eee;
 }
 
-.autocomplete-list-item:hover {
-    background: #eee;
-}
-
 .suggestions-inner-container {
     flex: auto;
     display: flex;
@@ -101,6 +97,7 @@
     flex-direction: column;
     min-width: 0;
     padding: 6px 0;
+    cursor: default;
 }
 
 .search-icon-container {

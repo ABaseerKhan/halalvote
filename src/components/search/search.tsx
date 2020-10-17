@@ -24,7 +24,8 @@ export const SearchComponent = (props: SearchComponentProps) => {
     }, [searchResults]);
 
     const onClickSuggestion = (topicTitle: string) => () => {
-        props.onSuggestionClick(topicTitle)
+        props.onSuggestionClick(topicTitle);
+        setInputText("");
         document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
     };
 
@@ -69,7 +70,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
                         <ul className={"autocomplete-list"}>
                             {
                                 searchResults.result.data.map((topicTitle: [string], index: number) => (
-                                    <li className={index===autoCompleteIndex ? "autocomplete-list-item-highlighted" : "autocomplete-list-item"} key={topicTitle[0]}>
+                                    <li className={index===autoCompleteIndex ? "autocomplete-list-item-highlighted" : "autocomplete-list-item"} key={topicTitle[0]} onMouseOver={() => {setAutoCompleteIndex(index)}}>
                                         <div onClick={onClickSuggestion(topicTitle[0])} className={"suggestions-inner-container"}>
                                             <div className={"option"}>{topicTitle[0]}</div>
                                         </div>
