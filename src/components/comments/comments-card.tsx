@@ -18,8 +18,7 @@ import './comments.css';
 interface CommentsCardComponentProps {
     userTopicVote: number | undefined,
     topicTitle: string,
-    numHalalComments: number,
-    numHaramComments: number,
+    numComments: number,
     specificComment?: Comment,
     refreshTopic: (topicTofetch: string) => any,
     switchCards: (judgement: Judgment) => any,
@@ -312,8 +311,7 @@ const getPathFromId = (comments: Comment[], commentId: number, accumulator: numb
 
 const areCommentsCardPropsEqual = (prevProps: CommentsCardComponentProps, nextProps: CommentsCardComponentProps) => {
     return prevProps.topicTitle === nextProps.topicTitle && 
-        prevProps.numHalalComments === nextProps.numHalalComments && 
-        prevProps.numHaramComments === nextProps.numHaramComments &&
+        prevProps.numComments === nextProps.numComments && 
         prevProps.specificComment === nextProps.specificComment
 }
 

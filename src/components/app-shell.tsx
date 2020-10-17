@@ -134,8 +134,7 @@ export const AppShellComponent = (props: any) => {
   const halalPoints = topic?.halalPoints !== undefined ? topic.halalPoints : 0;
   const haramPoints = topic?.haramPoints !== undefined ? topic.haramPoints : 0;
   const numTopicVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
-  const numHalalComments = topic?.numHalalComments !== undefined ? topic.numHalalComments : 0;
-  const numHaramComments = topic?.numHaramComments !== undefined ? topic.numHaramComments : 0;
+  const numComments = topic?.numComments !== undefined ? topic.numComments : 0;
 
   if (appShell && topicCarousel) {
     appShell.onscroll = () => {
@@ -186,7 +185,7 @@ export const AppShellComponent = (props: any) => {
         <SearchComponent onSuggestionClick={fetchTopics} />
         <CardsShellComponent id={cardsShellId}
           mediaCard={<TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
-          commentsCard={<CommentsCardComponent userTopicVote={topic?.vote} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+          commentsCard={<CommentsCardComponent userTopicVote={topic?.vote} topicTitle={topicTitle} numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
           analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
         />
         <div className="fixed-content">
