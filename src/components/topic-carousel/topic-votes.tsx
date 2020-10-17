@@ -20,23 +20,17 @@ interface TopicVotesComponentProps {
 };
 
 const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
-    const { topicTitle, userVote, halalPoints, haramPoints, numVotes } = props;
     const { topic, setTopic } = useContext(TopicContext);
-    const [state, setState] = useState({ halalPoints: halalPoints, haramPoints: haramPoints, numVotes: numVotes, userVote: userVote });
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
-    useEffect(() => {
-        setState(prevState => ({ ...prevState, numVotes: numVotes, halalPoints: halalPoints, haramPoints: haramPoints, userVote: userVote }));
-    }, [halalPoints, haramPoints, numVotes, userVote]);
-
     const submitVote = async (value: number) => {
-        if (topicTitle) {
+        if (topic?.topicTitle) {
             const { status, data } = await postData({
                 baseUrl: topicsConfig.url,
                 path: 'vote-topic',
                 data: {
-                    "topicTitle": topicTitle,
+                    "topicTitle": topic.topicTitle,
                     "username": username,
                     "vote": value,
                 },
@@ -58,11 +52,9 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                         document.body.style.backgroundColor = 'var(--site-background-color)'
                     }, 500);
                 }
-                setState(prevState => ({ ...prevState, numVotes: data.numVotes, halalPoints: data.halalPoints, haramPoints: data.haramPoints, userVote: value }));
                 setTopic({ ...topic!, vote: value, halalPoints: data.halalPoints, haramPoints: data.haramPoints, numVotes: data.numVotes });
             } else {
-                const newUserVote = state.userVote === undefined ? 0 : undefined;
-                setState(prevState => ({ ...prevState, userVote: newUserVote }));
+                const newUserVote = topic.vote === undefined ? 0 : undefined;
                 setTopic({ ...topic!, vote: newUserVote });
             }
         }
@@ -72,12 +64,12 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
         <div className={"topic-votes-container"}>
             <VotingSwitch
                 submitVote={submitVote}
-                userVote={state.userVote}
+                userVote={topic?.vote}
             />
             <VotesBar
-                halalPoints={state.halalPoints}
-                haramPoints={state.haramPoints}
-                numVotes={state.numVotes}
+                halalPoints={topic?.halalPoints!}
+                haramPoints={topic?.haramPoints!}
+                numVotes={topic?.numVotes!}
             />
         </div>
     )
