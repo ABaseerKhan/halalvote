@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TopicVotesComponent } from './topic-votes';
 import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
 import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
@@ -35,14 +35,16 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
     const leftCarouselButtonId = "left-carousel-button";
     const rightCarouselButtonId = "right-carousel-button";
 
-    if (!isMobile) {
-        const leftCarouselButton = document.getElementById(leftCarouselButtonId);
-        const rightCarouselButton = document.getElementById(rightCarouselButtonId);
-        if (leftCarouselButton && rightCarouselButton) {
-            leftCarouselButton.classList.add("carousel-button-computer");
-            rightCarouselButton.classList.add("carousel-button-computer");
-        }
-    }
+    useEffect(() => {
+        if (!isMobile) {
+            const leftCarouselButton = document.getElementById(leftCarouselButtonId);
+            const rightCarouselButton = document.getElementById(rightCarouselButtonId);
+            if (leftCarouselButton && rightCarouselButton) {
+                leftCarouselButton.classList.add("carousel-button-computer");
+                rightCarouselButton.classList.add("carousel-button-computer");
+            }
+        } // eslint-disable-next-line
+    }, []);
 
     return (
         <div id={id} style={props.style} className='topic-carousel'>

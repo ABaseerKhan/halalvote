@@ -55,6 +55,25 @@ export const AppShellComponent = (props: any) => {
     fetchTopics(cookies.topicTitle || undefined);// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessiontoken]);
 
+  useEffect(() => {
+    const appShell = getAppShell();
+    const topicCarousel = getTopicCarousel();
+
+    if (appShell && topicCarousel) {
+      appShell.onscroll = () => {
+        const scrollRatio = parseFloat((appShell.scrollTop / window.innerHeight).toFixed(1));
+  
+        if (scrollRatio === 0 || scrollRatio === 0.4) {
+          selectPageScrollerButton(0);
+        } else if (scrollRatio === 0.6 || scrollRatio === 1 || scrollRatio === 1.4) {
+          selectPageScrollerButton(1);
+        } else if (scrollRatio === 1.6 || scrollRatio === 2 || scrollRatio === 2.4) {
+          selectPageScrollerButton(2);
+        }
+      }
+    } // eslint-disable-next-line
+  }, []);
+
   const fetchTopics = async (topicTofetch?: string) => {
     let body: any = { 
       "topicTitles": topicTofetch ? [topicTofetch] : undefined, 
@@ -98,27 +117,31 @@ export const AppShellComponent = (props: any) => {
   const pageOneId = "Topics";
   const cardsShellId = "cards-shell";
 
-  const appShell = document.getElementById(appShellId);
-  const topicCarousel = document.getElementById(topicCarouselId);
-  const pageZero = document.getElementById(pageZeroId);
-  const pageOne = document.getElementById(pageOneId);
-  const cardsShell = document.getElementById(cardsShellId);
+  const getAppShell = () => { return document.getElementById(appShellId); }
+  const getTopicCarousel = () => { return document.getElementById(topicCarouselId); }
+  const getPageZero = () => { return document.getElementById(pageZeroId); }
+  const getPageOne = () => { return document.getElementById(pageOneId); }
+  const getCardsShell = () => { return document.getElementById(cardsShellId); }
 
   const iterateTopic = (iteration: number) => () => {
-    const animationCallback = (state: any, iteration: any, setState: any, setCookie: any, fetchTopics: any) => () => {
-      if ((state.topicDetails.topicIndex + iteration) < state.topicDetails.topics.length && (state.topicDetails.topicIndex + iteration) >= 0) {
-        setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
-        setCookie("topicTitle", state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle);
-      } else if ((state.topicDetails.topicIndex + iteration) === state.topicDetails.topics.length) {
-        fetchTopics();
-        setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
+    const cardsShell = getCardsShell();
+
+    if (cardsShell) {
+      const animationCallback = (state: any, iteration: any, setState: any, setCookie: any, fetchTopics: any) => () => {
+        if ((state.topicDetails.topicIndex + iteration) < state.topicDetails.topics.length && (state.topicDetails.topicIndex + iteration) >= 0) {
+          setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
+          setCookie("topicTitle", state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle);
+        } else if ((state.topicDetails.topicIndex + iteration) === state.topicDetails.topics.length) {
+          fetchTopics();
+          setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }});
+        }
+      };
+      if (iteration === 1) {
+        animateNextTopic(cardsShell, animationCallback(state, iteration, setState, setCookie, fetchTopics));
       }
-    };
-    if (iteration === 1) {
-      animateNextTopic(cardsShell, animationCallback(state, iteration, setState, setCookie, fetchTopics));
-    }
-    if (iteration === -1) {
-      animatePrevTopic(cardsShell, animationCallback(state, iteration, setState, setCookie, fetchTopics));
+      if (iteration === -1) {
+        animatePrevTopic(cardsShell, animationCallback(state, iteration, setState, setCookie, fetchTopics));
+      }
     }
   };
 
@@ -136,27 +159,18 @@ export const AppShellComponent = (props: any) => {
   const numTopicVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
   const numComments = topic?.numComments !== undefined ? topic.numComments : 0;
 
-  if (appShell && topicCarousel) {
-    appShell.onscroll = () => {
-      const scrollRatio = parseFloat((appShell.scrollTop / window.innerHeight).toFixed(1));
-
-      if (scrollRatio === 0 || scrollRatio === 0.4) {
-        selectPageScrollerButton(0);
-      } else if (scrollRatio === 0.6 || scrollRatio === 1 || scrollRatio === 1.4) {
-        selectPageScrollerButton(1);
-      } else if (scrollRatio === 1.6 || scrollRatio === 2 || scrollRatio === 2.4) {
-        selectPageScrollerButton(2);
-      }
-    }
-  }
-
   const scrollToPage = (page: number) => {
+    const appShell = getAppShell();
+
     if (appShell) {
       appShell.scrollTo({left: 0, top: page * window.innerHeight, behavior:'smooth'});
     }
   }
 
   const selectPageScrollerButton = (page: number) => {
+    const pageZero = getPageZero();
+    const pageOne = getPageOne();
+
     if (pageZero && pageOne) {
       pageZero.className = page === 0 ? 'page-scroller-button-selected' : 'page-scroller-button'
       pageOne.className = page === 1 ? 'page-scroller-button-selected' : 'page-scroller-button'
@@ -169,7 +183,7 @@ export const AppShellComponent = (props: any) => {
       <div id={appShellId} className={appShellId} >
         <SearchComponent onSuggestionClick={fetchTopics} />
         <TopicContext.Provider value={{ topic: topic, setTopic: setTopic }}>
-          <div className="topic-content">
+          <div className="topic-content" key={topicTitle}>
             <CardsShellComponent id={cardsShellId}
               mediaCard={<TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
               commentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
