@@ -8,12 +8,14 @@
   scroll-snap-type: y mandatory;
 }
 
-.fixed-content {
-  position: fixed;
+.topic-content {
+  position: relative;
+  height: 100%;
   width: 100%;
 }
 
-.fixed-content-below-cover {
+.fixed-content {
   position: fixed;
+  height: 100%;
   width: 100%;
 }

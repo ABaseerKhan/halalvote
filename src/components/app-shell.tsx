@@ -7,8 +7,7 @@ import { MenuComponent } from './menu/menu';
 import { Topic, Comment, Judgment } from '../types';
 import { postData } from '../https-client/client';
 import { topicsConfig } from '../https-client/config';
-import { vhToPixelsWithMax, arrayMove, vhToPixels, vwToPixels } from "../utils";
-import { elementStyles } from "../index";
+import { arrayMove, vhToPixels, vwToPixels } from "../utils";
 import { useCookies } from 'react-cookie';
 import { CardsShellComponent } from './cards-shell/cards-shell';
 import { CommentsCardComponent } from './comments/comments-card';
@@ -139,21 +138,6 @@ export const AppShellComponent = (props: any) => {
 
   if (appShell && topicCarousel) {
     appShell.onscroll = () => {
-      const { topicCarouselHeightVh, maxTopicCarouselHeightPx } = elementStyles;
-      const topicCarouselHeightPx = vhToPixelsWithMax(topicCarouselHeightVh, maxTopicCarouselHeightPx);
-      const halfWindowHeight = window.innerHeight / 2.0;
-  
-      if (appShell.scrollTop > halfWindowHeight) {
-        topicCarousel.style.visibility = "visible";
-        topicCarousel.style.opacity = "1.0";
-      } else if (appShell.scrollTop > topicCarouselHeightPx) {
-        topicCarousel.style.visibility = "visible";
-        topicCarousel.style.opacity = ((appShell.scrollTop - topicCarouselHeightPx)/(halfWindowHeight - topicCarouselHeightPx)).toString();
-      } else {
-        topicCarousel.style.opacity = "0.0";
-        topicCarousel.style.visibility = "hidden";
-      }
-
       const scrollRatio = parseFloat((appShell.scrollTop / window.innerHeight).toFixed(1));
 
       if (scrollRatio === 0 || scrollRatio === 0.4) {
@@ -184,15 +168,17 @@ export const AppShellComponent = (props: any) => {
   return (
       <div id={appShellId} className={appShellId} >
         <SearchComponent onSuggestionClick={fetchTopics} />
-        <CardsShellComponent id={cardsShellId}
-          mediaCard={<TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
-          commentsCard={<CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-          analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-        />
-        <div className="fixed-content">
+        <div className="topic-content">
+          <CardsShellComponent id={cardsShellId}
+            mediaCard={<TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
+            commentsCard={<CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+            analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+          />
           <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
-          <MenuComponent fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
+        </div>
+        <div className="fixed-content">
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />
+          <MenuComponent fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
         </div>
       </div>
   )
