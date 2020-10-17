@@ -31,7 +31,7 @@
         width: 100% !important;
     }
     
-    .comment-bubble {
+    .comment-bubble-halal, .comment-bubble-haram {
         height: 30px !important;
         width: 30px !important;
     }
@@ -142,12 +142,23 @@
 
 }
 
-.comment-bubble {
+.comment-bubble-halal, .comment-bubble-haram, .comment-bubble-other {
     height: 40px;
     width: 40px;
-    background-color: #bbb;
     border-radius: 50%;
     display: inline-block;
+}
+
+.comment-bubble-halal {
+    background-color: var(--halal-color);
+}
+
+.comment-bubble-haram {
+    background-color: var(--haram-color);
+}
+
+.comment-bubble-other {
+    background-color: #bbb;
 }
 
 .username {
@@ -283,7 +294,7 @@
     text-decoration: underline;
 }
 
-.comment-maker-card-0, .comment-maker-card-1 {
+.comment-maker-card {
     display: table;
     position: absolute;
     bottom: 0px;
@@ -316,7 +327,7 @@
 
 }
 
-.comment-maker-button-0, .comment-maker-button-1 {
+.comment-maker-button {
     position: absolute;
     bottom: 5px;
     right: 1.75%;
@@ -325,24 +336,12 @@
     border-radius: 100px 100px 100px 100px;
     border-style: none;
     cursor: pointer;
-}
-
-.comment-maker-button-0 {
     color: var(--halal-compliment-color);
 }
 
-.comment-maker-button-0:hover {
+.comment-maker-button:hover {
     color: var(--halal-color);
     fill: var(--halal-compliment-color);
-}
-
-.comment-maker-button-1 {
-    color: var(--haram-compliment-color);
-}
-
-.comment-maker-button-1:hover {
-    color: var(--haram-color);
-    fill: var(--haram-compliment-color);
 }
 
 .comment-maker-input:focus, .comment-maker-button:focus {

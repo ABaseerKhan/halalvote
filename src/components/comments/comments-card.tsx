@@ -9,15 +9,15 @@ import { useCookies } from 'react-cookie';
 import { SkeletonComponent } from "./comments-skeleton";
 
 // type imports
-import { Judgment, judgementToTextMap } from '../../types';
+import { Judgment, userVoteToCommentType } from '../../types';
 
 // style imports
 import './comments.css';
 // import { useMedia } from '../../hooks/useMedia';
 
 interface CommentsCardComponentProps {
-    judgment: Judgment,
-    topicTitle: string, 
+    userTopicVote: number | undefined,
+    topicTitle: string,
     numHalalComments: number,
     numHaramComments: number,
     specificComment?: Comment,
@@ -38,9 +38,8 @@ const initialState = {
     commentsShowable: true,
     pathToHighlightedComment: undefined,
 }
-var clickTimer: any = null;
 const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
-    const { judgment, topicTitle, specificComment, refreshTopic } = props;
+    const { topicTitle, userTopicVote, specificComment, refreshTopic } = props;
 
     // const isMobile = useMedia(
     //     // Media queries
@@ -65,7 +64,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         } else {
             setState(prevState => ({ ...prevState, loading: false, commentsShowable: true }));
         }
-    }, 500, [topicTitle, judgment]);
+    }, 500, [topicTitle]);
 
     useEffect(() => {
         if (!state.loading) {
@@ -75,7 +74,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     }, [topicTitle]);
 
     useEffect(() => {
-        if (topicTitle && specificComment && (topicTitle === specificComment.topicTitle) && (specificComment.commentType === judgementToTextMap[judgment])) {
+        if (topicTitle && specificComment && (topicTitle === specificComment.topicTitle)) {
             state.comments = [];
             state.pathToHighlightedComment = undefined;
             fetchComments([], undefined, specificComment?.id);
@@ -93,8 +92,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         const { data: comments }: { data: Comment[]} = await postData({
             baseUrl: commentsConfig.url,
             path: 'get-comments', 
-            data: { 
-                "commentType": judgementToTextMap[judgment],
+            data: {
                 "topicTitle": topicTitle,
                 "username": username,
                 "parentId": parentComment?.id,
@@ -122,12 +120,12 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         const { status, data: comment }: { status: number, data: Comment } = await postData({
             baseUrl: commentsConfig.url,
             path: 'add-comment', 
-            data: { 
+            data: {
                 "parentId": highlightedComment?.id,
                 "topicTitle": topicTitle, 
                 "username": username,
                 "comment": commentText,
-                "commentType": judgementToTextMap[judgment],
+                "commentType": userVoteToCommentType(userTopicVote), 
             },
             additionalHeaders: {
                 "sessiontoken": sessiontoken
@@ -139,7 +137,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         }
         const commentObject: Comment = {
             id: comment.id,
-            commentType: judgementToTextMap[judgment],
+            commentType: userVoteToCommentType(userTopicVote),
             username: username,
             comment: commentText,
             replies: [],
@@ -225,20 +223,8 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const commentsContainerId = `comments-container`;
     const commentsCardId = "comments-card";
 
-    const doubleTap = (judgmentMemo: any) => (() => {
-        if (clickTimer == null) {
-            clickTimer = setTimeout(function () {
-                clickTimer = null;
-
-            }, 300)
-        } else {
-            clearTimeout(clickTimer);
-            clickTimer = null;
-            props.switchCards(judgmentMemo)();
-        }
-    });
     return(
-        <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onTouchStart={doubleTap(+(!judgment))} className={commentsCardId} >
+        <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} >
                 <div id={commentsContainerId} className="comments-container">
                     <div className={"comments-container-padding-div"}>
                         {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
@@ -251,7 +237,6 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                                             highlightComment={highlightComment} 
                                             fetchMoreReplies={fetchComments}
                                             deleteComment={deleteComment}
-                                            judgment={judgment}
                                         />
                             })
                         }
@@ -259,7 +244,6 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                 </div>
                 <CommentMakerComponent 
                     ref={commentMakerRef}
-                    judgment={judgment} 
                     submitComment={createComment} 
                     replyToUsername={highlightedComment?.username}
                 />

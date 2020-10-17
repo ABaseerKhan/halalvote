@@ -4,7 +4,7 @@ import { TopicCarouselComponent } from './topic-carousel/topic-carousel';
 import { SearchComponent } from './search/search';
 import { AnalyticsCardComponent } from './analytics-card/analytics-card';
 import { MenuComponent } from './menu/menu';
-import { Topic, Comment, Judgment } from '../types';
+import { Topic, Comment } from '../types';
 import { postData } from '../https-client/client';
 import { topicsConfig } from '../https-client/config';
 import { arrayMove, vhToPixels, vwToPixels } from "../utils";
@@ -171,7 +171,7 @@ export const AppShellComponent = (props: any) => {
         <div className="topic-content">
           <CardsShellComponent id={cardsShellId}
             mediaCard={<TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
-            commentsCard={<CommentsCardComponent judgment={Judgment.HALAL} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+            commentsCard={<CommentsCardComponent userTopicVote={topic?.vote} topicTitle={topicTitle} numHalalComments={numHalalComments} numHaramComments={numHaramComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
             analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
           />
           <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
