@@ -41,6 +41,9 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
                 quillEditor.current.getEditor().getModule('mention').insertItem({ denotationChar: "@", id: 0, index: 0, value: props.replyToUsername }, true);
             } else {
                 setValue('');
+                if (document.getElementById("comment-maker-card")) {
+                    document.getElementById("comment-maker-card")!.style.height = `4em`;
+                }
             }
         }
     }, [props.replyToUsername])
@@ -49,6 +52,11 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
         focus: () => {
             if (quillEditor.current) {
                 quillEditor.current.focus();
+            }
+        },
+        setHeight: (height: number) => {
+            if (document.getElementById("comment-maker-card")) {
+                document.getElementById("comment-maker-card")!.style.height = `${height}px`;
             }
         }
     }));
@@ -90,7 +98,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     };
 
     return (
-        <div className={"comment-maker-card"} onClick={(e) => { e.stopPropagation()}}>
+        <div id="comment-maker-card" className={"comment-maker-card"} onClick={(e) => { e.stopPropagation()}}>
             <ReactQuill
                 ref={quillEditor} 
                 className={"comment-maker-input"} 

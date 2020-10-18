@@ -190,8 +190,11 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                 document.getElementById(commentsContainerId)!.scrollTop = 0;
             };
         }    
-        if (commentMakerRef.current) {
+        if (commentMakerRef.current && path !== undefined) {
             commentMakerRef.current.focus();
+            const commentsCard = document.getElementById('comments-card');
+            const highlightedComment = document.getElementById(`comment-${getCommentFromPath(state.comments, path)?.id}`);
+            commentMakerRef.current.setHeight(commentsCard?.clientHeight! - (highlightedComment!.offsetTop + highlightedComment!.offsetHeight));
         };
     }
 
