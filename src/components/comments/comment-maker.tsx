@@ -3,6 +3,7 @@ import ReactQuill, { Quill } from 'react-quill';
 import "quill-mention";
 import { ReactComponent as SendButtonSVG } from '../../icons/send-button.svg';
 import { useMedia } from '../../hooks/useMedia';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 //type imports
 
@@ -113,6 +114,11 @@ const suggestUsers = async (searchTerm: string) => {
     return allUsers;
 };
 
+const fetchMentions = async (searchTerm: any, renderList: any) => {
+    const matchedUsers = await suggestUsers(searchTerm);
+    renderList(matchedUsers);
+};
+
 const modules = {
     toolbar: [
         [{'header': 1}, 'bold', 'italic', 'underline','strike', 'blockquote', 'code-block', 'link', 'image'],
@@ -120,10 +126,7 @@ const modules = {
     mention: {
         allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
         mentionDenotationChars: ["@"],
-        source: async function(searchTerm: any, renderList: any) {
-            const matchedUsers = await suggestUsers(searchTerm);
-            renderList(matchedUsers);
-        }
+        source: AwesomeDebouncePromise(fetchMentions, 500),
     }
 };
 
