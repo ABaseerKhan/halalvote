@@ -18,68 +18,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     const { submitVote, userVote } = props;
 
     useEffect(() => {
-        const switchElement = getSwitchElement();
-        const votingSwitchContainerElement = getVotingSwitchContainerElement();
-        const votingAreaFilledHalalElement = getVotingAreaFilledHalalElement();
-        const votingAreaFilledHaramElement = getVotingAreaFilledHaramElement();
-
-        if (switchElement && votingSwitchContainerElement && votingAreaFilledHalalElement && votingAreaFilledHaramElement) {
-            let containerRects = votingSwitchContainerElement.getClientRects();
-            let dragging = false;
-    
-            switchElement.onmousedown = () => {
-                dragging = true;
-                containerRects = votingSwitchContainerElement.getClientRects();
-            }
-
-            document.onmouseup = (e: MouseEvent) => {
-                if (dragging && containerRects.length > 0) {
-                    dragging = false;
-    
-                    const containerLeft = containerRects[0].x;
-                    const containerLeftMid = containerLeft + (switchContainerWidth / 4);
-                    const containerMid = containerLeft + (switchContainerWidth / 2);
-                    const containerRightMid = containerMid + (switchContainerWidth / 4);
-    
-                    if (e.x <= containerLeftMid) {
-                        vote(Judgment.HARAM);
-                    } else if (e.x >= containerRightMid) {
-                        vote(Judgment.HALAL);
-                    } else {
-                        vote(undefined);
-                    }
-                }
-            }
-
-            document.onmousemove = (e: MouseEvent) => {
-                if (dragging && containerRects.length > 0) {
-                    const containerLeft = containerRects[0].x;
-                    const containerMid = containerLeft + (switchContainerWidth / 2);
-                    const switchCenterX = e.x - (switchDimension / 2);
-    
-                    switchElement.style.marginLeft = Math.min(totalSwitchMarginLeft + switchMargins, (Math.max(switchMargins, switchCenterX - containerLeft))) + "px";
-    
-                    if (e.x > containerMid) {
-                        const halalFillWidth = e.x + (switchDimension / 2) + switchMargins - containerMid;
-    
-                        votingAreaFilledHalalElement.style.display = "unset";
-                        votingAreaFilledHaramElement.style.display = "none";
-                        votingAreaFilledHalalElement.style.width = Math.min(switchContainerWidth / 2, halalFillWidth) + "px";
-                    } else {
-                        const haramFillWidth = containerMid - e.x + (switchDimension / 2) + switchMargins;
-                        const haramFillMarginLeft = e.x - (switchDimension / 2) - switchMargins - containerLeft;
-    
-                        votingAreaFilledHalalElement.style.display = "none";
-                        votingAreaFilledHaramElement.style.display = "unset";
-                        votingAreaFilledHaramElement.style.width = Math.min(switchContainerWidth / 2, haramFillWidth) + "px";
-                        votingAreaFilledHaramElement.style.marginLeft = Math.max(0, haramFillMarginLeft) + "px";
-                    }
-                }
-            }
-        }
-    }, []);
-
-    useEffect(() => {
         if (userVote === undefined || userVote === 0 || !(username && sessiontoken)) {
             setVote(undefined);
         } else if (userVote < 0) {
@@ -98,6 +36,66 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     const getSwitchElement = () => {return document.getElementById(switchId);}
     const getVotingAreaFilledHaramElement = () => {return document.getElementById(votingAreaFilledHaramId);}
     const getVotingAreaFilledHalalElement = () => {return document.getElementById(votingAreaFilledHalalId);}
+
+    const switchElement = getSwitchElement();
+    const votingSwitchContainerElement = getVotingSwitchContainerElement();
+    const votingAreaFilledHalalElement = getVotingAreaFilledHalalElement();
+    const votingAreaFilledHaramElement = getVotingAreaFilledHaramElement();
+
+    if (switchElement && votingSwitchContainerElement && votingAreaFilledHalalElement && votingAreaFilledHaramElement) {
+        let containerRects = votingSwitchContainerElement.getClientRects();
+        let dragging = false;
+
+        switchElement.onmousedown = () => {
+            dragging = true;
+            containerRects = votingSwitchContainerElement.getClientRects();
+        }
+
+        document.onmouseup = (e: MouseEvent) => {
+            if (dragging && containerRects.length > 0) {
+                dragging = false;
+
+                const containerLeft = containerRects[0].x;
+                const containerLeftMid = containerLeft + (switchContainerWidth / 4);
+                const containerMid = containerLeft + (switchContainerWidth / 2);
+                const containerRightMid = containerMid + (switchContainerWidth / 4);
+                
+                if (e.x <= containerLeftMid) {
+                    vote(Judgment.HARAM);
+                } else if (e.x >= containerRightMid) {
+                    vote(Judgment.HALAL);
+                } else {
+                    vote(undefined);
+                }
+            }
+        }
+
+        document.onmousemove = (e: MouseEvent) => {
+            if (dragging && containerRects.length > 0) {
+                const containerLeft = containerRects[0].x;
+                const containerMid = containerLeft + (switchContainerWidth / 2);
+                const switchCenterX = e.x - (switchDimension / 2);
+
+                switchElement.style.marginLeft = Math.min(totalSwitchMarginLeft + switchMargins, (Math.max(switchMargins, switchCenterX - containerLeft))) + "px";
+
+                if (e.x > containerMid) {
+                    const halalFillWidth = e.x + (switchDimension / 2) + switchMargins - containerMid;
+
+                    votingAreaFilledHalalElement.style.display = "unset";
+                    votingAreaFilledHaramElement.style.display = "none";
+                    votingAreaFilledHalalElement.style.width = Math.min(switchContainerWidth / 2, halalFillWidth) + "px";
+                } else {
+                    const haramFillWidth = containerMid - e.x + (switchDimension / 2) + switchMargins;
+                    const haramFillMarginLeft = e.x - (switchDimension / 2) - switchMargins - containerLeft;
+
+                    votingAreaFilledHalalElement.style.display = "none";
+                    votingAreaFilledHaramElement.style.display = "unset";
+                    votingAreaFilledHaramElement.style.width = Math.min(switchContainerWidth / 2, haramFillWidth) + "px";
+                    votingAreaFilledHaramElement.style.marginLeft = Math.max(0, haramFillMarginLeft) + "px";
+                }
+            }
+        }
+    }
     
     const switchTime = 50;
     const switchContainerWidth = 225; // pixels
@@ -251,9 +249,9 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     const vote = (judgment: Judgment | undefined) => {
         setVote(judgment);
         if (judgment === Judgment.HARAM && (userVote === undefined || userVote >= 0)) {
-            submitVote(-100);
+            submitVote(-1);
         } else if (judgment === Judgment.HALAL && (userVote === undefined || userVote <= 0)) {
-            submitVote(100);
+            submitVote(1);
         } else if (userVote) {
             submitVote(0);
         }
