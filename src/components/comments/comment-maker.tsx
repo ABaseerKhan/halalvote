@@ -28,14 +28,15 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     );
 
     const [state, setState] = useState({
-        holdingDownShift: false
+        holdingDownForSubmission: false,
     });
     let [value, setValue] = useState('');
     const quillEditor = useRef<ReactQuill>(null);
 
     useEffect(() => {
         if (quillEditor.current) {
-            quillEditor.current.getEditor().root.dataset.placeholder = "Comment";
+            const placeholderText = (props.replyToUsername && "Reply to " + props.replyToUsername) || "Comment";
+            quillEditor.current.getEditor().root.dataset.placeholder = placeholderText;
             if (props.replyToUsername) {
                 quillEditor.current.getEditor().getModule('mention').insertItem({ denotationChar: "@", id: 0, index: 0, value: props.replyToUsername }, true);
             } else {
@@ -52,9 +53,8 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
         }
     }));
 
-    const submitComment = async (event: any) => {
+    const submitComment = async () => {
         if (value !== "") {
-            event.preventDefault();
             value = value.replace(new RegExp('<img '), '<img style="max-width: 100%;max-height: 65vh;border-radius: 15px;"');
             if ((await props.submitComment(value)) === 200) { 
                 setValue('')
@@ -63,43 +63,43 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     };
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        switch (event.keyCode) {	
+        switch (event.keyCode) {
             case 13:
-                event.preventDefault();
-                if (!state.holdingDownShift && !isMobile && false) {
+                if (state.holdingDownForSubmission && !isMobile) {
                     value = value.replace(new RegExp('<p><br></p>$'), '');
-                    submitComment(event as any);
-                }
-                break;	
-            case 16:	
+                    submitComment();
+                };
+                break;
+            case 17:
+            case 18:
                 setState({	
-                    ...state,	
-                    holdingDownShift: true	
+                    ...state,
+                    holdingDownForSubmission: true
                 });	
             }	
     }	
 
 
     const onKeyUp = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (event.keyCode === 16) {	
+        if (event.keyCode === 17 || event.keyCode === 18) {	
             setState({	
                 ...state,	
-                holdingDownShift: false	
+                holdingDownForSubmission: false	
             });	
         }	
     };
-    
+
     return (
         <div className={"comment-maker-card"} onClick={(e) => { e.stopPropagation()}}>
             <ReactQuill
                 ref={quillEditor} 
                 className={"comment-maker-input"} 
-                theme="snow" 
+                theme="snow"
                 value={value}
                 onChange={setValue}
                 onKeyDown={onKeyDown}
                 onKeyUp={onKeyUp}
-                modules={modules} 
+                modules={modules}
                 formats={formats}
                 preserveWhitespace
             />
@@ -122,7 +122,7 @@ const fetchMentions = async (searchTerm: any, renderList: any) => {
     renderList(matchedUsers);
 };
 
-const modules = {
+const modules: any = {
     toolbar: [
         [{'header': 1}, 'bold', 'italic', 'underline','strike', 'blockquote', 'code-block', 'link', 'image'],
     ],
@@ -130,7 +130,7 @@ const modules = {
         allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
         mentionDenotationChars: ["@"],
         source: AwesomeDebouncePromise(fetchMentions, 300),
-        onSelect: (item: any, insertItem: any) => { insertItem(item); console.log(item);}
+        link: 'https://google.com'
     }
 };
 
@@ -153,4 +153,47 @@ class CustomLink extends Link {
         return value;
     }
 }
+
+const Embed = Quill.import("blots/embed");
+class CustomMentionBlot extends Embed {
+    static create(data:any) {
+        const node = super.create();
+        const denotationChar = document.createElement("span");
+        denotationChar.className = "ql-mention-denotation-char";
+        denotationChar.innerHTML = data.denotationChar;
+        node.appendChild(denotationChar);
+        node.innerHTML += data.value;
+        return CustomMentionBlot.setDataValues(node, data);
+    }
+
+    static setDataValues(element:any, data:any) {
+        const domNode = element;
+        Object.keys(data).forEach(key => {
+        domNode.dataset[key] = data[key];
+        });
+        return domNode;
+    }
+
+    static value(domNode: any) {
+        return domNode.dataset;
+    }
+
+    constructor(domNode: any) {
+        super(domNode);
+
+        // Bind our click handler to the class.
+        this.clickHandler = this.clickHandler.bind(this);
+        domNode.addEventListener('click', this.clickHandler);
+    }
+
+    clickHandler(event: any) {
+        console.log("ClickableSpan was clicked. Blot: ", this);
+    }
+}
+
+CustomMentionBlot.blotName = "mention";
+CustomMentionBlot.tagName = "span";
+CustomMentionBlot.className = "mention";
+
+Quill.register(CustomMentionBlot);
 Quill.register(CustomLink);
