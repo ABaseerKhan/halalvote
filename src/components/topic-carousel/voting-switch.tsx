@@ -32,13 +32,13 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
         const votingAreaLightHaramElementOne = getVotingAreaLightHaramElement(1);
         const votingAreaLightHaramElementTwo = getVotingAreaLightHaramElement(2);
     
-        setLightAnimations(votingAreaLightHaramElementZero, votingAreaLightHaramElementOne, votingAreaLightHaramElementTwo, "#9A8FA3", "#B59EC7", "#D0ADEB");
+        setLightAnimations(votingAreaLightHaramElementZero, votingAreaLightHaramElementOne, votingAreaLightHaramElementTwo, "#9A8FA3", "#B59EC7", "#D0ADEB", 500);
     
         const votingAreaLightHalalElementZero = getVotingAreaLightHalalElement(0);
         const votingAreaLightHalalElementOne = getVotingAreaLightHalalElement(1);
         const votingAreaLightHalalElementTwo = getVotingAreaLightHalalElement(2);
     
-        setLightAnimations(votingAreaLightHalalElementZero, votingAreaLightHalalElementOne, votingAreaLightHalalElementTwo, "#8D9F9C", "#9BBEB9", "#A9DDD6");// eslint-disable-next-line
+        setLightAnimations(votingAreaLightHalalElementZero, votingAreaLightHalalElementOne, votingAreaLightHalalElementTwo, "#8D9F9C", "#9BBEB9", "#A9DDD6", 0);// eslint-disable-next-line
     }, [])
 
     const votingSwitchContainerId = "voting-switch-container";
@@ -147,7 +147,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
         setInfiniteFunctionHelper(fn, interval);
     }
 
-    const setLightAnimations = (elementZero: HTMLElement | null, elementOne: HTMLElement | null, elementTwo: HTMLElement | null, colorZero: string, colorOne: string, colorTwo: string) => {
+    const setLightAnimations = (elementZero: HTMLElement | null, elementOne: HTMLElement | null, elementTwo: HTMLElement | null, colorZero: string, colorOne: string, colorTwo: string, offset: number) => {
         const switchElement = getSwitchElement();
 
         if (switchElement && elementZero && elementOne && elementTwo) {
@@ -159,7 +159,8 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                         }
                         ], {
                             duration: 500,
-                            easing: "ease-in"
+                            easing: "ease-in",
+                            delay: offset
                         }).onfinish = () => {
                             elementZero.animate([
                                 {
@@ -177,7 +178,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                         }
                         ], {
                             duration: 500,
-                            delay: 250
+                            delay: 250 + offset
                         }).onfinish = () => {
                             elementOne.animate([
                                 {
@@ -195,7 +196,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                         }
                         ], {
                             duration: 500,
-                            delay: 500
+                            delay: 500 + offset
                         }).onfinish = () => {
                             elementTwo.animate([
                                 {
