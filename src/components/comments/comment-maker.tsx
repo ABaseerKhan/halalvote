@@ -35,7 +35,8 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
 
     useEffect(() => {
         if (quillEditor.current) {
-            quillEditor.current.getEditor().root.dataset.placeholder = "Comment";
+            const placeholderText = (props.replyToUsername && "Reply to " + props.replyToUsername) || "Comment";
+            quillEditor.current.getEditor().root.dataset.placeholder = placeholderText;
             if (props.replyToUsername) {
                 quillEditor.current.getEditor().getModule('mention').insertItem({ denotationChar: "@", id: 0, index: 0, value: props.replyToUsername }, true);
             } else {
