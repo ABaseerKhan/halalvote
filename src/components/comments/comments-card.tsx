@@ -194,7 +194,8 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             commentMakerRef.current.focus();
             const commentsCard = document.getElementById('comments-card');
             const highlightedComment = document.getElementById(`comment-${getCommentFromPath(state.comments, path)?.id}`);
-            commentMakerRef.current.setHeight(commentsCard?.clientHeight! - (highlightedComment!.offsetTop + highlightedComment!.offsetHeight));
+            const offsetTop = highlightedComment?.offsetParent?.id === 'comments-container' ? highlightedComment.offsetTop : (highlightedComment?.offsetParent as HTMLElement)?.offsetTop + highlightedComment!.offsetTop;
+            commentMakerRef.current.setHeight(commentsCard?.clientHeight! - (offsetTop + highlightedComment!.clientHeight));
         };
     }
 
