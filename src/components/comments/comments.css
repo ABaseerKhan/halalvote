@@ -400,4 +400,5 @@
 
 .mention > span {
     margin: 0 3px;
+    cursor: pointer;
 }
