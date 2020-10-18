@@ -176,7 +176,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         }
 
         const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.data?.psuedoDelete);
-        setState(prevState => ({ ...prevState, comments: updatedComments }));
+        setState(prevState => ({ ...prevState, comments: updatedComments, pathToHighlightedComment: undefined }));
     }
 
     const highlightComment = (path: number[] | undefined) => {
