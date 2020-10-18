@@ -190,14 +190,10 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             if (commentsContainerElement) {
                 document.getElementById(commentsContainerId)!.scrollTop = 0;
             };
-            if (commentMakerRef.current) {
-                commentMakerRef.current.focus();
-            };
-        } else {
-            if (commentMakerRef.current) {
-                //commentMakerRef.current.focus();
-            };
-        }
+        }    
+        if (commentMakerRef.current) {
+            commentMakerRef.current.focus();
+        };
     }
 
     const scrollToHighlightedComment = (highlightedComment: Comment | undefined) => {

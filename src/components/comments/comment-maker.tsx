@@ -35,9 +35,12 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
 
     useEffect(() => {
         if (quillEditor.current) {
-            const placeholderText = (props.replyToUsername && "Reply to " + props.replyToUsername) || "Comment";
-            quillEditor.current.getEditor().root.dataset.placeholder = placeholderText;
-            setValue(`${props.replyToUsername ? '@'+props.replyToUsername : ''}`);
+            quillEditor.current.getEditor().root.dataset.placeholder = "Comment";
+            if (props.replyToUsername) {
+                quillEditor.current.getEditor().getModule('mention').insertItem({ denotationChar: "@", id: 0, index: 0, value: props.replyToUsername }, true);
+            } else {
+                setValue('');
+            }
         }
     }, [props.replyToUsername])
 
@@ -126,7 +129,8 @@ const modules = {
     mention: {
         allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
         mentionDenotationChars: ["@"],
-        source: AwesomeDebouncePromise(fetchMentions, 500),
+        source: AwesomeDebouncePromise(fetchMentions, 300),
+        onSelect: (item: any, insertItem: any) => { insertItem(item); console.log(item);}
     }
 };
 
