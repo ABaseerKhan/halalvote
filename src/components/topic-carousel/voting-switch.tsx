@@ -148,9 +148,11 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     }
 
     const setLightAnimations = (elementZero: HTMLElement | null, elementOne: HTMLElement | null, elementTwo: HTMLElement | null, colorZero: string, colorOne: string, colorTwo: string) => {
-        if (elementZero && elementOne && elementTwo) {
+        const switchElement = getSwitchElement();
+
+        if (switchElement && elementZero && elementOne && elementTwo) {
             setInfiniteFunction(() => {
-                if (!userVote || userVote === 0) {
+                if (switchElement.style.marginLeft === halfSwitchMarginLeft + switchMargins + "px") {
                     elementZero.animate([
                         {
                             background: colorZero
