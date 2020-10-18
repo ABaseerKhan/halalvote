@@ -150,60 +150,62 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     const setLightAnimations = (elementZero: HTMLElement | null, elementOne: HTMLElement | null, elementTwo: HTMLElement | null, colorZero: string, colorOne: string, colorTwo: string) => {
         if (elementZero && elementOne && elementTwo) {
             setInfiniteFunction(() => {
-                elementZero.animate([
-                    {
-                        background: colorZero
-                    }
-                    ], {
-                        duration: 500,
-                        easing: "ease-in"
-                    }).onfinish = () => {
-                        elementZero.animate([
-                            {
-                                background: colorZero
-                            }
-                            ], {
-                                duration: 500,
-                                direction: "reverse",
-                                easing: "ease-out"
-                            })
-                    }
-                elementOne.animate([
-                    {
-                        background: colorOne
-                    }
-                    ], {
-                        duration: 500,
-                        delay: 250
-                    }).onfinish = () => {
-                        elementOne.animate([
-                            {
-                                background: colorOne
-                            }
-                            ], {
-                                duration: 500,
-                                direction: "reverse",
-                                easing: "ease-out"
-                            })
-                    }
-                elementTwo.animate([
-                    {
-                        background: colorTwo
-                    }
-                    ], {
-                        duration: 500,
-                        delay: 500
-                    }).onfinish = () => {
-                        elementTwo.animate([
-                            {
-                                background: colorTwo
-                            }
-                            ], {
-                                duration: 500,
-                                direction: "reverse",
-                                easing: "ease-out"
-                            })
-                    }
+                if (!userVote || userVote === 0) {
+                    elementZero.animate([
+                        {
+                            background: colorZero
+                        }
+                        ], {
+                            duration: 500,
+                            easing: "ease-in"
+                        }).onfinish = () => {
+                            elementZero.animate([
+                                {
+                                    background: colorZero
+                                }
+                                ], {
+                                    duration: 500,
+                                    direction: "reverse",
+                                    easing: "ease-out"
+                                })
+                        }
+                    elementOne.animate([
+                        {
+                            background: colorOne
+                        }
+                        ], {
+                            duration: 500,
+                            delay: 250
+                        }).onfinish = () => {
+                            elementOne.animate([
+                                {
+                                    background: colorOne
+                                }
+                                ], {
+                                    duration: 500,
+                                    direction: "reverse",
+                                    easing: "ease-out"
+                                })
+                        }
+                    elementTwo.animate([
+                        {
+                            background: colorTwo
+                        }
+                        ], {
+                            duration: 500,
+                            delay: 500
+                        }).onfinish = () => {
+                            elementTwo.animate([
+                                {
+                                    background: colorTwo
+                                }
+                                ], {
+                                    duration: 500,
+                                    direction: "reverse",
+                                    easing: "ease-out"
+                                })
+                        }   
+                }
             }, 3000);
         }
     }
@@ -355,12 +357,16 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 if (switchMarginLeft >= halfSwitchMarginLeft) {
                     votingAreaFilledHaramElement.style.display = "none";
                     votingAreaFilledHalalElement.style.display = "unset";
-                    moveSwitchToHalal(() => {});
+                    moveSwitchToHalal(() => {
+                        displayLights(false);
+                    });
                 } else {
                     moveSwitchToCenter(() => {
                         votingAreaFilledHaramElement.style.display = "none";
                         votingAreaFilledHalalElement.style.display = "unset";
-                        moveSwitchToHalal(() => {});
+                        moveSwitchToHalal(() => {
+                            displayLights(false);
+                        });
                     });
                 }
             } else if (judgment === Judgment.HARAM) {
@@ -368,12 +374,16 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 if (switchMarginLeft <= halfSwitchMarginLeft) {
                     votingAreaFilledHaramElement.style.display = "unset";
                     votingAreaFilledHalalElement.style.display = "none";
-                    moveSwitchToHaram(() => {});
+                    moveSwitchToHaram(() => {
+                        displayLights(false);
+                    });
                 } else {
                     moveSwitchToCenter(() => {
                         votingAreaFilledHaramElement.style.display = "unset";
                         votingAreaFilledHalalElement.style.display = "none";
-                        moveSwitchToHaram(() => {});
+                        moveSwitchToHaram(() => {
+                            displayLights(false);
+                        });
                     });
                 }
             } else {
