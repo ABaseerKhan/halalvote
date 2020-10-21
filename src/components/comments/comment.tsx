@@ -109,8 +109,13 @@ export const CommentComponent = (props: CommentComponentProps) => {
                     onClick={(e) => {
                         const selection = window.getSelection();
                         if(selection?.toString().length === 0) {
-                            e.stopPropagation();
-                            props.highlightComment(props.path);
+                            if (isHighlighted) {
+                                e.stopPropagation();
+                                props.highlightComment(undefined);
+                            } else {
+                                e.stopPropagation();
+                                props.highlightComment(props.path);
+                            }
                         }
                     }}
                 >
