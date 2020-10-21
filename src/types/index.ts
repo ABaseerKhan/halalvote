@@ -6,9 +6,9 @@ export enum Judgment {
 
 export const userVoteToCommentType = (userVote: number | undefined) => {
     switch(userVote) {
-        case 100:
+        case 1:
             return "HALAL";
-        case -100:
+        case -1:
             return "HARAM";
         default:
             return "OTHER";
