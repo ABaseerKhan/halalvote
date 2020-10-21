@@ -107,8 +107,11 @@ export const CommentComponent = (props: CommentComponentProps) => {
                 <div
                     className={commentContentClass} 
                     onClick={(e) => {
-                        e.stopPropagation();
-                        props.highlightComment(props.path);
+                        const selection = window.getSelection();
+                        if(selection?.toString().length === 0) {
+                            e.stopPropagation();
+                            props.highlightComment(props.path);
+                        }
                     }}
                 >
                     <div className="username">{props.comment.username}</div>
@@ -123,7 +126,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                             !(props.comment.comment === "__deleted__" && props.comment.numReplies > 0) &&
                             <span
                                 className={"delete-button"}
-                                onClick={() => props.deleteComment(props.path)}
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation();  props.deleteComment(props.path); }}
                                 role={"img"}
                                 aria-label="trash"
                             >
