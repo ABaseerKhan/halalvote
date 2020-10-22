@@ -28,7 +28,8 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     );
 
     const [state, setState] = useState({
-        holdingDownForSubmission: false,
+        holdingDownShift: false,
+        cancelSubmissionOnEnter: false,
     });
     let [value, setValue] = useState('');
     const quillEditor = useRef<ReactQuill>(null);
@@ -73,29 +74,31 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         switch (event.keyCode) {
             case 13:
-                if (state.holdingDownForSubmission && !isMobile) {
+                if (!state.holdingDownShift && !state.cancelSubmissionOnEnter && !isMobile) {
                     value = value.replace(new RegExp('<p><br></p>$'), '');
                     submitComment();
                 };
+                setState(prevState => ({ ...prevState, cancelSubmissionOnEnter: false }));
                 break;
-            case 17:
-            case 18:
+            case 16:
                 setState({	
                     ...state,
-                    holdingDownForSubmission: true
+                    holdingDownShift: true
                 });	
             }	
     }	
 
 
     const onKeyUp = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (event.keyCode === 17 || event.keyCode === 18) {	
+        if (event.keyCode === 16) {	
             setState({	
                 ...state,	
-                holdingDownForSubmission: false	
+                holdingDownShift: false	
             });	
-        }	
+        }
     };
+
+    modules.mention.onClose = () => setState(prevState => ({ ...prevState, cancelSubmissionOnEnter: true }));
 
     return (
         <div id="comment-maker-card" className={"comment-maker-card"} onClick={(e) => { e.stopPropagation()}}>
@@ -138,7 +141,6 @@ const modules: any = {
         allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
         mentionDenotationChars: ["@"],
         source: AwesomeDebouncePromise(fetchMentions, 300),
-        link: 'https://google.com'
     }
 };
 

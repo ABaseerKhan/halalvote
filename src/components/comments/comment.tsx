@@ -62,10 +62,6 @@ export const CommentComponent = (props: CommentComponentProps) => {
     const upVote = async () => {
         const upVotes = (state.comment.userVote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes + 1;
         const userVote = (state.comment.userVote === Vote.UPVOTE) ? undefined : Vote.UPVOTE;
-        setState(prevState => ({
-            ...prevState,
-            comment: { ...prevState.comment, upVotes: upVotes, userVote: userVote },
-        }));
         const { status } = await postData({
             baseUrl: commentsConfig.url,
             path: 'vote-comment', 
@@ -107,8 +103,16 @@ export const CommentComponent = (props: CommentComponentProps) => {
                 <div
                     className={commentContentClass} 
                     onClick={(e) => {
-                        e.stopPropagation();
-                        props.highlightComment(props.path);
+                        const selection = window.getSelection();
+                        if(selection?.toString().length === 0) {
+                            if (isHighlighted) {
+                                e.stopPropagation();
+                                props.highlightComment(undefined);
+                            } else {
+                                e.stopPropagation();
+                                props.highlightComment(props.path);
+                            }
+                        }
                     }}
                 >
                     <div className="username">{props.comment.username}</div>
@@ -123,7 +127,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                             !(props.comment.comment === "__deleted__" && props.comment.numReplies > 0) &&
                             <span
                                 className={"delete-button"}
-                                onClick={() => props.deleteComment(props.path)}
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation();  props.deleteComment(props.path); }}
                                 role={"img"}
                                 aria-label="trash"
                             >
