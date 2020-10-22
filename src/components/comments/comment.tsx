@@ -62,10 +62,6 @@ export const CommentComponent = (props: CommentComponentProps) => {
     const upVote = async () => {
         const upVotes = (state.comment.userVote === Vote.UPVOTE) ? state.comment.upVotes - 1 : state.comment.upVotes + 1;
         const userVote = (state.comment.userVote === Vote.UPVOTE) ? undefined : Vote.UPVOTE;
-        setState(prevState => ({
-            ...prevState,
-            comment: { ...prevState.comment, upVotes: upVotes, userVote: userVote },
-        }));
         const { status } = await postData({
             baseUrl: commentsConfig.url,
             path: 'vote-comment', 
