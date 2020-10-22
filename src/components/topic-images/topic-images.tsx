@@ -203,7 +203,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                                     isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
                                 }
                                 <div className="image-likes-container">
-                                    <HeartButtonSVG className={!!topicImg.userLike ? "heart-liked" : "heart"} onClick={updateImageLike} />
+                                    <HeartButtonSVG className={!!topicImg.userLike ? "liked" : "like"} onClick={updateImageLike} />
                                     <div className="image-likes">{topicImg.likes}</div>
                                 </div>
                             </div>
