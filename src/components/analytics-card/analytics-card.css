@@ -3,6 +3,13 @@
   height: 100%;
   width: 100%;
   text-align: center;
-  background: black;
+  background: rgb(0,0,0,0.1);
   border-radius: 25px;
+}
+
+.chart {
+  height: 300px !important;
+  width: 90% !important;
+  padding-top: 12em;
+  margin: auto;
 }
