@@ -43,12 +43,14 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         picture: null,
         loading: true
     });
-    const [cookies, setCookie] = useCookies(['username', 'sessiontoken', 'topicTitle']);
+    const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
     useEffect(() => {
-        fetchImages(); // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [topicTitle]);
+        if (topicTitle) { 
+            fetchImages();
+        } // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [topicTitle, sessiontoken]);
 
     useEffect(() => {
         setState(prevState=> prevState)
@@ -147,8 +149,8 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         });
 
         if (status === 200) {
-            state.topicImages[state.currentIndex].likes = data.likes;
-            state.topicImages[state.currentIndex].userLike = topicImage.userLike === 0 ? 1 : 0;
+            topicImage.likes = data.likes;
+            topicImage.userLike = topicImage.userLike === 0 ? 1 : 0;
             setState({...state, topicImages: state.topicImages});
         }
     }
