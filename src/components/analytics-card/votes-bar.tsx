@@ -29,8 +29,8 @@ export const VotesBar = (props: VotesBarProps) => {
     
     return (
         <div className="votes-bar" style={{height: votesBarHeightPx, width: votesBarWidthPx, borderRadius: votesBarHeightPx}} data-tip={`Votes: ${numVotes}, Haram: ${numVotes > 0 ? haramPercentageString : "N/A"}, Halal: ${numVotes > 0 ? halalPercentageString : "N/A"}`} data-for="vote-breakdown-bar">
-            <div className="voting-bar-haram" style={{height: votesBarHeightPx, width: haramPercentageString, borderRadius: `${votesBarHeightPx} 0 0 ${votesBarHeightPx}`}}></div>
-            <div className="voting-bar-halal" style={{height: votesBarHeightPx, width: halalPercentageString, borderRadius: `0 ${votesBarHeightPx} ${votesBarHeightPx} 0`}}></div>
+            <div className="voting-bar-haram" style={{height: votesBarHeightPx, width: haramPercentageString, borderRadius: `${votesBarHeightPx} ${halalPercentage === 0 ? votesBarHeightPx : 0} ${halalPercentage === 0 ? votesBarHeightPx : 0} ${votesBarHeightPx}`}}></div>
+            <div className="voting-bar-halal" style={{height: votesBarHeightPx, width: halalPercentageString, borderRadius: `${haramPercentage === 0 ? votesBarHeightPx : 0} ${votesBarHeightPx} ${votesBarHeightPx} ${haramPercentage === 0 ? votesBarHeightPx : 0}`}}></div>
             <ReactTooltip className="vote-breakdown-tooltip" id="vote-breakdown-bar" place="top" delayShow={100} effect="solid"/>
         </div>
 )
