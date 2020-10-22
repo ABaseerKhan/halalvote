@@ -64,6 +64,9 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
             <VotingSwitch
                 submitVote={submitVote}
                 userVote={topic?.vote}
+                halalPoints={topic?.halalPoints}
+                haramPoints={topic?.haramPoints}
+                numVotes={topic?.numVotes}
             />
         </div>
     )

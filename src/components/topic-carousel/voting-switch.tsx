@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useCookies } from 'react-cookie';
+import ReactTooltip from 'react-tooltip';
 
 //type imports
 import { Judgment } from '../../types';
@@ -10,12 +11,18 @@ import './voting-switch.css';
 type VotingSwitchProps = {
     submitVote: (value: number) => void,
     userVote: number | undefined,
+    halalPoints: number | undefined,
+    haramPoints: number | undefined,
+    numVotes: number | undefined
 };
 export const VotingSwitch = (props: VotingSwitchProps) => {
     const [cookies] = useCookies(['username', 'sessiontoken']);
 
     const { username, sessiontoken } = cookies;
-    const { submitVote, userVote } = props;
+    const { submitVote, userVote, halalPoints, haramPoints, numVotes } = props;
+
+    const haramLightsAnimationTimeout = useRef<any>(undefined);
+    const halalLightsAnimationTimeout = useRef<any>(undefined);
 
     useEffect(() => {
         if (userVote === undefined || userVote === 0 || !(username && sessiontoken)) {
@@ -28,18 +35,42 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     }, [userVote, username, sessiontoken]);
 
     useEffect(() => {
+        if (haramLightsAnimationTimeout.current) {
+            clearTimeout(haramLightsAnimationTimeout.current);
+        }
+        if (halalLightsAnimationTimeout) {
+            clearTimeout(halalLightsAnimationTimeout.current);
+        }
+
+        const randomBit = Math.floor(Math.random() * 2);
+
+        let haramOffset = randomBit === 0 ? 500 : 0;
+        let halalOffset = randomBit === 1 ? 500 : 0;
+    
+        if (haramPoints !== undefined && halalPoints !== undefined && !isNaN(haramPoints) && !isNaN(halalPoints)) {
+            if (haramPoints > halalPoints) {
+                haramOffset = 0;
+                halalOffset = 500;
+            } else {
+                haramOffset = 500;
+                halalOffset = 0;
+            }
+        }
+
         const votingAreaLightHaramElementZero = getVotingAreaLightHaramElement(0);
         const votingAreaLightHaramElementOne = getVotingAreaLightHaramElement(1);
         const votingAreaLightHaramElementTwo = getVotingAreaLightHaramElement(2);
     
-        setLightAnimations(votingAreaLightHaramElementZero, votingAreaLightHaramElementOne, votingAreaLightHaramElementTwo, "#9A8FA3", "#B59EC7", "#D0ADEB", 500);
+        setLightAnimations(votingAreaLightHaramElementZero, votingAreaLightHaramElementOne, votingAreaLightHaramElementTwo, 
+                                "#9A8FA3", "#B59EC7", "#D0ADEB", haramOffset, Judgment.HARAM);
     
         const votingAreaLightHalalElementZero = getVotingAreaLightHalalElement(0);
         const votingAreaLightHalalElementOne = getVotingAreaLightHalalElement(1);
         const votingAreaLightHalalElementTwo = getVotingAreaLightHalalElement(2);
     
-        setLightAnimations(votingAreaLightHalalElementZero, votingAreaLightHalalElementOne, votingAreaLightHalalElementTwo, "#8D9F9C", "#9BBEB9", "#A9DDD6", 0);// eslint-disable-next-line
-    }, [])
+        setLightAnimations(votingAreaLightHalalElementZero, votingAreaLightHalalElementOne, votingAreaLightHalalElementTwo, 
+                                "#8D9F9C", "#9BBEB9", "#A9DDD6", halalOffset, Judgment.HALAL);// eslint-disable-next-line
+    }, [userVote, username, sessiontoken])
 
     const votingSwitchContainerId = "voting-switch-container";
     const switchId = "voting-switch";
@@ -135,19 +166,27 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
         }
     }
 
-    const setInfiniteFunctionHelper = (fn: () => void, interval: number) => {
-        setTimeout(() => {
-            fn();
-            setInfiniteFunctionHelper(fn, interval);
-        }, interval);
+    const setInfiniteFunctionHelper = (fn: () => void, interval: number, judgment: Judgment) => {
+        if (judgment === Judgment.HARAM) {
+            haramLightsAnimationTimeout.current = setTimeout(() => {
+                fn();
+                setInfiniteFunctionHelper(fn, interval, Judgment.HARAM);
+            }, interval);
+        } else if (judgment === Judgment.HALAL) {
+            halalLightsAnimationTimeout.current = setTimeout(() => {
+                fn();
+                setInfiniteFunctionHelper(fn, interval, Judgment.HALAL);
+            }, interval);
+        }
     }
 
-    const setInfiniteFunction = (fn: () => void, interval: number) => {
+    const setInfiniteFunction = (fn: () => void, interval: number, judgment: Judgment) => {
         fn();
-        setInfiniteFunctionHelper(fn, interval);
+        setInfiniteFunctionHelper(fn, interval, judgment);
     }
 
-    const setLightAnimations = (elementZero: HTMLElement | null, elementOne: HTMLElement | null, elementTwo: HTMLElement | null, colorZero: string, colorOne: string, colorTwo: string, offset: number) => {
+    const setLightAnimations = (elementZero: HTMLElement | null, elementOne: HTMLElement | null, elementTwo: HTMLElement | null, 
+                                    colorZero: string, colorOne: string, colorTwo: string, offset: number, judgment: Judgment) => {
         const switchElement = getSwitchElement();
 
         if (switchElement && elementZero && elementOne && elementTwo) {
@@ -209,7 +248,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                                 })
                         }   
                 }
-            }, 3000);
+            }, 3000, judgment);
         }
     }
     
@@ -451,11 +490,25 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     const switchDimensionPx = switchDimension + "px";
     const switchMarginTopPx = switchMargins + "px";
     const switchMarginLeftPx = halfSwitchMarginLeft + switchMargins + "px";
+
+    let haramPercentage = 0;
+    let halalPercentage = 0;
+
+    if (haramPoints !== undefined && halalPoints !== undefined && !isNaN(haramPoints) && 
+            !isNaN(halalPoints) && (halalPoints > 0 || haramPoints > 0)) {
+        haramPercentage = Math.round((haramPoints / (halalPoints + haramPoints)) * 100);
+        halalPercentage = 100 - haramPercentage;
+    }
+
+    const haramPercentageString = haramPercentage + "%";
+    const halalPercentageString = halalPercentage + "%";
+
+    const numVotesCalc = numVotes !== undefined ? numVotes : 0;
     
     return (
         <div className="voting-container" style={{maxWidth: votingContainerWidthPx}}>
             <div className="voting-label" style={{ color: '#452061' }}>{'Haram'}<br/>{'حرام'}</div>
-            <div id={votingSwitchContainerId} className="voting-switch-container" style={{height: switchContainerHeightPx, width: switchContainerWidthPx, borderRadius: switchContainerHeightPx}}>
+            <div id={votingSwitchContainerId} className="voting-switch-container" style={{height: switchContainerHeightPx, width: switchContainerWidthPx, borderRadius: switchContainerHeightPx}} data-tip={`Votes: ${numVotes}, Haram: ${numVotesCalc > 0 ? haramPercentageString : "N/A"}, Halal: ${numVotesCalc > 0 ? halalPercentageString : "N/A"}`} data-for="vote-breakdown-switch">
                 <div className="voting-area" onClick={clickHaramVotingArea} style={{height: switchContainerHeightPx, width: votingAreaWidthPx, borderRadius: `${switchContainerHeightPx} 0 0 ${switchContainerHeightPx}`}}>
                     <div id={`${votingAreaLightHaramId}-2`} style={{
                         height: `${switchContainerHeight * .5}px`, 
@@ -513,8 +566,9 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 <div id={switchId} className="voting-switch" style={{height: switchDimensionPx, width: switchDimensionPx, borderRadius: switchDimensionPx, marginLeft: switchMarginLeftPx, marginTop: switchMarginTopPx}}>
                     <div className="voting-switch-text">VOTE</div>
                 </div>
+                <ReactTooltip className="vote-breakdown-tooltip" id="vote-breakdown-switch" place="bottom" delayShow={100} effect="solid"/>
             </div>
-    <div className="voting-label" style={{ color: '#1f594f' }}>{'Halal'}<br/>{'حلال'}</div>
+            <div className="voting-label" style={{ color: '#1f594f' }}>{'Halal'}<br/>{'حلال'}</div>
         </div>
     )
 }

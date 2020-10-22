@@ -97,7 +97,6 @@
 
 .topic-votes-container {
     width: 100%;
-    height: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
     color: var(--gray);
 }
 
