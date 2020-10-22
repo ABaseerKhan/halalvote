@@ -247,3 +247,38 @@
   bottom: 0;
   color: white !important;
 }
+
+.like, .liked {
+  height: 22px;
+  width: 25px;
+  cursor: pointer;
+  stroke-width: 1px;
+}
+
+.like {
+  color: white;
+}
+
+.like:hover {
+  color: red !important;
+}
+
+.liked {
+  color: #cf003b;
+  stroke: #cf003b;
+  animation: like 0.5s ease-in-out forwards;
+}
+
+@keyframes like {
+  0% {
+      color: gray;
+      stroke: gray;
+      transform: scale(1);
+  }
+  50% {
+      transform: scale(0);
+  }
+  100% {
+      transform: scale(1);
+  }
+}
