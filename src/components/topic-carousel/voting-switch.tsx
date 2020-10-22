@@ -51,7 +51,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
             if (haramPoints > halalPoints) {
                 haramOffset = 0;
                 halalOffset = 500;
-            } else {
+            } else if (haramPoints < halalPoints) {
                 haramOffset = 500;
                 halalOffset = 0;
             }
