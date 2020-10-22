@@ -70,7 +70,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     
         setLightAnimations(votingAreaLightHalalElementZero, votingAreaLightHalalElementOne, votingAreaLightHalalElementTwo, 
                                 "#8D9F9C", "#9BBEB9", "#A9DDD6", halalOffset, Judgment.HALAL);// eslint-disable-next-line
-    }, [userVote, username, sessiontoken])
+    }, [halalPoints, haramPoints, username, sessiontoken])
 
     const votingSwitchContainerId = "voting-switch-container";
     const switchId = "voting-switch";
