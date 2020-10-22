@@ -32,35 +32,10 @@
     overflow-y: hidden;
 }
 
-.linear-wipe {
-    text-align: center;
-    width: fit-content;
-    margin: auto;
-    background: linear-gradient(to right, var(--light-neutral-color) 0%, var(--neutral-color) 10%, var(--neutral-color) 90%, var(--light-neutral-color) 100%);
-    background-size: 200% auto;
-    
-    color: #000;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    
-    animation: shine 3s infinite linear;
-}
-
-@keyframes shine {
-    to {
-        background-position: 200% center;
-    }
-}
-
 @keyframes jump {
     to {
         transform: translate(0, 0.3em);
     }
-}
-
-.topic-title:hover {
-    color: var(--light-neutral-color);
 }
 
 .carousel-button-left, .carousel-button-right {
