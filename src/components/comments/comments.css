@@ -82,6 +82,13 @@
     }
 }
 
+.no-comments-to-show-text {
+    position: absolute;
+    width: 100%;
+    top: calc(50% - 0.5em);
+    text-align: center;
+}
+
 .comments-container {
     position: relative;
     height: calc(100% - 4em - 20px);
