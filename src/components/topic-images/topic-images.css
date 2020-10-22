@@ -247,3 +247,38 @@
   bottom: 0;
   color: white !important;
 }
+
+.heart, .heart-liked {
+  height: 22px;
+  width: 25px;
+  cursor: pointer;
+  stroke-width: 1px;
+}
+
+.heart {
+  color: white;
+}
+
+.heart:hover {
+  color: gray !important;
+}
+
+.heart-liked {
+  color: #cf003b;
+  stroke: #cf003b;
+  animation: like 0.5s ease-in-out forwards;
+}
+
+@keyframes like {
+  0% {
+      color: gray;
+      stroke: gray;
+      transform: scale(1);
+  }
+  50% {
+      transform: scale(0);
+  }
+  100% {
+      transform: scale(1);
+  }
+}
