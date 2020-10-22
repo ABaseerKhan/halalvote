@@ -8,7 +8,6 @@ import { VotingSwitch } from './voting-switch';
 //style imports
 import './topic-carousel.css';
 import { useCookies } from 'react-cookie';
-import { VotesBar } from './votes-bar';
 import { TopicContext } from '../app-shell';
 
 interface TopicVotesComponentProps {
@@ -65,11 +64,6 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
             <VotingSwitch
                 submitVote={submitVote}
                 userVote={topic?.vote}
-            />
-            <VotesBar
-                halalPoints={topic?.halalPoints!}
-                haramPoints={topic?.haramPoints!}
-                numVotes={topic?.numVotes!}
             />
         </div>
     )

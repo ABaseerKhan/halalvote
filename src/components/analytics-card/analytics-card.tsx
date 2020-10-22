@@ -1,4 +1,5 @@
 import React from 'react';
+import { VotesBar } from './votes-bar';
 
 // type imports
 
@@ -6,13 +7,18 @@ import React from 'react';
 import './analytics-card.css';
 
 interface AnalyticsCardComponentProps {
-    id: string
+    id: string,
+    halalPoints: number,
+    haramPoints: number,
+    numVotes: number
 };
 
 export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
-    const { id } = props;
+    const { id, halalPoints, haramPoints, numVotes } = props;
 
     return (
-    <div id={id} className="analytics">{id}</div>
+    <div id={id} className="analytics">
+        <VotesBar halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes}></VotesBar>
+    </div>
     );
 }
