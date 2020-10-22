@@ -223,23 +223,26 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
     return(
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} >
-                <div id={commentsContainerId} className="comments-container">
-                    <div className={"comments-container-padding-div"}>
-                        {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
-                            state.comments.map((comment: Comment, i: number) => {
-                                return <CommentComponent 
-                                            key={comment.id} 
-                                            comment={comment}
-                                            path={[i]} 
-                                            pathToHighlightedComment={state.pathToHighlightedComment} 
-                                            highlightComment={highlightComment} 
-                                            fetchMoreReplies={fetchComments}
-                                            deleteComment={deleteComment}
-                                        />
-                            })
-                        }
-                    </div>
+                { !state.loading && state.commentsShowable && state.comments.length === 0 ?
+                    <div className="no-comments-to-show-text">No arguments to show</div> :
+                        <div id={commentsContainerId} className="comments-container">
+                        <div className={"comments-container-padding-div"}>
+                            {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
+                                state.comments.map((comment: Comment, i: number) => {
+                                    return <CommentComponent 
+                                                key={comment.id} 
+                                                comment={comment}
+                                                path={[i]} 
+                                                pathToHighlightedComment={state.pathToHighlightedComment} 
+                                                highlightComment={highlightComment} 
+                                                fetchMoreReplies={fetchComments}
+                                                deleteComment={deleteComment}
+                                            />
+                                })
+                            }
+                        </div>
                 </div>
+                }
                 <CommentMakerComponent 
                     ref={commentMakerRef}
                     submitComment={createComment} 
