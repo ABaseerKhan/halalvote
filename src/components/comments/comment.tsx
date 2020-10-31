@@ -8,6 +8,9 @@ import { postData } from '../../https-client/client';
 import { ReactComponent as UpSVG } from '../../icons/up-arrow.svg';
 import { ReactComponent as DownSVG } from '../../icons/down-arrow.svg';
 import ClipLoader from "react-spinners/ClipLoader";
+import { 
+    useHistory,
+} from "react-router-dom";
 
 // type imports
 import { Vote } from '../../types';
@@ -29,6 +32,7 @@ interface CommentComponentProps {
 export const CommentComponent = (props: CommentComponentProps) => {
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
+    const history = useHistory();
 
     const [state, setState] = useState({
         comment: props.comment,
@@ -94,6 +98,14 @@ export const CommentComponent = (props: CommentComponentProps) => {
 
     let commentContentClass = isHighlighted ? "comment-content-highlighted" : "comment-content";
 
+    const onUserClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.preventDefault();
+        event.stopPropagation();
+        history.push({
+            search: "?" + new URLSearchParams({userProfile: props.comment.username}).toString()
+        });
+    };
+
     return (
         <div id={`comment-${state.comment.id}`} className={"comment-container"}>
             <div className="comment-bubble-container">
@@ -115,7 +127,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                         }
                     }}
                 >
-                    <div className="username">{props.comment.username}</div>
+                    <div className="username" onClick={onUserClick}>{props.comment.username}</div>
                     <div className="comment">
                         <div style={{ maxWidth: 'calc(100% - 50px)' }} dangerouslySetInnerHTML={{__html: props.comment.comment}}/>
                     </div>

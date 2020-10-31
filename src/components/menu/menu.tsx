@@ -40,7 +40,6 @@ export const MenuComponent = (props: MenuComponentProps) => {
     const history = useHistory();
     const query = useQuery();
     const userProfile = query.get("userProfile") || undefined;
-    console.log(userProfile);
     // eslint-disable-next-line
     const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken']);
     const { username } = cookies;

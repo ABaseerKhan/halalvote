@@ -12,6 +12,9 @@ import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 import { getImageDimensionsFromSource } from '../../utils';
 import { resizeImage } from '../../utils';
+import { 
+    useHistory,
+} from "react-router-dom";
 
 // type imports
 import { TopicImages } from '../../types';
@@ -45,6 +48,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     });
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
+    const history = useHistory();
 
     useEffect(() => {
         if (topicTitle) { 
@@ -189,6 +193,14 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }
     }
 
+    const onUserClick = (user: string) => (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.preventDefault();
+        event.stopPropagation();
+        history.push({
+            search: "?" + new URLSearchParams({userProfile: user}).toString()
+        });
+    };
+
     const ImageNavigator = (
         <div id="images-body" className="images-body">
             {
@@ -198,7 +210,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         const ImgStats = 
                         <>
                             <div className="image-actions-container">
-                                <div className="image-username">{"@" + topicImg.username}</div>
+                                <div className="image-username" onClick={onUserClick(topicImg.username)}>{"@" + topicImg.username}</div>
                                 {
                                     isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
                                 }

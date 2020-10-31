@@ -169,10 +169,16 @@
 }
 
 .username {
+    width: fit-content;
     font-family: proxima-semibold, PingFangSC, sans-serif;
     font-weight: 600;
     font-size: 18px;
     color: black;
+}
+
+.username:hover {
+    cursor: pointer;
+    color: var(--link-color);
 }
 
 .comment {
