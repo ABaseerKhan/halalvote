@@ -16,6 +16,12 @@
   height: 100%;
   width: 100%;
   scroll-snap-align: start;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.image-body::-webkit-scrollbar {
+  display: none;
 }
 
 .image-navigator-button {
