@@ -29,6 +29,19 @@ enum IncomingDirection {
   NONE
 }
 
+const appShellId = "app-shell";
+const topicContentId = "topic-content";
+const topicCarouselId = "topicCarousel";
+const pageZeroId = "Search";
+const pageOneId = "Topics";
+const cardsShellContainerId = "cards-shell-container";
+
+const getAppShell = () => { return document.getElementById(appShellId); }
+const getTopicCarousel = () => { return document.getElementById(topicCarouselId); }
+const getPageZero = () => { return document.getElementById(pageZeroId); }
+const getPageOne = () => { return document.getElementById(pageOneId); }
+const getCardsShellContainer = () => { return document.getElementById(cardsShellContainerId); }
+
 export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<{ topicDetails: {topics: Topic[]; topicIndex: number}; scrollPosition: number, specificComment?: Comment, incomingDirection: IncomingDirection }>({
     topicDetails: {
@@ -167,19 +180,6 @@ export const AppShellComponent = (props: any) => {
       cardsShellContainer.style.opacity = "1.0";
     }
   }
-
-  const appShellId = "app-shell";
-  const topicContentId = "topic-content";
-  const topicCarouselId = "topicCarousel";
-  const pageZeroId = "Search";
-  const pageOneId = "Topics";
-  const cardsShellContainerId = "cards-shell-container";
-
-  const getAppShell = () => { return document.getElementById(appShellId); }
-  const getTopicCarousel = () => { return document.getElementById(topicCarouselId); }
-  const getPageZero = () => { return document.getElementById(pageZeroId); }
-  const getPageOne = () => { return document.getElementById(pageOneId); }
-  const getCardsShellContainer = () => { return document.getElementById(cardsShellContainerId); }
 
   const animationCallback = useCallback((state: any, iteration: any, setState: any, fetchTopics: any) => () => {
     const incomingDirection = iteration === 0 ? IncomingDirection.NONE : iteration > 0 ? IncomingDirection.RIGHT : IncomingDirection.LEFT;
