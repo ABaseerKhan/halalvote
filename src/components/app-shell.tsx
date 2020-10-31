@@ -62,6 +62,7 @@ export const AppShellComponent = (props: any) => {
   );
 
   const { topicTitle } = useParams();
+  topicTitle?.replace(/_/g, ' ');
   const [cookies] = useCookies(['username', 'sessiontoken']);
   const { username, sessiontoken } = cookies;
 
@@ -161,10 +162,11 @@ export const AppShellComponent = (props: any) => {
     }
     if (data && data.length) { 
       if (props.match.path === "/") {
-        props.history.push(`${data[0].topicTitle}`);
+        props.history.push(`${data[0].topicTitle.replace(/ /g,"_")}`);
       } else {
         props.history.push({
-          pathname: generatePath(props.match.path, { topicTitle: data[0].topicTitle })
+          pathname: generatePath(props.match.path, { topicTitle: data[0].topicTitle.replace(/ /g,"_") }),
+          search: props.location.search
         });
       }
     }
@@ -186,7 +188,7 @@ export const AppShellComponent = (props: any) => {
     if ((state.topicDetails.topicIndex + iteration) < state.topicDetails.topics.length && (state.topicDetails.topicIndex + iteration) >= 0) {
       setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }, incomingDirection: incomingDirection});
       props.history.push({
-        pathname: generatePath(props.match.path, { topicTitle: state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle })
+        pathname: generatePath(props.match.path, { topicTitle: state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle.replace(/ /g,"_") })
       });
     } else if ((state.topicDetails.topicIndex + iteration) === state.topicDetails.topics.length) {
       fetchTopics();

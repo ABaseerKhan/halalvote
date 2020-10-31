@@ -26,11 +26,13 @@ export const modalWidthVw = (isMobile: boolean): number => isMobile ? 80 : 40;
 export const modalMaxHeight = window.innerHeight - (Math.max(elementStyles.maxTopicCarouselHeightPx, vhToPixels(elementStyles.topicCarouselHeightVh)) + vhToPixels(10));
 export const modalMaxWidth = 800;
 
+export const Portal = ({children} : {children: ReactNode}) => ReactDOM.createPortal(children, document.getElementById("portal") || document.createElement("portal"));
+
 ReactDOM.render(
   <CookiesProvider >
     <Router >
       <Switch>
-        <Route exact path={["/", "/:topicTitle", "/:topicTitle/:username"]} component={AppShellComponent} />
+        <Route exact path={["/", "/:topicTitle"]} component={AppShellComponent} />
       </Switch>
     </Router>
     <div id="login-portal"></div>
@@ -38,5 +40,3 @@ ReactDOM.render(
   </CookiesProvider>,
   document.getElementById('root')
 );
-
-export const Portal = ({children} : {children: ReactNode}) => ReactDOM.createPortal(children, document.getElementById("portal") || document.createElement("portal"));

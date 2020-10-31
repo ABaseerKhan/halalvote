@@ -1,14 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ModalComponent } from '../modal/modal';
 import { useMedia } from '../../hooks/useMedia';
 import { useCookies } from 'react-cookie';
 import { Portal } from '../../index';
+import { 
+    useHistory,
+} from "react-router-dom";
 
 // type imports
 import { ModalType, MenuLocation } from '../../types';
 
 // styles
 import './menu.css';
+import { useQuery } from '../../hooks/useQuery';
+
+const menuHeight = 72;
+const menuWidth = 72;
+const menuWidthExpanded = 150;
+const menuButtonWidth = 40;
+const menuButtonInteriorWidth = 24;
+const menuButtonWidthExpanded = 118;
+const menuButtonInteriorWidthExpanded = 102;
+
+const menuId = "menu";
+const menuButtonId = "menu-button";
+const menuButtonInteriorId = "menu-button-interior";
 
 interface MenuComponentProps {
     fetchTopics: any,
@@ -18,10 +34,13 @@ interface MenuComponentState {
     menuLocation: MenuLocation, 
     loginDisplayed: boolean, 
     addTopicDisplayed: boolean,
-    accountDisplayed: boolean,
 }
 export const MenuComponent = (props: MenuComponentProps) => {
     const { fetchTopics } = props;
+    const history = useHistory();
+    const query = useQuery();
+    const userProfile = query.get("userProfile") || undefined;
+    console.log(userProfile);
     // eslint-disable-next-line
     const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken']);
     const { username } = cookies;
@@ -30,7 +49,6 @@ export const MenuComponent = (props: MenuComponentProps) => {
         menuLocation: MenuLocation.NONE,
         loginDisplayed: false,
         addTopicDisplayed: false,
-        accountDisplayed: false,
     });
 
     const isMobile = useMedia(
@@ -40,18 +58,6 @@ export const MenuComponent = (props: MenuComponentProps) => {
         // default value
         false
     );
-
-    const menuHeight = 72;
-    const menuWidth = 72;
-    const menuWidthExpanded = 150;
-    const menuButtonWidth = 40;
-    const menuButtonInteriorWidth = 24;
-    const menuButtonWidthExpanded = 118;
-    const menuButtonInteriorWidthExpanded = 102;
-
-    const menuId = "menu";
-    const menuButtonId = "menu-button";
-    const menuButtonInteriorId = "menu-button-interior";
 
     useEffect(() => {
         const menu = document.getElementById(menuId);
@@ -82,6 +88,18 @@ export const MenuComponent = (props: MenuComponentProps) => {
         } // eslint-disable-next-line
     }, [state.menuLocation]);
 
+    const updateUrl = useCallback((userProfile) => {
+        if (userProfile) {
+            history.push({
+                search: "?" + new URLSearchParams({userProfile: userProfile}).toString()
+            });
+        } else {
+            history.push({
+                search: ''
+            });
+        }
+    }, [history]);
+
     const usernameExists = () => {
         return username && username !== "";
     }
@@ -95,7 +113,13 @@ export const MenuComponent = (props: MenuComponentProps) => {
     }
 
     const setAccountDisplayed = (accountDisplayed: boolean) => {
-        closeMenu({...state, menuLocation: MenuLocation.NONE, accountDisplayed: accountDisplayed}, () => {});
+        closeMenu({...state, menuLocation: MenuLocation.NONE}, () => { 
+            if (accountDisplayed) {
+                updateUrl(username);
+            } else {
+                updateUrl(undefined);
+            };
+        });
     }
 
     const setMenuLocation = (menuLocation: MenuLocation) => {
@@ -306,14 +330,14 @@ export const MenuComponent = (props: MenuComponentProps) => {
             { state.addTopicDisplayed &&
                 <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_TOPIC} fetchTopics={fetchTopics}/></Portal>
             }
-            { state.accountDisplayed &&
-                <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT} fetchTopics={fetchTopics} showSpecificComment={props.showSpecificComment} accountUsername={username}/></Portal>
+            { userProfile &&
+                <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT} fetchTopics={fetchTopics} showSpecificComment={props.showSpecificComment} accountUsername={userProfile}/></Portal>
             }
             {
                 state.menuLocation !== MenuLocation.NONE && 
                     <ul className="menu-items-list" style={{padding: state.menuLocation === MenuLocation.UPPER_LEFT || state.menuLocation === MenuLocation.UPPER_RIGHT ? "24px 0 72px 0" : "72px 0 24px 0"}}>
                         <li className="menu-item" onClick={() => {setAddTopicDisplayed(true)}}>Add Topic</li>
-                        {usernameExists() && <li className="menu-item" onClick={() => {setAccountDisplayed(true)}}>Account</li>}
+                        {usernameExists() && <li className="menu-item" onClick={() => setAccountDisplayed(true)}>Account</li>}
                         <li className="menu-item" onClick={login}>
                             { usernameExists() ? "Logout" : "Login" }
                         </li>
