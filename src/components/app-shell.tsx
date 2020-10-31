@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PageScrollerComponent } from './page-scroller/page-scroller';
 import { TopicCarouselComponent } from './topic-carousel/topic-carousel';
 import { SearchComponent } from './search/search';
@@ -11,6 +11,10 @@ import { arrayMove, vhToPixels, vwToPixels } from "../utils";
 import { useCookies } from 'react-cookie';
 import { CardsShellComponent } from './cards-shell/cards-shell';
 import { CommentsCardComponent } from './comments/comments-card';
+import {
+  useParams,
+  generatePath
+} from "react-router-dom";
 
 // type imports
 
@@ -44,7 +48,8 @@ export const AppShellComponent = (props: any) => {
     false
   );
 
-  const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken', 'topicTitle']);
+  const { topicTitle } = useParams();
+  const [cookies] = useCookies(['username', 'sessiontoken']);
   const { username, sessiontoken } = cookies;
 
   useEffect(() => {
@@ -65,7 +70,7 @@ export const AppShellComponent = (props: any) => {
       state.topicDetails.topics = [state.topicDetails.topics[indexOfTopicToFetch]];
       state.topicDetails.topicIndex = 0;
     }
-    fetchTopics(cookies.topicTitle || undefined);// eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchTopics((topicTitle) || undefined); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessiontoken]);
 
   useEffect(() => {
@@ -141,9 +146,14 @@ export const AppShellComponent = (props: any) => {
     } else {
       setState(s => ({ ...s, topicDetails: {...s.topicDetails, topics: [...s.topicDetails.topics, ...data] }}));
     }
-    if (data && data.length) setCookie('topicTitle', data[0].topicTitle);
-    else {
-      removeCookie("topicTitle");
+    if (data && data.length) { 
+      if (props.match.path === "/") {
+        props.history.push(`${data[0].topicTitle}`);
+      } else {
+        props.history.push({
+          pathname: generatePath(props.match.path, { topicTitle: data[0].topicTitle })
+        });
+      }
     }
   }
 
@@ -171,25 +181,28 @@ export const AppShellComponent = (props: any) => {
   const getPageOne = () => { return document.getElementById(pageOneId); }
   const getCardsShellContainer = () => { return document.getElementById(cardsShellContainerId); }
 
+  const animationCallback = useCallback((state: any, iteration: any, setState: any, fetchTopics: any) => () => {
+    const incomingDirection = iteration === 0 ? IncomingDirection.NONE : iteration > 0 ? IncomingDirection.RIGHT : IncomingDirection.LEFT;
+    if ((state.topicDetails.topicIndex + iteration) < state.topicDetails.topics.length && (state.topicDetails.topicIndex + iteration) >= 0) {
+      setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }, incomingDirection: incomingDirection});
+      props.history.push({
+        pathname: generatePath(props.match.path, { topicTitle: state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle })
+      });
+    } else if ((state.topicDetails.topicIndex + iteration) === state.topicDetails.topics.length) {
+      fetchTopics();
+      setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }, incomingDirection: incomingDirection});
+    }
+  }, [props.match.path, props.history]);
+
   const iterateTopic = (iteration: number) => () => {
     const cardsShellContainer = getCardsShellContainer();
 
     if (cardsShellContainer) {
-      const animationCallback = (state: any, iteration: any, setState: any, setCookie: any, fetchTopics: any) => () => {
-        const incomingDirection = iteration === 0 ? IncomingDirection.NONE : iteration > 0 ? IncomingDirection.RIGHT : IncomingDirection.LEFT;
-        if ((state.topicDetails.topicIndex + iteration) < state.topicDetails.topics.length && (state.topicDetails.topicIndex + iteration) >= 0) {
-          setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }, incomingDirection: incomingDirection});
-          setCookie("topicTitle", state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle);
-        } else if ((state.topicDetails.topicIndex + iteration) === state.topicDetails.topics.length) {
-          fetchTopics();
-          setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }, incomingDirection: incomingDirection});
-        }
-      };
       if (iteration === 1) {
-        animateNextTopic(cardsShellContainer, animationCallback(state, iteration, setState, setCookie, fetchTopics));
+        animateNextTopic(cardsShellContainer, animationCallback(state, iteration, setState, fetchTopics));
       }
       if (iteration === -1) {
-        animatePrevTopic(cardsShellContainer, animationCallback(state, iteration, setState, setCookie, fetchTopics));
+        animatePrevTopic(cardsShellContainer, animationCallback(state, iteration, setState, fetchTopics));
       }
     }
   };
@@ -202,7 +215,6 @@ export const AppShellComponent = (props: any) => {
   const setTopic = (newTopic: Topic) => setState(prevState => ({ ...prevState, topicDetails: { ...prevState.topicDetails, topics: prevState.topicDetails.topics.map((topic, idx) => { if(idx === prevState.topicDetails.topicIndex) return newTopic; return topic; })}}))
   const nextTopic = (state.topicDetails.topics.length > 0) && (state.topicDetails.topicIndex < state.topicDetails.topics.length) ? state.topicDetails.topics[state.topicDetails.topicIndex + 1] : undefined;
   const prevTopic = (state.topicDetails.topics.length > 0) && (state.topicDetails.topicIndex >= 0) ? state.topicDetails.topics[state.topicDetails.topicIndex - 1] : undefined;
-  const topicTitle = topic?.topicTitle !== undefined ? topic.topicTitle : "";
   const halalPoints = topic?.halalPoints !== undefined ? topic.halalPoints : 0;
   const haramPoints = topic?.haramPoints !== undefined ? topic.haramPoints : 0;
   const numTopicVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
@@ -233,14 +245,14 @@ export const AppShellComponent = (props: any) => {
         <SearchComponent onSuggestionClick={searchTopic} />
         <TopicContext.Provider value={{ topic: topic, setTopic: setTopic }}>
           <div id={topicContentId} className={topicContentId}>
-            <div key={topicTitle} id={cardsShellContainerId} className={cardsShellContainerId}>
+            <div key={topic?.topicTitle} id={cardsShellContainerId} className={cardsShellContainerId}>
               <CardsShellComponent
-                mediaCard={<TopicImagesComponent topicTitle={topicTitle} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
+                mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
                 commentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                 analyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
               />
             </div>
-            <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topicTitle} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
+            <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topic?.topicTitle || ""} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
           </div>
         </TopicContext.Provider>
         <div className="fixed-content">

@@ -2,6 +2,11 @@ import React, {ReactNode} from 'react';
 import ReactDOM from 'react-dom';
 import { AppShellComponent } from './components/app-shell';
 import { CookiesProvider } from 'react-cookie';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 
 // type imports
 
@@ -23,7 +28,11 @@ export const modalMaxWidth = 800;
 
 ReactDOM.render(
   <CookiesProvider >
-    <AppShellComponent/>
+    <Router >
+      <Switch>
+        <Route exact path={["/", "/:topicTitle", "/:topicTitle/:username"]} component={AppShellComponent} />
+      </Switch>
+    </Router>
     <div id="login-portal"></div>
     <div id="portal"></div>
   </CookiesProvider>,
