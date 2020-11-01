@@ -18,6 +18,7 @@ import { Vote } from '../../types';
 // style imports
 import './comments.css';
 import { useCookies } from 'react-cookie';
+import { useQuery } from '../../hooks/useQuery';
 
 interface CommentComponentProps {
     key: number,
@@ -32,6 +33,7 @@ interface CommentComponentProps {
 export const CommentComponent = (props: CommentComponentProps) => {
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
+    const query = useQuery();
     const history = useHistory();
 
     const [state, setState] = useState({
@@ -101,8 +103,9 @@ export const CommentComponent = (props: CommentComponentProps) => {
     const onUserClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.preventDefault();
         event.stopPropagation();
+        query.set('userProfile', props.comment.username);
         history.push({
-            search: "?" + new URLSearchParams({userProfile: props.comment.username}).toString()
+            search: "?" + query.toString()
         });
     };
 

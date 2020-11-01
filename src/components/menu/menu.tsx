@@ -89,15 +89,20 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
     const updateUrl = useCallback((userProfile) => {
         if (userProfile) {
-            history.push({
-                search: "?" + new URLSearchParams({userProfile: userProfile}).toString()
-            });
+            if (query.has('userProfile')) {
+                query.set('userProfile', userProfile);
+            } else {
+                query.append('userProfile', userProfile);
+            };
         } else {
-            history.push({
-                search: ''
-            });
+            if (query.has('userProfile')) {
+                query.delete('userProfile');
+            }
         }
-    }, [history]);
+        history.push({
+            search: "?" + query.toString()
+        });
+    }, [history, query]);
 
     const usernameExists = () => {
         return username && username !== "";

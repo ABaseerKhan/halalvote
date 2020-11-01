@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
+import { 
+    useHistory,
+} from "react-router-dom";
 
 // styles
 import './account.css';
 import { getData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
 import { Topic, Comment } from '../../types';
-import { timeSince, vhToPixels } from '../../utils';
+import { timeSince, vhToPixels, setCardQueryParam } from '../../utils';
 import { modalHeightVh, modalMaxHeight } from '../../';
+import { commentsCardId } from '../cards-shell/cards-shell';
+import { useQuery } from '../../hooks/useQuery';
+
 
 enum Tab {
     CREATEDTOPICS,
@@ -150,6 +156,8 @@ interface UserCommentProps {
 }
 const UserComment = (props: UserCommentProps) => {
     const { comment, showSpecificComment, fetchTopics, closeModal } = props;
+    const query = useQuery();
+    const history = useHistory();
 
     return (
         <div className="user-comment-container">
@@ -160,7 +168,7 @@ const UserComment = (props: UserCommentProps) => {
                 <div className="comment-body">
                     <div 
                         className={"comment-content"}
-                        onClick={async (e) => { await fetchTopics(comment.topicTitle); showSpecificComment(comment); closeModal(); }}
+                        onClick={async (e) => { setCardQueryParam(history, query, commentsCardId); await fetchTopics(comment.topicTitle); showSpecificComment(comment); closeModal(); }}
                     >
                         <div className="username" style={{ color: 'var(--site-background-color)' }}>{comment.username}</div>
                         <div className="comment" style={{ color: 'var(--site-background-color)' }}>

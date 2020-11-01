@@ -1,11 +1,16 @@
 import React, { useEffect, useRef, ReactElement, useState } from 'react';
+import './cards-shell.css';
+import { useMedia } from '../../hooks/useMedia';
+import { useQuery } from '../../hooks/useQuery';
+import { 
+  useHistory,
+} from "react-router-dom";
+import { setCardQueryParam } from '../../utils';
 // import { useMedia } from '../../hooks/useMedia';
 
 // type imports
 
 // styles
-import './cards-shell.css';
-import { useMedia } from '../../hooks/useMedia';
 
 const x1 = .25, y1 = .1, x2 = .25, y2 = 1;
 const x1r = 1-x2, y1r = 1-y2, x2r = 1-x1, y2r = 1-y1;
@@ -13,6 +18,10 @@ const x1r = 1-x2, y1r = 1-y2, x2r = 1-x1, y2r = 1-y1;
 const DURATION = 300;
 const EASEAPART = `cubic-bezier(${x1},${y1},${x2},${y2})`;
 const EASECLOSER = `cubic-bezier(${x1r},${y1r},${x2r},${y2r})`;
+
+export const mediaCardId = "CANVAS";
+export const commentsCardId = "ARGUMENTS";
+export const analyticsCardId = "ANALYTICS";
 
 interface CardsShellComponentProps {
     mediaCard: ReactElement,
@@ -23,13 +32,26 @@ interface CardsShellComponentProps {
 export const CardsShellComponent = (props: CardsShellComponentProps) => {
     const { mediaCard, commentsCard, analyticsCard } = props;
 
-    const mediaCardId = "CANVAS";
-    const commentsCardId = "ARGUMENTS";
-    const analyticsCardId = "ANALYTICS";
-
+    const history = useHistory();
+    const query = useQuery();
+    const topCard = query.get("card") || undefined;
     // eslint-disable-next-line
     const [state, setState] = useState({});
-    let positions = useRef<string[]>([mediaCardId, commentsCardId, analyticsCardId]);
+    let orderedCards;
+    switch(topCard) {
+      case mediaCardId:
+        orderedCards = [mediaCardId, commentsCardId, analyticsCardId];
+        break;
+      case commentsCardId:
+        orderedCards = [commentsCardId, analyticsCardId, mediaCardId];
+        break;
+      case analyticsCardId:
+        orderedCards = [analyticsCardId, mediaCardId, commentsCardId];
+        break;
+      default:
+        orderedCards = [mediaCardId, commentsCardId, analyticsCardId];
+    };
+    let positions = useRef<string[]>(orderedCards);
     let canFlip = useRef<boolean>(false);
 
     const createCardElement = (id: string, body: ReactElement, index: number) => {
@@ -42,9 +64,9 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
       );
     };
 
-    const mediaCardElement = createCardElement(mediaCardId, React.cloneElement(mediaCard, { shown: positions.current[0] === mediaCardId }), 0);
-    const commentsCardElement = createCardElement(commentsCardId, commentsCard, 1);
-    const analyticsCardElement = createCardElement(analyticsCardId, analyticsCard, 2);
+    const mediaCardElement = createCardElement(mediaCardId, React.cloneElement(mediaCard, { shown: positions.current[0] === mediaCardId }), positions.current.indexOf(mediaCardId));
+    const commentsCardElement = createCardElement(commentsCardId, commentsCard, positions.current.indexOf(commentsCardId));
+    const analyticsCardElement = createCardElement(analyticsCardId, analyticsCard, positions.current.indexOf(analyticsCardId));
 
     const isMobile = useMedia(
       // Media queries
@@ -61,25 +83,25 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
     }, []);
 
     const setCards = () => {
-      const commentsCard = document.getElementById(commentsCardId);
-      const analyticsCard = document.getElementById(analyticsCardId);
+      const leftCard = document.getElementById(positions.current[1]);
+      const rightCard = document.getElementById(positions.current[2]);
 
-      const commentsCardCover = document.getElementById(`${commentsCardId}-cover`);
-      const analyticsCardCover = document.getElementById(`${analyticsCardId}-cover`);
+      const leftCardCover = document.getElementById(`${positions.current[1]}-cover`);
+      const rightCardCover = document.getElementById(`${positions.current[2]}-cover`);
 
-      const commentsCardLabel = document.getElementById(`${commentsCardId}-label`);
-      const analyticsCardLabel = document.getElementById(`${analyticsCardId}-label`);
+      const leftCardLabel = document.getElementById(`${positions.current[1]}-label`);
+      const rightCardLabel = document.getElementById(`${positions.current[2]}-label`);
 
-      if (commentsCard && analyticsCard && commentsCardCover && analyticsCardCover && commentsCardLabel && analyticsCardLabel) {
-        commentsCardLabel.style.right = 'unset';
-        commentsCardLabel.style.left = '1vw';
-        commentsCardLabel.style.transform = 'rotate(-180deg)';
+      if (leftCard && rightCard && leftCardCover && rightCardCover && leftCardLabel && rightCardLabel) {
+        leftCardLabel.style.right = 'unset';
+        leftCardLabel.style.left = '1vw';
+        leftCardLabel.style.transform = 'rotate(-180deg)';
 
-        analyticsCardLabel.style.right = '1vw';
-        analyticsCardLabel.style.left = 'unset';
-        analyticsCardLabel.style.transform = 'unset';
+        rightCardLabel.style.right = '1vw';
+        rightCardLabel.style.left = 'unset';
+        rightCardLabel.style.transform = 'unset';
 
-        commentsCard.animate([
+        leftCard.animate([
           {
             marginLeft: `-5vw`,
             transform:'scale(.95)'
@@ -91,7 +113,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
         }).onfinish = () => {
           canFlip.current = true;
         };
-        analyticsCard.animate([
+        rightCard.animate([
           {
             marginLeft: `5vw`,
             transform:'scale(.95)'
@@ -101,7 +123,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
             easing: EASEAPART,
             fill: "forwards"
         });
-        commentsCardCover.animate([
+        leftCardCover.animate([
           {
             opacity: '1'
           }
@@ -110,7 +132,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
             easing: EASEAPART,
             fill: "forwards"
         });
-        analyticsCardCover.animate([
+        rightCardCover.animate([
           {
             opacity: '1'
           }
@@ -124,6 +146,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
 
     const selectCard = (cardId: string) => {
       if (canFlip.current) {
+        setCardQueryParam(history, query, cardId);
         canFlip.current = false;
         makeRoom(cardId, () => {
           rotate(cardId, () => {

@@ -21,6 +21,7 @@ import { TopicImages } from '../../types';
 
 // styles
 import './topic-images.css';
+import { useQuery } from '../../hooks/useQuery';
 
 interface TopicImagesComponentProps {
     topicTitle: string,
@@ -49,6 +50,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
     const history = useHistory();
+    const query = useQuery();
 
     useEffect(() => {
         if (topicTitle) { 
@@ -196,8 +198,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const onUserClick = (user: string) => (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.preventDefault();
         event.stopPropagation();
+        
+        query.set('userProfile', user);
         history.push({
-            search: "?" + new URLSearchParams({userProfile: user}).toString()
+            search: "?" + query.toString()
         });
     };
 

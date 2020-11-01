@@ -188,13 +188,14 @@ export const AppShellComponent = (props: any) => {
     if ((state.topicDetails.topicIndex + iteration) < state.topicDetails.topics.length && (state.topicDetails.topicIndex + iteration) >= 0) {
       setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }, incomingDirection: incomingDirection});
       props.history.push({
-        pathname: generatePath(props.match.path, { topicTitle: state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle.replace(/ /g,"_") })
+        pathname: generatePath(props.match.path, { topicTitle: state.topicDetails.topics[state.topicDetails.topicIndex + iteration].topicTitle.replace(/ /g,"_") }),
+        search: props.location.search
       });
     } else if ((state.topicDetails.topicIndex + iteration) === state.topicDetails.topics.length) {
       fetchTopics();
       setState({ ...state, topicDetails: {...state.topicDetails, topicIndex: state.topicDetails.topicIndex + iteration }, incomingDirection: incomingDirection});
     }
-  }, [props.match.path, props.history]);
+  }, [props.match.path, props.history, props.location.search]);
 
   const iterateTopic = (iteration: number) => () => {
     const cardsShellContainer = getCardsShellContainer();
