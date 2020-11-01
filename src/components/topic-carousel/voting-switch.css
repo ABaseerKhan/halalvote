@@ -55,3 +55,27 @@
     margin-top: auto;
     margin-bottom: auto;
 }
+
+.number-haram, .number-halal {
+    width: 3.5em;
+    height: 3.5em;
+    margin-top: auto;
+    margin-bottom: auto;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 3.5em;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.number-haram {
+    margin-left: auto;
+    background: var(--haram-color);
+    color: #602d86;
+}
+
+.number-halal {
+    margin-right: auto;
+    background: var(--halal-color);
+    color: #1c4d44;
+}
