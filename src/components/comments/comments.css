@@ -80,6 +80,19 @@
     .delete-button {
         font-size: 8px !important;
     }
+
+    .comment-maker-input {
+        font-size: 12px !important;
+    }
+    
+    .comment-maker-input .ql-container {
+        font-size: 12px !important;
+    }
+
+    .ql-toolbar button {
+        height: 20px !important;
+        padding: 3px 2px !important;
+    }
 }
 
 .no-comments-to-show-text {
