@@ -10,6 +10,14 @@
   background: black;
 }
 
+.images-body::-webkit-scrollbar {
+  width: 0px;  /* Remove scrollbar space */
+}
+/* Optional: show position indicator in red */
+.images-body::-webkit-scrollbar-thumb {
+  background: rgb(195, 195, 12);
+}
+
 .image-container {
   display: flex;
   position: relative;

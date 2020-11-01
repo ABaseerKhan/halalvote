@@ -43,7 +43,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
 
     useEffect(() => {
         setState(prevState => ({ ...prevState, comment: props.comment }));
-    }, [props.comment]);
+    }, [props.comment, sessiontoken]);
 
     // eslint-disable-next-line
     const hideReplies = () => {

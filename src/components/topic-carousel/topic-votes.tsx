@@ -61,6 +61,7 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
 
     return (
         <div className={"topic-votes-container"}>
+            <div key={`${topic?.topicTitle || ''}-0`} className="number-haram">{topic?.haramPoints}</div>
             <VotingSwitch
                 submitVote={submitVote}
                 userVote={topic?.vote}
@@ -68,6 +69,7 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                 haramPoints={topic?.haramPoints}
                 numVotes={topic?.numVotes}
             />
+            <div key={`${topic?.topicTitle || ''}-1`} className="number-halal">{topic?.halalPoints}</div>
         </div>
     )
 };

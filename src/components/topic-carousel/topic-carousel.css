@@ -71,6 +71,7 @@
 }
 
 .topic-votes-container {
+    display: flex;
     width: 100%;
     color: var(--gray);
 }
@@ -99,6 +100,37 @@
 .topic-vote-text-right {
     right: 26vw;
     border-radius: 10px 50px 50px 10px;
+    color: #1c4d44;
+}
+
+.number-haram, .number-halal {
+    width: 3.5em;
+    height: 3.5em;
+    margin-top: auto;
+    margin-bottom: auto;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 3.5em;
+    font-weight: 600;
+    transform: scale(0);
+    animation: appear 0.3s ease-in-out forwards;
+}
+
+@keyframes appear {
+    to {
+        transform: scale(1);
+    }
+}
+
+.number-haram {
+    margin-left: auto;
+    background: var(--haram-color);
+    color: #602d86;
+}
+
+.number-halal {
+    margin-right: auto;
+    background: var(--halal-color);
     color: #1c4d44;
 }
 
