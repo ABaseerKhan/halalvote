@@ -79,3 +79,28 @@
     background: var(--halal-color);
     color: #1c4d44;
 }
+
+@media only screen and (max-width: 600px) {
+    .voting-label {
+        position: relative;
+        text-align: center;
+        width: 60px;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        font-weight: 600;
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+    .voting-switch-text {
+        font-size: 0.7em;
+        line-height: 1.2em;
+    }
+
+    .number-haram, .number-halal {
+        width: 3.5em;
+        height: 3.5em;
+        line-height: 3.5em;
+        font-size: 9px;
+        font-weight: 600;
+    }
+}

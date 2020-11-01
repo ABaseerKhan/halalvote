@@ -7,6 +7,7 @@ import { Judgment } from '../../types';
 
 //style imports
 import './voting-switch.css';
+import { useMedia } from '../../hooks/useMedia';
 
 type VotingSwitchProps = {
     submitVote: (value: number) => void,
@@ -16,6 +17,14 @@ type VotingSwitchProps = {
     numVotes: number | undefined
 };
 export const VotingSwitch = (props: VotingSwitchProps) => {
+    const isMobile = useMedia(
+        // Media queries
+        ['(max-width: 600px)'],
+        [true],
+        // default value
+        false
+    );
+
     const [cookies] = useCookies(['username', 'sessiontoken']);
 
     const { username, sessiontoken } = cookies;
@@ -253,8 +262,8 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     }
     
     const switchTime = 50;
-    const switchContainerWidth = 225; // pixels
-    const switchContainerHeight = Math.round(switchContainerWidth / 5) // pixels
+    const switchContainerWidth = isMobile ? 150 : 225; // pixels
+    const switchContainerHeight = Math.round(switchContainerWidth / (isMobile ? 3.5 : 5)) // pixels
     const totalSwitchMarginLeft = switchContainerWidth - switchContainerHeight; // pixels
     const halfSwitchMarginLeft = Math.round(totalSwitchMarginLeft / 2); // pixels
     const switchMargins = 2; // pixels
@@ -505,8 +514,8 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     
     return (
         <div className="voting-container" >
-            <div className="number-haram">{haramPoints}</div>
-            <div className="voting-label" style={{ color: '#452061' }}>{'Haram'}<br/>{'حرام'}</div>
+            {<div className="number-haram">{haramPoints}</div>}
+            {<div className="voting-label" style={{ color: '#452061' }}>{'Haram'}<br/>{'حرام'}</div>}
             <div id={votingSwitchContainerId} className="voting-switch-container" style={{height: switchContainerHeightPx, width: switchContainerWidthPx, borderRadius: switchContainerHeightPx}} data-tip={`Votes: ${numVotes}, Haram: ${numVotesCalc > 0 ? haramPercentageString : "N/A"}, Halal: ${numVotesCalc > 0 ? halalPercentageString : "N/A"}`} data-for="vote-breakdown-switch">
                 <div className="voting-area" onClick={clickHaramVotingArea} style={{height: switchContainerHeightPx, width: votingAreaWidthPx, borderRadius: `${switchContainerHeightPx} 0 0 ${switchContainerHeightPx}`}}>
                     <div id={`${votingAreaLightHaramId}-2`} style={{
@@ -567,8 +576,8 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 </div>
                 <ReactTooltip className="vote-breakdown-tooltip" id="vote-breakdown-switch" place="bottom" delayShow={100} effect="solid"/>
             </div>
-            <div className="voting-label" style={{ color: '#1f594f' }}>{'Halal'}<br/>{'حلال'}</div>
-            <div className="number-halal">{halalPoints}</div>
+            {<div className="voting-label" style={{ color: '#1f594f' }}>{'Halal'}<br/>{'حلال'}</div>}
+            {<div className="number-halal">{halalPoints}</div>}
         </div>
     )
 }

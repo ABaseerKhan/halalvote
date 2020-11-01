@@ -22,13 +22,12 @@ export const VotesBar = (props: VotesBarProps) => {
         halalPercentage = 100 - haramPercentage;
     }
 
-    const votesBarWidthPx = votesBarWidth + "px";
     const votesBarHeightPx = votesBarHeight + "px";
     const haramPercentageString = haramPercentage + "%";
     const halalPercentageString = halalPercentage + "%";
     
     return (
-        <div className="votes-bar" style={{height: votesBarHeightPx, width: votesBarWidthPx, borderRadius: votesBarHeightPx}} data-tip={`Votes: ${numVotes}, Haram: ${numVotes > 0 ? haramPercentageString : "N/A"}, Halal: ${numVotes > 0 ? halalPercentageString : "N/A"}`} data-for="vote-breakdown-bar">
+        <div className="votes-bar" style={{height: votesBarHeightPx, borderRadius: votesBarHeightPx}} data-tip={`Votes: ${numVotes}, Haram: ${numVotes > 0 ? haramPercentageString : "N/A"}, Halal: ${numVotes > 0 ? halalPercentageString : "N/A"}`} data-for="vote-breakdown-bar">
             <div className="voting-bar-haram" style={{height: votesBarHeightPx, width: haramPercentageString, borderRadius: `${votesBarHeightPx} ${halalPercentage === 0 ? votesBarHeightPx : 0} ${halalPercentage === 0 ? votesBarHeightPx : 0} ${votesBarHeightPx}`}}></div>
             <div className="voting-bar-halal" style={{height: votesBarHeightPx, width: halalPercentageString, borderRadius: `${haramPercentage === 0 ? votesBarHeightPx : 0} ${votesBarHeightPx} ${votesBarHeightPx} ${haramPercentage === 0 ? votesBarHeightPx : 0}`}}></div>
             <ReactTooltip className="vote-breakdown-tooltip" id="vote-breakdown-bar" place="top" delayShow={100} effect="solid"/>

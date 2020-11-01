@@ -14,6 +14,7 @@ import { Judgment, userVoteToCommentType } from '../../types';
 // style imports
 import './comments.css';
 import { TopicContext } from '../app-shell';
+import { isMobile } from '../../utils';
 // import { useMedia } from '../../hooks/useMedia';
 
 interface CommentsCardComponentProps {
@@ -192,10 +193,12 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         }    
         if (commentMakerRef.current && path !== undefined) {
             commentMakerRef.current.focus();
-            const commentsCard = document.getElementById('comments-card');
-            const highlightedComment = document.getElementById(`comment-${getCommentFromPath(state.comments, path)?.id}`);
-            const offsetTop = highlightedComment?.offsetParent?.id === 'comments-container' ? highlightedComment.offsetTop : (highlightedComment?.offsetParent as HTMLElement)?.offsetTop + highlightedComment!.offsetTop;
-            commentMakerRef.current.setHeight(commentsCard?.clientHeight! - (offsetTop + highlightedComment!.clientHeight));
+            if (!isMobile) {
+                const commentsCard = document.getElementById('comments-card');
+                const highlightedComment = document.getElementById(`comment-${getCommentFromPath(state.comments, path)?.id}`);
+                const offsetTop = highlightedComment?.offsetParent?.id === 'comments-container' ? highlightedComment.offsetTop : (highlightedComment?.offsetParent as HTMLElement)?.offsetTop + highlightedComment!.offsetTop;
+                commentMakerRef.current.setHeight(commentsCard?.clientHeight! - (offsetTop + highlightedComment!.clientHeight));
+            }
         };
     }
 
