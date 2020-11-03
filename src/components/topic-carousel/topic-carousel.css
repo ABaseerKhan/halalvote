@@ -122,9 +122,9 @@
     }
     .left-topic-navigator-display, .right-topic-navigator-display {
         position: absolute;
-        top: 0;
+        top: 25vh;
         width: 0px;
-        height: 100vh;
+        height: 50vh;
         border-radius: 50%;
         color: var(--site-background-color);
         background: transparent;
