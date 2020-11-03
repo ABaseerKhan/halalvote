@@ -53,7 +53,7 @@ export const AppShellComponent = (props: any) => {
   });
 
   let { topicTitle } = useParams();
-  topicTitle = topicTitle?.replace(/_/g, ' ');
+  topicTitle = topicTitle?.replace(/_/g, ' ').replace(/%2F/g, '/');
   const [cookies] = useCookies(['username', 'sessiontoken']);
   const { username, sessiontoken } = cookies;
 
