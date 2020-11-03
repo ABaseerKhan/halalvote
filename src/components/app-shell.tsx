@@ -248,7 +248,7 @@ export const AppShellComponent = (props: any) => {
         <SearchComponent onSuggestionClick={searchTopic} />
         <TopicContext.Provider value={{ topic: topic, setTopic: setTopic }}>
           <div id={topicContentId} className={topicContentId}>
-            <div key={topic?.topicTitle} id={cardsShellContainerId} className={cardsShellContainerId}>
+            <div key={state.topicDetails.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId}>
               <CardsShellComponent
                 mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
                 commentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
