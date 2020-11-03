@@ -228,6 +228,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
         if (isMobile) {
             menuButton.ontouchmove = (event: TouchEvent) => {
                 event.preventDefault();
+                event.stopPropagation();
                 const touchLocation = event.targetTouches[0];
                 const yOffset = menuHeight / 2;
                 const xOffset = (usernameExists() ? menuWidthExpanded : menuWidth) / 2;
