@@ -53,7 +53,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 rightCarouselButton.classList.add("carousel-button-computer");
             }
         } else {
-            const deltaMin = 150;
+            const deltaMin = 100;
             const itemCarousel = document.getElementById(id);
             const leftTopicNavigatorDisplay = document.getElementById(leftTopicNavigatorDisplayId);
             const rightTopicNavigatorDisplay = document.getElementById(rightTopicNavigatorDisplayId);
@@ -136,7 +136,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                         <ChevronLeftSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>
                     </button> :
                     <div id={leftTopicNavigatorDisplayId} className={leftTopicNavigatorDisplayId}>
-                        <ChevronLeftSVG color={'var(--neutral-color)'} style={{position: "absolute", right: 25, top: "calc(25vh - 15px)"}}/>
+                        <ChevronLeftSVG color={'var(--neutral-color)'} style={{position: "absolute", right: 15, top: "calc(25vh - 15px)"}}/>
                     </div>
                 }
                 <div id="topic-title" className='topic-title' >
@@ -148,7 +148,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                         <ChevronRightSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>
                     </button> :
                     <div id={rightTopicNavigatorDisplayId} className={rightTopicNavigatorDisplayId}>
-                        <ChevronRightSVG color={'var(--neutral-color)'} style={{position: "absolute", left: 25, top: "calc(25vh - 15px)"}}/>
+                        <ChevronRightSVG color={'var(--neutral-color)'} style={{position: "absolute", left: 15, top: "calc(25vh - 15px)"}}/>
                     </div>
                 }
             </div>
