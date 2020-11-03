@@ -67,7 +67,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 }
                 let swipeDirection = SwipeDirection.NONE;
 
-                itemCarousel.ontouchstart = (e: TouchEvent) => {
+                window.ontouchstart = (e: TouchEvent) => {
                     const t = e.touches[0]
                     swipeDet.sX = t.screenX;
                     swipeDet.sY = t.screenY;
@@ -75,7 +75,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     swipeDet.eY = t.screenY;
                 }
 
-                itemCarousel.ontouchmove = (e: TouchEvent) => {
+                window.ontouchmove = (e: TouchEvent) => {
                     const t = e.touches[0]
                     swipeDet.eX = t.screenX;
                     swipeDet.eY = t.screenY;
@@ -98,13 +98,15 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     }
                 }
 
-                itemCarousel.ontouchend = (e: TouchEvent) => {
+                window.ontouchend = (e: TouchEvent) => {
                     const deltaX = Math.abs(swipeDet.eX - swipeDet.sX);
 
                     if (deltaX >= deltaMin) {
                         if (swipeDet.eX > swipeDet.sX) {
+                            e.preventDefault();
                             iterateTopic(-1)();
                         } else if (swipeDet.eX < swipeDet.sX) {
+                            e.preventDefault();
                             iterateTopic(1)();
                         }
                     }
@@ -138,7 +140,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     </div>
                 }
                 <div id="topic-title" className='topic-title' >
-                        {topicTitle}
+                    <span className="topic-label">Topic:</span>{topicTitle}
                 </div>
                 {
                     !isMobile ?

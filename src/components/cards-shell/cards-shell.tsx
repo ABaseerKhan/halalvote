@@ -32,6 +32,14 @@ interface CardsShellComponentProps {
 export const CardsShellComponent = (props: CardsShellComponentProps) => {
     const { mediaCard, commentsCard, analyticsCard } = props;
 
+    const isMobile = useMedia(
+      // Media queries
+      ['(max-width: 600px)'],
+      [true],
+      // default value
+      false
+    );
+
     const history = useHistory();
     const query = useQuery();
     const topCard = query.get("card") || undefined;
@@ -68,20 +76,14 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
     const commentsCardElement = createCardElement(commentsCardId, commentsCard, positions.current.indexOf(commentsCardId));
     const analyticsCardElement = createCardElement(analyticsCardId, analyticsCard, positions.current.indexOf(analyticsCardId));
 
-    const isMobile = useMedia(
-      // Media queries
-      ['(max-width: 600px)'],
-      [true],
-      // default value
-      false
-    );
-
     useEffect(() => {
       setTimeout(() => {
         setCards();
       }, 300) // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const leftCardMarginLeft = isMobile ? -10 : -5;
+    const rightCardMarginLeft = isMobile ? 10 : 5;
     const setCards = () => {
       const leftCard = document.getElementById(positions.current[1]);
       const rightCard = document.getElementById(positions.current[2]);
@@ -103,7 +105,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
 
         leftCard.animate([
           {
-            marginLeft: `-5vw`,
+            marginLeft: `${leftCardMarginLeft.toString()}vw`,
             transform:'scale(.95)'
           }
         ], {
@@ -115,7 +117,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
         };
         rightCard.animate([
           {
-            marginLeft: `5vw`,
+            marginLeft: `${rightCardMarginLeft.toString()}vw`,
             transform:'scale(.95)'
           }
         ], {
@@ -264,7 +266,6 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
       const backLabel = document.getElementById(`${positions.current[position === 1 ? 2 : 1]}-label`);
 
       if (selected && front && back && selectedCover && frontCover && frontLabel && backLabel) {
-        const marginLeftVw = 5;
         
         selected.animate([
           {
@@ -298,7 +299,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
           case 1:
             front.animate([
               {
-                marginLeft: `${marginLeftVw}vw`,
+                marginLeft: `${rightCardMarginLeft}vw`,
                 transform:'scale(.95)'
               }
             ], {
@@ -323,7 +324,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
             };
             back.animate([
               {
-                marginLeft: `-${marginLeftVw}vw`,
+                marginLeft: `${leftCardMarginLeft}vw`,
                 transform:'scale(.95)'
               }
             ], {
@@ -335,7 +336,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
           case 2:
             front.animate([
               {
-                marginLeft: `-${marginLeftVw}vw`,
+                marginLeft: `${leftCardMarginLeft}vw`,
                 transform:'scale(.95)'
               }
             ], {
@@ -360,7 +361,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
             };;
             back.animate([
               {
-                marginLeft: `${marginLeftVw}vw`,
+                marginLeft: `${rightCardMarginLeft}vw`,
                 transform:'scale(.95)'
               }
             ], {

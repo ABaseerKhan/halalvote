@@ -27,6 +27,7 @@ export const modalMaxHeight = window.innerHeight - (Math.max(elementStyles.maxTo
 export const modalMaxWidth = 800;
 
 export const Portal = ({children} : {children: ReactNode}) => ReactDOM.createPortal(children, document.getElementById("portal") || document.createElement("portal"));
+export const FullScreenPortal = ({children} : {children: ReactNode}) => ReactDOM.createPortal(children, document.getElementById("full-screen-portal") || document.createElement("full-screen-portal"));
 
 ReactDOM.render(
   <CookiesProvider >

@@ -7,7 +7,7 @@ import { MenuComponent } from './menu/menu';
 import { Topic, Comment } from '../types';
 import { postData } from '../https-client/client';
 import { topicsConfig } from '../https-client/config';
-import { arrayMove, vhToPixels, vwToPixels } from "../utils";
+import { arrayMove } from "../utils";
 import { useCookies } from 'react-cookie';
 import { CardsShellComponent } from './cards-shell/cards-shell';
 import { CommentsCardComponent } from './comments/comments-card';
@@ -21,7 +21,6 @@ import {
 // style imports
 import './app-shell.css';
 import { TopicImagesComponent } from './topic-images/topic-images';
-import { useMedia } from '../hooks/useMedia';
 
 enum IncomingDirection {
   LEFT,
@@ -52,14 +51,6 @@ export const AppShellComponent = (props: any) => {
     specificComment: undefined,
     incomingDirection: IncomingDirection.NONE
   });
-
-  const isMobile = useMedia(
-    // Media queries
-    ['(max-width: 600px)'],
-    [true],
-    // default value
-    false
-  );
 
   let { topicTitle } = useParams();
   topicTitle = topicTitle?.replace(/_/g, ' ');
@@ -241,16 +232,15 @@ export const AppShellComponent = (props: any) => {
     }
   }
 
-  const cardShellHeight = vhToPixels(75);
-  const cardShellWidth = isMobile ? vwToPixels(75) : vwToPixels(45);
   return (
       <div id={appShellId} className={appShellId} >
         <SearchComponent onSuggestionClick={searchTopic} />
         <TopicContext.Provider value={{ topic: topic, setTopic: setTopic }}>
           <div id={topicContentId} className={topicContentId}>
+            <div id="full-screen-portal"></div>
             <div key={state.topicDetails.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId}>
               <CardsShellComponent
-                mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} maxHeight={cardShellHeight} maxWidth={cardShellWidth}/> }
+                mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} /> }
                 commentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                 analyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
               />
