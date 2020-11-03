@@ -8,7 +8,7 @@
     margin-left: 0;
     border-radius: 25px 25px 25px 25px;
     background-color: var(--neutral-color);
-    z-index: 3;
+    z-index: 4;
     overflow: hidden;
 }
 
@@ -19,5 +19,5 @@
     position: fixed;
     background-color: #D3D3D3;
     opacity: 0.8;
-    z-index: 3;
+    z-index: 4;
 }
