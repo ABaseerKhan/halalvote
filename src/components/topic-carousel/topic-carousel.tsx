@@ -140,8 +140,9 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     </div>
                 }
                 <span className="topic-label">Topic:</span>
-                <div id="topic-title" className='topic-title' >
-                    {topicTitle}
+                <div id="topic-title" className='topic-title' onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                        onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                        onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} >
                 </div>
                 {
                     !isMobile ?
