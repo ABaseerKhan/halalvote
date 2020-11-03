@@ -104,12 +104,12 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
         let containerRects = votingSwitchContainerElement.getClientRects();
         let dragging = false;
 
-        switchElement.onmousedown = () => {
+        const onClickDown = () => {
             dragging = true;
             containerRects = votingSwitchContainerElement.getClientRects();
         }
 
-        document.onmouseup = (e: MouseEvent) => {
+        const onClickUp = (eX: number) => {
             if (dragging && containerRects.length > 0) {
                 dragging = false;
 
@@ -118,9 +118,9 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 const containerMid = containerLeft + (switchContainerWidth / 2);
                 const containerRightMid = containerMid + (switchContainerWidth / 4);
                 
-                if (e.x <= containerLeftMid) {
+                if (eX <= containerLeftMid) {
                     setVote(Judgment.HARAM);
-                } else if (e.x >= containerRightMid) {
+                } else if (eX >= containerRightMid) {
                     setVote(Judgment.HALAL);
                 } else {
                     setVote(undefined);
@@ -128,7 +128,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
             }
         }
 
-        document.onmousemove = (e: MouseEvent) => {
+        const onClickMove = (eX: number) => {
             if (dragging && containerRects.length > 0) {
                 displayLights(false);
 
@@ -136,41 +136,78 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 const containerLeftMid = containerLeft + (switchContainerWidth / 4);
                 const containerMid = containerLeft + (switchContainerWidth / 2);
                 const containerRightMid = containerMid + (switchContainerWidth / 4);
-                const switchCenterX = e.x - (switchDimension / 2);
+                const switchCenterX = eX - (switchDimension / 2);
 
                 switchElement.style.marginLeft = Math.min(totalSwitchMarginLeft + switchMargins, (Math.max(switchMargins, switchCenterX - containerLeft))) + "px";
 
-                if (e.x > containerMid) {
-                    const halalFillWidth = e.x + (switchDimension / 2) + switchMargins - containerMid;
+                if (eX > containerMid) {
+                    const halalFillWidth = eX + (switchDimension / 2) + switchMargins - containerMid;
 
                     votingAreaFilledHalalElement.style.display = "unset";
                     votingAreaFilledHaramElement.style.display = "none";
                     votingAreaFilledHalalElement.style.width = Math.min(switchContainerWidth / 2, halalFillWidth) + "px";
 
-                    if (e.x >= containerRightMid && (!userVote || userVote <= 0)) {
+                    if (eX >= containerRightMid && (!userVote || userVote <= 0)) {
                         dragging = false;
                         vote(Judgment.HALAL);
-                    } else if (e.x < containerMid + (switchDimension / 2) && userVote && userVote !== 0) {
+                    } else if (eX < containerMid + (switchDimension / 2) && userVote && userVote !== 0) {
                         dragging = false;
                         vote(undefined);
                     }
                 } else {
-                    const haramFillWidth = containerMid - e.x + (switchDimension / 2) + switchMargins;
-                    const haramFillMarginLeft = e.x - (switchDimension / 2) - switchMargins - containerLeft;
+                    const haramFillWidth = containerMid - eX + (switchDimension / 2) + switchMargins;
+                    const haramFillMarginLeft = eX - (switchDimension / 2) - switchMargins - containerLeft;
 
                     votingAreaFilledHalalElement.style.display = "none";
                     votingAreaFilledHaramElement.style.display = "unset";
                     votingAreaFilledHaramElement.style.width = Math.min(switchContainerWidth / 2, haramFillWidth) + "px";
                     votingAreaFilledHaramElement.style.marginLeft = Math.max(0, haramFillMarginLeft) + "px";
 
-                    if (e.x <= containerLeftMid && (!userVote || userVote >= 0)) {
+                    if (eX <= containerLeftMid && (!userVote || userVote >= 0)) {
                         dragging = false;
                         vote(Judgment.HARAM);
-                    } else if (e.x > containerMid - (switchDimension / 2) && userVote && userVote !== 0) {
+                    } else if (eX > containerMid - (switchDimension / 2) && userVote && userVote !== 0) {
                         dragging = false;
                         vote(undefined);
                     }
                 }
+            }
+        }
+
+        if (!isMobile) {
+            switchElement.onmousedown = () => {
+                onClickDown();
+            }
+    
+            document.onmouseup = (e: MouseEvent) => {
+                onClickUp(e.x);
+            }
+    
+            document.onmousemove = (e: MouseEvent) => {
+                console.log(e.x);
+                onClickMove(e.x);
+            }
+        } else {
+            let currentX: number | null = null;
+
+            switchElement.ontouchstart = (event: TouchEvent) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onClickDown();
+            }
+    
+            switchElement.ontouchend = (event: TouchEvent) => {
+                event.preventDefault();
+                event.stopPropagation();
+                if (currentX) onClickUp(currentX);
+            }
+    
+            switchElement.ontouchmove = (event: TouchEvent) => {
+                event.preventDefault();
+                event.stopPropagation();
+                currentX = Math.round(event.touches[0].screenX);
+                console.log(currentX);
+                onClickMove(currentX);
             }
         }
     }
