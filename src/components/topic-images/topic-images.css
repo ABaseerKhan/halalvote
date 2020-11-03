@@ -27,6 +27,29 @@
   z-index: 3;
 }
 
+.show-add-image-button, .hide-add-image-button {
+  position: absolute;
+  height: 34px;
+  width: 60px;
+  bottom: 8px;
+  left: calc(50% - 30px);
+  border-radius: 30px;
+  background-color: var(--neutral-color);
+  color: var(--site-background-color);
+  cursor: pointer;
+  box-shadow: 0px 0px 5px 5px rgba(32,33,36,0.5);
+}
+
+.show-add-image-button, .show-add-image-button-fullscreen {
+  transform: scale(0);
+  animation: appear 0.3s ease-in-out forwards;
+}
+
+.hide-add-image-button, .hide-add-image-button-fullscreen {
+  transform: scale(1);
+  animation: disappear 0.3s ease-in-out forwards;
+}
+
 .images-body::-webkit-scrollbar {
   width: 0px;  /* Remove scrollbar space */
 }
@@ -168,29 +191,6 @@
   color: var(--site-background-color);
 }
 
-.show-add-image-button, .hide-add-image-button {
-  position: absolute;
-  height: 4vh;
-  width: 6vh;
-  bottom: 0.5em;
-  left: calc(50% - 3vh);
-  border-radius: 36px;
-  background-color: var(--neutral-color);
-  color: var(--site-background-color);
-  cursor: pointer;
-  box-shadow: 0px 0px 5px 5px rgba(32,33,36,0.5);
-}
-
-.show-add-image-button, .show-add-image-button-fullscreen {
-  transform: scale(0);
-  animation: appear 0.3s ease-in-out forwards;
-}
-
-.hide-add-image-button, .hide-add-image-button-fullscreen {
-  transform: scale(1);
-  animation: disappear 0.3s ease-in-out forwards;
-}
-
 @keyframes appear {
   to {
       transform: scale(1);
@@ -218,11 +218,11 @@
 
 .add-image-back-button {
   position: absolute;
-  height: 4vh;
-  width: 8vh;
-  bottom: 0.5em;
-  left: calc(50% - 4vh);
-  border-radius: 36px;
+  height: 34px;
+  width: 60px;
+  bottom: 8px;
+  left: calc(50% - 30px);
+  border-radius: 30px;
   background-color: var(--neutral-color);
   color: var(--site-background-color);
   cursor: pointer;
