@@ -53,7 +53,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     {!isMobile && <ChevronLeftSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>}
                 </button>
                 <div id="topic-title" className='topic-title' >
-                        {topicTitle}
+                    <span className="topic-label">Topic:</span>{topicTitle}
                 </div>
                 <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button-right'>
                     {!isMobile && <ChevronRightSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>}

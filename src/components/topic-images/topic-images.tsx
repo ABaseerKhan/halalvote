@@ -3,7 +3,6 @@ import { getData } from '../../https-client/client';
 import { useCookies } from 'react-cookie';
 import { topicsConfig } from '../../https-client/config';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
-import { ReactComponent as LeftArrowSVG } from '../../icons/left-arrow.svg';
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { postData } from '../../https-client/client';
@@ -22,11 +21,10 @@ import { TopicImages } from '../../types';
 // styles
 import './topic-images.css';
 import { useQuery } from '../../hooks/useQuery';
+import { FullScreenPortal } from '../..';
 
 interface TopicImagesComponentProps {
     topicTitle: string,
-    maxHeight: number,
-    maxWidth: number,
     shown?: boolean,
 };
 
@@ -36,16 +34,18 @@ interface TopicImagesComponentState {
     topicImages: TopicImages[],
     currentIndex: number,
     picture: BasicPicture | null,
-    loading: boolean
+    loading: boolean,
+    fullScreenMode: boolean,
 };
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
-    const { topicTitle, maxHeight, maxWidth } = props;
+    const { topicTitle } = props;
     const [state, setState] = useState<TopicImagesComponentState>({
         addTopicDisplayed: false,
         topicImages: [],
         currentIndex: 0,
         picture: null,
-        loading: true
+        loading: true,
+        fullScreenMode: false,
     });
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
@@ -205,8 +205,22 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         });
     };
 
+    var clickTimer: any = null;
+    const doubleTap = () => (() => {
+        if (clickTimer == null) {
+            clickTimer = setTimeout(function () {
+                clickTimer = null;
+
+            }, 300)
+        } else {
+            clearTimeout(clickTimer);
+            clickTimer = null;
+            setState(prevState => ({ ...prevState, fullScreenMode: !prevState.fullScreenMode }));
+        }
+    });
+
     const ImageNavigator = (
-        <div id="images-body" className="images-body">
+        <div id="images-body" className={state.fullScreenMode ? "images-body-fullscreen" : "images-body"} onTouchStart={doubleTap()}>
             {
 
                 state.topicImages.length > 0 ?
@@ -226,7 +240,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         </>
                         const Img = (
                             <div className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
-                                <img id="image" className='image' style={{maxHeight: (maxHeight) + "px", maxWidth: maxWidth + "px", margin: "auto"}} alt={props.topicTitle} src={topicImg.image}/>
+                                <img id="image" className='image' style={{ margin: "auto"}} alt={props.topicTitle} src={topicImg.image}/>
                                 {ImgStats}
                             </div>
                         )
@@ -237,56 +251,54 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                     <div className='no-image-text'>No images to show</div>
             }
-            <div className={!!props.shown ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
+            <div className={!!props.shown ? ("show-add-image-button" + (state.fullScreenMode ? "-fullscreen" : "")) : ("hide-add-image-button" + (state.fullScreenMode ? "-fullscreen" : ""))} onClick={() => {showAddTopic(true)}}>
                 <AddButtonSVG/>
             </div>
         </div>
     );
 
     const ImageAdder = (
-        <div style={{ height: '100%', width: '100%' }}>
-            <div className="images-body" style={{ background: 'black'}}>
-                {
-                    state.picture ? 
-                        <div className="image-container" style={{ flexDirection: (state.picture?.width || 0) > (state.picture?.height || 0) ? 'unset' : 'column' }}>
-                            <div className="image-preview-title">Image Preview</div>
-                            <img className='image' style={{maxHeight: (maxHeight) + "px", maxWidth: maxWidth + "px", margin: "auto"}} alt="Topic" src={state.picture.src}/>
-                            <ImageUploader 
-                                className={"file-uploader"}
-                                fileContainerStyle={{padding: '5px', background: "rgba(0,0,0,0.4)", height: 'fit-content', boxShadow: "none", color: "white", margin: '0', flexDirection: 'unset'}} 
-                                buttonClassName="add-image-choose-button"
-                                buttonStyles={{background: "none", width: "auto", color: "white", fontStyle: 'italic', textDecoration: 'underline', fontSize: '1.5vh', transition: "none", padding: "0", margin: "0 0 0 0"}}
-                                withIcon={false} 
-                                buttonText="Choose New Image"
-                                onChange={onDrop} 
-                                imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
-                                maxFileSize={5242880} 
-                                singleImage={true}
-                                label={""}
-                            />
-                            <button id={addImageSubmitId} className={`button ${addImageSubmitId}`} onClick={addImage} >Add Image</button>
-                        </div>:
-                        <div style={{ height: '100px', width: '100%', position: 'absolute', top: 'calc(50% - 100px)'}}>
-                            <div className="add-image-section-text">Add Image</div>
-                            <ImageUploader 
-                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 
-                                buttonClassName="button"
-                                buttonStyles={{width: "auto", transition: "none", margin: "20px 0 0 0"}}
-                                withIcon={false}
-                                buttonText="Choose Image"
-                                onChange={onDrop} 
-                                imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
-                                maxFileSize={5242880} 
-                                singleImage={true}
-                            />
-                        </div>
-                }
-            </div> 
-            <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
-                <LeftArrowSVG/>
-            </button>
-        </div>
+        <div className={state.fullScreenMode ? "images-body-fullscreen" : "images-body"} style={{ background: 'black'}} onTouchStart={doubleTap()}>
+            {
+                state.picture ? 
+                    <div className="image-container" style={{ flexDirection: (state.picture?.width || 0) > (state.picture?.height || 0) ? 'unset' : 'column' }}>
+                        <div className="image-preview-title">Image Preview</div>
+                        <img className='image' style={{margin: "auto"}} alt="Topic" src={state.picture.src}/>
+                        <ImageUploader 
+                            className={"file-uploader"}
+                            fileContainerStyle={{padding: '5px', background: "rgba(0,0,0,0.4)", height: 'fit-content', boxShadow: "none", color: "white", margin: '0', flexDirection: 'unset'}} 
+                            buttonClassName="add-image-choose-button"
+                            buttonStyles={{background: "none", width: "auto", color: "white", fontStyle: 'italic', textDecoration: 'underline', fontSize: '1.5vh', transition: "none", padding: "0", margin: "0 0 0 0"}}
+                            withIcon={false} 
+                            buttonText="Choose New Image"
+                            onChange={onDrop} 
+                            imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
+                            maxFileSize={5242880} 
+                            singleImage={true}
+                            label={""}
+                        />
+                        <button id={addImageSubmitId} className={`button ${addImageSubmitId}`} onClick={addImage} >Add Image</button>
+                    </div>:
+                    <div style={{ height: '100px', width: '100%', position: 'absolute', top: 'calc(50% - 100px)'}}>
+                        <div className="add-image-section-text">Add Image</div>
+                        <ImageUploader 
+                            fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 
+                            buttonClassName="button"
+                            buttonStyles={{width: "auto", transition: "none", margin: "20px 0 0 0"}}
+                            withIcon={false}
+                            buttonText="Choose Image"
+                            onChange={onDrop} 
+                            imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
+                            maxFileSize={5242880} 
+                            singleImage={true}
+                        />
+                        <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
+                            Cancel
+                        </button>
+                    </div>
+            }
+        </div> 
     );
 
-    return !state.addTopicDisplayed ? ImageNavigator : ImageAdder;
+    return !state.addTopicDisplayed ? (state.fullScreenMode ? <FullScreenPortal>{ImageNavigator}</FullScreenPortal> : ImageNavigator) : (state.fullScreenMode ? <FullScreenPortal>{ImageAdder}</FullScreenPortal> : ImageAdder);
 }
