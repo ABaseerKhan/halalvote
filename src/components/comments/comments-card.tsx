@@ -64,7 +64,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         } else {
             setState(prevState => ({ ...prevState, loading: false, commentsShowable: true }));
         }
-    }, 500, [topic?.topicTitle]);
+    }, 500, [topic?.topicTitle, sessiontoken]);
 
     useEffect(() => {
         if (!state.loading) {

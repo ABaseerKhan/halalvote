@@ -38,7 +38,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
     // eslint-disable-next-line
     const [state, setState] = useState({});
     let orderedCards;
-    switch(topCard) {
+    switch(topCard?.toUpperCase()) {
       case mediaCardId:
         orderedCards = [mediaCardId, commentsCardId, analyticsCardId];
         break;
@@ -146,7 +146,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
 
     const selectCard = (cardId: string) => {
       if (canFlip.current) {
-        setCardQueryParam(history, query, cardId);
+        setCardQueryParam(history, query, cardId.toLowerCase());
         canFlip.current = false;
         makeRoom(cardId, () => {
           rotate(cardId, () => {

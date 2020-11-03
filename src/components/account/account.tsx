@@ -168,7 +168,7 @@ const UserComment = (props: UserCommentProps) => {
                 <div className="comment-body">
                     <div 
                         className={"comment-content"}
-                        onClick={async (e) => { setCardQueryParam(history, query, commentsCardId); await fetchTopics(comment.topicTitle); showSpecificComment(comment); closeModal(); }}
+                        onClick={async (e) => { setCardQueryParam(history, query, commentsCardId.toLowerCase()); await fetchTopics(comment.topicTitle); showSpecificComment(comment); closeModal(); }}
                     >
                         <div className="username" style={{ color: 'var(--site-background-color)' }}>{comment.username}</div>
                         <div className="comment" style={{ color: 'var(--site-background-color)' }}>
