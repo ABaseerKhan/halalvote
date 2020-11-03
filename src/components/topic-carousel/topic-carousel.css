@@ -1,13 +1,14 @@
 .topic-carousel {
     position: absolute;
-    height: var(--max-topic-carousel-height-px);
+    height: 100%;
     width: 100%;
     top: 0;
+    z-index: 2 !important
 }
 
 .topic-navigator {
-    height: var(--max-toolbar-height-px);
-    width: max-content;
+    height: 100%;
+    width: 100%;
     display: contents;
     margin-left: auto;
     margin-right: auto;
@@ -112,10 +113,24 @@
         margin-left: 5px !important;
         margin-right: 5px !important;
     }
-    .carousel-button-left, .carousel-button-right {
-        width: 5vw;
-    }
     .topic-title {
         font-size: 1.5em;
+    }
+    .left-topic-navigator-display, .right-topic-navigator-display {
+        position: absolute;
+        top: 0;
+        width: 0px;
+        height: 100%;
+        border-radius: 50%;
+        color: var(--site-background-color);
+        background: transparent;
+        -webkit-box-shadow: inset 0 0 100px 20px var(--light-neutral-color);
+        box-shadow: inset 0 0 100px 20px var(--light-neutral-color);
+    }
+    .left-topic-navigator-display {
+        left: 0;
+    }
+    .right-topic-navigator-display {
+        right: 0;
     }
 }
