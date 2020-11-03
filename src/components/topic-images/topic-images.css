@@ -218,11 +218,11 @@
 
 .add-image-back-button {
   position: absolute;
-  height: 4vh;
-  width: 8vh;
-  bottom: 0.5em;
-  left: calc(50% - 4vh);
-  border-radius: 36px;
+  height: 34px;
+  width: 60px;
+  bottom: 8px;
+  left: calc(50% - 30px);
+  border-radius: 30px;
   background-color: var(--neutral-color);
   color: var(--site-background-color);
   cursor: pointer;
