@@ -215,83 +215,91 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     };
 
     const ImageNavigator = (
-        <div id="images-body" ref={imagesBodyRef} className={state.fullScreenMode ? "images-body-fullscreen" : "images-body"} onDoubleClick={doubleTap}>
-            {
-                state.topicImages.length > 0 ?
-                    state.topicImages.map((topicImg, idx) => {
-                        const ImgStats = 
-                        <>
-                            <div className="image-actions-container">
-                                <div className="image-username" onClick={onUserClick(topicImg.username)}>{"@" + topicImg.username}</div>
-                                {
-                                    isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
-                                }
-                                <div className="image-likes-container">
-                                    <HeartButtonSVG className={!!topicImg.userLike ? "liked" : "like"} onClick={updateImageLike} />
-                                    <div className="image-likes">{topicImg.likes}</div>
+        <div style={{ height: '100%', width: '100%' }}>
+            <div id="images-body" ref={imagesBodyRef} className={state.fullScreenMode ? "images-body-fullscreen" : "images-body"} onDoubleClick={doubleTap}>
+                {
+                    state.topicImages.length > 0 ?
+                        state.topicImages.map((topicImg, idx) => {
+                            const ImgStats = 
+                            <>
+                                <div className="image-actions-container">
+                                    <div className="image-username" onClick={onUserClick(topicImg.username)}>{"@" + topicImg.username}</div>
+                                    {
+                                        isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
+                                    }
+                                    <div className="image-likes-container">
+                                        <HeartButtonSVG className={!!topicImg.userLike ? "liked" : "like"} onClick={updateImageLike} />
+                                        <div className="image-likes">{topicImg.likes}</div>
+                                    </div>
                                 </div>
-                            </div>
-                        </>
-                        const Img = (
-                            <div className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
-                                <img id="image" className='image' style={{ margin: "auto"}} alt={props.topicTitle} src={topicImg.image}/>
-                                {ImgStats}
-                            </div>
-                        )
-                        return Img;
-                    })
-                :
-                state.loading ?
-                    <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
-                    <div className='no-image-text'>No images to show</div>
-            }
-            <div className={!!props.shown ? ("show-add-image-button" + (state.fullScreenMode ? "-fullscreen" : "")) : ("hide-add-image-button" + (state.fullScreenMode ? "-fullscreen" : ""))} onClick={() => {showAddTopic(true)}}>
-                <AddButtonSVG/>
+                            </>
+                            const Img = (
+                                <div className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
+                                    <img id="image" className='image' style={{ margin: "auto"}} alt={props.topicTitle} src={topicImg.image}/>
+                                    {ImgStats}
+                                </div>
+                            )
+                            return Img;
+                        })
+                    :
+                    state.loading ?
+                        <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
+                        <div className='no-image-text'>No images to show</div>
+                }
+            </div>
+            <div className={state.fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
+                <div className={!!props.shown ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
+                    <AddButtonSVG/>
+                </div>
             </div>
         </div>
     );
 
     const ImageAdder = (
-        <div className={state.fullScreenMode ? "images-body-fullscreen" : "images-body"} style={{ background: 'black'}} onDoubleClick={doubleTap}>
-            {
-                state.picture ? 
-                    <div className="image-container" style={{ flexDirection: (state.picture?.width || 0) > (state.picture?.height || 0) ? 'unset' : 'column' }}>
-                        <div className="image-preview-title">Image Preview</div>
-                        <img className='image' style={{margin: "auto"}} alt="Topic" src={state.picture.src}/>
-                        <ImageUploader 
-                            className={"file-uploader"}
-                            fileContainerStyle={{padding: '5px', background: "rgba(0,0,0,0.4)", height: 'fit-content', boxShadow: "none", color: "white", margin: '0', flexDirection: 'unset'}} 
-                            buttonClassName="add-image-choose-button"
-                            buttonStyles={{background: "none", width: "auto", color: "white", fontStyle: 'italic', textDecoration: 'underline', fontSize: '1.5vh', transition: "none", padding: "0", margin: "0 0 0 0"}}
-                            withIcon={false} 
-                            buttonText="Choose New Image"
-                            onChange={onDrop} 
-                            imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
-                            maxFileSize={5242880} 
-                            singleImage={true}
-                            label={""}
-                        />
-                        <button id={addImageSubmitId} className={`button ${addImageSubmitId}`} onClick={addImage} >Add Image</button>
-                    </div>:
-                    <div style={{ height: '100px', width: '100%', position: 'absolute', top: 'calc(50% - 100px)'}}>
-                        <div className="add-image-section-text">Add Image</div>
-                        <ImageUploader 
-                            fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 
-                            buttonClassName="button"
-                            buttonStyles={{width: "auto", transition: "none", margin: "20px 0 0 0"}}
-                            withIcon={false}
-                            buttonText="Choose Image"
-                            onChange={onDrop} 
-                            imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
-                            maxFileSize={5242880} 
-                            singleImage={true}
-                        />
-                        <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
-                            Cancel
-                        </button>
-                    </div>
-            }
-        </div> 
+        <div style={{ height: '100%', width: '100%' }}>
+            <div className={state.fullScreenMode ? "images-body-fullscreen" : "images-body"} style={{ background: 'black'}} onDoubleClick={doubleTap}>
+                {
+                    state.picture ? 
+                        <div className="image-container" style={{ flexDirection: (state.picture?.width || 0) > (state.picture?.height || 0) ? 'unset' : 'column' }}>
+                            <div className="image-preview-title">Image Preview</div>
+                            <img className='image' style={{margin: "auto"}} alt="Topic" src={state.picture.src}/>
+                            <ImageUploader 
+                                className={"file-uploader"}
+                                fileContainerStyle={{padding: '5px', background: "rgba(0,0,0,0.4)", height: 'fit-content', boxShadow: "none", color: "white", margin: '0', flexDirection: 'unset'}} 
+                                buttonClassName="add-image-choose-button"
+                                buttonStyles={{background: "none", width: "auto", color: "white", fontStyle: 'italic', textDecoration: 'underline', fontSize: '1.5vh', transition: "none", padding: "0", margin: "0 0 0 0"}}
+                                withIcon={false} 
+                                buttonText="Choose New Image"
+                                onChange={onDrop} 
+                                imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
+                                maxFileSize={5242880} 
+                                singleImage={true}
+                                label={""}
+                            />
+                            <button id={addImageSubmitId} className={`button ${addImageSubmitId}`} onClick={addImage} >Add Image</button>
+                        </div>:
+                        <div style={{ height: '100px', width: '100%', position: 'absolute', top: 'calc(50% - 100px)'}}>
+                            <div className="add-image-section-text">Add Image</div>
+                            <ImageUploader 
+                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 
+                                buttonClassName="button"
+                                buttonStyles={{width: "auto", transition: "none", margin: "20px 0 0 0"}}
+                                withIcon={false}
+                                buttonText="Choose Image"
+                                onChange={onDrop} 
+                                imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
+                                maxFileSize={5242880} 
+                                singleImage={true}
+                            />
+                        </div>
+                }
+            </div>
+            <div className={state.fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
+                <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
+                    Cancel
+                </button>
+            </div>
+        </div>
     );
 
     return !state.addTopicDisplayed ? (state.fullScreenMode ? <FullScreenPortal>{ImageNavigator}</FullScreenPortal> : ImageNavigator) : (state.fullScreenMode ? <FullScreenPortal>{ImageAdder}</FullScreenPortal> : ImageAdder);
