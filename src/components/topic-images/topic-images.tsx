@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getData } from '../../https-client/client';
 import { useCookies } from 'react-cookie';
 import { topicsConfig } from '../../https-client/config';
@@ -51,6 +51,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const { username, sessiontoken } = cookies;
     const history = useHistory();
     const query = useQuery();
+    const imagesBodyRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (topicTitle) { 
@@ -61,6 +62,19 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     useEffect(() => {
         setState(prevState=> prevState)
     }, [props.shown]);
+
+    useEffect(() => {
+        var isScrolling: any;
+        if (imagesBodyRef.current) {
+            imagesBodyRef.current.onscroll = () => {
+                clearTimeout( isScrolling );
+                isScrolling = setTimeout(function() {
+                    const imgIndex = Math.floor((imagesBodyRef.current!.scrollTop+10) / imagesBodyRef.current!.clientHeight);
+                    setState(prevState => ({...prevState, currentIndex: Math.min(Math.max(imgIndex, 0), state.topicImages.length - 1)}));
+                }, 66);
+            }
+        }
+    });
 
     const addImageSubmitId = "add-image-submit-button";
 
@@ -183,18 +197,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         left: calc(50% - 25px);
     `;
 
-    const imagesBody = document.getElementById("images-body");
-    var isScrolling: any;
-    if (imagesBody) {
-        imagesBody.onscroll = () => {
-            clearTimeout( isScrolling );
-            isScrolling = setTimeout(function() {
-                const imgIndex = Math.floor((imagesBody.scrollTop+10) / imagesBody.clientHeight);
-                setState(prevState => ({...prevState, currentIndex: Math.min(Math.max(imgIndex, 0), state.topicImages.length - 1)}));
-            }, 66);
-        }
-    }
-
     const onUserClick = (user: string) => (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.preventDefault();
         event.stopPropagation();
@@ -216,13 +218,15 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             clearTimeout(clickTimer);
             clickTimer = null;
             setState(prevState => ({ ...prevState, fullScreenMode: !prevState.fullScreenMode }));
+            setTimeout(() => { 
+                imagesBodyRef.current?.scroll(0, (state.currentIndex * imagesBodyRef.current.clientHeight));
+            }, 0);
         }
     });
 
     const ImageNavigator = (
-        <div id="images-body" className={state.fullScreenMode ? "images-body-fullscreen" : "images-body"} onTouchStart={doubleTap()}>
+        <div id="images-body" ref={imagesBodyRef} className={state.fullScreenMode ? "images-body-fullscreen" : "images-body"} onTouchStart={doubleTap()}>
             {
-
                 state.topicImages.length > 0 ?
                     state.topicImages.map((topicImg, idx) => {
                         const ImgStats = 
