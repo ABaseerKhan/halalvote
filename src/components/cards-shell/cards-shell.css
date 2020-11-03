@@ -55,4 +55,8 @@
     .cards-shell {
         margin-left: 13vw;
     }
+    .card-shell-cover-label {
+        right: 0.5vw;
+        font-size: 1.25em;
+    }
 }
