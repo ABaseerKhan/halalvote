@@ -20,6 +20,7 @@
     font-weight: 600;
     color: gray;
     font-style: italic;
+    text-align: center;
 }
 .topic-title::-webkit-scrollbar {
     display: none;

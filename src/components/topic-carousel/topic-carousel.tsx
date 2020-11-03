@@ -139,8 +139,9 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                         <ChevronLeftSVG color={'var(--neutral-color)'} style={{position: "absolute", right: 15, top: "calc(25vh - 15px)"}}/>
                     </div>
                 }
+                <span className="topic-label">Topic:</span>
                 <div id="topic-title" className='topic-title' >
-                    <span className="topic-label">Topic:</span>{topicTitle}
+                    {topicTitle}
                 </div>
                 {
                     !isMobile ?
