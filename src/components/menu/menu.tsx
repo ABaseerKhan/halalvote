@@ -14,14 +14,6 @@ import { ModalType, MenuLocation } from '../../types';
 import './menu.css';
 import { useQuery } from '../../hooks/useQuery';
 
-const menuHeight = 72;
-const menuWidth = 72;
-const menuWidthExpanded = 150;
-const menuButtonWidth = 40;
-const menuButtonInteriorWidth = 24;
-const menuButtonWidthExpanded = 118;
-const menuButtonInteriorWidthExpanded = 102;
-
 const menuId = "menu";
 const menuButtonId = "menu-button";
 const menuButtonInteriorId = "menu-button-interior";
@@ -57,6 +49,18 @@ export const MenuComponent = (props: MenuComponentProps) => {
         // default value
         false
     );
+
+    const menuWidth = isMobile ? 60 : 75;
+    const menuWidthExpanded = isMobile ? 120 : 150;
+
+    const menuHeight = menuWidth;
+    const menuButtonWidth = menuWidth;
+    const menuButtonInteriorPadding = menuWidth / 6;
+    const menuButtonInteriorWidth = menuWidth - (menuButtonInteriorPadding * 4);
+    const menuButtonWidthExpanded = menuButtonWidth;
+    const menuButtonInteriorWidthExpanded = menuWidthExpanded - (menuButtonInteriorPadding * 4);
+    const menuButtonInteriorMargin = (menuButtonWidth - menuButtonInteriorWidth - (menuButtonInteriorPadding * 2)) / 2;
+    const menuButtonInteriorFontSize = menuWidth / 5;
 
     useEffect(() => {
         const menu = document.getElementById(menuId);
@@ -166,6 +170,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
     const menu = document.getElementById(menuId);
     const menuButton = document.getElementById(menuButtonId);
+    const menuButtonInterior = document.getElementById(menuButtonInteriorId);
 
     const pressButton = () => {
         if (state.menuLocation === MenuLocation.NONE) {
@@ -224,7 +229,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
         }
     }
 
-    if (menu && menuButton) {
+    if (menu && menuButton && menuButtonInterior) {
         if (isMobile) {
             menuButton.ontouchmove = (event: TouchEvent) => {
                 event.preventDefault();
@@ -280,6 +285,10 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 menuButton.style.left = "unset";
                 menuButton.style.bottom = "0";
                 menuButton.style.right = "0";
+                menuButtonInterior.style.top = "unset";
+                menuButtonInterior.style.left = "unset";
+                menuButtonInterior.style.bottom = "0";
+                menuButtonInterior.style.right = "0";
                 break;
             case MenuLocation.UPPER_RIGHT:
                 menu.style.top = "unset";
@@ -291,6 +300,10 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 menuButton.style.right = "unset";
                 menuButton.style.bottom = "0";
                 menuButton.style.left = "0";
+                menuButtonInterior.style.top = "unset";
+                menuButtonInterior.style.right = "unset";
+                menuButtonInterior.style.bottom = "0";
+                menuButtonInterior.style.left = "0";
                 break;
             case MenuLocation.BOTTOM_LEFT:
                 menu.style.top = rect.y + "px";
@@ -302,6 +315,10 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 menuButton.style.left = "unset";
                 menuButton.style.top = "0";
                 menuButton.style.right = "0";
+                menuButtonInterior.style.bottom = "unset";
+                menuButtonInterior.style.left = "unset";
+                menuButtonInterior.style.top = "0";
+                menuButtonInterior.style.right = "0";
                 break;
             case MenuLocation.BOTTOM_RIGHT:
                 menu.style.top = rect.y + "px";
@@ -313,6 +330,10 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 menuButton.style.right = "unset";
                 menuButton.style.top = "0";
                 menuButton.style.left = "0";
+                menuButtonInterior.style.bottom = "unset";
+                menuButtonInterior.style.right = "unset";
+                menuButtonInterior.style.top = "0";
+                menuButtonInterior.style.left = "0";
                 break;
             case MenuLocation.NONE:
                 menu.style.top = "unset";
@@ -323,12 +344,22 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 menuButton.style.right = "unset";
                 menuButton.style.bottom = "unset";
                 menuButton.style.left = "unset";
+                menuButtonInterior.style.top = "unset";
+                menuButtonInterior.style.right = "unset";
+                menuButtonInterior.style.bottom = "unset";
+                menuButtonInterior.style.left = "unset";
                 break;
         }
     }
 
+    const listItemStyles = {
+        fontSize: menuButtonInteriorFontSize + 4 + "px", 
+        paddingTop: menuButtonInteriorFontSize + 4 + "px", 
+        paddingBottom: menuButtonInteriorFontSize + 4 + "px"
+    }
+
     return (
-        <div id={menuId} className={menuId}>
+        <div id={menuId} className={menuId} style={{height: menuHeight + "px", width: menuWidth + "px", borderRadius: (menuHeight / 2) + "px"}}>
             { state.loginDisplayed &&
                 <Portal><ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchTopics={null}/></Portal>
             }
@@ -340,18 +371,27 @@ export const MenuComponent = (props: MenuComponentProps) => {
             }
             {
                 state.menuLocation !== MenuLocation.NONE && 
-                    <ul className="menu-items-list" style={{padding: state.menuLocation === MenuLocation.UPPER_LEFT || state.menuLocation === MenuLocation.UPPER_RIGHT ? "24px 0 72px 0" : "72px 0 24px 0"}}>
-                        <li className="menu-item" onClick={() => {setAddTopicDisplayed(true)}}>Add Topic</li>
-                        {usernameExists() && <li className="menu-item" onClick={() => setAccountDisplayed(true)}>Account</li>}
-                        <li className="menu-item" onClick={login}>
+                    <ul className="menu-items-list" style={{padding: state.menuLocation === MenuLocation.UPPER_LEFT || state.menuLocation === MenuLocation.UPPER_RIGHT ? `${menuHeight / 3}px 0 ${menuHeight}px 0` : `${menuHeight}px 0 ${menuHeight / 3}px 0`}}>
+                        <li className="menu-item" style={listItemStyles} onClick={() => {setAddTopicDisplayed(true)}}>Add Topic</li>
+                        {usernameExists() && <li className="menu-item" style={listItemStyles} onClick={() => setAccountDisplayed(true)}>Account</li>}
+                        <li className="menu-item" style={listItemStyles} onClick={login}>
                             { usernameExists() ? "Logout" : "Login" }
                         </li>
                     </ul>
             }
-            <div id={menuButtonId} className={menuButtonId} onClick={pressButton}>
-                <div id={menuButtonInteriorId} className={menuButtonInteriorId}>
+            <div id={menuButtonId} className={menuButtonId} onClick={pressButton} style={{height: menuButtonWidth + "px", width: menuButtonWidth + "px", borderRadius: (menuButtonWidth / 2) + "px"}}>
+                <div id={menuButtonInteriorId} className={menuButtonInteriorId} style={{height: menuButtonInteriorWidth + "px", width: menuButtonInteriorWidth + "px", 
+                    padding: menuButtonInteriorPadding + "px", borderRadius: (menuButtonInteriorWidth / 2) + menuButtonInteriorPadding + "px",
+                    margin: menuButtonInteriorMargin + "px", fontSize: menuButtonInteriorFontSize + "px"}}>
                     { 
-                        usernameExists() && state.menuLocation === MenuLocation.NONE ? username.charAt(0) : username
+                        usernameExists() && 
+                            <div className="menu-button-interior-text">
+                                {
+                                    state.menuLocation === MenuLocation.NONE ? 
+                                        username.charAt(0) : 
+                                        username
+                                }
+                            </div>
                     }
                 </div>
             </div>

@@ -3,6 +3,7 @@ import { postData } from '../../https-client/client';
 import { topicsConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
 import ImageUploader from 'react-images-upload';
+import { resizeImage } from '../../utils';
 
 // styles
 import './add-topic.css';
@@ -59,8 +60,9 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
         }
     }
 
-    const onDrop = (files: File[], picture: string[]) => {
-        setState({...state, picture: picture[0]});
+    const onDrop = async (files: File[], picture: string[]) => {
+        const resizedImage = await resizeImage(files[0]);
+        setState({...state, picture: resizedImage});
     }
 
     return (

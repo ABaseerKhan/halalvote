@@ -1,10 +1,7 @@
 .menu {
     position: fixed;
-    height: 72px;
-    width: 72px;
     bottom: 5%;
     right: 5%;
-    border-radius: 36px;
     background: var(--neutral-color);
     color: var(--site-background-color);
     overflow: hidden;
@@ -16,12 +13,8 @@
 
 .menu-button {
     position: absolute;
-    width: 40px;
-    height: 40px;
-    padding: 16px;
     bottom: 0;
     right: 0;
-    border-radius: 36px;
     outline: none;
     background-color: var(--neutral-color);
     cursor: pointer;
@@ -30,38 +23,31 @@
 
 .menu-button-interior {
     position: absolute;
-    width: 24px;
-    height: 24px;
-    padding: 12px;
-    border-radius: 24px;
     bottom: 0;
     right: 0;
-    margin-bottom: 12px;
-    margin-right: 12px;
     outline: none;
     background-color: white;
     text-align: center;
-    font-size: 16px;
     font-weight: bolder;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.menu-button-interior-text {
+    margin: auto;
 }
 
 .menu-items-list {
     width: 100%;
     list-style-type: none;
     margin: 0;
-    padding: 0 0 60px 0;
 }
 
 li.menu-item {
     width: 100%;
     cursor: pointer;
     background: transparent;
-    font-size: 20px;
     text-align: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
 }
 
 li.menu-item:hover {

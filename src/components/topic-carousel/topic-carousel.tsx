@@ -142,7 +142,9 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                         <ChevronLeftSVG color={'var(--neutral-color)'} style={{position: "absolute", right: 15, top: "calc(25vh - 15px)"}}/>
                     </div>
                 }
-                <span className="topic-label">Topic:</span>
+                <span className="topic-label" onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                        onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                        onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}>Topic:</span>
                 <div id="topic-title" className='topic-title' onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                         onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                         onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} >
