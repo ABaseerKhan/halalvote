@@ -229,7 +229,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         setFullScreenMode(!fullScreenMode);
     };
     return(
-        <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onDoubleClick={doubleTap} className={commentsCardId} style={{ zIndex: fullScreenMode ? 4 : 0 }} >
+        <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onDoubleClick={doubleTap} className={commentsCardId} style={{ zIndex: fullScreenMode ? 3 : 0 }} >
                 { !state.loading && state.commentsShowable && state.comments.length === 0 ?
                     <div className="no-comments-to-show-text">No arguments to show</div> :
                         <div id={commentsContainerId} className="comments-container" style={{ paddingTop: fullScreenMode ? "6em" : 0 }}>
