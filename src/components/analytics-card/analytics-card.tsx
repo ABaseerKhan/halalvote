@@ -75,9 +75,10 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }, []);
 
     const doubleTap = () => {
+        console.log(fullScreenMode);
         setFullScreenMode(!fullScreenMode);
     };
-    
+
     return (
     <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"} onDoubleClick={doubleTap}>
         <VotesBar halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes}></VotesBar>

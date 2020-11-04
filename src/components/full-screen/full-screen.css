@@ -3,6 +3,7 @@
     height: 100%;
     width: 100%;
     background: white;
+    z-index: 4;
 }
 
 .topic-carousel-container-fs {
