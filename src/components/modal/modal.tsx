@@ -84,8 +84,12 @@ export const ModalComponent = (props: ModalComponentProps) => {
 
     return (
         <div>
-            <div id={modalCoverId} className={modalCoverId} onClick={ closeModal }></div>
-            <div id={modalId} className={modalId}>
+            <div id={modalCoverId} className={modalCoverId} onClick={closeModal} onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                        onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                        onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}></div>
+            <div id={modalId} className={modalId} onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                        onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                        onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}>
                 { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> }
                 { modalType === ModalType.ADD_TOPIC && <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> }
                 { modalType === ModalType.ACCOUNT && <AccountComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> }
