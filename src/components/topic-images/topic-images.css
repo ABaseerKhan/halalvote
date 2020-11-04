@@ -71,6 +71,42 @@
   background: black;
 }
 
+.more-images-above, .more-images-below {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  left: calc(50% - 15px);
+  fill: gray;
+}
+
+.more-images-below {
+  bottom: 50px;
+  animation: jumpdown 0.75s infinite ease-out alternate;
+}
+
+.more-images-above {
+  top: 10px;
+  animation: jumpup 0.75s infinite ease-out alternate;
+}
+
+@keyframes jumpdown {
+  from {
+    transform: translate(0, 0.3em)
+  }
+  to {
+      transform: translate(0, 0);
+  }
+}
+
+@keyframes jumpup {
+  from {
+    transform: translate(0, 0)
+  }
+  to {
+      transform: translate(0, 0.3em);
+  }
+}
+
 .image-container {
   display: flex;
   position: relative;

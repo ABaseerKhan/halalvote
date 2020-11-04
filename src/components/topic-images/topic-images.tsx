@@ -5,6 +5,8 @@ import { topicsConfig } from '../../https-client/config';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
+import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
+import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
 import { postData } from '../../https-client/client';
 import ImageUploader from 'react-images-upload';
 import { css } from "@emotion/core";
@@ -246,6 +248,12 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                         <div className='no-image-text'>No images to show</div>
                 }
+                {state.currentIndex > 0 && <div className={"more-images-above"}>
+                    <UpArrowSVG />
+                </div>}
+                {state.topicImages.length > state.currentIndex + 1 && <div className={"more-images-below"}>
+                    <DownArrowSVG />
+                </div>}
             </div>
             <div className={state.fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
                 <div className={!!props.shown ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
