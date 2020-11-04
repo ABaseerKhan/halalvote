@@ -250,10 +250,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                         <div className='no-image-text'>No images to show</div>
                 }
-                {state.currentIndex > 0 && <div className={"more-images-above"} style={{ position: moreImagesIndicatorPosition }}>
+                {state.currentIndex > 0 && <div className={"more-images-above"} style={{ position: moreImagesIndicatorPosition }} onClick={() => imagesBodyRef.current?.scroll(0, ((state.currentIndex * imagesBodyRef.current.clientHeight) - 500)) }>
                     <UpArrowSVG />
                 </div>}
-                {state.topicImages.length > state.currentIndex + 1 && <div className={"more-images-below"} style={{ position: moreImagesIndicatorPosition }}>
+                {state.topicImages.length > state.currentIndex + 1 && <div className={"more-images-below"} style={{ position: moreImagesIndicatorPosition }} onClick={() => imagesBodyRef.current?.scroll(0, ((state.currentIndex * imagesBodyRef.current.clientHeight) + 500)) }>
                     <DownArrowSVG />
                 </div>}
             </div>
