@@ -184,7 +184,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
             }
     
             document.onmousemove = (e: MouseEvent) => {
-                console.log(e.x);
                 onClickMove(e.x);
             }
         } else {
@@ -206,7 +205,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 event.preventDefault();
                 event.stopPropagation();
                 currentX = Math.round(event.touches[0].screenX);
-                console.log(currentX);
                 onClickMove(currentX);
             }
         }
