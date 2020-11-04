@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { getData } from '../../https-client/client';
 import { useCookies } from 'react-cookie';
 import { topicsConfig } from '../../https-client/config';
@@ -24,6 +24,7 @@ import { TopicImages } from '../../types';
 import './topic-images.css';
 import { useQuery } from '../../hooks/useQuery';
 import { FullScreenPortal } from '../..';
+import { fullScreenContext } from '../app-shell';
 
 interface TopicImagesComponentProps {
     topicTitle: string,
@@ -37,17 +38,16 @@ interface TopicImagesComponentState {
     currentIndex: number,
     picture: BasicPicture | null,
     loading: boolean,
-    fullScreenMode: boolean,
 };
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const { topicTitle } = props;
+    const { fullScreenMode, setFullScreenMode } = useContext(fullScreenContext);
     const [state, setState] = useState<TopicImagesComponentState>({
         addTopicDisplayed: false,
         topicImages: [],
         currentIndex: 0,
         picture: null,
         loading: true,
-        fullScreenMode: false,
     });
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
@@ -210,17 +210,17 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     };
 
     const doubleTap = () => {
-        setState(prevState => ({ ...prevState, fullScreenMode: !prevState.fullScreenMode }));
+        setFullScreenMode(!fullScreenMode);
         setTimeout(() => { 
             imagesBodyRef.current?.scroll(0, (state.currentIndex * imagesBodyRef.current.clientHeight));
         }, 0);
     };
 
-    const moreImagesIndicatorPosition = state.fullScreenMode ? "fixed" : "absolute";
+    const moreImagesIndicatorPosition = fullScreenMode ? "fixed" : "absolute";
 
     const ImageNavigator = (
         <div style={{ height: '100%', width: '100%' }}>
-            <div id="images-body" ref={imagesBodyRef} className={state.fullScreenMode ? "images-body-fullscreen" : "images-body"} onDoubleClick={doubleTap}>
+            <div id="images-body" ref={imagesBodyRef} className={fullScreenMode ? "images-body-fullscreen" : "images-body"} onDoubleClick={doubleTap}>
                 {
                     state.topicImages.length > 0 ?
                         state.topicImages.map((topicImg, idx) => {
@@ -257,7 +257,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     <DownArrowSVG />
                 </div>}
             </div>
-            <div className={state.fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
+            <div className={fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
                 <div className={!!props.shown ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
                     <AddButtonSVG/>
                 </div>
@@ -267,7 +267,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 
     const ImageAdder = (
         <div style={{ height: '100%', width: '100%' }}>
-            <div className={state.fullScreenMode ? "images-body-fullscreen" : "images-body"} style={{ background: 'black'}} onDoubleClick={doubleTap}>
+            <div className={fullScreenMode ? "images-body-fullscreen" : "images-body"} style={{ background: 'black'}} onDoubleClick={doubleTap}>
                 {
                     state.picture ? 
                         <div className="image-container" style={{ flexDirection: (state.picture?.width || 0) > (state.picture?.height || 0) ? 'unset' : 'column' }}>
@@ -304,7 +304,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         </div>
                 }
             </div>
-            <div className={state.fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
+            <div className={fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
                 <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
                     Cancel
                 </button>
@@ -312,5 +312,5 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         </div>
     );
 
-    return !state.addTopicDisplayed ? (state.fullScreenMode ? <FullScreenPortal>{ImageNavigator}</FullScreenPortal> : ImageNavigator) : (state.fullScreenMode ? <FullScreenPortal>{ImageAdder}</FullScreenPortal> : ImageAdder);
+    return !state.addTopicDisplayed ? (fullScreenMode ? <FullScreenPortal>{ImageNavigator}</FullScreenPortal> : ImageNavigator) : (fullScreenMode ? <FullScreenPortal>{ImageAdder}</FullScreenPortal> : ImageAdder);
 }
