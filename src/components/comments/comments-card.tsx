@@ -13,7 +13,7 @@ import { Judgment, userVoteToCommentType } from '../../types';
 
 // style imports
 import './comments.css';
-import { TopicContext, fullScreenContext } from '../app-shell';
+import { topicContext, fullScreenContext } from '../app-shell';
 import { isMobile } from '../../utils';
 // import { useMedia } from '../../hooks/useMedia';
 
@@ -49,7 +49,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     // );
 
     const { fullScreenMode, setFullScreenMode } = useContext(fullScreenContext);
-    const { topic } = useContext(TopicContext);
+    const { topic } = useContext(topicContext);
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 

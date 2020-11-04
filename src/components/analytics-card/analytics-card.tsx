@@ -75,7 +75,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }, []);
 
     const doubleTap = () => {
-        console.log(fullScreenMode);
         setFullScreenMode(!fullScreenMode);
     };
 

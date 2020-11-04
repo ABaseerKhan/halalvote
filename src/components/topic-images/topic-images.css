@@ -5,7 +5,20 @@
   border-radius: 25px 25px 0px 0px;
   overflow: auto;
   text-align: center;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+  scroll-snap-type: y mandatory;
+  background: black;
+}
+
+.images-body-fullscreen {
+  z-index: 3;
+  position: absolute;
+  display: block;
+  height: calc(100% - 50px);
+  width: 100%;
+  overflow: auto;
+  text-align: center;
+  scroll-behavior: auto;
   scroll-snap-type: y mandatory;
   background: black;
 }
@@ -56,19 +69,6 @@
 /* Optional: show position indicator in red */
 .images-body::-webkit-scrollbar-thumb {
   background: rgb(195, 195, 12);
-}
-
-.images-body-fullscreen {
-  z-index: 3;
-  position: absolute;
-  display: block;
-  height: calc(100% - 50px);
-  width: 100%;
-  overflow: auto;
-  text-align: center;
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
-  background: black;
 }
 
 .more-images-above, .more-images-below {

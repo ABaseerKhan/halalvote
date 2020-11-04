@@ -8,7 +8,7 @@ import { VotingSwitch } from './voting-switch';
 //style imports
 import './topic-carousel.css';
 import { useCookies } from 'react-cookie';
-import { TopicContext } from '../app-shell';
+import { topicContext } from '../app-shell';
 
 interface TopicVotesComponentProps {
     topicTitle: string,
@@ -19,7 +19,7 @@ interface TopicVotesComponentProps {
 };
 
 const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
-    const { topic, setTopic } = useContext(TopicContext);
+    const { topic, setTopic } = useContext(topicContext);
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 

@@ -23,7 +23,7 @@ import { TopicImages } from '../../types';
 // styles
 import './topic-images.css';
 import { useQuery } from '../../hooks/useQuery';
-import { fullScreenContext } from '../app-shell';
+import { fullScreenContext, topicImagesContext } from '../app-shell';
 
 interface TopicImagesComponentProps {
     topicTitle: string,
@@ -33,20 +33,19 @@ interface TopicImagesComponentProps {
 interface BasicPicture { src: string; width: number; height: number; };
 interface TopicImagesComponentState {
     addTopicDisplayed: boolean,
-    topicImages: TopicImages[],
-    currentIndex: number,
     picture: BasicPicture | null,
     loading: boolean,
 };
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const { topicTitle } = props;
     const { fullScreenMode, setFullScreenMode } = useContext(fullScreenContext);
+    const { topicImagesState, setTopicImages } = useContext(topicImagesContext);
+    const topicImages = topicImagesState[topicTitle]?.images || [];
+    const imageIndex = topicImagesState[topicTitle]?.index || 0;
     const [state, setState] = useState<TopicImagesComponentState>({
         addTopicDisplayed: false,
-        topicImages: [],
-        currentIndex: 0,
         picture: null,
-        loading: true,
+        loading: false,
     });
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
@@ -55,7 +54,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const imagesBodyRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (topicTitle) { 
+        if (topicTitle && !topicImagesState[topicTitle]) { 
             fetchImages();
         } // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [topicTitle, sessiontoken]);
@@ -67,11 +66,12 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     useEffect(() => {
         var isScrolling: any;
         if (imagesBodyRef.current) {
+            imagesBodyRef.current?.scroll(0, (imageIndex * imagesBodyRef.current.clientHeight));
             imagesBodyRef.current.onscroll = () => {
                 clearTimeout( isScrolling );
                 isScrolling = setTimeout(function() {
                     const imgIndex = Math.floor((imagesBodyRef.current!.scrollTop+10) / imagesBodyRef.current!.clientHeight);
-                    setState(prevState => ({...prevState, currentIndex: Math.min(Math.max(imgIndex, 0), state.topicImages.length - 1)}));
+                    setTopicImages(topicTitle, topicImages, Math.min(Math.max(imgIndex, 0), topicImages.length - 1));
                 }, 66);
             }
         }
@@ -102,11 +102,13 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 img.height = imgDimensions.height;
                 img.width = imgDimensions.width;
                 if (idx === data.length - 1) {
-                    setState({...state, topicImages: data, currentIndex: 0, addTopicDisplayed: false, loading: false});
+                    setTopicImages(topicTitle, data, 0);
+                    setState({...state, addTopicDisplayed: false, loading: false});
                 }
             });
         } else {
-            setState({...state, topicImages: data, currentIndex: 0, addTopicDisplayed: false, loading: false});
+            setTopicImages(topicTitle, data, 0);
+            setState({...state, addTopicDisplayed: false, loading: false});
         }
     }
 
@@ -138,7 +140,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 baseUrl: topicsConfig.url,
                 path: 'delete-topic-image',
                 data: {
-                    "id": state.topicImages[state.currentIndex].id,
+                    "id": topicImages[imageIndex].id,
                     "username": username
                 },
                 additionalHeaders: {
@@ -154,7 +156,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     }
 
     const updateImageLike = async () => {
-        const topicImage = state.topicImages[state.currentIndex];
+        const topicImage = topicImages[imageIndex];
         const { status, data } = await postData({
             baseUrl: topicsConfig.url,
             path: 'update-topic-image-like',
@@ -172,7 +174,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         if (status === 200) {
             topicImage.likes = data.likes;
             topicImage.userLike = topicImage.userLike === 0 ? 1 : 0;
-            setState({...state, topicImages: state.topicImages});
+            setTopicImages(topicTitle, topicImages, imageIndex);
         }
     }
 
@@ -189,7 +191,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     }
 
     const isUserImage = (idx: number) => {
-        return state.topicImages.length > state.currentIndex && state.topicImages[idx].username === username;
+        return topicImages.length > imageIndex && topicImages[idx].username === username;
     }
 
     const loaderCssOverride = css`
@@ -210,9 +212,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 
     const doubleTap = () => {
         setFullScreenMode(!fullScreenMode);
-        setTimeout(() => { 
-            imagesBodyRef.current?.scroll(0, (state.currentIndex * imagesBodyRef.current.clientHeight));
-        }, 0);
     };
 
     const moreImagesIndicatorPosition = fullScreenMode ? "fixed" : "absolute";
@@ -221,8 +220,8 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         <div style={{ height: '100%', width: '100%' }}>
             <div id="images-body" ref={imagesBodyRef} className={fullScreenMode ? "images-body-fullscreen" : "images-body"} onDoubleClick={doubleTap}>
                 {
-                    state.topicImages.length > 0 ?
-                        state.topicImages.map((topicImg, idx) => {
+                    topicImages.length > 0 ?
+                        topicImages.map((topicImg, idx) => {
                             const ImgStats = 
                             <>
                                 <div className="image-actions-container">
@@ -249,10 +248,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                         <div className='no-image-text'>No images to show</div>
                 }
-                {state.currentIndex > 0 && <div className={"more-images-above"} style={{ position: moreImagesIndicatorPosition, top: fullScreenMode ? `3.5em` : `5px` }} onClick={() => imagesBodyRef.current?.scroll(0, ((state.currentIndex * imagesBodyRef.current.clientHeight) - 500)) }>
+                {imageIndex > 0 && <div className={"more-images-above"} style={{ position: moreImagesIndicatorPosition, top: fullScreenMode ? `3.5em` : `5px` }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) - 500)) }>
                     <UpArrowSVG />
                 </div>}
-                {state.topicImages.length > state.currentIndex + 1 && <div className={"more-images-below"} style={{ position: moreImagesIndicatorPosition }} onClick={() => imagesBodyRef.current?.scroll(0, ((state.currentIndex * imagesBodyRef.current.clientHeight) + 500)) }>
+                {topicImages.length > imageIndex + 1 && <div className={"more-images-below"} style={{ position: moreImagesIndicatorPosition }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) + 500)) }>
                     <DownArrowSVG />
                 </div>}
             </div>
