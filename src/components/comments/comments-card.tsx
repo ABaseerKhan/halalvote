@@ -13,7 +13,7 @@ import { Judgment, userVoteToCommentType } from '../../types';
 
 // style imports
 import './comments.css';
-import { TopicContext } from '../app-shell';
+import { TopicContext, fullScreenContext } from '../app-shell';
 import { isMobile } from '../../utils';
 // import { useMedia } from '../../hooks/useMedia';
 
@@ -48,6 +48,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     //     false
     // );
 
+    const { fullScreenMode } = useContext(fullScreenContext);
     const { topic } = useContext(TopicContext);
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
@@ -228,7 +229,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} >
                 { !state.loading && state.commentsShowable && state.comments.length === 0 ?
                     <div className="no-comments-to-show-text">No arguments to show</div> :
-                        <div id={commentsContainerId} className="comments-container">
+                        <div id={commentsContainerId} className="comments-container" style={{ paddingTop: fullScreenMode ? "6em" : 0 }}>
                         <div className={"comments-container-padding-div"}>
                             {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
                                 state.comments.map((comment: Comment, i: number) => {

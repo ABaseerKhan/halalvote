@@ -1,0 +1,48 @@
+.full-screen-container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.topic-carousel-container-fs {
+    
+}
+
+.feature-selector {
+    position: absolute;
+    top: 4em;
+    width: 350px;
+    left: calc(50% - 175px);
+    font-weight: 600;
+    z-index: 4;
+    display: flex;
+}
+
+.feature-selector:hover {
+    cursor: pointer;
+}
+
+.feature-selector-selected, .feature-selector-unselected {
+    margin: auto;
+    width: 100px;
+    text-align: center;
+}
+
+.feature-selector-selected {
+    color: white;
+}
+
+.feature-selector-unselected {
+    color: gray;
+}
+
+.selector-underline {
+    position: absolute;
+    top: 5.75em;
+    width: 3em;
+    left: calc(50% - 1.5em);
+    z-index: 4;
+    height: 3px;
+    background: white;
+    border-radius: 5px;
+}

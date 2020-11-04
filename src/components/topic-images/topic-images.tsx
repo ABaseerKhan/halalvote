@@ -23,7 +23,6 @@ import { TopicImages } from '../../types';
 // styles
 import './topic-images.css';
 import { useQuery } from '../../hooks/useQuery';
-import { FullScreenPortal } from '../..';
 import { fullScreenContext } from '../app-shell';
 
 interface TopicImagesComponentProps {
@@ -258,7 +257,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 </div>}
             </div>
             <div className={fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
-                <div className={!!props.shown ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
+                <div className={!state.addTopicDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
                     <AddButtonSVG/>
                 </div>
             </div>
@@ -312,5 +311,5 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         </div>
     );
 
-    return !state.addTopicDisplayed ? (fullScreenMode ? <FullScreenPortal>{ImageNavigator}</FullScreenPortal> : ImageNavigator) : (fullScreenMode ? <FullScreenPortal>{ImageAdder}</FullScreenPortal> : ImageAdder);
+    return !state.addTopicDisplayed ? ImageNavigator : ImageAdder;
 }

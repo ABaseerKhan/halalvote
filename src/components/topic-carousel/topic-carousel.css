@@ -58,6 +58,28 @@
     outline: none;
 }
 
+.carousel-button-left-fs, .carousel-button-right-fs {
+    position: absolute;
+    top: calc(50vh - 25px);
+    padding: 0;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    background: rgba(0,0,0,0.4);
+    border: none;
+    border-radius: 50%;
+    color: var(--site-background-color);
+    outline: none;
+}
+
+.carousel-button-left-fs {
+    left: 2em;
+}
+
+.carousel-button-right-fs {
+    right: 2em;
+}
+
 .carousel-button-left {
     left: 0;
 }

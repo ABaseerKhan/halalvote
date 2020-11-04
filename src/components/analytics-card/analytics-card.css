@@ -1,10 +1,18 @@
-.analytics {
+.analytics, .analytics-fs {
   display: table;
   height: 100%;
   width: 100%;
   text-align: center;
-  background: rgb(0,0,0,0.1);
+  background: var(--site-background-color);
   border-radius: 25px;
+}
+
+.analytics {
+
+}
+
+.analytics-fs {
+  padding-top: 6em;
 }
 
 .chart {

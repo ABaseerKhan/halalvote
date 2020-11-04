@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import { VotesBar } from './votes-bar';
 import { Chart } from "chart.js";
 
@@ -6,6 +6,7 @@ import { Chart } from "chart.js";
 
 // styles
 import './analytics-card.css';
+import { fullScreenContext } from '../app-shell';
 
 interface AnalyticsCardComponentProps {
     id: string,
@@ -17,6 +18,7 @@ interface AnalyticsCardComponentProps {
 export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     const { id, halalPoints, haramPoints, numVotes } = props;
 
+    const { fullScreenMode } = useContext(fullScreenContext);
     const chartRef = useRef<any>(null);
 
     useEffect(() => {
@@ -73,7 +75,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }, []);
 
     return (
-    <div id={id} className="analytics">
+    <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"}>
         <VotesBar halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes}></VotesBar>
         <canvas ref={chartRef} className="chart" id="myChart"></canvas>
     </div>
