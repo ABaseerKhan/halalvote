@@ -23,7 +23,7 @@ interface FullScreenComponentProps {
 export const FullScreenComponent = (props: FullScreenComponentProps) => {
     const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel } = props;
 
-    const { fullScreenMode, setFullScreenMode } = useContext(fullScreenContext);
+    const { setFullScreenMode } = useContext(fullScreenContext);
     const history = useHistory();
     const query = useQuery();
     const topCard = query.get("card")?.toUpperCase() || mediaCardId;
@@ -46,7 +46,7 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
     }
 
     const doubleTap = () => {
-      setFullScreenMode(!fullScreenMode);
+      setFullScreenMode(false);
     };
 
     return (
