@@ -252,10 +252,13 @@ export const AppShellComponent = (props: any) => {
                     commentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                     analyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
                   />
-                  <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topic?.topicTitle || ""} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
                 </Fragment>
                 }
               </div>
+              {
+                !state.fullScreenMode && 
+                <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topic?.topicTitle || ""} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
+              }
               {state.fullScreenMode && <FullScreenPortal>
                 {
                   <FullScreenComponent
