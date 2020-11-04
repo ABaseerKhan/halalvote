@@ -48,7 +48,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     //     false
     // );
 
-    const { fullScreenMode } = useContext(fullScreenContext);
+    const { fullScreenMode, setFullScreenMode } = useContext(fullScreenContext);
     const { topic } = useContext(TopicContext);
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
@@ -225,8 +225,11 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const commentsContainerId = `comments-container`;
     const commentsCardId = "comments-card";
 
+    const doubleTap = () => {
+        setFullScreenMode(!fullScreenMode);
+    };
     return(
-        <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} >
+        <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onDoubleClick={doubleTap} className={commentsCardId} >
                 { !state.loading && state.commentsShowable && state.comments.length === 0 ?
                     <div className="no-comments-to-show-text">No arguments to show</div> :
                         <div id={commentsContainerId} className="comments-container" style={{ paddingTop: fullScreenMode ? "6em" : 0 }}>

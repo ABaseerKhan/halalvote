@@ -18,7 +18,7 @@ interface AnalyticsCardComponentProps {
 export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     const { id, halalPoints, haramPoints, numVotes } = props;
 
-    const { fullScreenMode } = useContext(fullScreenContext);
+    const { fullScreenMode, setFullScreenMode } = useContext(fullScreenContext);
     const chartRef = useRef<any>(null);
 
     useEffect(() => {
@@ -74,8 +74,12 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
         });
     }, []);
 
+    const doubleTap = () => {
+        setFullScreenMode(!fullScreenMode);
+    };
+    
     return (
-    <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"}>
+    <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"} onDoubleClick={doubleTap}>
         <VotesBar halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes}></VotesBar>
         <canvas ref={chartRef} className="chart" id="myChart"></canvas>
     </div>
