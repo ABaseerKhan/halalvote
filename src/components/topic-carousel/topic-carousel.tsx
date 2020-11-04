@@ -70,7 +70,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 }
                 let swipeDirection = SwipeDirection.NONE;
 
-                window.ontouchstart = (e: TouchEvent) => {
+                const touchStartListener = (e: TouchEvent) => {
                     const t = e.touches[0]
                     swipeDet.sX = t.screenX;
                     swipeDet.sY = t.screenY;
@@ -78,7 +78,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     swipeDet.eY = t.screenY;
                 }
 
-                window.ontouchmove = (e: TouchEvent) => {
+                const touchMoveListener = (e: TouchEvent) => {
                     const t = e.touches[0]
                     swipeDet.eX = t.screenX;
                     swipeDet.eY = t.screenY;
@@ -101,7 +101,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     }
                 }
 
-                window.ontouchend = (e: TouchEvent) => {
+                const touchEndListener = (e: TouchEvent) => {
                     const deltaX = Math.abs(swipeDet.eX - swipeDet.sX);
 
                     if (deltaX >= deltaMin) {
@@ -125,6 +125,16 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     leftTopicNavigatorDisplay.style.width = "0px";
                     rightTopicNavigatorDisplay.style.right = "0";
                     rightTopicNavigatorDisplay.style.width = "0px";
+                }
+
+                window.addEventListener("touchstart", touchStartListener, {passive: false});
+                window.addEventListener("touchmove", touchMoveListener, {passive: false});
+                window.addEventListener("touchend", touchEndListener, {passive: false});
+
+                return () => {
+                    window.removeEventListener("touchstart", touchStartListener);
+                    window.removeEventListener("touchmove", touchMoveListener);
+                    window.removeEventListener("touchend", touchEndListener);
                 }
             }
         } // eslint-disable-next-line

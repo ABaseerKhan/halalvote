@@ -179,13 +179,13 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 onClickDown();
             }
     
-            document.onmouseup = (e: MouseEvent) => {
+            document.addEventListener("mouseup", (e: MouseEvent) => {
                 onClickUp(e.x);
-            }
+            });
     
-            document.onmousemove = (e: MouseEvent) => {
+            document.addEventListener("mousemove", (e: MouseEvent) => {
                 onClickMove(e.x);
-            }
+            });
         } else {
             let currentX: number | null = null;
 
