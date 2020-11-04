@@ -216,6 +216,8 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }, 0);
     };
 
+    const moreImagesIndicatorPosition = state.fullScreenMode ? "fixed" : "absolute";
+
     const ImageNavigator = (
         <div style={{ height: '100%', width: '100%' }}>
             <div id="images-body" ref={imagesBodyRef} className={state.fullScreenMode ? "images-body-fullscreen" : "images-body"} onDoubleClick={doubleTap}>
@@ -248,10 +250,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                         <div className='no-image-text'>No images to show</div>
                 }
-                {state.currentIndex > 0 && <div className={"more-images-above"}>
+                {state.currentIndex > 0 && <div className={"more-images-above"} style={{ position: moreImagesIndicatorPosition }}>
                     <UpArrowSVG />
                 </div>}
-                {state.topicImages.length > state.currentIndex + 1 && <div className={"more-images-below"}>
+                {state.topicImages.length > state.currentIndex + 1 && <div className={"more-images-below"} style={{ position: moreImagesIndicatorPosition }}>
                     <DownArrowSVG />
                 </div>}
             </div>
