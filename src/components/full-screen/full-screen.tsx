@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useState, useContext } from 'react';
 import './full-screen.css';
 import { useQuery } from '../../hooks/useQuery';
 import { 
@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { setCardQueryParam } from '../../utils';
 import { mediaCardId, commentsCardId, analyticsCardId } from '../cards-shell/cards-shell';
+import { fullScreenContext } from '../app-shell';
 // import { useMedia } from '../../hooks/useMedia';
 
 // type imports
@@ -22,6 +23,7 @@ interface FullScreenComponentProps {
 export const FullScreenComponent = (props: FullScreenComponentProps) => {
     const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel } = props;
 
+    const { fullScreenMode, setFullScreenMode } = useContext(fullScreenContext);
     const history = useHistory();
     const query = useQuery();
     const topCard = query.get("card")?.toUpperCase() || mediaCardId;
@@ -43,8 +45,12 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
         underlineTranslationPx = 0;
     }
 
+    const doubleTap = () => {
+      setFullScreenMode(!fullScreenMode);
+    };
+
     return (
-        <div className="full-screen-container">
+        <div className="full-screen-container" onDoubleClick={doubleTap}>
           <div className={"topic-carousel-container-fs"}>
             {TopicCarousel}
           </div>
