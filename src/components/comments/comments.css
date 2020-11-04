@@ -325,6 +325,7 @@
     border-radius: 0px 0px 25px 25px;
     box-shadow: 0 5px 50px 0 rgba(32,33,36,0.28);
     transition: all ease-out 0.3s;
+    background: white;
 }
 
 .comment-maker-input {

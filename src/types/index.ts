@@ -49,6 +49,7 @@ export interface Comment {
     timeStamp: string,
     depth: number,
     userVote?: number,
+    repliesShown?: boolean,
 };
 
 export enum Vote {

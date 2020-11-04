@@ -19,7 +19,7 @@ interface TopicVotesComponentProps {
 };
 
 const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
-    const { topic, setTopic } = useContext(topicContext);
+    const { topic, setTopicContext } = useContext(topicContext);
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
@@ -51,10 +51,10 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                         document.body.style.backgroundColor = 'var(--site-background-color)'
                     }, 500);
                 }
-                setTopic({ ...topic!, vote: value, halalPoints: data.halalPoints, haramPoints: data.haramPoints, numVotes: data.numVotes });
+                setTopicContext({ ...topic!, vote: value, halalPoints: data.halalPoints, haramPoints: data.haramPoints, numVotes: data.numVotes });
             } else {
                 const newUserVote = topic.vote === undefined ? 0 : undefined;
-                setTopic({ ...topic!, vote: newUserVote });
+                setTopicContext({ ...topic!, vote: newUserVote });
             }
         }
     };

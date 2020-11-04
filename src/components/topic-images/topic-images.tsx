@@ -38,8 +38,8 @@ interface TopicImagesComponentState {
 };
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const { topicTitle } = props;
-    const { fullScreenMode, setFullScreenMode } = useContext(fullScreenContext);
-    const { topicImagesState, setTopicImages } = useContext(topicImagesContext);
+    const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
+    const { topicImagesState, setTopicImagesContext } = useContext(topicImagesContext);
     const topicImages = topicImagesState[topicTitle]?.images || [];
     const imageIndex = topicImagesState[topicTitle]?.index || 0;
     const [state, setState] = useState<TopicImagesComponentState>({
@@ -71,7 +71,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 clearTimeout( isScrolling );
                 isScrolling = setTimeout(function() {
                     const imgIndex = Math.floor((imagesBodyRef.current!.scrollTop+10) / imagesBodyRef.current!.clientHeight);
-                    setTopicImages(topicTitle, topicImages, Math.min(Math.max(imgIndex, 0), topicImages.length - 1));
+                    setTopicImagesContext(topicTitle, topicImages, Math.min(Math.max(imgIndex, 0), topicImages.length - 1));
                 }, 66);
             }
         }
@@ -102,12 +102,12 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 img.height = imgDimensions.height;
                 img.width = imgDimensions.width;
                 if (idx === data.length - 1) {
-                    setTopicImages(topicTitle, data, 0);
+                    setTopicImagesContext(topicTitle, data, 0);
                     setState({...state, addTopicDisplayed: false, loading: false});
                 }
             });
         } else {
-            setTopicImages(topicTitle, data, 0);
+            setTopicImagesContext(topicTitle, data, 0);
             setState({...state, addTopicDisplayed: false, loading: false});
         }
     }
@@ -174,7 +174,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         if (status === 200) {
             topicImage.likes = data.likes;
             topicImage.userLike = topicImage.userLike === 0 ? 1 : 0;
-            setTopicImages(topicTitle, topicImages, imageIndex);
+            setTopicImagesContext(topicTitle, topicImages, imageIndex);
         }
     }
 
@@ -211,7 +211,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     };
 
     const doubleTap = () => {
-        setFullScreenMode(!fullScreenMode);
+        setFullScreenModeContext(!fullScreenMode);
     };
 
     const moreImagesIndicatorPosition = fullScreenMode ? "fixed" : "absolute";

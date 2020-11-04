@@ -29,6 +29,8 @@ enum IncomingDirection {
   NONE
 }
 
+const maxTopicsDataCacheSize = 3;
+
 const appShellId = "app-shell";
 const topicContentId = "topic-content";
 const topicCarouselId = "topicCarousel";
@@ -45,6 +47,7 @@ const getCardsShellContainer = () => { return document.getElementById(cardsShell
 type AppShellState = { 
   topicDetails: {topics: Topic[]; topicIndex: number}; 
   topicImages: TopicImagesState,
+  comments: CommentsState,
   scrollPosition: number, 
   specificComment?: Comment, 
   incomingDirection: IncomingDirection, 
@@ -57,6 +60,7 @@ export const AppShellComponent = (props: any) => {
       topicIndex: 0
     },
     topicImages: { },
+    comments: { },
     scrollPosition: window.innerHeight,
     specificComment: undefined,
     incomingDirection: IncomingDirection.NONE,
@@ -222,7 +226,6 @@ export const AppShellComponent = (props: any) => {
   const halalPoints = topic?.halalPoints !== undefined ? topic.halalPoints : 0;
   const haramPoints = topic?.haramPoints !== undefined ? topic.haramPoints : 0;
   const numTopicVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
-  const numComments = topic?.numComments !== undefined ? topic.numComments : 0;
 
   const scrollToPage = (page: number) => {
     const appShell = getAppShell();
@@ -242,45 +245,53 @@ export const AppShellComponent = (props: any) => {
     }
   }
 
-  // context-setters
-  const setFullScreenMode = (fullScreenMode: boolean) => { setState(prevState => ({ ...prevState, fullScreenMode: fullScreenMode })); };
-  const setTopic = (newTopic: Topic) => setState(prevState => ({ ...prevState, topicDetails: { ...prevState.topicDetails, topics: prevState.topicDetails.topics.map((topic, idx) => { if(idx === prevState.topicDetails.topicIndex) return newTopic; return topic; })}}));
-  const setTopicImagesState = (topicTitle: string, topicImages: TopicImages[], index: number) => setState(prevState => { 
-    prevState.topicImages[topicTitle] = { images: topicImages, index: index };
+  // context-setters (they also serve as application cache)
+  const setFullScreenModeContext = (fullScreenMode: boolean) => { setState(prevState => ({ ...prevState, fullScreenMode: fullScreenMode })); };
+  const setTopicContext = (newTopic: Topic) => setState(prevState => ({ ...prevState, topicDetails: { ...prevState.topicDetails, topics: prevState.topicDetails.topics.map((topic, idx) => { if(idx === prevState.topicDetails.topicIndex) return newTopic; return topic; })}}));
+  const setTopicImagesContext = (topicTitle: string, topicImages: TopicImages[], index: number) => setState(prevState => { 
+    prevState.topicImages[topicTitle] = { images: topicImages, index: index, creationTime: Date.now() };
+    limitCacheSize(prevState.topicImages);
+    return { ...prevState };
+  });
+  const setCommentsContext = (topicTitle: string, comments: Comment[], specificComment: Comment) => setState(prevState => { 
+    prevState.comments[topicTitle] = { comments: comments, specificComment: specificComment, creationTime: Date.now() };
+    limitCacheSize(prevState.comments);
     return { ...prevState };
   });
 
   return (
       <div id={appShellId} className={appShellId} >
         <SearchComponent onSuggestionClick={searchTopic} />
-        <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenMode: setFullScreenMode }}>
-          <topicContext.Provider value={{ topic: topic, setTopic: setTopic }}>
-            <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImages: setTopicImagesState }}>
-              <div id={topicContentId} className={topicContentId}>
-                {state.fullScreenMode && 
-                  <FullScreenComponent
-                    MediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} />}
-                    CommentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                    AnalyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
-                    TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} topicTitle={topic?.topicTitle || ""} />}
-                  />
-                }
-                <div key={state.topicDetails.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId}>
-                  {!state.fullScreenMode && 
-                  <Fragment>
-                    <CardsShellComponent
-                      mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} /> }
-                      commentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                      analyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
+        <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenModeContext: setFullScreenModeContext }}>
+          <topicContext.Provider value={{ topic: topic, setTopicContext: setTopicContext }}>
+            <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
+              <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
+                <div id={topicContentId} className={topicContentId}>
+                  {state.fullScreenMode && 
+                    <FullScreenComponent
+                      MediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} />}
+                      CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                      AnalyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
+                      TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} topicTitle={topic?.topicTitle || ""} />}
                     />
-                  </Fragment>
+                  }
+                  <div key={state.topicDetails.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId}>
+                    {!state.fullScreenMode && 
+                    <Fragment>
+                      <CardsShellComponent
+                        mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} /> }
+                        commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                        analyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
+                      />
+                    </Fragment>
+                    }
+                  </div>
+                  {
+                    !state.fullScreenMode && 
+                    <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topic?.topicTitle || ""} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
                   }
                 </div>
-                {
-                  !state.fullScreenMode && 
-                  <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topic?.topicTitle || ""} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
-                }
-              </div>
+              </commentsContext.Provider>
             </topicImagesContext.Provider>
           </topicContext.Provider>
         </fullScreenContext.Provider>
@@ -327,19 +338,39 @@ const animatePrevTopic = (cardsShellContainer: any, callback: () => void) => {
   };
 }
 
-export const topicContext = React.createContext<{topic: Topic | undefined; setTopic: (newTopic: Topic) => void}>({
+export const topicContext = React.createContext<{topic: Topic | undefined; setTopicContext: (newTopic: Topic) => void}>({
   topic: undefined,
-  setTopic: (newTopic) => undefined
+  setTopicContext: (newTopic) => undefined
 });
 
-export const fullScreenContext = React.createContext<{fullScreenMode: boolean; setFullScreenMode: (fullScreenMode: boolean) => void}>({
+export const fullScreenContext = React.createContext<{fullScreenMode: boolean; setFullScreenModeContext: (fullScreenMode: boolean) => void}>({
   fullScreenMode: false,
-  setFullScreenMode: (fullScreenMode) => undefined
+  setFullScreenModeContext: (fullScreenMode) => undefined
 });
 
-export type TopicImagesState = { [topicTitle: string]: { images: TopicImages[], index: number } };
-export const topicImagesContext = React.createContext<{topicImagesState: TopicImagesState; setTopicImages: (topicTitle: string, topicImages: TopicImages[], index: number) => void}>({
+export type TopicImagesState = { [topicTitle: string]: { images: TopicImages[], index: number, creationTime: number } };
+export const topicImagesContext = React.createContext<{topicImagesState: TopicImagesState; setTopicImagesContext: (topicTitle: string, topicImages: TopicImages[], index: number) => void}>({
   topicImagesState: { },
-  setTopicImages: (topicTitle, topicImages, index) => undefined
+  setTopicImagesContext: (topicTitle, topicImages, index) => undefined
 });
 
+export type CommentsState = { [topicTitle: string]: { comments: Comment[], specificComment: Comment | undefined, creationTime: number } };
+export const commentsContext = React.createContext<{commentsState: CommentsState; setCommentsContext: (topicTitle: string, comments: Comment[], specificComment: Comment) => void}>({
+  commentsState: { },
+  setCommentsContext: (topicTitle, comments, specificComment) => undefined
+});
+
+const limitCacheSize = (object: Object): void => {
+  let i = 1;
+  let oldest = ['', Number.MAX_SAFE_INTEGER];
+  for (const [key, value] of Object.entries(object)) {
+    if (value.creationTime < oldest[1]) {
+      oldest = [key, value.creationTime];
+    };
+
+    if (i > maxTopicsDataCacheSize) {
+      delete (object as any)[oldest[0]];
+    }
+    i++;
+  }
+}

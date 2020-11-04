@@ -1,4 +1,4 @@
-import React, { useState, memo, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
@@ -13,32 +13,28 @@ import { Judgment, userVoteToCommentType } from '../../types';
 
 // style imports
 import './comments.css';
-import { topicContext, fullScreenContext } from '../app-shell';
+import { topicContext, fullScreenContext, commentsContext } from '../app-shell';
 import { isMobile } from '../../utils';
 // import { useMedia } from '../../hooks/useMedia';
 
 interface CommentsCardComponentProps {
-    numComments: number,
-    specificComment?: Comment,
     refreshTopic: (topicTofetch: string | undefined) => any,
     switchCards: (judgement: Judgment) => any,
 };
 
 interface CommentsCardState {
-    comments: Comment[];
     loading: boolean;
     commentsShowable: boolean;
     pathToHighlightedComment: number[] | undefined;
 };
 
 const initialState = {
-    comments: [],
     loading: true,
     commentsShowable: true,
     pathToHighlightedComment: undefined,
 }
-const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
-    const { specificComment, refreshTopic } = props;
+export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
+    const { refreshTopic } = props;
 
     // const isMobile = useMedia(
     //     // Media queries
@@ -48,8 +44,11 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     //     false
     // );
 
-    const { fullScreenMode, setFullScreenMode } = useContext(fullScreenContext);
+    const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
     const { topic } = useContext(topicContext);
+    const { commentsState, setCommentsContext } = useContext(commentsContext);
+    let comments = topic?.topicTitle ? commentsState[topic.topicTitle]?.comments || [] : [];
+    const specificComment = topic?.topicTitle ? commentsState[topic.topicTitle]?.specificComment : undefined;
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
@@ -58,8 +57,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     const commentMakerRef = useRef<any>(null);
 
     useDebouncedEffect(() => {
-        if (topic?.topicTitle) {
-            state.comments = [];
+        if (topic?.topicTitle && !commentsState[topic.topicTitle]) {
             state.pathToHighlightedComment = undefined;
             fetchComments([]);
         } else {
@@ -76,21 +74,22 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
 
     useEffect(() => {
         if (topic?.topicTitle && specificComment && (topic.topicTitle === specificComment.topicTitle)) {
-            state.comments = [];
+            // eslint-disable-next-line
+            comments = [];
             state.pathToHighlightedComment = undefined;
-            fetchComments([], undefined, specificComment?.id);
+            fetchComments([], specificComment?.id);
         } // eslint-disable-next-line
     }, [specificComment]);
 
     useEffect(() => {
         if(state.pathToHighlightedComment) {
-            scrollToHighlightedComment(getCommentFromPath(state.comments, state.pathToHighlightedComment));
+            scrollToHighlightedComment(getCommentFromPath(comments, state.pathToHighlightedComment));
         } // eslint-disable-next-line
     }, [state.pathToHighlightedComment])
 
-    const fetchComments = async (pathToParentComment: number[], totalTopLevelComments?: number, specificCommentId?: number, depth=1) => {
-        const parentComment = getCommentFromPath(state.comments, pathToParentComment);
-        const { data: comments }: { data: Comment[]} = await postData({
+    const fetchComments = async (pathToParentComment: number[], specificCommentId?: number, depth=1) => {
+        const parentComment = getCommentFromPath(comments, pathToParentComment);
+        const { data: newComments }: { data: Comment[]} = await postData({
             baseUrl: commentsConfig.url,
             path: 'get-comments', 
             data: {
@@ -100,16 +99,14 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
                 "singleCommentId": specificCommentId,
                 "depth": depth,
                 "n": 50,
-                "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : state.comments?.map((r) => r.id),
+                "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : comments?.map((r) => r.id),
             },
             additionalHeaders: { },
         });
-        const updatedComments = addCommentsLocally(state.comments, comments, pathToParentComment, true);
-        if (totalTopLevelComments !== undefined) {
-            setState(prevState => ({ ...prevState, comments: updatedComments, totalTopLevelComments: totalTopLevelComments, loading: false }));
-        } else {
-            setState(prevState => ({ ...prevState, comments: updatedComments, loading: false }));
-        }
+        const updatedComments = addCommentsLocally(comments, newComments, pathToParentComment, true);
+        setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
+        setState(prevState => ({ ...prevState, loading: false }));
+
         if (specificCommentId) {
             const pathToSpecificComment = getPathFromId(updatedComments, specificCommentId, []);
             setState(prevState => ({ ...prevState, pathToHighlightedComment: pathToSpecificComment }));
@@ -117,9 +114,9 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     }
 
     const createComment = async (commentText: string) => {
-        const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
+        const highlightedComment = getCommentFromPath(comments, state.pathToHighlightedComment);
         const isReplyToReply = (highlightedComment?.depth || 0) >= 2;
-        const parentOfhighlightedComment = isReplyToReply ? getCommentFromPath(state.comments, state.pathToHighlightedComment?.slice(0,-1)) : undefined;
+        const parentOfhighlightedComment = isReplyToReply ? getCommentFromPath(comments, state.pathToHighlightedComment?.slice(0,-1)) : undefined;
 
         const { status, data: comment }: { status: number, data: Comment } = await postData({
             baseUrl: commentsConfig.url,
@@ -152,13 +149,14 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             depth: comment.depth,
         };
         
-        const updatedComments = addCommentsLocally(state.comments, [commentObject], isReplyToReply ? parentOfhighlightedComment && state.pathToHighlightedComment?.slice(0,-1) : highlightedComment && state.pathToHighlightedComment);
-        setState(prevState => ({ ...prevState, comments: updatedComments }));
+        const updatedComments = addCommentsLocally(comments, [commentObject], isReplyToReply ? parentOfhighlightedComment && state.pathToHighlightedComment?.slice(0,-1) : highlightedComment && state.pathToHighlightedComment);
+        setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
+        setState(prevState => ({ ...prevState }));
         return status;
     }
 
     const deleteComment = async (pathToComment: number[]) => {
-        const commentToDelete = getCommentFromPath(state.comments, pathToComment);
+        const commentToDelete = getCommentFromPath(comments, pathToComment);
         const response = await postData({
             baseUrl: commentsConfig.url,
             path: 'delete-comment', 
@@ -177,8 +175,9 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             await refreshTopic(topic?.topicTitle);
         }
 
-        const updatedComments = deleteCommentLocally(state.comments, pathToComment, !!response.data?.psuedoDelete);
-        setState(prevState => ({ ...prevState, comments: updatedComments, pathToHighlightedComment: undefined }));
+        const updatedComments = deleteCommentLocally(comments, pathToComment, !!response.data?.psuedoDelete);
+        setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
+        setState(prevState => ({ ...prevState, pathToHighlightedComment: undefined }));
     }
 
     const highlightComment = (path: number[] | undefined) => {
@@ -196,7 +195,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
             commentMakerRef.current.focus();
             if (!isMobile) {
                 const commentsCard = document.getElementById('comments-card');
-                const highlightedComment = document.getElementById(`comment-${getCommentFromPath(state.comments, path)?.id}`);
+                const highlightedComment = document.getElementById(`comment-${getCommentFromPath(comments, path)?.id}`);
                 const offsetTop = highlightedComment?.offsetParent?.id === 'comments-container' ? highlightedComment.offsetTop : (highlightedComment?.offsetParent as HTMLElement)?.offsetTop + highlightedComment!.offsetTop;
                 commentMakerRef.current.setHeight(commentsCard?.clientHeight! - (offsetTop + highlightedComment!.clientHeight));
             }
@@ -221,24 +220,23 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
         }
     }
 
-    const highlightedComment = getCommentFromPath(state.comments, state.pathToHighlightedComment);
+    const highlightedComment = getCommentFromPath(comments, state.pathToHighlightedComment);
     const commentsContainerId = `comments-container`;
     const commentsCardId = "comments-card";
 
     const doubleTap = () => {
-        setFullScreenMode(!fullScreenMode);
+        setFullScreenModeContext(!fullScreenMode);
     };
     return(
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onDoubleClick={doubleTap} className={commentsCardId} style={{ zIndex: fullScreenMode ? 3 : 0 }} >
-                { !state.loading && state.commentsShowable && state.comments.length === 0 ?
+                { !state.loading && state.commentsShowable && comments.length === 0 ?
                     <div className="no-comments-to-show-text">No arguments to show</div> :
                         <div id={commentsContainerId} className="comments-container" style={{ paddingTop: fullScreenMode ? "6em" : 0 }}>
                         <div className={"comments-container-padding-div"}>
                             {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
-                                state.comments.map((comment: Comment, i: number) => {
+                                comments.map((comment: Comment, i: number) => {
                                     return <CommentComponent 
-                                                key={comment.id} 
-                                                comment={comment}
+                                                key={comment.id}
                                                 path={[i]} 
                                                 pathToHighlightedComment={state.pathToHighlightedComment} 
                                                 highlightComment={highlightComment} 
@@ -260,7 +258,7 @@ const CommentsCardImplementation = (props: CommentsCardComponentProps) => {
     )
 }
 
-const getCommentFromPath = (comments: Comment[], path: number[] | undefined): Comment | undefined => {
+export const getCommentFromPath = (comments: Comment[], path: number[] | undefined): Comment | undefined => {
     // base cases
     if (!path || (path.length < 1) || !comments) {
         return undefined;
@@ -318,10 +316,3 @@ const getPathFromId = (comments: Comment[], commentId: number, accumulator: numb
         return accumulator;
     }
 }
-
-const areCommentsCardPropsEqual = (prevProps: CommentsCardComponentProps, nextProps: CommentsCardComponentProps) => {
-    return prevProps.numComments === nextProps.numComments && 
-        prevProps.specificComment === nextProps.specificComment
-}
-
-export const CommentsCardComponent = memo(CommentsCardImplementation, areCommentsCardPropsEqual);
