@@ -3,12 +3,13 @@
   height: 100%;
   width: 100%;
   text-align: center;
-  background: var(--site-background-color);
   border-radius: 25px;
 }
 
 .analytics {
+}
 
+.analytics-fs {
 }
 
 .analytics-fs {
@@ -18,6 +19,7 @@
 .chart {
   height: 50% !important;
   width: 90% !important;
+  max-width: 500px !important;
   padding-top: 5em;
   margin: auto;
 }

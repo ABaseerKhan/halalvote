@@ -5,6 +5,7 @@
     margin: auto;
     margin-top: 15px;
     width: 75%;
+    max-width: 500px;
 }
 
 .voting-bar-haram {

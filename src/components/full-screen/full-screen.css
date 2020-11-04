@@ -2,6 +2,7 @@
     position: absolute;
     height: 100%;
     width: 100%;
+    background: white;
 }
 
 .topic-carousel-container-fs {
@@ -29,7 +30,7 @@
 }
 
 .feature-selector-selected {
-    color: white;
+    color: green;
 }
 
 .feature-selector-unselected {
@@ -43,6 +44,6 @@
     left: calc(50% - 1.5em);
     z-index: 4;
     height: 3px;
-    background: white;
+    background: green;
     border-radius: 5px;
 }

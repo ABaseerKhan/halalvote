@@ -85,7 +85,6 @@
 }
 
 .more-images-above {
-  top: 3.5em;
   animation: jumpup 0.75s infinite ease-out alternate;
 }
 
