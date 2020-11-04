@@ -262,7 +262,7 @@ export const AppShellComponent = (props: any) => {
                     MediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} />}
                     CommentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                     AnalyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
-                    TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topic?.topicTitle || ""} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} />}
+                    TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} topicTitle={topic?.topicTitle || ""} />}
                   />
                 }
                 </FullScreenPortal>
