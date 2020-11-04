@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { TopicVotesComponent } from './topic-votes';
 import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
 import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
@@ -8,6 +8,7 @@ import { useMedia } from '../../hooks/useMedia';
 
 // styles
 import './topic-carousel.css';
+import { fullScreenContext } from '../app-shell';
 
 enum SwipeDirection {
     LEFT,
@@ -29,6 +30,8 @@ interface TopicCarouselComponentProps {
 };
 export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
     const { id, iterateTopic, topicTitle, userVote, halalPoints, haramPoints, numVotes } = props;
+
+    const { fullScreenMode } = useContext(fullScreenContext);
 
     const isMobile = useMedia(
         // Media queries
@@ -155,7 +158,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     </div>
                 }
             </div>
-            <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />
+            {!fullScreenMode && <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />}
         </div>
     );
 }

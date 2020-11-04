@@ -42,15 +42,18 @@ const getPageOne = () => { return document.getElementById(pageOneId); }
 const getCardsShellContainer = () => { return document.getElementById(cardsShellContainerId); }
 
 export const AppShellComponent = (props: any) => {
-  const [state, setState] = useState<{ topicDetails: {topics: Topic[]; topicIndex: number}; scrollPosition: number, specificComment?: Comment, incomingDirection: IncomingDirection }>({
+  const [state, setState] = useState<{ topicDetails: {topics: Topic[]; topicIndex: number}; scrollPosition: number, specificComment?: Comment, incomingDirection: IncomingDirection, fullScreenMode: boolean }>({
     topicDetails: {
       topics: [],
       topicIndex: 0
     },
     scrollPosition: window.innerHeight,
     specificComment: undefined,
-    incomingDirection: IncomingDirection.NONE
+    incomingDirection: IncomingDirection.NONE,
+    fullScreenMode: false,
   });
+
+  const setFullScreenMode = (fullScreenMode: boolean) => { console.log("fullScreenMode toggled"); setState(prevState => ({ ...prevState, fullScreenMode: fullScreenMode })); };
 
   let { topicTitle } = useParams();
   topicTitle = topicTitle?.replace(/_/g, ' ').replace(/%2F/g, '/');
@@ -235,19 +238,21 @@ export const AppShellComponent = (props: any) => {
   return (
       <div id={appShellId} className={appShellId} >
         <SearchComponent onSuggestionClick={searchTopic} />
-        <TopicContext.Provider value={{ topic: topic, setTopic: setTopic }}>
-          <div id={topicContentId} className={topicContentId}>
-            <div id="full-screen-portal"></div>
-            <div key={state.topicDetails.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId}>
-              <CardsShellComponent
-                mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} /> }
-                commentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                analyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
-              />
+        <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenMode: setFullScreenMode }}>
+          <TopicContext.Provider value={{ topic: topic, setTopic: setTopic }}>
+            <div id={topicContentId} className={topicContentId}>
+              <div id="full-screen-portal"></div>
+              <div key={state.topicDetails.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId}>
+                <CardsShellComponent
+                  mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} /> }
+                  commentsCard={<CommentsCardComponent numComments={numComments} specificComment={state.specificComment} refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                  analyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
+                />
+              </div>
+              <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topic?.topicTitle || ""} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
             </div>
-            <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topic?.topicTitle || ""} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
-          </div>
-        </TopicContext.Provider>
+          </TopicContext.Provider>
+        </fullScreenContext.Provider>
         <div className="fixed-content">
           <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />
           <MenuComponent fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
@@ -291,8 +296,12 @@ const animatePrevTopic = (cardsShellContainer: any, callback: () => void) => {
   };
 }
 
-// set the defaults
 export const TopicContext = React.createContext<{topic: Topic | undefined; setTopic: (newTopic: Topic) => void}>({
   topic: undefined,
   setTopic: (newTopic) => undefined
+});
+
+export const fullScreenContext = React.createContext<{fullScreenMode: boolean; setFullScreenMode: (fullScreenMode: boolean) => void}>({
+  fullScreenMode: false,
+  setFullScreenMode: (fullScreenMode) => undefined
 });
