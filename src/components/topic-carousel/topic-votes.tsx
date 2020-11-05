@@ -8,7 +8,7 @@ import { VotingSwitch } from './voting-switch';
 //style imports
 import './topic-carousel.css';
 import { useCookies } from 'react-cookie';
-import { topicContext } from '../app-shell';
+import { topicsContext } from '../app-shell';
 
 interface TopicVotesComponentProps {
     topicTitle: string,
@@ -19,7 +19,9 @@ interface TopicVotesComponentProps {
 };
 
 const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
-    const { topic, setTopicContext } = useContext(topicContext);
+    const { topicsState: { topics, topicIndex }, setTopicsContext } = useContext(topicsContext);
+    const topic = topics?.length ? topics[topicIndex] : undefined;
+
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
@@ -51,10 +53,14 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                         document.body.style.backgroundColor = 'var(--site-background-color)'
                     }, 500);
                 }
-                setTopicContext({ ...topic!, vote: value, halalPoints: data.halalPoints, haramPoints: data.haramPoints, numVotes: data.numVotes });
+                topic.vote = value;
+                topic.halalPoints = data.halalPoints;
+                topic.haramPoints = data.haramPoints;
+                topic.numVotes = data.numVotes;
+                setTopicsContext(topics, topicIndex);
             } else {
-                const newUserVote = topic.vote === undefined ? 0 : undefined;
-                setTopicContext({ ...topic!, vote: newUserVote });
+                topic.vote = topic.vote === undefined ? 0 : undefined;
+                setTopicsContext(topics, topicIndex);
             }
         }
     };

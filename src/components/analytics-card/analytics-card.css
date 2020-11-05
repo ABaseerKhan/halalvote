@@ -24,3 +24,19 @@
   padding-top: 5em;
   margin: auto;
 }
+
+.analytics-footer, .analytics-footer-fullscreen {
+  height: 50px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  border-top: 0.5px solid dimgray;
+}
+
+.analytics-footer {
+  border-radius: 0 0 25px 25px;
+}
+
+.analytics-footer-fullscreen {
+  z-index: 3;
+}

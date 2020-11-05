@@ -80,7 +80,7 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
     });
 
     return (
-        <div className="full-screen-container" ref={FSContainerRef} >
+        <div className="full-screen-topic" ref={FSContainerRef} >
           <div className={"topic-carousel-container-fs"} ref={topicCarouselRef}>
             {TopicCarousel}
           </div>

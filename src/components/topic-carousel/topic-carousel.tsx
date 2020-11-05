@@ -19,8 +19,6 @@ enum SwipeDirection {
 interface TopicCarouselComponentProps {
     id: string,
     iterateTopic: any,
-    prevTopicTitle: string | undefined,
-    nextTopicTitle: string | undefined,
     topicTitle: string,
     userVote: number | undefined,
     halalPoints: number,

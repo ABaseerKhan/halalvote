@@ -82,6 +82,8 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"} onDoubleClick={doubleTap}>
         <VotesBar halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes}></VotesBar>
         <canvas ref={chartRef} className="chart" id="myChart"></canvas>
+        <div className={fullScreenMode ? "analytics-footer-fullscreen" : "analytics-footer"}>
+        </div>
     </div>
     );
 }

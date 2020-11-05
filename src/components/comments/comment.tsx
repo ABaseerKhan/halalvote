@@ -20,7 +20,7 @@ import { Vote } from '../../types';
 import './comments.css';
 import { useCookies } from 'react-cookie';
 import { useQuery } from '../../hooks/useQuery';
-import { topicContext, commentsContext } from '../app-shell';
+import { topicsContext, commentsContext } from '../app-shell';
 
 interface CommentComponentProps {
     key: number,
@@ -34,9 +34,13 @@ interface CommentComponentProps {
 export const CommentComponent = (props: CommentComponentProps) => {
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
+
     const query = useQuery();
     const history = useHistory();
-    const { topic } = useContext(topicContext);
+
+    const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
+    const topic = topics?.length ? topics[topicIndex] : undefined;
+
     const { commentsState, setCommentsContext } = useContext(commentsContext);
     const comment = getCommentFromPath(commentsState[topic?.topicTitle!].comments, props.path)!;
     const specificComment = topic?.topicTitle ? commentsState[topic.topicTitle]?.specificComment : undefined;

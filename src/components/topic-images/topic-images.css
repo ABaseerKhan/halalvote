@@ -24,7 +24,7 @@
 }
 
 .canvas-footer, .canvas-footer-fullscreen {
-  height: 51px;
+  height: 50px;
   width: 100%;
   position: absolute;
   bottom: 0;
@@ -37,6 +37,8 @@
 
 .canvas-footer-fullscreen {
   z-index: 3;
+  border-left: 0.5px solid dimgray;
+  border-right: 0.5px solid dimgray;
 }
 
 .show-add-image-button, .hide-add-image-button {
