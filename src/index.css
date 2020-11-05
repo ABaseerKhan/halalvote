@@ -49,6 +49,18 @@ html, body {
   --button-background-color: #f2f2f2;
 }
 
+.dark-mode {
+  --dark-mode-background: #181818;
+  --dark-mode-middleground: #2a2a2a;
+  --dark-mode-foreground: #414141;
+  --dark-mode-text-color: rgb(197, 197, 197);
+  --dark-mode-secondary-text-color: rgb(124, 124, 124);
+  --dark-mode-highlight-color: rgb(49, 49, 49);
+  --dark-mode-red: #9a2f4e;
+  --dark-mode-halal-color: #4f8a82;
+  --dark-mode-haram-color: #7f5f98;
+}
+
 input[type=text], input[type=password] {
   border-radius: 24px;
   border: 1px solid #dfe1e5;
