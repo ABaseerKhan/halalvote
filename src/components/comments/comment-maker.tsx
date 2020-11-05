@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
+import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef, useContext } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import "quill-mention";
 import { ReactComponent as SendButtonSVG } from '../../icons/send-button.svg';
@@ -12,6 +12,7 @@ import 'react-quill/dist/quill.snow.css';
 import './comments.css';
 import { getData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
+import { fullScreenContext } from '../app-shell';
 
 interface CommentMakerComponentProps {
     submitComment: (comment: any) => Promise<number>,
@@ -27,6 +28,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
         false
     );
 
+    const { fullScreenMode } = useContext(fullScreenContext);
     const [state, setState] = useState({
         holdingDownShift: false,
         cancelSubmissionOnEnter: false,
@@ -101,7 +103,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     modules.mention.onClose = () => setState(prevState => ({ ...prevState, cancelSubmissionOnEnter: true }));
 
     return (
-        <div id="comment-maker-card" className={"comment-maker-card"} onClick={(e) => { e.stopPropagation()}}>
+        <div id="comment-maker-card" className={fullScreenMode ? "comment-maker-card-fs" : "comment-maker-card"} onClick={(e) => { e.stopPropagation()}}>
             <ReactQuill
                 ref={quillEditor} 
                 className={"comment-maker-input"} 

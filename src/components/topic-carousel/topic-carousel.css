@@ -26,7 +26,8 @@
     display: block;
     font-size: 0.8em;
     font-weight: 600;
-    color: gray;
+    /* color: gray; */
+    color: var(--dark-mode-secondary-text-color);
     font-style: italic;
     text-align: center;
 }
@@ -39,7 +40,8 @@
     min-width: 100%;
     text-align: center;
     font-size: 2em;
-    color: var(--neutral-color);
+    /* color: var(--neutral-color); */
+    color: var(--dark-mode-text-color);
     overflow-x: auto;
     white-space: nowrap;
     scroll-behavior: smooth;

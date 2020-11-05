@@ -53,20 +53,20 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 legend: {
                     labels: {
                         fontFamily: 'verdana, arial, helvetica, sans-serif',
-                        fontColor: "black",
+                        fontColor: 'var(--dark-mode-text-color)',
                         fontSize: 12
                     }
                 },
                 scales: {
                     yAxes: [{
                         ticks: {
-                            fontColor: 'black',
+                            fontColor: 'var(--dark-mode-text-color)',
                             beginAtZero: true
                         }
                     }],
                     xAxes: [{
                         ticks: {
-                            fontColor: 'black',
+                            fontColor: 'var(--dark-mode-text-color)',
                         }
                     }],
                 }

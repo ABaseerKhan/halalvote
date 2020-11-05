@@ -294,7 +294,7 @@ export const AppShellComponent = (props: any) => {
           </topicContext.Provider>
         </fullScreenContext.Provider>
         <div className="fixed-content">
-          <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />
+          {!state.fullScreenMode && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
           <MenuComponent fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
         </div>
       </div>

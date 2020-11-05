@@ -26,6 +26,9 @@ html, body {
 
   --link-color: #6495ed;
   --gray: #232B2F;
+  --dark-mode-background: #181818;
+  --dark-mode-text-color: rgb(221, 221, 221);
+  --dark-mode-secondary-text-color: rgb(124, 124, 124);
 
   --site-background-color: #d4d4d4;
 
