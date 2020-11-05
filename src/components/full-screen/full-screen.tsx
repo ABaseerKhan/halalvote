@@ -85,9 +85,9 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
             {TopicCarousel}
           </div>
           <div className={"feature-selector"}>
-            <span onClick={() => setCardQueryParam(history, query, commentsCardId.toLowerCase())} className={topCard === commentsCardId ? "feature-selector-selected" : "feature-selector-unselected"}>Arguments</span>
-            <span onClick={() => setCardQueryParam(history, query, mediaCardId.toLowerCase())} className={topCard === mediaCardId ? "feature-selector-selected" : "feature-selector-unselected"}>Canvas</span>
-            <span onClick={() => setCardQueryParam(history, query, analyticsCardId.toLowerCase())} className={topCard === analyticsCardId ? "feature-selector-selected" : "feature-selector-unselected"}>Analytics</span>
+            <span onClick={() => setCardQueryParam(history, query, commentsCardId.toLowerCase())} className={(underlineTranslationPx < -42) ? "feature-selector-selected" : "feature-selector-unselected"}>Arguments</span>
+            <span onClick={() => setCardQueryParam(history, query, mediaCardId.toLowerCase())} className={(underlineTranslationPx > -42 && underlineTranslationPx < 42) ? "feature-selector-selected" : "feature-selector-unselected"}>Canvas</span>
+            <span onClick={() => setCardQueryParam(history, query, analyticsCardId.toLowerCase())} className={(underlineTranslationPx > 42) ? "feature-selector-selected" : "feature-selector-unselected"}>Analytics</span>
           </div>
           <div className={"selector-underline"} style={{ transform: `translate(${underlineTranslationPx}px, 0)` }}></div>
           <div className={"fs-1"} style={{ transform: 'translate(0, 0)' }}>
