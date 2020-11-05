@@ -41,12 +41,12 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
             
             if (status === 200 && !("noUpdates" in data) && !("message" in data)) {
                 if (value > 0) {
-                    document.body.style.backgroundColor = 'var(--halal-color)';
+                    document.body.style.backgroundColor = 'var(--dark-mode-halal-color)';
                     setTimeout(() => {
                         document.body.style.backgroundColor = 'var(--site-background-color)'
                     }, 500);
                 } else if (value < 0) {
-                    document.body.style.backgroundColor = 'var(--haram-color)';
+                    document.body.style.backgroundColor = 'var(--dark-mode-haram-color)';
                     setTimeout(() => {
                         document.body.style.backgroundColor = 'var(--site-background-color)'
                     }, 500);

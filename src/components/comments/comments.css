@@ -179,11 +179,11 @@
 }
 
 .comment-bubble-halal {
-    background-color: var(--halal-color);
+    background-color: var(--dark-mode-halal-color);
 }
 
 .comment-bubble-haram {
-    background-color: var(--haram-color);
+    background-color: var(--dark-mode-haram-color);
 }
 
 .comment-bubble-other {
@@ -236,7 +236,8 @@
 }
 
 .likes-liked {
-    color: #cf003b;
+    /* color: #cf003b; */
+    color: var(--dark-mode-red);
 }
 
 .heart, .heart-liked {
@@ -256,8 +257,9 @@
 }
 
 .heart-liked {
-    color: #cf003b;
-    stroke: #cf003b;
+    /* color: #cf003b;
+    stroke: #cf003b; */
+    color: var(--dark-mode-red);
     animation: like 0.5s ease-in-out forwards;
 }
 
@@ -344,7 +346,7 @@
 .comment-maker-card {
     border-radius: 0px 0px 25px 25px;
     /* background: white; */
-    background: var(--dark-mode-background);
+    background: var(--dark-mode-foreground);
 }
 
 .comment-maker-card-fs {

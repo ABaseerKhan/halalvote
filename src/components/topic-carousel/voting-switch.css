@@ -6,14 +6,14 @@
 .voting-switch-container {
     position: relative;
     /* background: gray; */
-    background: black;
+    background: var(--dark-mode-middleground);
     margin: auto;
 }
 
 .voting-switch {
     position: absolute;
     /* background: white; */
-    background: dimgray;
+    background: dimgrey;
     cursor: pointer;
 }
 
@@ -40,13 +40,13 @@
 .voting-area-filled-haram {
     position: absolute;
     cursor: pointer;
-    background: linear-gradient(to left, gray, var(--haram-color), var(--haram-color));
+    background: linear-gradient(to left, var(--dark-mode-middleground), var(--dark-mode-haram-color), var(--dark-mode-haram-color));
 }
 
 .voting-area-filled-halal {
     position: absolute;
     cursor: pointer;
-    background: linear-gradient(to right, gray, var(--halal-color), var(--halal-color));
+    background: linear-gradient(to right, var(--dark-mode-middleground), var(--dark-mode-halal-color), var(--dark-mode-halal-color));
 }
 
 .voting-label {
@@ -73,13 +73,13 @@
 
 .number-haram {
     margin-left: auto;
-    background: var(--haram-color);
+    background: var(--dark-mode-haram-color);
     color: #602d86;
 }
 
 .number-halal {
     margin-right: auto;
-    background: var(--halal-color);
+    background: var(--dark-mode-halal-color);
     color: #1c4d44;
 }
 

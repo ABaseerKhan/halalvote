@@ -4,7 +4,7 @@ html, body {
   height: 100%;
   font-family: verdana, arial, helvetica, sans-serif;
   color: #616161;
-  background-color: var(--site-background-color);
+  background-color: var(--dark-mode-background);
   position: relative;
   transition: background-color 0.5s linear;
 }
@@ -27,9 +27,14 @@ html, body {
   --link-color: #6495ed;
   --gray: #232B2F;
   --dark-mode-background: #181818;
-  --dark-mode-text-color: rgb(221, 221, 221);
+  --dark-mode-middleground: #2a2a2a;
+  --dark-mode-foreground: #414141;
+  --dark-mode-text-color: rgb(197, 197, 197);
   --dark-mode-secondary-text-color: rgb(124, 124, 124);
-  --dark-mode-highlight-color: rgb(44, 44, 44);
+  --dark-mode-highlight-color: rgb(49, 49, 49);
+  --dark-mode-red: #9a2f4e;
+  --dark-mode-halal-color: #4f8a82;
+  --dark-mode-haram-color: #7f5f98;
 
   /* --site-background-color: #d4d4d4; */
   --site-background-color: #3a3a3a;

@@ -15,8 +15,8 @@
     margin-left: unset;
     margin-right: unset;
     /* background: white; */
-    background: var(--dark-mode-background);
-    box-shadow: 0 5px 50px 0 rgba(32,33,36,0.28);
+    /* box-shadow: 0 5px 50px 0 rgba(32,33,36,0.28); */
+    background: var(--dark-mode-foreground);
 }
 
 .card-shell-cover {
@@ -25,7 +25,7 @@
     width: 100%;
     border-radius: 25px;
     /* background-color: grey; */
-    background-color: black;
+    background-color: var(--dark-mode-middleground);
     opacity: 0;
     cursor: pointer;
     z-index: 1;

@@ -9,7 +9,7 @@
 }
 
 .voting-bar-haram {
-    background: var(--haram-color);
+    background: var(--dark-mode-haram-color);
 }
 
 .voting-bar-halal {

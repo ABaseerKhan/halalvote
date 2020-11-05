@@ -7,8 +7,7 @@
   text-align: center;
   scroll-behavior: auto;
   scroll-snap-type: y mandatory;
-  /* background: black; */
-  background: var(--dark-mode-background);
+  background: black;
 }
 
 .images-body-fullscreen {
@@ -29,7 +28,6 @@
   width: 100%;
   position: absolute;
   bottom: 0;
-  background: black;
   border-top: 0.5px solid dimgray;
 }
 

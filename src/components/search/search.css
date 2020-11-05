@@ -43,7 +43,7 @@
     border: none !important;
 
     /* darkmode styles */
-    background: black !important;
+    background: var(--dark-mode-middleground) !important;
     color: var(--dark-mode-text-color);
 }
 
@@ -64,7 +64,7 @@
     width: 100%;
     box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
     /* background-color: white; */
-    background-color: black;
+    background: var(--dark-mode-middleground);
     color: var(--dark-mode-text-color);
     border-radius: 0 0 24px 24px;
     list-style-type: none;
