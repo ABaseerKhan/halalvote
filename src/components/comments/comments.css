@@ -442,6 +442,14 @@
     color: var(--dark-mode-secondary-text-color);
 }
 
+.ql-snow .ql-stroke {
+    stroke: var(--dark-mode-secondary-text-color);
+}
+
+.ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill {
+    fill: var(--dark-mode-secondary-text-color);
+}
+
 .mention {
     height: 24px;
     width: 65px;

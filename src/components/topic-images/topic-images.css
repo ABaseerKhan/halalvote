@@ -20,7 +20,7 @@
   text-align: center;
   scroll-behavior: auto;
   scroll-snap-type: y mandatory;
-  background: var(--dark-mode-background);
+  background: black;
 }
 
 .canvas-footer, .canvas-footer-fullscreen {
