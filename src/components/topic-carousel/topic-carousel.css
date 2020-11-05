@@ -103,9 +103,10 @@
 }
 
 .carousel-button-computer:hover {
-    background: transparent;
-    -webkit-box-shadow: inset 0 0 100px 20px var(--light-neutral-color);
-    box-shadow: inset 0 0 100px 20px var(--light-neutral-color);
+    /* background: transparent; */
+    /* -webkit-box-shadow: inset 0 0 100px 20px var(--light-neutral-color);
+    box-shadow: inset 0 0 100px 20px var(--light-neutral-color); */
+    background: var(--dark-mode-middleground);
 }
 
 .topic-votes-container {
