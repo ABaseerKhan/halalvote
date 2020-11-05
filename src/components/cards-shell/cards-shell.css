@@ -32,7 +32,8 @@
 }
 
 .card-shell-cover:hover{
-    background-color: var(--highlight-color);
+    /* background-color: var(--highlight-color); */
+    background-color: var(--dark-mode-highlight-color);
 }
 
 .card-shell-cover-label {

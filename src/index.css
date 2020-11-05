@@ -29,6 +29,7 @@ html, body {
   --dark-mode-background: #181818;
   --dark-mode-text-color: rgb(221, 221, 221);
   --dark-mode-secondary-text-color: rgb(124, 124, 124);
+  --dark-mode-highlight-color: rgb(44, 44, 44);
 
   /* --site-background-color: #d4d4d4; */
   --site-background-color: #3a3a3a;

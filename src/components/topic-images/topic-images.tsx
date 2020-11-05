@@ -258,7 +258,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             </div>
             <div className={fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
                 <div className={!state.addTopicDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
-                    <AddButtonSVG/>
+                    <AddButtonSVG />
                 </div>
             </div>
         </div>
