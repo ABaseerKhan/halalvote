@@ -231,7 +231,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onDoubleClick={doubleTap} className={commentsCardId} style={{ zIndex: fullScreenMode ? 3 : 0 }} >
                 { !state.loading && state.commentsShowable && comments.length === 0 ?
                     <div className="no-comments-to-show-text">No arguments to show</div> :
-                        <div id={commentsContainerId} className="comments-container" style={{ paddingTop: fullScreenMode ? "6em" : 0 }}>
+                        <div id={commentsContainerId} className={fullScreenMode ? "comments-container-fs" : "comments-container"} >
                         <div className={"comments-container-padding-div"}>
                             {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
                                 comments.map((comment: Comment, i: number) => {
