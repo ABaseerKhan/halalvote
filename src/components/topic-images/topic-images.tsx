@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useLayoutEffect } from 'react';
 import { getData } from '../../https-client/client';
 import { useCookies } from 'react-cookie';
 import { topicsConfig } from '../../https-client/config';
@@ -59,6 +59,12 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         } // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [topicTitle, sessiontoken]);
 
+    useLayoutEffect(() => {
+        if (imagesBodyRef.current) {
+            imagesBodyRef.current?.scroll(0, (imageIndex * imagesBodyRef.current.clientHeight));
+        } // eslint-disable-next-line
+    }, []);
+
     useEffect(() => {
         setState(prevState=> prevState)
     }, [props.shown]);
@@ -66,7 +72,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     useEffect(() => {
         var isScrolling: any;
         if (imagesBodyRef.current) {
-            imagesBodyRef.current?.scroll(0, (imageIndex * imagesBodyRef.current.clientHeight));
             imagesBodyRef.current.onscroll = () => {
                 clearTimeout( isScrolling );
                 isScrolling = setTimeout(function() {
@@ -248,7 +253,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                         <div className='no-image-text'>No images to show</div>
                 }
-                {imageIndex > 0 && <div className={"more-images-above"} style={{ position: moreImagesIndicatorPosition, top: fullScreenMode ? `3.5em` : `5px` }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) - 500)) }>
+                {imageIndex > 0 && <div className={"more-images-above"} style={{ position: moreImagesIndicatorPosition, top: fullScreenMode ? `6em` : `5px` }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) - 500)) }>
                     <UpArrowSVG />
                 </div>}
                 {topicImages.length > imageIndex + 1 && <div className={"more-images-below"} style={{ position: moreImagesIndicatorPosition }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) + 500)) }>

@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useRef, useEffect } from 'react';
+import React, { ReactElement, useState, useRef, useEffect, useLayoutEffect } from 'react';
 import './full-screen.css';
 import { useQuery } from '../../hooks/useQuery';
 import { 
@@ -19,7 +19,7 @@ interface FullScreenComponentProps {
     TopicCarousel: ReactElement,
 };
 
-const underlineTravelDistance = 115;
+const underlineTravelDistance = 85;
 var isScrolling: any;
 
 export const FullScreenComponent = (props: FullScreenComponentProps) => {
@@ -33,7 +33,7 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
     // eslint-disable-next-line
     const [underlineTranslationPx, setUnderlineTranslationPx] = useState(0); 
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (FSContainerRef.current) {
         let scrollPosition: number;
         switch(topCard) {

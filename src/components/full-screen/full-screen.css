@@ -17,8 +17,9 @@
 .feature-selector {
     position: fixed;
     top: 4em;
-    width: 350px;
-    left: calc(50% - 175px);
+    width: 260px;
+    left: calc(50% - 130px);
+    font-size: 14px;
     font-weight: 600;
     z-index: 4;
     display: flex;
@@ -44,7 +45,7 @@
 
 .selector-underline {
     position: fixed;
-    top: 5.75em;
+    top: 5em;
     width: 3em;
     left: calc(50% - 1.5em);
     z-index: 4;
