@@ -4,7 +4,7 @@ html, body {
   height: 100%;
   font-family: verdana, arial, helvetica, sans-serif;
   color: #616161;
-  background-color: #d4d4d4;
+  background-color: var(--site-background-color);
   position: relative;
   transition: background-color 0.5s linear;
 }
@@ -30,7 +30,8 @@ html, body {
   --dark-mode-text-color: rgb(221, 221, 221);
   --dark-mode-secondary-text-color: rgb(124, 124, 124);
 
-  --site-background-color: #d4d4d4;
+  /* --site-background-color: #d4d4d4; */
+  --site-background-color: #3a3a3a;
 
   --toolbar-height-vh: 11vh;
   --max-toolbar-height-px: 50px;

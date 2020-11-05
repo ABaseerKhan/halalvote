@@ -5,13 +5,15 @@
 
 .voting-switch-container {
     position: relative;
-    background: gray;
+    /* background: gray; */
+    background: black;
     margin: auto;
 }
 
 .voting-switch {
     position: absolute;
-    background: white;
+    /* background: white; */
+    background: dimgray;
     cursor: pointer;
 }
 
@@ -20,7 +22,8 @@
     margin-top: 13px;
     font-weight: 600;
     text-align: center;
-    color: var(--neutral-color);
+    /* color: var(--neutral-color); */
+    color: var(--dark-mode-text-color);
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
     -khtml-user-select: none; /* Konqueror HTML */

@@ -343,7 +343,8 @@
 
 .comment-maker-card {
     border-radius: 0px 0px 25px 25px;
-    background: white;
+    /* background: white; */
+    background: var(--dark-mode-background);
 }
 
 .comment-maker-card-fs {

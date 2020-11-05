@@ -14,7 +14,8 @@
     border-radius: 25px;
     margin-left: unset;
     margin-right: unset;
-    background: white;
+    /* background: white; */
+    background: var(--dark-mode-background);
     box-shadow: 0 5px 50px 0 rgba(32,33,36,0.28);
 }
 
@@ -23,7 +24,8 @@
     height: 100%;
     width: 100%;
     border-radius: 25px;
-    background-color: grey;
+    /* background-color: grey; */
+    background-color: black;
     opacity: 0;
     cursor: pointer;
     z-index: 1;
@@ -38,12 +40,14 @@
     height: 100%;
     width: 0;
     right: 1vw;
-    color: white;
     font-size: 2em;
     z-index: 2;
     pointer-events: none;
     writing-mode: vertical-rl;
     text-align: center;
+
+    /* darkmode styles*/
+    color: var(--dark-mode-text-color);
 }
 
 @media only screen and (max-width: 600px) {

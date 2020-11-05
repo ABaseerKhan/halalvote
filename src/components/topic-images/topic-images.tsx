@@ -6,7 +6,6 @@ import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
-import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
 import { postData } from '../../https-client/client';
 import ImageUploader from 'react-images-upload';
 import { css } from "@emotion/core";
@@ -253,9 +252,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                         <div className='no-image-text'>No images to show</div>
                 }
-                {imageIndex > 0 && <div className={"more-images-above"} style={{ position: moreImagesIndicatorPosition, top: fullScreenMode ? `6em` : `5px` }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) - 500)) }>
-                    <UpArrowSVG />
-                </div>}
                 {topicImages.length > imageIndex + 1 && <div className={"more-images-below"} style={{ position: moreImagesIndicatorPosition }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) + 500)) }>
                     <DownArrowSVG />
                 </div>}

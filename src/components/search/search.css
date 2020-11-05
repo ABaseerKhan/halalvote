@@ -41,6 +41,10 @@
     margin: 8px 0 0 0 !important;
     padding: 1em 3em !important;
     border: none !important;
+
+    /* darkmode styles */
+    background: black !important;
+    color: white;
 }
 
 .search-bar-input:hover {

@@ -550,7 +550,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
     return (
         <div className="voting-container" >
             {<div className="number-haram">{haramPoints}</div>}
-            {<div className="voting-label" style={{ color: '#452061' }}>{'Haram'}<br/>{'حرام'}</div>}
+            {<div className="voting-label" style={{ color: 'rgb(131 58 185)' }}>{'Haram'}<br/>{'حرام'}</div>}
             <div id={votingSwitchContainerId} className="voting-switch-container" style={{height: switchContainerHeightPx, width: switchContainerWidthPx, borderRadius: switchContainerHeightPx}} data-tip={`Votes: ${numVotes}, Haram: ${numVotesCalc > 0 ? haramPercentageString : "N/A"}, Halal: ${numVotesCalc > 0 ? halalPercentageString : "N/A"}`} data-for="vote-breakdown-switch">
                 <div className="voting-area" onClick={clickHaramVotingArea} style={{height: switchContainerHeightPx, width: votingAreaWidthPx, borderRadius: `${switchContainerHeightPx} 0 0 ${switchContainerHeightPx}`}}>
                     <div id={`${votingAreaLightHaramId}-2`} style={{
@@ -611,7 +611,7 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 </div>
                 <ReactTooltip className="vote-breakdown-tooltip" id="vote-breakdown-switch" place="bottom" delayShow={100} effect="solid"/>
             </div>
-            {<div className="voting-label" style={{ color: '#1f594f' }}>{'Halal'}<br/>{'حلال'}</div>}
+            {<div className="voting-label" style={{ color: 'rgb(54, 142, 127)' }}>{'Halal'}<br/>{'حلال'}</div>}
             {<div className="number-halal">{halalPoints}</div>}
         </div>
     )
