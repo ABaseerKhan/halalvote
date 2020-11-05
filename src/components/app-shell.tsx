@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Fragment } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PageScrollerComponent } from './page-scroller/page-scroller';
 import { TopicCarouselComponent, TopicCarouselComponentFS } from './topic-carousel/topic-carousel';
 import { SearchComponent } from './search/search';
@@ -260,32 +260,30 @@ export const AppShellComponent = (props: any) => {
   });
 
   return (
-      <div id={appShellId} className={appShellId} >
+      <div id={appShellId} className={appShellId} style={{ overflowY: state.fullScreenMode ? 'hidden' : 'scroll' }} >
         <SearchComponent onSuggestionClick={searchTopic} />
         <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenModeContext: setFullScreenModeContext }}>
           <topicContext.Provider value={{ topic: topic, setTopicContext: setTopicContext }}>
             <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
               <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
                 <div id={topicContentId} className={topicContentId}>
-                  {state.fullScreenMode && 
-                    <FullScreenComponent
-                      MediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} />}
-                      CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                      AnalyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
-                      TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} topicTitle={topic?.topicTitle || ""} />}
-                    />
-                  }
-                  <div key={state.topicDetails.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId}>
-                    {!state.fullScreenMode && 
-                    <Fragment>
-                      <CardsShellComponent
-                        mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} /> }
-                        commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                        analyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
-                      />
-                    </Fragment>
-                    }
-                  </div>
+                    <div key={state.topicDetails.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId}> 
+                        {state.fullScreenMode && 
+                          <FullScreenComponent
+                            MediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} />}
+                            CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                            AnalyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
+                            TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} topicTitle={topic?.topicTitle || ""} />}
+                          />
+                        }
+                        {!state.fullScreenMode && 
+                          <CardsShellComponent
+                            mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} /> }
+                            commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                            analyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
+                          />
+                        }
+                    </div>
                   {
                     !state.fullScreenMode && 
                     <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topic?.topicTitle || ""} nextTopicTitle={nextTopic?.topicTitle} prevTopicTitle={prevTopic?.topicTitle} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />

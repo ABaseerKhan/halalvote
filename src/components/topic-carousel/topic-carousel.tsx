@@ -184,7 +184,7 @@ export const TopicCarouselComponentFS = (props: TopicCarouselComponentFSProps) =
     const { id, topicTitle } = props;
 
     return (
-        <div id={id} style={props.style} className='topic-carousel'>
+        <div id={id} style={props.style} className='topic-carousel-fs'>
             <span className="topic-label">Topic:</span>
             <div id="topic-title" className='topic-title' onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                     onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 

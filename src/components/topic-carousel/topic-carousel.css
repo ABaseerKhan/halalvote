@@ -5,6 +5,14 @@
     z-index: 4;
 }
 
+.topic-carousel-fs {
+    position: inherit;
+    width: 100vw;
+    height: 4em;
+    top: 0;
+    z-index: 4;
+}
+
 .topic-navigator {
     width: 100%;
     display: contents;
