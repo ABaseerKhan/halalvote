@@ -275,12 +275,15 @@ export const AppShellComponent = (props: any) => {
                     <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId}> 
                         {state.fullScreenMode && 
                           <div className="full-screen-container">
-                            <FullScreenComponent
-                              MediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} />}
-                              CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                              AnalyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
-                              TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} topicTitle={topic?.topicTitle || ""} />}
-                            />
+                            {state.topicsState.topics.map((topic: Topic, i: number) => {
+                              return <FullScreenComponent
+                                  MediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} />}
+                                  CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                                  AnalyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
+                                  TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} topicTitle={topic?.topicTitle || ""} />}
+                                />
+                              })
+                            }
                           </div>
                         }
                         {!state.fullScreenMode && 

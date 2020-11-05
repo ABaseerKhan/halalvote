@@ -64,14 +64,6 @@
   animation: disappear 0.3s ease-in-out forwards;
 }
 
-.images-body::-webkit-scrollbar {
-  width: 0px;  /* Remove scrollbar space */
-}
-/* Optional: show position indicator in red */
-.images-body::-webkit-scrollbar-thumb {
-  background: rgb(195, 195, 12);
-}
-
 .more-images-above, .more-images-below {
   position: absolute;
   height: 30px;

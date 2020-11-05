@@ -31,7 +31,8 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
     const query = useQuery();
     const topCard = query.get("card")?.toUpperCase() || mediaCardId;
     // eslint-disable-next-line
-    const [underlineTranslationPx, setUnderlineTranslationPx] = useState(0); 
+    const [underlineTranslationPx, setUnderlineTranslationPx] = useState<number>(0);
+    const [topicCarouselTranslationPx, setTopicCarouselTranslationPx] = useState<number>(0);
 
     useLayoutEffect(() => {
       if (FSContainerRef.current) {
@@ -56,8 +57,9 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
 
     useEffect(() => {
       if (FSContainerRef.current) {
-          FSContainerRef.current.onscroll = () => {
+          FSContainerRef.current.onscroll = (e: Event) => {
             setUnderlineTranslationPx(underlineTravelDistance * ((FSContainerRef.current!.scrollLeft - FSContainerRef.current!.clientWidth) / FSContainerRef.current!.clientWidth));
+            setTopicCarouselTranslationPx(FSContainerRef.current!.scrollLeft - FSContainerRef.current!.clientWidth);
             clearTimeout(isScrolling);
             isScrolling = setTimeout(function() {
                 const index = Math.floor((FSContainerRef.current!.scrollLeft+10) / FSContainerRef.current!.clientWidth);
@@ -81,7 +83,7 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
 
     return (
         <div className="full-screen-topic" ref={FSContainerRef} >
-          <div className={"topic-carousel-container-fs"} ref={topicCarouselRef}>
+          <div className={"topic-carousel-container-fs"} style={{ transform: `translate(${topicCarouselTranslationPx}px, 0)` }} ref={topicCarouselRef}>
             {TopicCarousel}
           </div>
           <div className={"feature-selector"}>

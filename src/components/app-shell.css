@@ -26,3 +26,13 @@
   width: 100%;
   z-index: 4;
 }
+
+.full-screen-container {
+  position: absolute;
+  display: block;
+  overflow: auto;
+  scroll-behavior: auto;
+  scroll-snap-type: y mandatory;
+  height: 100%;
+  width: 100%;
+}
