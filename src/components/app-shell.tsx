@@ -252,9 +252,6 @@ export const AppShellComponent = (props: any) => {
   };
 
   const topic = state.topicsState.topics.length > 0 ? state.topicsState.topics[state.topicsState.topicIndex] : undefined;
-  const halalPoints = topic?.halalPoints !== undefined ? topic.halalPoints : 0;
-  const haramPoints = topic?.haramPoints !== undefined ? topic.haramPoints : 0;
-  const numTopicVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
 
   const scrollToPage = (page: number) => {
     const appShell = getAppShell();
@@ -287,7 +284,7 @@ export const AppShellComponent = (props: any) => {
                       fetchTopics={fetchTopics}
                       MediaCard={<TopicImagesComponent />}
                       CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                      AnalyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
+                      AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
                       TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} />}
                     />
                   }
@@ -296,13 +293,13 @@ export const AppShellComponent = (props: any) => {
                         <CardsShellComponent
                           mediaCard={<TopicImagesComponent /> }
                           commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                          analyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
+                          analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
                         />
                       }
                   </div>
                   {
                     !state.fullScreenMode && 
-                    <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
+                    <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
                   }
                 </div>
               </commentsContext.Provider>
@@ -374,6 +371,8 @@ export const commentsContext = React.createContext<{commentsState: CommentsState
   commentsState: { },
   setCommentsContext: (topicTitle, comments, specificComment) => undefined
 });
+
+export type AnalyticsState = {}
 
 const limitCacheSize = (object: Object): void => {
   let i = 1;

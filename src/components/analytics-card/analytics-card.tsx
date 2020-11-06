@@ -1,24 +1,29 @@
 import React, { useRef, useEffect, useContext } from 'react';
 import { VotesBar } from './votes-bar';
 import { Chart } from "chart.js";
+import { topicsContext, fullScreenContext } from '../app-shell';
 
 // type imports
 
 // styles
 import './analytics-card.css';
-import { fullScreenContext } from '../app-shell';
 
 interface AnalyticsCardComponentProps {
-    id: string,
-    halalPoints: number,
-    haramPoints: number,
-    numVotes: number
+    id: string
 };
 
 export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
-    const { id, halalPoints, haramPoints, numVotes } = props;
+    const { id } = props;
 
     const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
+
+    const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
+    
+    const topic = topics?.length ? topics[topicIndex] : undefined;
+    const halalPoints = topic?.halalPoints !== undefined ? topic.halalPoints : 0;
+    const haramPoints = topic?.haramPoints !== undefined ? topic.haramPoints : 0;
+    const numVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
+
     const chartRef = useRef<any>(null);
 
     useEffect(() => {
@@ -80,7 +85,9 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
 
     return (
     <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"} onDoubleClick={doubleTap}>
-        <VotesBar halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes}></VotesBar>
+        {
+            numVotes > 0 && <VotesBar halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes}></VotesBar>
+        }
         <canvas ref={chartRef} className="chart" id="myChart"></canvas>
         <div className={fullScreenMode ? "analytics-footer-fullscreen" : "analytics-footer"}>
         </div>

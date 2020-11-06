@@ -3,12 +3,12 @@ import { TopicVotesComponent } from './topic-votes';
 import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
 import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
 import { useMedia } from '../../hooks/useMedia';
+import { topicsContext, fullScreenContext } from '../app-shell';
 
 // type imports
 
 // styles
 import './topic-carousel.css';
-import { fullScreenContext, topicsContext } from '../app-shell';
 
 enum SwipeDirection {
     LEFT,
@@ -19,19 +19,21 @@ enum SwipeDirection {
 interface TopicCarouselComponentProps {
     id: string,
     iterateTopic: any,
-    userVote: number | undefined,
-    halalPoints: number,
-    haramPoints: number,
-    numVotes: number,
     style?: any;
 };
 export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
-    const { id, iterateTopic, userVote, halalPoints, haramPoints, numVotes } = props;
+    const { id, iterateTopic } = props;
 
     const { fullScreenMode } = useContext(fullScreenContext);
 
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
-    const topicTitle = topics?.length ? topics[topicIndex]?.topicTitle || '' : '';
+
+    const topic = topics?.length ? topics[topicIndex] : undefined;
+    const topicTitle = topic?.topicTitle || "";
+    const halalPoints = topic?.halalPoints !== undefined ? topic.halalPoints : 0;
+    const haramPoints = topic?.haramPoints !== undefined ? topic.haramPoints : 0;
+    const numVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
+    const userVote = topic?.vote;
 
     const isMobile = useMedia(
         // Media queries
