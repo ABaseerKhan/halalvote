@@ -80,12 +80,6 @@ export const AppShellComponent = (props: any) => {
   const setFullScreenModeContext = (fullScreenMode: boolean) => { setState(prevState => ({ ...prevState, fullScreenMode: fullScreenMode })); };
   const setTopicsContext = (topics: Topic[], index: number) => {
     setState(prevState => ({ ...prevState, topicsState: { topics: topics, topicIndex: index }}));
-    if (topics[index]) {
-      props.history.push({
-        pathname: generatePath(props.match.path, { topicTitle: topics[index].topicTitle.replace(/ /g,"_") }),
-        search: window.location.search
-      });
-    }
   };
   const setTopicImagesContext = (topicTitle: string, topicImages: TopicImages[], index: number) => setState(prevState => { 
     prevState.topicImages[topicTitle] = { images: topicImages, index: index, creationTime: Date.now() };
@@ -144,6 +138,18 @@ export const AppShellComponent = (props: any) => {
   }, []);
 
   useEffect(() => {
+    const { topics, topicIndex } = state.topicsState;
+    if (topics[topicIndex]) {
+      if (props.match.path === "/") {
+        props.history.push(`${topics[topicIndex].topicTitle.replace(/ /g,"_")}`);
+      } else {
+        props.history.push({
+          pathname: generatePath(props.match.path, { topicTitle: topics[topicIndex].topicTitle.replace(/ /g,"_") }),
+          search: window.location.search
+        });
+      }
+    }
+
     const appShell = getAppShell();
     const cardsShellContainer = getCardsShellContainer();
 
@@ -166,7 +172,7 @@ export const AppShellComponent = (props: any) => {
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.topicsState]);
 
-  const fetchTopics = async (topicTofetch?: string, backgroundFetch?: boolean) => {
+  const fetchTopics = async (topicTofetch?: string, newIndex?: number) => {
     let body: any = { 
       "topicTitles": topicTofetch ? [topicTofetch] : undefined, 
       "n": 2,
@@ -192,23 +198,10 @@ export const AppShellComponent = (props: any) => {
         state.topicsState.topics[state.topicsState.topicIndex] = data[0]; // refresh topic with new data from db
         setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex); // trigger re-render
       } else {
-        state.topicsState.topics = [...state.topicsState.topics.slice(0, state.topicsState.topicIndex+1), ...data, ...state.topicsState.topics.slice(state.topicsState.topicIndex+1)];
-        state.topicsState.topicIndex = state.topicsState.topics.length > 1 ? state.topicsState.topicIndex+1 : 0;
-        setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex);
+        setTopicsContext([...state.topicsState.topics.slice(0, state.topicsState.topicIndex+1), ...data, ...state.topicsState.topics.slice(state.topicsState.topicIndex+1)], state.topicsState.topics.length > 1 ? state.topicsState.topicIndex+1 : 0);
       }
     } else {
-      state.topicsState.topics = [...state.topicsState.topics, ...data];
-      setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex);
-    }
-    if (data && data.length && !backgroundFetch) { 
-      if (props.match.path === "/") {
-        props.history.push(`${data[0].topicTitle.replace(/ /g,"_")}`);
-      } else {
-        props.history.push({
-          pathname: generatePath(props.match.path, { topicTitle: data[0].topicTitle.replace(/ /g,"_") }),
-          search: window.location.search
-        });
-      }
+      setTopicsContext([...state.topicsState.topics, ...data], newIndex!==undefined ? newIndex : state.topicsState.topicIndex);
     }
   }
 

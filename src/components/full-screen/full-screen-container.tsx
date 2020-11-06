@@ -5,10 +5,9 @@ import { FullScreenComponent } from './full-screen';
 
 import './full-screen.css';
 
-var isScrollingFSContainer: any;
 
 interface FullScreenComponentProps {
-    fetchTopics: (topicTofetch?: string | undefined, backgroundFetch?: boolean | undefined) => Promise<void>;
+    fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
     MediaCard: ReactElement,
     CommentsCard: ReactElement,
     AnalyticsCard: ReactElement,
@@ -25,21 +24,29 @@ export const FullScreenContainer = (props: FullScreenComponentProps) => {
     useEffect(() => {
         if (FSContainerRef.current) {
             FSContainerRef.current!.onscroll = (e: Event) => {
-                clearTimeout(isScrollingFSContainer);
-                isScrollingFSContainer = setTimeout(function() {
-                    const index = Math.floor((FSContainerRef.current!.scrollTop + 10)/FSContainerRef.current!.clientHeight);
-                    if (index >= topics.length - 2) {
-                        topicsState.topicIndex = index;
-                        fetchTopics(undefined, true);
+                const scrollRatio = (FSContainerRef.current!.scrollTop - (FSContainerRef.current!.clientHeight * topicIndex))/FSContainerRef.current!.clientHeight;
+                const indexDelta = scrollRatio < -0.5 ? -1 : (scrollRatio > 0.5 ? 1 : 0);
+                // console.log(`(idx, ∆): (${topicIndex}, ${indexDelta})`);
+                if (indexDelta !== 0) {
+                    if ((topicIndex + indexDelta) >= topics.length - 2) {
+                        // console.log('fetching topics + incrementing index');
+                        fetchTopics(undefined, topicIndex+indexDelta);
                     } else {
-                        setTopicsContext(topics, index);
+                        console.log('changing index');
+                        setTopicsContext(topics, topicIndex+indexDelta);
                     }
-                }, 30);
+                    FSContainerRef.current!.onscroll = () => { 
+                        // console.log("onScroll does nothing");
+                    };
+                };
             };
         }; // eslint-disable-next-line
-    }, [topics]);
+    }, [topicsState]);
 
     useEffect(() => {
+        if (topics.length === 1) {
+            fetchTopics();
+        };
         if (FSContainerRef.current) {
             FSContainerRef.current!.scrollTop = FSContainerRef.current!.clientHeight * topicIndex;
         }; // eslint-disable-next-line
