@@ -244,6 +244,8 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                                 comments.map((comment: Comment, i: number) => {
                                     return <CommentComponent 
                                                 key={comment.id}
+                                                comment={comment}
+                                                specificComment={specificComment}
                                                 path={[i]} 
                                                 pathToHighlightedComment={state.pathToHighlightedComment} 
                                                 highlightComment={highlightComment} 
