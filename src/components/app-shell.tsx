@@ -242,7 +242,9 @@ export const AppShellComponent = (props: any) => {
         animateNextTopic(cardsShellContainer, animationCallback(state, iteration, setState, fetchTopics));
       }
       if (iteration === -1) {
-        animatePrevTopic(cardsShellContainer, animationCallback(state, iteration, setState, fetchTopics));
+        if ((state.topicsState.topicIndex + iteration) >= 0) {
+          animatePrevTopic(cardsShellContainer, animationCallback(state, iteration, setState, fetchTopics));
+        }
       }
     }
   };
