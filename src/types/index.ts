@@ -70,3 +70,8 @@ export enum MenuLocation {
     BOTTOM_LEFT,
     NONE
 }
+
+export interface AnalyticCounts {
+    halalCounts: number[],
+    haramCounts: number[]
+}

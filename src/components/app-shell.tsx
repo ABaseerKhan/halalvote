@@ -51,7 +51,8 @@ type AppShellState = {
   scrollPosition: number, 
   specificComment?: Comment, 
   incomingDirection: IncomingDirection, 
-  fullScreenMode: boolean 
+  fullScreenMode: boolean,
+  analytics: AnalyticsState
 };
 export const AppShellComponent = (props: any) => {
   const [state, setState] = useState<AppShellState>({
@@ -65,6 +66,7 @@ export const AppShellComponent = (props: any) => {
     specificComment: undefined,
     incomingDirection: IncomingDirection.NONE,
     fullScreenMode: false,
+    analytics: { }
   });
 
   let { topicTitle } = useParams();
@@ -83,6 +85,11 @@ export const AppShellComponent = (props: any) => {
   const setCommentsContext = (topicTitle: string, comments: Comment[], specificComment: Comment) => setState(prevState => { 
     prevState.comments[topicTitle] = { comments: comments, specificComment: specificComment, creationTime: Date.now() };
     limitCacheSize(prevState.comments);
+    return { ...prevState };
+  });
+  const setAnalyticsContext = (topicTitle: string, graph: AnalyticsGraph) => setState(prevState => {
+    prevState.analytics[topicTitle] = { graph: graph, creationTime: Date.now() }
+    limitCacheSize(prevState.analytics);
     return { ...prevState };
   });
 
@@ -268,34 +275,36 @@ export const AppShellComponent = (props: any) => {
           <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
             <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
               <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
-                <div id={topicContentId} className={topicContentId}>
-                    <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId}> 
-                        {state.fullScreenMode && 
-                          <div className="full-screen-container">
-                            {state.topicsState.topics.map((topic: Topic, i: number) => {
-                              return <FullScreenComponent
-                                  MediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} />}
-                                  CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                                  AnalyticsCard={<AnalyticsCardComponent id={"analytics"} />}
-                                  TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} topicTitle={topic?.topicTitle || ""}/>}
-                                />
-                              })
-                            }
-                          </div>
-                        }
-                        {!state.fullScreenMode && 
-                          <CardsShellComponent
-                            mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} /> }
-                            commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                            analyticsCard={<AnalyticsCardComponent id={"analytics"} />}
-                          />
-                        }
-                    </div>
-                  {
-                    !state.fullScreenMode && 
-                    <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
-                  }
-                </div>
+                <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
+                  <div id={topicContentId} className={topicContentId}>
+                      <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId}> 
+                          {state.fullScreenMode && 
+                            <div className="full-screen-container">
+                              {state.topicsState.topics.map((topic: Topic, i: number) => {
+                                return <FullScreenComponent
+                                    MediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} />}
+                                    CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                                    AnalyticsCard={<AnalyticsCardComponent id={"analytics"} />}
+                                    TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} topicTitle={topic?.topicTitle || ""}/>}
+                                  />
+                                })
+                              }
+                            </div>
+                          }
+                          {!state.fullScreenMode && 
+                            <CardsShellComponent
+                              mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} /> }
+                              commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                              analyticsCard={<AnalyticsCardComponent id={"analytics"} />}
+                            />
+                          }
+                      </div>
+                    {
+                      !state.fullScreenMode && 
+                      <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
+                    }
+                  </div>
+                </analyticsContext.Provider>
               </commentsContext.Provider>
             </topicImagesContext.Provider>
           </topicsContext.Provider>
@@ -366,7 +375,17 @@ export const commentsContext = React.createContext<{commentsState: CommentsState
   setCommentsContext: (topicTitle, comments, specificComment) => undefined
 });
 
-export type AnalyticsState = {}
+export interface AnalyticsGraph {
+  interval: string, 
+  numIntervals: number, 
+  halalCounts: number[],
+  haramCounts: number[]
+}
+export type AnalyticsState = { [topicTitle: string]: {graph: AnalyticsGraph, creationTime: number} }
+export const analyticsContext = React.createContext<{analyticsState: AnalyticsState; setAnalyticsContext: (topicTitle: string, graph: AnalyticsGraph) => void}>({
+  analyticsState: { },
+  setAnalyticsContext: () => undefined
+});
 
 const limitCacheSize = (object: Object): void => {
   let i = 1;
