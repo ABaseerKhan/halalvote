@@ -22,11 +22,11 @@ import { TopicImages } from '../../types';
 // styles
 import './topic-images.css';
 import { useQuery } from '../../hooks/useQuery';
-import { fullScreenContext, topicImagesContext } from '../app-shell';
+import { fullScreenContext, topicImagesContext, topicsContext } from '../app-shell';
 
 interface TopicImagesComponentProps {
-    topicTitle: string,
     shown?: boolean,
+    topicIndexOverride?: number;
 };
 
 interface BasicPicture { src: string; width: number; height: number; };
@@ -36,20 +36,30 @@ interface TopicImagesComponentState {
     loading: boolean,
 };
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
-    const { topicTitle } = props;
+    let { topicIndexOverride } = props;
+
     const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
+
+    const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
+    topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
+    const topicTitle = topics?.length ? topics[topicIndexOverride]?.topicTitle || '' : '';
+
     const { topicImagesState, setTopicImagesContext } = useContext(topicImagesContext);
     const topicImages = topicImagesState[topicTitle]?.images || [];
     const imageIndex = topicImagesState[topicTitle]?.index || 0;
+
     const [state, setState] = useState<TopicImagesComponentState>({
         addTopicDisplayed: false,
         picture: null,
         loading: false,
     });
+
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
+
     const history = useHistory();
     const query = useQuery();
+
     const imagesBodyRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -123,7 +133,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 path: 'add-topic-image',
                 data: {
                     "username": username,
-                    "topicTitle": props.topicTitle,
+                    "topicTitle": topicTitle,
                     "image": state.picture.src
                 },
                 additionalHeaders: {
@@ -132,7 +142,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 setCookie: setCookie,
             });
 
-            if (status === 200 && props.topicTitle === data) {
+            if (status === 200 && topicTitle === data) {
                 fetchImages();
             }
         }
@@ -241,7 +251,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                             </>
                             const Img = (
                                 <div className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
-                                    <img id="image" className='image' style={{ margin: "auto"}} alt={props.topicTitle} src={topicImg.image}/>
+                                    <img id="image" className='image' style={{ margin: "auto"}} alt={topicTitle} src={topicImg.image}/>
                                     {ImgStats}
                                 </div>
                             )

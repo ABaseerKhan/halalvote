@@ -29,9 +29,12 @@ interface CommentComponentProps {
     highlightComment: (path: number[] | undefined) => void,
     fetchMoreReplies: (pathToParentComment: number[], specificCommentId?: number | undefined, depth?: number) => Promise<void>,
     deleteComment: (path: number[]) => void,
+    topicIndexOverride?: number;
     level2?: boolean;
 }
 export const CommentComponent = (props: CommentComponentProps) => {
+    let { topicIndexOverride } = props;
+
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
@@ -39,7 +42,8 @@ export const CommentComponent = (props: CommentComponentProps) => {
     const history = useHistory();
 
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
-    const topic = topics?.length ? topics[topicIndex] : undefined;
+    topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
+    const topic = topics?.length ? topics[topicIndexOverride] : undefined;
 
     const { commentsState, setCommentsContext } = useContext(commentsContext);
     const comment = getCommentFromPath(commentsState[topic?.topicTitle!].comments, props.path)!;

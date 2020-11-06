@@ -179,11 +179,15 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
 
 interface TopicCarouselComponentFSProps {
     id: string,
-    topicTitle: string,
     style?: any;
+    topicIndexOverride?: number;
 };
 export const TopicCarouselComponentFS = (props: TopicCarouselComponentFSProps) => {
-    const { id, topicTitle } = props;
+    let { id, topicIndexOverride } = props;
+
+    const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
+    topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
+    const topicTitle = topics?.length ? topics[topicIndexOverride]?.topicTitle || '' : '';
 
     return (
         <div id={id} style={props.style} className='topic-carousel-fs'>
