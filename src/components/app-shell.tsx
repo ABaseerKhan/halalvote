@@ -21,7 +21,7 @@ import {
 // style imports
 import './app-shell.css';
 import { TopicImagesComponent } from './topic-images/topic-images';
-import { FullScreenComponent } from './full-screen/full-screen';
+import { FullScreenContainer } from './full-screen/full-screen-container';
 
 enum IncomingDirection {
   LEFT,
@@ -29,7 +29,7 @@ enum IncomingDirection {
   NONE
 }
 
-const maxTopicsDataCacheSize = 3;
+const maxTopicsDataCacheSize = 20;
 
 const appShellId = "app-shell";
 const topicContentId = "topic-content";
@@ -66,15 +66,25 @@ export const AppShellComponent = (props: any) => {
     incomingDirection: IncomingDirection.NONE,
     fullScreenMode: false,
   });
+  
 
   let { topicTitle } = useParams();
   topicTitle = topicTitle?.replace(/_/g, ' ').replace(/%2F/g, '/');
+
   const [cookies] = useCookies(['username', 'sessiontoken']);
   const { username, sessiontoken } = cookies;
 
   // context-setters (they also serve as application cache)
   const setFullScreenModeContext = (fullScreenMode: boolean) => { setState(prevState => ({ ...prevState, fullScreenMode: fullScreenMode })); };
-  const setTopicsContext = (topics: Topic[], index: number) => setState(prevState => ({ ...prevState, topicsState: { topics: topics, topicIndex: index }}));
+  const setTopicsContext = (topics: Topic[], index: number) => {
+    setState(prevState => ({ ...prevState, topicsState: { topics: topics, topicIndex: index }}));
+    if (topics[index]) {
+      props.history.push({
+        pathname: generatePath(props.match.path, { topicTitle: topics[index].topicTitle.replace(/ /g,"_") }),
+        search: window.location.search
+      });
+    }
+  };
   const setTopicImagesContext = (topicTitle: string, topicImages: TopicImages[], index: number) => setState(prevState => { 
     prevState.topicImages[topicTitle] = { images: topicImages, index: index, creationTime: Date.now() };
     limitCacheSize(prevState.topicImages);
@@ -90,7 +100,7 @@ export const AppShellComponent = (props: any) => {
     setTimeout(() => {
       const appShell = getAppShell();
       const cardsShellContainer = getCardsShellContainer();
-      
+
       if (appShell && cardsShellContainer) {
         appShell.scrollTo(0, window.innerHeight);
         cardsShellContainer.style.opacity = "1.0";
@@ -149,10 +159,10 @@ export const AppShellComponent = (props: any) => {
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.topicsState]);
 
-  const fetchTopics = async (topicTofetch?: string) => {
+  const fetchTopics = async (topicTofetch?: string, backgroundFetch?: boolean) => {
     let body: any = { 
       "topicTitles": topicTofetch ? [topicTofetch] : undefined, 
-      "n": 3,
+      "n": 2,
       "excludedTopics": state.topicsState.topics && state.topicsState.topics.length && !topicTofetch ? state.topicsState.topics.map((topic) => topic.topicTitle) : undefined,
     };
     let additionalHeaders = {};
@@ -183,13 +193,13 @@ export const AppShellComponent = (props: any) => {
       state.topicsState.topics = [...state.topicsState.topics, ...data];
       setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex);
     }
-    if (data && data.length) { 
+    if (data && data.length && !backgroundFetch) { 
       if (props.match.path === "/") {
         props.history.push(`${data[0].topicTitle.replace(/ /g,"_")}`);
       } else {
         props.history.push({
           pathname: generatePath(props.match.path, { topicTitle: data[0].topicTitle.replace(/ /g,"_") }),
-          search: props.location.search
+          search: window.location.search
         });
       }
     }
@@ -214,15 +224,15 @@ export const AppShellComponent = (props: any) => {
       setState({ ...state, incomingDirection: incomingDirection});
       props.history.push({
         pathname: generatePath(props.match.path, { topicTitle: state.topicsState.topics[state.topicsState.topicIndex].topicTitle.replace(/ /g,"_") }),
-        search: props.location.search
+        search: window.location.search
       });
     } else if ((state.topicsState.topicIndex + iteration) === state.topicsState.topics.length) {
       fetchTopics();
       state.topicsState.topicIndex = state.topicsState.topicIndex + iteration;
       setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex);
       setState({ ...state, incomingDirection: incomingDirection});
-    }
-  }, [props.match.path, props.history, props.location.search]);
+    } // eslint-disable-next-line
+  }, [props.match.path, props.history]);
 
   const iterateTopic = (iteration: number) => () => {
     const cardsShellContainer = getCardsShellContainer();
@@ -272,31 +282,27 @@ export const AppShellComponent = (props: any) => {
             <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
               <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
                 <div id={topicContentId} className={topicContentId}>
-                    <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId}> 
-                        {state.fullScreenMode && 
-                          <div className="full-screen-container">
-                            {state.topicsState.topics.map((topic: Topic, i: number) => {
-                              return <FullScreenComponent
-                                  MediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} />}
-                                  CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                                  AnalyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
-                                  TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} topicTitle={topic?.topicTitle || ""} />}
-                                />
-                              })
-                            }
-                          </div>
-                        }
-                        {!state.fullScreenMode && 
-                          <CardsShellComponent
-                            mediaCard={<TopicImagesComponent topicTitle={topic?.topicTitle || ""} /> }
-                            commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                            analyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
-                          />
-                        }
-                    </div>
+                  {state.fullScreenMode && 
+                    <FullScreenContainer 
+                      fetchTopics={fetchTopics}
+                      MediaCard={<TopicImagesComponent />}
+                      CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                      AnalyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
+                      TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} />}
+                    />
+                  }
+                  <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}> 
+                      {!state.fullScreenMode && 
+                        <CardsShellComponent
+                          mediaCard={<TopicImagesComponent /> }
+                          commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                          analyticsCard={<AnalyticsCardComponent id={"analytics"} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes}/>}
+                        />
+                      }
+                  </div>
                   {
                     !state.fullScreenMode && 
-                    <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} topicTitle={topic?.topicTitle || ""} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
+                    <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} userVote={topic?.vote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numTopicVotes} />
                   }
                 </div>
               </commentsContext.Provider>

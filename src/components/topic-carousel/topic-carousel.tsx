@@ -8,7 +8,7 @@ import { useMedia } from '../../hooks/useMedia';
 
 // styles
 import './topic-carousel.css';
-import { fullScreenContext } from '../app-shell';
+import { fullScreenContext, topicsContext } from '../app-shell';
 
 enum SwipeDirection {
     LEFT,
@@ -19,7 +19,6 @@ enum SwipeDirection {
 interface TopicCarouselComponentProps {
     id: string,
     iterateTopic: any,
-    topicTitle: string,
     userVote: number | undefined,
     halalPoints: number,
     haramPoints: number,
@@ -27,9 +26,12 @@ interface TopicCarouselComponentProps {
     style?: any;
 };
 export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
-    const { id, iterateTopic, topicTitle, userVote, halalPoints, haramPoints, numVotes } = props;
+    const { id, iterateTopic, userVote, halalPoints, haramPoints, numVotes } = props;
 
     const { fullScreenMode } = useContext(fullScreenContext);
+
+    const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
+    const topicTitle = topics?.length ? topics[topicIndex]?.topicTitle || '' : '';
 
     const isMobile = useMedia(
         // Media queries
@@ -175,11 +177,15 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
 
 interface TopicCarouselComponentFSProps {
     id: string,
-    topicTitle: string,
     style?: any;
+    topicIndexOverride?: number;
 };
 export const TopicCarouselComponentFS = (props: TopicCarouselComponentFSProps) => {
-    const { id, topicTitle } = props;
+    let { id, topicIndexOverride } = props;
+
+    const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
+    topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
+    const topicTitle = topics?.length ? topics[topicIndexOverride]?.topicTitle || '' : '';
 
     return (
         <div id={id} style={props.style} className='topic-carousel-fs'>

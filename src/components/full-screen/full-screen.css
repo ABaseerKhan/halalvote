@@ -1,3 +1,13 @@
+.full-screen-container {
+    position: absolute;
+    display: block;
+    overflow: auto;
+    scroll-behavior: auto;
+    scroll-snap-type: y mandatory;
+    height: 100%;
+    width: 100%;
+}
+
 .full-screen-topic {
     display: flex;
     position: relative;
@@ -11,10 +21,15 @@
     overflow-y: auto;
 }
 
-.topic-carousel-container-fs {
+.topic-carousel-container-fs-absolute {
     position: absolute;
     top: 0;
     left: 100%;
+    z-index: 4;
+}
+
+.topic-carousel-container-fs-fixed {
+    position: fixed;
     z-index: 4;
 }
 
