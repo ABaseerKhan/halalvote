@@ -18,10 +18,8 @@
 }
 
 .chart {
-  height: 50% !important;
-  width: 90% !important;
-  max-width: 500px !important;
-  padding-top: 5em;
+  max-width: 90% !important;
+  padding-top: 1em;
   margin: auto;
 }
 

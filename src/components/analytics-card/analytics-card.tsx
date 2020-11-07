@@ -98,11 +98,17 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             ]
             },
             options: {
+                responsive: true,
+                aspectRatio: 1.25,
                 legend: {
+                    position: 'bottom',
                     labels: {
+                        boxWidth: 10,
+                        padding: 20,
                         fontFamily: 'verdana, arial, helvetica, sans-serif',
                         fontColor: 'rgb(197, 197, 197)',
-                        fontSize: 12
+                        fontSize: 10,
+                        usePointStyle: true,
                     }
                 },
                 scales: {
