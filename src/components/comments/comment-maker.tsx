@@ -35,6 +35,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     });
     let [value, setValue] = useState('');
     const quillEditor = useRef<ReactQuill>(null);
+    const commentMakerCardRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (quillEditor.current) {
@@ -44,8 +45,8 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
                 quillEditor.current.getEditor().getModule('mention').insertItem({ denotationChar: "@", id: 0, index: 0, value: props.replyToUsername }, true);
             } else {
                 setValue('');
-                if (document.getElementById("comment-maker-card")) {
-                    document.getElementById("comment-maker-card")!.style.height = `4em`;
+                if (commentMakerCardRef.current) {
+                    commentMakerCardRef.current.style.height = `4em`;
                 }
             }
         }
@@ -58,8 +59,13 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
             }
         },
         setHeight: (height: number) => {
-            if (document.getElementById("comment-maker-card")) {
-                document.getElementById("comment-maker-card")!.style.height = `${height}px`;
+            if (commentMakerCardRef.current) {
+                commentMakerCardRef.current.style.height = `${height}px`;
+            }
+        },
+        getCommentMakerCardRef: () => {
+            if (commentMakerCardRef.current) {
+                return commentMakerCardRef.current;
             }
         }
     }));
@@ -103,7 +109,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     modules.mention.onClose = () => setState(prevState => ({ ...prevState, cancelSubmissionOnEnter: true }));
 
     return (
-        <div id="comment-maker-card" className={fullScreenMode ? "comment-maker-card-fs" : "comment-maker-card"} onClick={(e) => { e.stopPropagation()}}>
+        <div id="comment-maker-card" ref={commentMakerCardRef} className={fullScreenMode ? "comment-maker-card-fs" : "comment-maker-card"} onClick={(e) => { e.stopPropagation()}}>
             <ReactQuill
                 ref={quillEditor} 
                 className={"comment-maker-input"} 

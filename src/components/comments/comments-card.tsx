@@ -14,7 +14,6 @@ import { Judgment, userVoteToCommentType } from '../../types';
 // style imports
 import './comments.css';
 import { topicsContext, fullScreenContext, commentsContext } from '../app-shell';
-import { isMobile } from '../../utils';
 // import { useMedia } from '../../hooks/useMedia';
 
 interface CommentsCardComponentProps {
@@ -62,6 +61,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const [state, setState] = useState<CommentsCardState>(initialState);
 
     const commentMakerRef = useRef<any>(null);
+    const commentsContainerRef = useRef<HTMLDivElement>(null);
 
     useDebouncedEffect(() => {
         if (topic?.topicTitle && !commentsState[topic.topicTitle]) {
@@ -87,12 +87,6 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             fetchComments([], specificComment?.id);
         } // eslint-disable-next-line
     }, [specificComment]);
-
-    useEffect(() => {
-        if(state.pathToHighlightedComment) {
-            scrollToHighlightedComment(getCommentFromPath(comments, state.pathToHighlightedComment));
-        } // eslint-disable-next-line
-    }, [state.pathToHighlightedComment])
 
     const fetchComments = async (pathToParentComment: number[], specificCommentId?: number, depth=1) => {
         const parentComment = getCommentFromPath(comments, pathToParentComment);
@@ -188,43 +182,18 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     }
 
     const highlightComment = (path: number[] | undefined) => {
-        const commentsContainerElement = document.getElementById(commentsContainerId);
         setState(prevState => ({
             ...prevState,
             pathToHighlightedComment: path,
         }));
-        if (path?.length === 1 && path[0] === 0) {
-            if (commentsContainerElement) {
-                document.getElementById(commentsContainerId)!.scrollTop = 0;
-            };
-        }    
         if (commentMakerRef.current && path !== undefined) {
+            const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+            const highlightedComment = document.getElementById(`comment-${getCommentFromPath(comments, path)?.id}`);
+            const viewPortOffsetCommentContentBottom = (highlightedComment?.childNodes[1].childNodes[0] as HTMLDivElement).getBoundingClientRect().bottom; ;
+            const viewPortOffsetMakerBottom = commentMakerRef.current.getCommentMakerCardRef()!.getBoundingClientRect().bottom;
+            commentMakerRef.current.setHeight(vh - viewPortOffsetCommentContentBottom - (vh - viewPortOffsetMakerBottom));
             commentMakerRef.current.focus();
-            if (!isMobile) {
-                const commentsCard = document.getElementById('comments-card');
-                const highlightedComment = document.getElementById(`comment-${getCommentFromPath(comments, path)?.id}`);
-                const offsetTop = highlightedComment?.offsetParent?.id === 'comments-container' ? highlightedComment.offsetTop : (highlightedComment?.offsetParent as HTMLElement)?.offsetTop + highlightedComment!.offsetTop;
-                commentMakerRef.current.setHeight(commentsCard?.clientHeight! - (offsetTop + highlightedComment!.clientHeight));
-            }
         };
-    }
-
-    const scrollToHighlightedComment = (highlightedComment: Comment | undefined) => {
-        if (highlightedComment) {
-            const highlightedCommentElement = document.getElementById("comment-" + highlightedComment.id);
-            const commentsContainerElement = document.getElementById(commentsContainerId);
-            
-            if (highlightedCommentElement && commentsContainerElement) {
-                let topPos = highlightedCommentElement.offsetTop;
-                let offsetParent = highlightedCommentElement.offsetParent;
-    
-                while (offsetParent && offsetParent.className !== "comments-container") {
-                    topPos += (offsetParent as HTMLElement).offsetTop;
-                    offsetParent = (offsetParent as HTMLElement).offsetParent;
-                }
-                commentsContainerElement.scrollTop =  topPos - 5;
-            }
-        }
     }
 
     const highlightedComment = getCommentFromPath(comments, state.pathToHighlightedComment);
@@ -238,7 +207,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onDoubleClick={doubleTap} className={commentsCardId} style={{ zIndex: fullScreenMode ? 3 : 0 }} >
                 { !state.loading && state.commentsShowable && comments.length === 0 ?
                     <div className="no-comments-to-show-text">No arguments to show</div> :
-                        <div id={commentsContainerId} className={fullScreenMode ? "comments-container-fs" : "comments-container"} >
+                        <div id={commentsContainerId} ref={commentsContainerRef} className={fullScreenMode ? "comments-container-fs" : "comments-container"} >
                         <div className={"comments-container-padding-div"}>
                             {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
                                 comments.map((comment: Comment, i: number) => {

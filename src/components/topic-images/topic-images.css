@@ -8,6 +8,8 @@
   scroll-behavior: auto;
   scroll-snap-type: y mandatory;
   background: black;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 .images-body::-webkit-scrollbar {

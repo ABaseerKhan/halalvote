@@ -5,6 +5,12 @@
   overflow-x: hidden;
   scroll-behavior: smooth;
   scroll-snap-type: y mandatory;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.app-shell::-webkit-scrollbar {
+  display: none;
 }
 
 .topic-content {

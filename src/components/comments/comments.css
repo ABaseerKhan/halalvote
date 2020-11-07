@@ -113,11 +113,13 @@
 }
 
 .comments-container-fs {
-    position: relative;
+    position: absolute;
+    width: 100%;
     height: calc(100% - 4em - 6em);
     top: 6em;
-    overflow: scroll;
+    overflow: auto;
     scroll-behavior: smooth;
+    z-index: 1;
 }
 
 .comments-container-padding-div {
@@ -340,7 +342,8 @@
     width: 100%;
     height: 4em;
     box-shadow: 0 5px 50px 0 rgba(32,33,36,0.28);
-    transition: all ease-out 0.3s;
+    z-index: 3;
+    /* transition: all ease-out 0.3s; */
 }
 
 .comment-maker-card {

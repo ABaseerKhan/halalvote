@@ -11,7 +11,6 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { 
     useHistory,
 } from "react-router-dom";
-import { getCommentFromPath } from "./comments-card";
 
 // type imports
 import { Vote } from '../../types';
