@@ -96,7 +96,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const fetchImages = async () => {
         setState(prevState => ({ ...prevState, topicImages: [], currentIndex: 0, picture: null, loading: true }));
         let queryParams: any = { 
-            "topicTitle": topicTitle
+            "topicTitle": topicTitle,
+            "n": 3,
+            "exludedIds": topicImages && topicImages.length ? topicImages.map((image) => image.id) : undefined,
         };
         let additionalHeaders: any = {};
         if (username && username !== "" && sessiontoken && sessiontoken !== "") {

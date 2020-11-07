@@ -328,6 +328,7 @@
 }
 
 .hide-replies {
+    margin-left: auto;
     cursor: pointer;
 }
 
