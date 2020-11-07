@@ -64,7 +64,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
 
     const createCardElement = (id: string, body: ReactElement, index: number) => {
       return (
-        <div id={id} className="card-shell" style={{zIndex: 2 - index}}>
+        <div key={id} id={id} className="card-shell" style={{zIndex: 2 - index}}>
           <div id={`${id}-label`} className="card-shell-cover-label" style={{display: index === 0 ? 'none' : 'unset'}}>{id}</div>
           <div id={`${id}-cover`} className="card-shell-cover" onClick={() => {selectCard(id)}} style={{display: index === 0 ? 'none' : 'unset'}}></div>
           {body}

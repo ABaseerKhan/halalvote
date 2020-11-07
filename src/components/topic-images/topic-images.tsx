@@ -250,7 +250,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                                 </div>
                             </>
                             const Img = (
-                                <div className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
+                                <div key={idx} className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
                                     <img id="image" className='image' style={{ margin: "auto"}} alt={topicTitle} src={topicImg.image}/>
                                     {ImgStats}
                                 </div>

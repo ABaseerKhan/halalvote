@@ -26,18 +26,13 @@ export const FullScreenContainer = (props: FullScreenComponentProps) => {
             FSContainerRef.current!.onscroll = (e: Event) => {
                 const scrollRatio = (FSContainerRef.current!.scrollTop - (FSContainerRef.current!.clientHeight * topicIndex))/FSContainerRef.current!.clientHeight;
                 const indexDelta = scrollRatio < -0.5 ? -1 : (scrollRatio > 0.5 ? 1 : 0);
-                // console.log(`(idx, ∆): (${topicIndex}, ${indexDelta})`);
                 if (indexDelta !== 0) {
                     if ((topicIndex + indexDelta) >= topics.length - 2) {
-                        // console.log('fetching topics + incrementing index');
                         fetchTopics(undefined, topicIndex+indexDelta);
                     } else {
-                        console.log('changing index');
                         setTopicsContext(topics, topicIndex+indexDelta);
                     }
-                    FSContainerRef.current!.onscroll = () => { 
-                        // console.log("onScroll does nothing");
-                    };
+                    FSContainerRef.current!.onscroll = () => { };
                 };
             };
         }; // eslint-disable-next-line
