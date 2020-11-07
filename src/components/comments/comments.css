@@ -56,7 +56,7 @@
     }
     
     .likes-container {
-        margin: 0em 0.5em 0 0 !important;
+        margin: 0.5em 0.5em 0 0 !important;
     }
     
     .likes, .likes-liked {
@@ -66,9 +66,9 @@
     }
     
     .heart, .heart-liked {
-        height: 13px !important;
-        width: 15px !important;
-        stroke-width: 40px !important;
+        height: 15px !important;
+        width: 17px !important;
+        stroke-width: 45px !important;
     }
     .replies {
         margin-top: 0.5em !important;

@@ -22,7 +22,7 @@ export const SkeletonComponent = () => {
     }
 
     return (
-        <SkeletonTheme color="#cccccc" highlightColor="#d9d9d9">
+        <SkeletonTheme color="var(--dark-mode-secondary-text-color)" highlightColor="var(--dark-mode-text-color)">
             {SkeletonSections}
         </SkeletonTheme>
     )
