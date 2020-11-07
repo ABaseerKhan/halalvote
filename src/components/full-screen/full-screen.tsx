@@ -62,10 +62,10 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
     useEffect(() => {
       if (FSTopicRef.current) {
           FSTopicRef.current.onscroll = (e: Event) => {
-            setUnderlineTranslationPx(underlineTravelDistance * ((FSTopicRef.current!.scrollLeft - FSTopicRef.current!.clientWidth) / FSTopicRef.current!.clientWidth));
-            clearTimeout(isScrolling);
-            isScrolling = setTimeout(function() {
-              if (FSTopicRef.current) {
+            if (FSTopicRef.current) {
+              setUnderlineTranslationPx(underlineTravelDistance * ((FSTopicRef.current!.scrollLeft - FSTopicRef.current!.clientWidth) / FSTopicRef.current!.clientWidth));
+              clearTimeout(isScrolling);
+              isScrolling = setTimeout(function() {
                 const index = Math.floor((FSTopicRef.current!.scrollLeft+10) / FSTopicRef.current!.clientWidth);
                 switch(index) {
                   case 0:
@@ -80,8 +80,8 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
                   default:
                     setCardQueryParam(history, query, mediaCardId.toLowerCase());
                 };
-              };
-            }, 100);
+              }, 66);
+            }
           }
       } // eslint-disable-next-line
     }, []);

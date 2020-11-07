@@ -9,6 +9,7 @@ import { VotingSwitch } from './voting-switch';
 import './topic-carousel.css';
 import { useCookies } from 'react-cookie';
 import { topicsContext } from '../app-shell';
+import { Topic } from '../../types';
 
 interface TopicVotesComponentProps {
     topicTitle: string,
@@ -53,11 +54,14 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                         document.body.style.backgroundColor = 'var(--site-background-color)'
                     }, 500);
                 }
-                topic.vote = value;
-                topic.halalPoints = data.halalPoints;
-                topic.haramPoints = data.haramPoints;
-                topic.numVotes = data.numVotes;
-                setTopicsContext(topics, topicIndex);
+                const newTopics: Topic[] = topics.map((t: Topic) => { 
+                    if (t.topicTitle === topic.topicTitle) { 
+                        return {...t, vote: value, halalPoints: data.halalPoints, haramPoints: data.haramPoints, numVotes: data.numVotes}; 
+                    } else {
+                        return t;
+                    }
+                });
+                setTopicsContext(newTopics, topicIndex);
             } else {
                 topic.vote = topic.vote === undefined ? 0 : undefined;
                 setTopicsContext(topics, topicIndex);

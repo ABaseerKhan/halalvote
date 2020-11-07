@@ -10,6 +10,10 @@
   background: black;
 }
 
+.images-body::-webkit-scrollbar {
+  display: none;
+}
+
 .images-body-fullscreen {
   z-index: 3;
   position: absolute;
@@ -26,16 +30,17 @@
 .canvas-footer, .canvas-footer-fullscreen {
   height: 50px;
   width: 100%;
-  position: absolute;
   bottom: 0;
   border-top: 0.5px solid dimgray;
 }
 
 .canvas-footer {
+  position: absolute;
   border-radius: 0 0 25px 25px;
 }
 
 .canvas-footer-fullscreen {
+  position: fixed;
   z-index: 3;
   border-left: 0.5px solid dimgray;
   border-right: 0.5px solid dimgray;
@@ -216,7 +221,7 @@
   height: auto;
   width: 100%;
   margin: auto;
-  color: var(--site-background-color);
+  color: var(--dark-mode-secondary-text-color);
 }
 
 @keyframes appear {

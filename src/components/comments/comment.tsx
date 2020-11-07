@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { Comment } from '../../types';
@@ -25,6 +25,8 @@ import { topicsContext, commentsContext } from '../app-shell';
 interface CommentComponentProps {
     key: number,
     path: number[],
+    comment: Comment,
+    specificComment: Comment | undefined,
     pathToHighlightedComment: number[] | undefined,
     highlightComment: (path: number[] | undefined) => void,
     fetchMoreReplies: (pathToParentComment: number[], specificCommentId?: number | undefined, depth?: number) => Promise<void>,
@@ -33,7 +35,7 @@ interface CommentComponentProps {
     level2?: boolean;
 }
 export const CommentComponent = (props: CommentComponentProps) => {
-    let { topicIndexOverride } = props;
+    let { topicIndexOverride, comment, specificComment } = props;
 
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
@@ -41,13 +43,13 @@ export const CommentComponent = (props: CommentComponentProps) => {
     const query = useQuery();
     const history = useHistory();
 
+    const commentContentRef = useRef<HTMLDivElement>(null);
+
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
     const topic = topics?.length ? topics[topicIndexOverride] : undefined;
 
     const { commentsState, setCommentsContext } = useContext(commentsContext);
-    const comment = getCommentFromPath(commentsState[topic?.topicTitle!].comments, props.path)!;
-    const specificComment = topic?.topicTitle ? commentsState[topic.topicTitle]?.specificComment : undefined;
 
     const [state, setState] = useState({
         fetchingReplies: false,
@@ -108,11 +110,9 @@ export const CommentComponent = (props: CommentComponentProps) => {
     const viewMoreReplies = !comment.repliesShown ? (comment.numReplies) : (moreReplies);
 
     const isHighlighted = 
-    props.pathToHighlightedComment && 
-    props.pathToHighlightedComment.length === props.path.length && 
-    props.pathToHighlightedComment.every((value, index) => value === props.path[index]);
+    !!props.pathToHighlightedComment;
 
-    let commentContentClass = isHighlighted ? "comment-content-highlighted" : "comment-content";
+    let commentContentClass = "comment-content";
 
     const onUserClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.preventDefault();
@@ -130,6 +130,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
             </div>
             <div className="comment-body">
                 <div
+                    ref={commentContentRef}
                     className={commentContentClass} 
                     onClick={(e) => {
                         const selection = window.getSelection();
@@ -140,6 +141,10 @@ export const CommentComponent = (props: CommentComponentProps) => {
                             } else {
                                 e.stopPropagation();
                                 props.highlightComment(props.path);
+                                commentContentRef.current!.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
+                                setTimeout(() => {
+                                    commentContentRef.current!.style.backgroundColor = "rgba(0, 0, 0, 0)";
+                                }, 100);
                             }
                         }
                     }}
@@ -171,6 +176,8 @@ export const CommentComponent = (props: CommentComponentProps) => {
                             return <CommentComponent 
                                         key={reply.id}
                                         path={props.path.concat([i])}
+                                        comment={reply}
+                                        specificComment={specificComment}
                                         pathToHighlightedComment={props.pathToHighlightedComment} 
                                         highlightComment={props.highlightComment} 
                                         fetchMoreReplies={props.fetchMoreReplies}
