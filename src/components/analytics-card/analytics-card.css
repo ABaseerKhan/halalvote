@@ -38,3 +38,23 @@
 .analytics-footer-fullscreen {
   z-index: 3;
 }
+
+.numeric-display {
+  display: flex;
+}
+
+.numeric-display-halal {
+  margin: auto;
+  color: var(--halal-color);
+}
+
+.numeric-display-haram {
+  margin: auto;
+  color: var(--haram-color);
+}
+
+.canvas-container {
+  padding: 15px;
+  width: 90%;
+  margin: auto;
+}

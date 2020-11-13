@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useContext } from 'react';
-import { Chart } from "chart.js";
+import React, { useRef, useEffect, useContext, useState } from 'react';
+import { Chart, ChartTooltipItem, ChartData } from "chart.js";
 import { topicsContext, fullScreenContext, analyticsContext, AnalyticsGraph } from '../app-shell';
 import { topicsConfig } from '../../https-client/config';
 import { AnalyticCounts } from '../../types';
@@ -9,6 +9,7 @@ import { getData } from '../../https-client/client';
 
 // styles
 import './analytics-card.css';
+import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 interface AnalyticsCardComponentProps {
     id: string
@@ -16,6 +17,8 @@ interface AnalyticsCardComponentProps {
 
 export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     const { id } = props;
+
+    const [displayNumbers, setDisplayNumbers] = useState({ halalNumber: 0, haramNumber: 0});
 
     const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
@@ -62,6 +65,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 halalCounts: data.halalCounts,
                 haramCounts: data.haramCounts
             }
+            setDisplayNumbers({ halalNumber: data.halalCounts[data.halalCounts.length-1], haramNumber: data.haramCounts[data.haramCounts.length-1] });
             setAnalyticsContext(topic.topicTitle, newGraph);
         }
     }
@@ -70,9 +74,44 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
         const myChartRef = chartRef.current?.getContext("2d");
         const halalCounts = graph?.halalCounts ? graph.halalCounts : [];
         const haramCounts = graph?.haramCounts ? graph.haramCounts : [];
+
+        Chart.Tooltip.positioners.custom = function(elements, eventPosition) {
+            /** @type {Chart.Tooltip} */
+            var tooltip = this;
+        
+            return {
+                x: elements[0]._view.x +7,
+                y: -5,
+            };
+        };
+
+        Chart.defaults.LineWithLine = Chart.defaults.line;
+        Chart.controllers.LineWithLine = Chart.controllers.line.extend({
+        draw: function(ease: any) {
+            Chart.controllers.line.prototype.draw.call(this, ease);
+
+            if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
+                var activePoint = this.chart.tooltip._active[0],
+                    ctx = this.chart.ctx,
+                    x = activePoint.tooltipPosition().x,
+                    topY = this.chart.chartArea.bottom - this.chart.chartArea.top,
+                    bottomY = 20;
+
+                // draw line
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(x, topY);
+                ctx.lineTo(x, bottomY);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'gray';
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+        });
         
         new Chart(myChartRef, {
-            type: 'line',
+            type: 'LineWithLine',
             data: {
                 labels: new Array(halalCounts.length).fill(''),
                 datasets: [{
@@ -100,6 +139,44 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             options: {
                 responsive: true,
                 aspectRatio: 1.25,
+                hover: {
+                    mode: 'x-axis',
+                    animationDuration: 0,
+                    onHover: (event, activeElements: any) => { 
+                        if (activeElements.length) { 
+                            setDisplayNumbers({ halalNumber: halalCounts[activeElements[0]._index], haramNumber: haramCounts[activeElements[1]._index] });  
+                        } },
+                    intersect: false,
+                },
+                tooltips: {
+                    custom: function(tooltip) {
+                        if (!tooltip) return;
+                        // disable displaying the color box;
+                        tooltip.displayColors = false;
+                    },
+                    mode: 'index',
+                    intersect: false,
+                    axis: 'x',
+                    callbacks: {
+                        label: (tooltipItem: ChartTooltipItem, data: ChartData): string | string[] => {
+                            return tooltipItem.index!.toString();
+                        }
+                    },
+                    filter: (item: ChartTooltipItem, data: ChartData): boolean => {
+                        if (item.datasetIndex === 0) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    position: 'custom',
+                    caretSize: 0,
+                    backgroundColor: 'transparent',
+                    bodyFontColor: 'gray',
+                    bodyFontSize: 14,
+                    bodyFontStyle: 'bold',
+                },
+                //onHover: (event, activeElements) => { },
                 legend: {
                     position: 'bottom',
                     labels: {
@@ -113,6 +190,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 },
                 scales: {
                     yAxes: [{
+                        display: false,
                         gridLines: {
                             drawOnChartArea: false,
                         },
@@ -120,10 +198,11 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                             fontColor: 'rgb(197, 197, 197)',
                             callback: (value: number) => { if (Number.isInteger(value)) { return value; } },
                             stepSize: 1,
-                            beginAtZero: true
+                            beginAtZero: true,
                         }
                     }],
                     xAxes: [{
+                        display: false,
                         gridLines: {
                             drawOnChartArea: false
                         },
@@ -134,6 +213,14 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                             beginAtZero: true
                         }
                     }],
+                },
+                layout: {
+                    padding: {
+                        top: 5,
+                        bottom: 5,
+                        left: 5,
+                        right: 5,
+                    }
                 }
             }
         });
@@ -145,7 +232,21 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
 
     return (
     <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"} onDoubleClick={doubleTap}>
-        <canvas ref={chartRef} className="chart" id="myChart"></canvas>
+        <div className={"numeric-display"}>
+            <span className="numeric-display-halal">{displayNumbers.halalNumber}</span>
+            <span className="numeric-display-haram">{displayNumbers.haramNumber}</span>
+        </div>
+        <div className={'canvas-container'} onMouseOut={() => { 
+                    console.log('onMouseLeave'); 
+                    setDisplayNumbers({ halalNumber: graph ? graph.halalCounts[graph.halalCounts.length-1] : 0, haramNumber: graph ? graph.haramCounts[graph.haramCounts.length-1] : 0 }); 
+                } 
+            } >
+            <canvas 
+                ref={chartRef}
+                className="chart" 
+                id="myChart"
+            />
+        </div>
         <div className={fullScreenMode ? "analytics-footer-fullscreen" : "analytics-footer"}>
         </div>
     </div>
