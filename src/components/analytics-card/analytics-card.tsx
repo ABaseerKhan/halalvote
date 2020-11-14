@@ -9,7 +9,6 @@ import { getData } from '../../https-client/client';
 
 // styles
 import './analytics-card.css';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 interface AnalyticsCardComponentProps {
     id: string
@@ -77,7 +76,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
 
         Chart.Tooltip.positioners.custom = function(elements, eventPosition) {
             /** @type {Chart.Tooltip} */
-            var tooltip = this;
         
             return {
                 x: elements[0]._view.x +7,
@@ -142,7 +140,8 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 hover: {
                     mode: 'x-axis',
                     animationDuration: 0,
-                    onHover: (event, activeElements: any) => { 
+                    onHover: (event, activeElements: any) => {
+                        event.stopPropagation();
                         if (activeElements.length) { 
                             setDisplayNumbers({ halalNumber: halalCounts[activeElements[0]._index], haramNumber: haramCounts[activeElements[1]._index] });  
                         } },
