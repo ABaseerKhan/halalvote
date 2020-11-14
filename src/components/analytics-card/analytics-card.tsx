@@ -36,6 +36,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }, [topic?.topicTitle]);
 
     useEffect(() => {
+        setDisplayNumbers({ halalNumber: graph && graph.halalCounts ? graph.halalCounts[graph.halalCounts.length-1] : 0, haramNumber: graph && graph.haramCounts ? graph.haramCounts[graph.haramCounts.length-1] : 0 });
         createGraph(); // eslint-disable-next-line
     }, [graph]);
 
@@ -64,7 +65,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 halalCounts: data.halalCounts,
                 haramCounts: data.haramCounts
             }
-            setDisplayNumbers({ halalNumber: data.halalCounts[data.halalCounts.length-1], haramNumber: data.haramCounts[data.haramCounts.length-1] });
             setAnalyticsContext(topic.topicTitle, newGraph);
         }
     }
@@ -74,7 +74,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
         const halalCounts = graph?.halalCounts ? graph.halalCounts : [];
         const haramCounts = graph?.haramCounts ? graph.haramCounts : [];
         const maxY = Math.max(...[...halalCounts, ...haramCounts]);
-        console.log(maxY / 5);
         const chartYMax = maxY > 1 ? (Math.ceil(maxY / 5) + maxY) : 2;
 
         Chart.Tooltip.positioners.custom = function(elements, eventPosition) {
@@ -149,7 +148,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                     mode: 'x-axis',
                     animationDuration: 0,
                     onHover: (event, activeElements: any) => {
-                        event.stopPropagation();
                         if (activeElements.length) { 
                             setDisplayNumbers({ halalNumber: halalCounts[activeElements[0]._index], haramNumber: haramCounts[activeElements[1]._index] });  
                         } },
