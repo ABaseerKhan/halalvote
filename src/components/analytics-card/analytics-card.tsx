@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useContext, useState } from 'react';
-import { Chart, ChartTooltipItem, ChartData } from "chart.js";
+import React, { useRef, useEffect, useContext, useState, useMemo } from 'react';
+import { Chart } from "chart.js";
 import { topicsContext, fullScreenContext, analyticsContext, AnalyticsGraph } from '../app-shell';
 import { topicsConfig } from '../../https-client/config';
 import { AnalyticCounts } from '../../types';
@@ -10,6 +10,13 @@ import { getData } from '../../https-client/client';
 // styles
 import './analytics-card.css';
 
+enum Interval {
+    WEEK,
+    MONTH,
+    YEAR,
+    ALL
+};
+
 interface AnalyticsCardComponentProps {
     id: string
 };
@@ -18,6 +25,21 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     const { id } = props;
 
     const [displayNumbers, setDisplayNumbers] = useState({ halalNumber: 0, haramNumber: 0});
+    const [interval, setInterval] = useState<Interval>(Interval.WEEK);
+    let numIntervals: number;
+    switch(interval) {
+        case Interval.WEEK:
+            numIntervals = 7;
+            break;
+        case Interval.MONTH:
+            numIntervals = 30;
+            break;
+        case Interval.YEAR:
+            numIntervals = 365;
+            break;
+        case Interval.ALL:
+            numIntervals = 365;
+    }
 
     const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
@@ -41,13 +63,12 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }, [graph]);
 
     const fetchAnalytics = async () => {
-        let interval = graph?.interval !== undefined ? graph.interval : "D";
-        let numIntervals = graph?.numIntervals !== undefined ? graph.numIntervals : 7;
+        let intervalOverride = graph?.interval !== undefined ? graph.interval : "D";
 
         if (topic?.topicTitle !== undefined) {
             let queryParams: any = { 
                 "topicTitle": topic.topicTitle,
-                "interval": interval,
+                "interval": intervalOverride,
                 "numIntervals": numIntervals
             };
             let additionalHeaders: any = {};
@@ -60,7 +81,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             });
             
             const newGraph: AnalyticsGraph = {
-                interval: interval,
+                interval: intervalOverride,
                 numIntervals: numIntervals,
                 halalCounts: data.halalCounts,
                 haramCounts: data.haramCounts
@@ -69,12 +90,21 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
         }
     }
 
+    const dates = useMemo(() => {
+        let dates: number[] = [];
+        const today = new Date();
+        for (let i = numIntervals; i > 0; i--) {
+            dates.push(new Date().setDate(today.getDate()-i));
+        };
+        return dates;
+    }, [numIntervals]);
+
     const createGraph = () => {
         const myChartRef = chartRef.current?.getContext("2d");
         const halalCounts = graph?.halalCounts ? graph.halalCounts : [];
         const haramCounts = graph?.haramCounts ? graph.haramCounts : [];
-        const maxY = Math.max(...[...halalCounts, ...haramCounts]);
-        const chartYMax = maxY > 1 ? (Math.ceil(maxY / 5) + maxY) : 2;
+        // const maxY = Math.max(...[...halalCounts, ...haramCounts]);
+        // const chartYMax = maxY > 1 ? (Math.ceil(maxY / 5) + maxY) : 2;
 
         Chart.Tooltip.positioners.custom = function(elements, eventPosition) {
             /** @type {Chart.Tooltip} */
@@ -92,21 +122,23 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
 
             if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
                 var activePoint = this.chart.tooltip._active[0],
-                    ctx = this.chart.ctx,
+                    ctx: CanvasRenderingContext2D = this.chart.ctx,
                     x = activePoint.tooltipPosition().x,
                     topY = this.chart.chartArea.bottom - this.chart.chartArea.top,
                     bottomY = 20;
 
+                const dateDisplay = new Date(dates[this.chart.tooltip._active[0]._index]).toLocaleString(undefined, { month: 'short', day: 'numeric'});
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(this.chart.tooltip._active[0]._index, x, bottomY-10);
+                ctx.fillStyle = 'rgb(124, 124, 124)';
+                ctx.fillText(dateDisplay, x, bottomY-10);
                 // draw line
                 ctx.save();
                 ctx.beginPath();
-                ctx.moveTo(x, topY+6);
+                ctx.moveTo(x, topY+20);
                 ctx.lineTo(x, bottomY);
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = 'gray';
+                ctx.strokeStyle = 'rgb(124, 124, 124)';
                 ctx.stroke();
                 ctx.restore();
             }
@@ -121,7 +153,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                     label: 'Halal Votes',
                     data: halalCounts,
                     fill: false,
-                    backgroundColor: '#A9DDD6',
                     borderColor: [
                         '#A9DDD6',
                     ],
@@ -132,7 +163,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                     label: 'Haram Votes',
                     data: haramCounts,
                     fill: false,
-                    backgroundColor: '#D0ADEB',
                     borderColor: [
                         '#D0ADEB',
                     ],
@@ -160,44 +190,12 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 },
                 tooltips: {
                     enabled: false,
-                    custom: function(tooltip) {
-                        if (!tooltip) return;
-                        // disable displaying the color box;
-                        tooltip.displayColors = false;
-                    },
                     mode: 'index',
                     intersect: false,
                     axis: 'x',
-                    callbacks: {
-                        label: (tooltipItem: ChartTooltipItem, data: ChartData): string | string[] => {
-                            return tooltipItem.index!.toString();
-                        }
-                    },
-                    filter: (item: ChartTooltipItem, data: ChartData): boolean => {
-                        if (item.datasetIndex === 0) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                    position: 'custom',
-                    caretSize: 0,
-                    backgroundColor: 'transparent',
-                    bodyFontColor: 'gray',
-                    bodyFontSize: 14,
-                    bodyFontStyle: 'bold',
                 },
                 legend: {
                     display: false,
-                    position: 'bottom',
-                    labels: {
-                        boxWidth: 10,
-                        padding: 20,
-                        fontFamily: 'verdana, arial, helvetica, sans-serif',
-                        fontColor: 'rgb(197, 197, 197)',
-                        fontSize: 10,
-                        usePointStyle: true,
-                    }
                 },
                 scales: {
                     yAxes: [{
@@ -210,7 +208,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                             callback: (value: number) => { if (Number.isInteger(value)) { return value; } },
                             stepSize: 1,
                             beginAtZero: true,
-                            max: chartYMax,
                         },
                     }],
                     xAxes: [{
@@ -233,10 +230,10 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 },
                 layout: {
                     padding: {
-                        top: 5,
-                        bottom: 5,
-                        left: 5,
-                        right: 5,
+                        top: 20,
+                        bottom: 20,
+                        left: 20,
+                        right: 20,
                     }
                 }
             }
@@ -260,6 +257,12 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 className="chart" 
                 id="myChart"
             />
+            <div className={'interval-selector-container'}>
+                <div className={'interval-selector'}>1W</div>
+                <div className={'interval-selector'}>1M</div>
+                <div className={'interval-selector'}>1Y</div>
+                <div className={'interval-selector'}>All</div>
+            </div>
         </div>
         <div className={fullScreenMode ? "analytics-footer-fullscreen" : "analytics-footer"}>
         </div>

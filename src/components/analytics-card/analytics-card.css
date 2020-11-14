@@ -18,7 +18,7 @@
 }
 
 .canvas-container {
-  width: 95%;
+  width: 100%;
   margin: auto;
   touch-action: none;
 }
@@ -52,12 +52,12 @@
 
 .votes-label {
   color: var(--dark-mode-text-color);
-  font-size: 1.5em;
+  font-size: 14px;
   padding-bottom: 2px;
 }
 
 .numeric-display-halal, .numeric-display-haram {
-  font-size: 1em;
+  font-size: 12px;
   text-align: left;
   margin: auto;
   display: flex;
