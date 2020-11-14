@@ -20,6 +20,7 @@
 .canvas-container {
   width: 95%;
   margin: auto;
+  touch-action: none;
 }
 
 .chart {

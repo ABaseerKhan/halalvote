@@ -144,10 +144,15 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             options: {
                 responsive: true,
                 aspectRatio: 1.75,
+                events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
                 hover: {
                     mode: 'x-axis',
                     animationDuration: 0,
                     onHover: (event, activeElements: any) => {
+                        if (event.type === 'touchmove' || event.type === 'touchstart') { event.stopPropagation(); };
+                        if (event.type === 'touchend' || event.type === 'mouseout') {
+                            setDisplayNumbers({ halalNumber: graph && graph.halalCounts ? graph.halalCounts[graph.halalCounts.length-1] : 0, haramNumber: graph && graph.haramCounts ? graph.haramCounts[graph.haramCounts.length-1] : 0 });
+                        }
                         if (activeElements.length) { 
                             setDisplayNumbers({ halalNumber: halalCounts[activeElements[0]._index], haramNumber: haramCounts[activeElements[1]._index] });  
                         } },
@@ -249,10 +254,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             <div className="numeric-display-halal"><span className="numeric-display-label">Halal</span><span className="numeric-display-value">{displayNumbers.halalNumber}</span></div>
             <div className="numeric-display-haram"><span className="numeric-display-label">Haram</span><span className="numeric-display-value">{displayNumbers.haramNumber}</span></div>
         </div>
-        <div className={'canvas-container'} onMouseOut={() => { 
-                    setDisplayNumbers({ halalNumber: graph && graph.halalCounts ? graph.halalCounts[graph.halalCounts.length-1] : 0, haramNumber: graph && graph.haramCounts ? graph.haramCounts[graph.haramCounts.length-1] : 0 }); 
-                } 
-            } >
+        <div className={'canvas-container'}>
             <canvas 
                 ref={chartRef}
                 className="chart" 

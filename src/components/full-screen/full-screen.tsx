@@ -66,7 +66,7 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
               setUnderlineTranslationPx(underlineTravelDistance * ((FSTopicRef.current!.scrollLeft - FSTopicRef.current!.clientWidth) / FSTopicRef.current!.clientWidth));
               clearTimeout(isScrolling);
               isScrolling = setTimeout(function() {
-                const index = Math.floor((FSTopicRef.current!.scrollLeft+10) / FSTopicRef.current!.clientWidth);
+                const index = Math.floor((FSTopicRef.current!.scrollLeft + (FSTopicRef.current!.clientWidth/2)) / FSTopicRef.current!.clientWidth);
                 switch(index) {
                   case 0:
                     setCardQueryParam(history, query, commentsCardId.toLowerCase());
