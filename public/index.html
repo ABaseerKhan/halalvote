@@ -3,6 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Android Viewport height fix-->
+    <script type="text/javascript">
+      var isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1; //&& ua.indexOf("mobile");
+      if(isAndroid) {
+          document.write('<meta name="viewport" content="width=device-width,height='+window.innerHeight+', initial-scale=1.0, , maximum-scale=1">');
+      }
+    </script> 
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <!--
       Notice the use of %PUBLIC_URL% in the tag above.
