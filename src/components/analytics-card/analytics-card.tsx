@@ -73,6 +73,9 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
         const myChartRef = chartRef.current?.getContext("2d");
         const halalCounts = graph?.halalCounts ? graph.halalCounts : [];
         const haramCounts = graph?.haramCounts ? graph.haramCounts : [];
+        const maxY = Math.max(...[...halalCounts, ...haramCounts]);
+        console.log(maxY / 5);
+        const chartYMax = maxY > 1 ? (Math.ceil(maxY / 5) + maxY) : 2;
 
         Chart.Tooltip.positioners.custom = function(elements, eventPosition) {
             /** @type {Chart.Tooltip} */
@@ -95,10 +98,13 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                     topY = this.chart.chartArea.bottom - this.chart.chartArea.top,
                     bottomY = 20;
 
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(this.chart.tooltip._active[0]._index, x, bottomY-10);
                 // draw line
                 ctx.save();
                 ctx.beginPath();
-                ctx.moveTo(x, topY);
+                ctx.moveTo(x, topY+6);
                 ctx.lineTo(x, bottomY);
                 ctx.lineWidth = 2;
                 ctx.strokeStyle = 'gray';
@@ -120,8 +126,9 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                     borderColor: [
                         '#A9DDD6',
                     ],
-                    borderWidth: 3
-                }, 
+                    borderWidth: 2,
+                    pointHoverRadius: 0,
+                },
                 {
                     label: 'Haram Votes',
                     data: haramCounts,
@@ -130,13 +137,14 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                     borderColor: [
                         '#D0ADEB',
                     ],
-                    borderWidth: 3
+                    borderWidth: 2,
+                    pointHoverRadius: 0,
                 }
             ]
             },
             options: {
                 responsive: true,
-                aspectRatio: 1.25,
+                aspectRatio: 1.75,
                 hover: {
                     mode: 'x-axis',
                     animationDuration: 0,
@@ -148,6 +156,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                     intersect: false,
                 },
                 tooltips: {
+                    enabled: false,
                     custom: function(tooltip) {
                         if (!tooltip) return;
                         // disable displaying the color box;
@@ -175,8 +184,8 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                     bodyFontSize: 14,
                     bodyFontStyle: 'bold',
                 },
-                //onHover: (event, activeElements) => { },
                 legend: {
+                    display: false,
                     position: 'bottom',
                     labels: {
                         boxWidth: 10,
@@ -198,7 +207,8 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                             callback: (value: number) => { if (Number.isInteger(value)) { return value; } },
                             stepSize: 1,
                             beginAtZero: true,
-                        }
+                            max: chartYMax,
+                        },
                     }],
                     xAxes: [{
                         display: false,
@@ -212,6 +222,11 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                             beginAtZero: true
                         }
                     }],
+                },
+                elements: {
+                    point:{
+                        radius: 0
+                    }
                 },
                 layout: {
                     padding: {
@@ -232,12 +247,12 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     return (
     <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"} onDoubleClick={doubleTap}>
         <div className={"numeric-display"}>
-            <span className="numeric-display-halal">{displayNumbers.halalNumber}</span>
-            <span className="numeric-display-haram">{displayNumbers.haramNumber}</span>
+            <div className="votes-label">Votes</div>
+            <div className="numeric-display-halal"><span className="numeric-display-label">Halal</span><span className="numeric-display-value">{displayNumbers.halalNumber}</span></div>
+            <div className="numeric-display-haram"><span className="numeric-display-label">Haram</span><span className="numeric-display-value">{displayNumbers.haramNumber}</span></div>
         </div>
         <div className={'canvas-container'} onMouseOut={() => { 
-                    console.log('onMouseLeave'); 
-                    setDisplayNumbers({ halalNumber: graph ? graph.halalCounts[graph.halalCounts.length-1] : 0, haramNumber: graph ? graph.haramCounts[graph.haramCounts.length-1] : 0 }); 
+                    setDisplayNumbers({ halalNumber: graph && graph.halalCounts ? graph.halalCounts[graph.halalCounts.length-1] : 0, haramNumber: graph && graph.haramCounts ? graph.haramCounts[graph.haramCounts.length-1] : 0 }); 
                 } 
             } >
             <canvas 

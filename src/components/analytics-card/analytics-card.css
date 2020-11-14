@@ -17,9 +17,13 @@
   padding-top: 6em;
 }
 
+.canvas-container {
+  width: 95%;
+  margin: auto;
+}
+
 .chart {
-  max-width: 90% !important;
-  padding-top: 1em;
+  max-width: 100% !important;
   margin: auto;
 }
 
@@ -40,21 +44,37 @@
 }
 
 .numeric-display {
+  width: 95%;
+  margin: auto;
+  margin-top: 1em;
+}
+
+.votes-label {
+  color: var(--dark-mode-text-color);
+  font-size: 1.5em;
+  padding-bottom: 2px;
+}
+
+.numeric-display-halal, .numeric-display-haram {
+  font-size: 1em;
+  text-align: left;
+  margin: auto;
   display: flex;
 }
 
 .numeric-display-halal {
-  margin: auto;
   color: var(--halal-color);
 }
 
 .numeric-display-haram {
-  margin: auto;
   color: var(--haram-color);
 }
 
-.canvas-container {
-  padding: 15px;
-  width: 90%;
-  margin: auto;
+.numeric-display-label {
+  margin-left: auto;
+  width: 5em;
+}
+
+.numeric-display-value {
+  margin-right: auto;
 }
