@@ -21,6 +21,8 @@ interface AnalyticsCardComponentProps {
     id: string
 };
 
+var myChart: Chart;
+
 export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     const { id } = props;
 
@@ -56,6 +58,10 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             fetchAnalytics();
         } // eslint-disable-next-line
     }, [topic?.topicTitle]);
+
+    useEffect(() => {
+        fetchAnalytics(); // eslint-disable-next-line
+    }, [interval])
 
     useEffect(() => {
         setDisplayNumbers({ halalNumber: graph && graph.halalCounts ? graph.halalCounts[graph.halalCounts.length-1] : 0, haramNumber: graph && graph.haramCounts ? graph.haramCounts[graph.haramCounts.length-1] : 0 });
@@ -100,20 +106,14 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }, [numIntervals]);
 
     const createGraph = () => {
+        if (myChart) {
+            myChart.destroy();
+        };
         const myChartRef = chartRef.current?.getContext("2d");
         const halalCounts = graph?.halalCounts ? graph.halalCounts : [];
         const haramCounts = graph?.haramCounts ? graph.haramCounts : [];
         // const maxY = Math.max(...[...halalCounts, ...haramCounts]);
         // const chartYMax = maxY > 1 ? (Math.ceil(maxY / 5) + maxY) : 2;
-
-        Chart.Tooltip.positioners.custom = function(elements, eventPosition) {
-            /** @type {Chart.Tooltip} */
-        
-            return {
-                x: elements[0]._view.x +7,
-                y: -5,
-            };
-        };
 
         Chart.defaults.LineWithLine = Chart.defaults.line;
         Chart.controllers.LineWithLine = Chart.controllers.line.extend({
@@ -145,7 +145,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
         }
         });
         
-        new Chart(myChartRef, {
+        myChart = new Chart(myChartRef, {
             type: 'LineWithLine',
             data: {
                 labels: new Array(halalCounts.length).fill(''),
@@ -258,10 +258,10 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 id="myChart"
             />
             <div className={'interval-selector-container'}>
-                <div className={'interval-selector'}>1W</div>
-                <div className={'interval-selector'}>1M</div>
-                <div className={'interval-selector'}>1Y</div>
-                <div className={'interval-selector'}>All</div>
+                <div onClick={() => setInterval(Interval.WEEK)} className={interval === Interval.WEEK ? 'interval-selector-selected' : 'interval-selector'}>1W</div>
+                <div onClick={() => setInterval(Interval.MONTH)} className={interval === Interval.MONTH ? 'interval-selector-selected' : 'interval-selector'}>1M</div>
+                <div onClick={() => setInterval(Interval.YEAR)} className={interval === Interval.YEAR ? 'interval-selector-selected' : 'interval-selector'}>1Y</div>
+                <div onClick={() => setInterval(Interval.ALL)} className={interval === Interval.ALL ? 'interval-selector-selected' : 'interval-selector'}>All</div>
             </div>
         </div>
         <div className={fullScreenMode ? "analytics-footer-fullscreen" : "analytics-footer"}>

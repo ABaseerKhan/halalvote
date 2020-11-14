@@ -79,3 +79,25 @@
 .numeric-display-value {
   margin-right: auto;
 }
+
+.interval-selector-container {
+  display: flex;
+}
+
+.interval-selector, .interval-selector-selected {
+  margin: auto;
+  width: 50px;
+  padding: 5px 0 5px 0;
+  border-radius: 10px;
+  color: var(--dark-mode-secondary-text-color);
+}
+
+.interval-selector:hover {
+  color: white;
+  cursor: pointer;
+}
+
+.interval-selector-selected {
+  color: white;
+  background-color: var(--dark-mode-background);
+}
