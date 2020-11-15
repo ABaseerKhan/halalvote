@@ -153,6 +153,7 @@ export const AppShellComponent = (props: any) => {
     const appShell = getAppShell();
     const cardsShellContainer = getCardsShellContainer();
 
+    console.log(state.incomingDirection);
     if (appShell && appShell.scrollTop > 0 && cardsShellContainer && state.incomingDirection !== IncomingDirection.NONE) {
         cardsShellContainer.style.transform = state.incomingDirection === IncomingDirection.RIGHT ? "translate(100%)" : "translate(-100%)";
         cardsShellContainer.style.opacity = "1.0";
@@ -166,6 +167,7 @@ export const AppShellComponent = (props: any) => {
           fill: "forwards"
         }).onfinish = () => {
           cardsShellContainer.style.transform = "translate(0)";
+          setState(prevState => ({ ...prevState, incomingDirection: IncomingDirection.NONE }));
         }
     } else if (cardsShellContainer && state.incomingDirection !== IncomingDirection.NONE) {
         cardsShellContainer.style.opacity = "1.0";
