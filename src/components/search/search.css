@@ -83,6 +83,7 @@
     align-items: center;
     min-width: 0;
     padding: 0;
+    transition: all .2s ease-in-out;
 }
 
 .autocomplete-list-item-highlighted {

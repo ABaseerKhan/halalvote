@@ -20,11 +20,11 @@ html, body {
   --halal-compliment-color: #57998e;
   --halal-compliment-color-transparent: rgb(124, 203, 190, 0.75);
 
-  --light-neutral-color: #97A5AF;
-  --neutral-color: #6A7C8A;
+  --light-neutral-color: #5f5f5f;
+  --neutral-color: #414141;
   --neutral-color-transparent: rgb(106, 124, 138, 0.75);
 
-  --link-color: #6495ed;
+  --link-color: #5f5f5f;
   --gray: #232B2F;
   --dark-mode-background: #181818;
   --dark-mode-middleground: #2a2a2a;
@@ -32,7 +32,7 @@ html, body {
   --dark-mode-text-color: rgb(197, 197, 197);
   --dark-mode-secondary-text-color: rgb(124, 124, 124);
   --dark-mode-highlight-color: rgb(49, 49, 49);
-  --dark-mode-red: #9a2f4e;
+  --dark-mode-red: #9c435d;
   --dark-mode-halal-color: #4f8a82;
   --dark-mode-haram-color: #7f5f98;
 
@@ -44,7 +44,7 @@ html, body {
   --topic-carousel-height-vh: 13vh;
   --max-topic-carousel-height-px: 135px;
 
-  --highlight-color: #8fb4ff;
+  --highlight-color: var(--light-neutral-color);
 
   --button-background-color: #f2f2f2;
 }
@@ -70,6 +70,10 @@ input[type=text], input[type=password] {
   padding: 12px 20px;
   display: inline-block;
   box-sizing: border-box;
+  border: none;
+  /* darkmode styles */
+  background: var(--dark-mode-middleground);
+  color: var(--dark-mode-text-color);
 }
 
 .button {
@@ -77,8 +81,8 @@ input[type=text], input[type=password] {
   padding: 6px;
   margin: 10% 0 0 10%;
   border-radius: 24px;
-  color: var(--site-background-color);
-  background-color: var(--gray) !important;
+  color: var(--dark-mode-text-color);
+  background-color: var(--dark-mode-foreground);
   border: none;
   outline: none;
   font-size: 16px;

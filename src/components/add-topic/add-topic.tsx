@@ -78,7 +78,7 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
             }
 
             <ImageUploader 
-                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 
+                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--dark-mode-background-color)", padding: "0", margin: "20px 0 0 0"}} 
                 buttonClassName="add-topic-image-choose-button"
                 buttonStyles={{background: "none", width: "auto", color: "var(--site-background-color)", transition: "none", padding: "0", margin: "20px 0 0 0"}}
                 withIcon={false} 
