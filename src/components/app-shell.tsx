@@ -198,7 +198,8 @@ export const AppShellComponent = (props: any) => {
         state.topicsState.topics[state.topicsState.topicIndex] = data[0]; // refresh topic with new data from db
         setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex); // trigger re-render
       } else {
-        setTopicsContext([...state.topicsState.topics.slice(0, state.topicsState.topicIndex+1), ...data, ...state.topicsState.topics.slice(state.topicsState.topicIndex+1)], state.topicsState.topics.length > 1 ? state.topicsState.topicIndex+1 : 0);
+        console.log([...state.topicsState.topics.slice(0, state.topicsState.topicIndex+1), ...data, ...state.topicsState.topics.slice(state.topicsState.topicIndex+1)]);
+        setTopicsContext([...state.topicsState.topics.slice(0, state.topicsState.topicIndex+1), ...data, ...state.topicsState.topics.slice(state.topicsState.topicIndex+1)], state.topicsState.topics.length >= 1 ? state.topicsState.topicIndex+1 : 0);
       }
     } else {
       setTopicsContext([...state.topicsState.topics, ...data], newIndex!==undefined ? newIndex : state.topicsState.topicIndex);
