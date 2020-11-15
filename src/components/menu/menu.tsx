@@ -6,13 +6,13 @@ import { Portal } from '../../index';
 import { 
     useHistory,
 } from "react-router-dom";
+import { useQuery } from '../../hooks/useQuery';
 
 // type imports
 import { ModalType, MenuLocation } from '../../types';
 
 // styles
 import './menu.css';
-import { useQuery } from '../../hooks/useQuery';
 
 const menuId = "menu";
 const menuButtonId = "menu-button";
@@ -24,7 +24,6 @@ interface MenuComponentProps {
 };
 interface MenuComponentState {
     menuLocation: MenuLocation, 
-    loginDisplayed: boolean, 
     addTopicDisplayed: boolean,
 }
 export const MenuComponent = (props: MenuComponentProps) => {
@@ -32,13 +31,13 @@ export const MenuComponent = (props: MenuComponentProps) => {
     const history = useHistory();
     const query = useQuery();
     const userProfile = query.get("userProfile") || undefined;
+    const loginScreen = query.get("loginScreen") || undefined;
     // eslint-disable-next-line
     const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken']);
     const { username } = cookies;
 
     const [state, setState] = useState<MenuComponentState>({
         menuLocation: MenuLocation.NONE,
-        loginDisplayed: false,
         addTopicDisplayed: false,
     });
 
@@ -91,7 +90,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
         } // eslint-disable-next-line
     }, [state.menuLocation]);
 
-    const updateUrl = useCallback((userProfile) => {
+    const updateUrl = useCallback((userProfile, loginScreen) => {
         if (userProfile) {
             if (query.has('userProfile')) {
                 query.set('userProfile', userProfile);
@@ -103,6 +102,19 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 query.delete('userProfile');
             }
         }
+        
+        if (loginScreen) {
+            if (query.has('loginScreen')) {
+                query.set('loginScreen', 'login');
+            } else {
+                query.append('loginScreen', 'login');
+            };
+        } else {
+            if (query.has('loginScreen')) {
+                query.delete('loginScreen');
+            }
+        }
+
         history.push({
             search: "?" + query.toString()
         });
@@ -113,7 +125,13 @@ export const MenuComponent = (props: MenuComponentProps) => {
     }
 
     const setLoginDisplayed = (loginDisplayed: boolean) => {
-        closeMenu({...state, menuLocation: MenuLocation.NONE, loginDisplayed: loginDisplayed}, () => {});
+        closeMenu({...state, menuLocation: MenuLocation.NONE}, () => {
+            if (loginDisplayed) {
+                updateUrl(undefined, 'login');
+            } else {
+                updateUrl(undefined, undefined);
+            }
+        });
     }
 
     const setAddTopicDisplayed = (addTopicDisplayed: boolean) => {
@@ -123,9 +141,9 @@ export const MenuComponent = (props: MenuComponentProps) => {
     const setAccountDisplayed = (accountDisplayed: boolean) => {
         closeMenu({...state, menuLocation: MenuLocation.NONE}, () => { 
             if (accountDisplayed) {
-                updateUrl(username);
+                updateUrl(username, undefined);
             } else {
-                updateUrl(undefined);
+                updateUrl(undefined, undefined);
             };
         });
     }
@@ -360,7 +378,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
     return (
         <div id={menuId} className={menuId} style={{height: menuHeight + "px", width: menuWidth + "px", borderRadius: (menuHeight / 2) + "px"}}>
-            { state.loginDisplayed &&
+            { loginScreen &&
                 <Portal><ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchTopics={null}/></Portal>
             }
             { state.addTopicDisplayed &&

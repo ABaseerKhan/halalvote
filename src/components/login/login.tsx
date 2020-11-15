@@ -1,19 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { postData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
+import { 
+    useHistory,
+} from "react-router-dom";
+import { useQuery } from '../../hooks/useQuery';
 
 // styles
 import './login.css';
 
-enum LoginScreenType {
+export enum LoginScreenType {
     LOGIN,
     REGISTER,
     REGISTER_COMPLETE,
     LOADING_LOGIN,
-    LOADING_REGISTER
+    LOADING_REGISTER,
+    NONE
 }
 
 interface LoginComponentProps {
@@ -26,45 +31,79 @@ export const LoginComponent = (props: LoginComponentProps) => {
     // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const [state, setState] = useState<{
-        loginScreenType: LoginScreenType, 
         isLoginButtonDisabled: boolean, 
-        isRegisterButtonDisabled: boolean, 
-        emailInput: string | undefined,
-        usernameInput: string | undefined,
-        passwordInput: string | undefined,
-        errorMessage: string | undefined }>({
-        loginScreenType: LoginScreenType.LOGIN,
+        isRegisterButtonDisabled: boolean }>({
         isLoginButtonDisabled: true,
-        isRegisterButtonDisabled: true,
-        emailInput: undefined,
-        usernameInput: undefined,
-        passwordInput: undefined,
-        errorMessage: undefined
+        isRegisterButtonDisabled: true
     });
 
+    let emailInput = useRef<string | undefined>(undefined);
+    let usernameInput = useRef<string | undefined>(undefined);
+    let passwordInput = useRef<string | undefined>(undefined);
+    let errorMessage = useRef<string | undefined>(undefined);
+
+    const history = useHistory();
+    const query = useQuery();
+
+    const loginScreen = query.get("loginScreen") || undefined;
+
+    let loginScreenType: LoginScreenType;
+    switch(loginScreen) {
+        case "login":
+            loginScreenType = LoginScreenType.LOGIN;
+            break;
+        case "register":
+            loginScreenType = LoginScreenType.REGISTER;
+            break;
+        case "registerComplete":
+            loginScreenType = LoginScreenType.REGISTER_COMPLETE;
+            break;
+        case "loadingLogin":
+            loginScreenType = LoginScreenType.LOADING_LOGIN;
+            break;
+        case "loadingRegister":
+            loginScreenType = LoginScreenType.LOADING_REGISTER;
+            break;
+        default:
+            loginScreenType = LoginScreenType.NONE;
+    };
+
     useEffect(() => {
-        if (state.loginScreenType === LoginScreenType.LOADING_LOGIN) {
+        if (loginScreenType === LoginScreenType.LOADING_LOGIN) {
             makeLoginCall();
-        } else if (state.loginScreenType === LoginScreenType.LOADING_REGISTER) {
+        } else if (loginScreenType === LoginScreenType.LOADING_REGISTER) {
             makeRegisterCall();
-        } else if (state.loginScreenType === LoginScreenType.LOGIN || state.loginScreenType === LoginScreenType.REGISTER) {
-            const usernameInput = getUsernameInput();
-            const passwordInput = getPasswordInput();
+        } else if (loginScreenType === LoginScreenType.LOGIN || loginScreenType === LoginScreenType.REGISTER) {
+            const usernameInputElement = getUsernameInput();
+            const passwordInputElement = getPasswordInput();
             
-            if (usernameInput && passwordInput) {
-                usernameInput.value = state.usernameInput ? state.usernameInput : "";
-                passwordInput.value = state.passwordInput ? state.passwordInput : "";
+            if (usernameInputElement && passwordInputElement) {
+                usernameInputElement.value = usernameInput.current ? usernameInput.current : "";
+                passwordInputElement.value = passwordInput.current ? passwordInput.current : "";
             }
 
-            if (state.loginScreenType === LoginScreenType.REGISTER) {
-                const emailInput = getRegisterEmailInput();
+            if (loginScreenType === LoginScreenType.REGISTER) {
+                const emailInputElement = getRegisterEmailInput();
 
-                if (emailInput) {
-                    emailInput.value = emailInput.value ? emailInput.value : "";
+                if (emailInputElement) {
+                    emailInputElement.value = emailInput.current ? emailInput.current : "";
                 }
             }
         } // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state.loginScreenType]);
+    }, [loginScreenType]);
+
+    const updateURL = useCallback((loginScreen) => {
+        if (loginScreen) {
+            if (query.has('loginScreen')) {
+                query.set('loginScreen', loginScreen);
+            } else {
+                query.append('loginScreen', loginScreen);
+            };
+            history.push({
+                search: "?" + query.toString()
+            });
+        }
+    }, [history, query]);
 
     const getUsernameInput = (): HTMLInputElement => {
         return document.getElementById("username-input") as HTMLInputElement;
@@ -112,22 +151,43 @@ export const LoginComponent = (props: LoginComponentProps) => {
 
     const setLoginScreenType = (loginScreenType: LoginScreenType, options: any) => {
         clearInputs();
-        const newState = {...state, loginScreenType: loginScreenType};
         if (options.hasOwnProperty("usernameInput")) {
-            newState.usernameInput = options.usernameInput;
+            usernameInput.current = options.usernameInput;
         }
         if (options.hasOwnProperty("passwordInput")) {
-            newState.passwordInput = options.passwordInput;
+            passwordInput.current = options.passwordInput;
         }
         if (options.hasOwnProperty("emailInput")) {
-            newState.emailInput = options.emailInput;
+            emailInput.current = options.emailInput;
         }
         if (options.hasOwnProperty("errorMessage")) {
-            newState.errorMessage = options.errorMessage;
+            errorMessage.current = options.errorMessage;
         } else {
-            newState.errorMessage = undefined;
+            errorMessage.current = undefined;
         }
-        setState(newState);
+
+        let loginScreen: string;
+        switch(loginScreenType) {
+            case LoginScreenType.LOGIN:
+                loginScreen = "login";
+                break;
+            case LoginScreenType.REGISTER:
+                loginScreen = "register";
+                break;
+            case LoginScreenType.REGISTER_COMPLETE:
+                loginScreen = "registerComplete";
+                break;
+            case LoginScreenType.LOADING_LOGIN:
+                loginScreen = "loadingLogin";
+                break;
+            case LoginScreenType.LOADING_REGISTER:
+                loginScreen = "loadingRegister";
+                break;
+            default:
+                loginScreen = "login";
+        }
+
+        updateURL(loginScreen);
     }
     
     const login = () => {
@@ -148,15 +208,15 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 baseUrl: usersConfig.url,
                 path: 'login',
                 data: {
-                    "username": state.usernameInput,
-                    "password": state.passwordInput,
+                    "username": usernameInput.current,
+                    "password": passwordInput.current,
                 },
                 additionalHeaders: { }
             });
 
             if (status === 200) {
                 const sessionToken = data;
-                setCookie('username', state.usernameInput, { path: '/' });
+                setCookie('username', usernameInput.current, { path: '/' });
                 setCookie('sessiontoken', sessionToken, { path: '/ '});
                 if(props.onLogin) props.onLogin('username', 'sessiontoken');
                 closeModal();
@@ -186,19 +246,19 @@ export const LoginComponent = (props: LoginComponentProps) => {
 
     const makeRegisterCall = () => {
         const fetchData = async () => {
-            if (state.emailInput && state.usernameInput && state.passwordInput) {
+            if (emailInput.current && usernameInput.current && passwordInput.current) {
                 const { status, data } = await postData({
                     baseUrl: usersConfig.url,
                     path: 'register-user',
                     data: {
-                        "email": state.emailInput,
-                        "username": state.usernameInput,
-                        "password": state.passwordInput,
+                        "email": emailInput.current,
+                        "username": usernameInput.current,
+                        "password": passwordInput.current,
                     },
                     additionalHeaders: { }
                 });
 
-                if (status === 200 && state.usernameInput === data) {
+                if (status === 200 && usernameInput.current === data) {
                     setLoginScreenType(LoginScreenType.REGISTER_COMPLETE, {});
                 } else {
                     setLoginScreenType(LoginScreenType.REGISTER, {
@@ -265,22 +325,22 @@ export const LoginComponent = (props: LoginComponentProps) => {
     return (
         <div>
             {
-                state.loginScreenType === LoginScreenType.LOADING_LOGIN || state.loginScreenType === LoginScreenType.LOADING_REGISTER ?
+                loginScreenType === LoginScreenType.LOADING_LOGIN || loginScreenType === LoginScreenType.LOADING_REGISTER ?
                 <div>
                     <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} />
                 </div> :
-                state.loginScreenType === LoginScreenType.REGISTER_COMPLETE ?
+                loginScreenType === LoginScreenType.REGISTER_COMPLETE ?
                 <div className="login-body">
                     <div className="login-section-text">Thanks for registering with Halal Vote!</div>
                     <div className="login-section-text">Check your email to activate your account.</div>
                 </div> :
-                state.loginScreenType === LoginScreenType.LOGIN ?
+                loginScreenType === LoginScreenType.LOGIN ?
                 <div className="login-body">
                     <div className="login-section-text">Log In</div>
                     <input id="username-input" className="login-input" type="text" placeholder="Username" onChange={checkLoginInputs} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                     <input id="password-input" className="login-input" type="password" placeholder="Password" onChange={checkLoginInputs} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                     {
-                        state.errorMessage && <div className="login-error-message">{state.errorMessage}</div>
+                        errorMessage.current && <div className="login-error-message">{errorMessage.current}</div>
                     }
                     <button id="login-submit-button" className="button disabled-button" onClick={ () => { login() } } disabled={state.isLoginButtonDisabled}>Log In</button>
                     <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.REGISTER, {})}>New user?<br/>Create account</div>
@@ -291,7 +351,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     <input id="register-username-input" className="login-input" type="text" placeholder="Username" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                     <input id="register-password-input" className="login-input" type="password" placeholder="Password" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                     {
-                        state.errorMessage && <div className="login-error-message">{state.errorMessage}</div>
+                        errorMessage.current && <div className="login-error-message">{errorMessage.current}</div>
                     }
                     <button id="register-submit-button" className="button disabled-button" onClick={ () => { registerUser() } } disabled={state.isRegisterButtonDisabled}>Register</button>
                     <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN, {})}>Have an account?<br/>Log in here.</div>
