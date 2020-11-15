@@ -27,7 +27,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     const { id } = props;
 
     const [displayNumbers, setDisplayNumbers] = useState({ halalNumber: 0, haramNumber: 0});
-    const [interval, setInterval] = useState<Interval>(Interval.WEEK);
+    const [interval, setInterval] = useState<Interval>(Interval.ALL);
     let numIntervals: number;
     switch(interval) {
         case Interval.WEEK:
@@ -69,7 +69,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }, [graph]);
 
     const fetchAnalytics = async () => {
-        let intervalOverride = graph?.interval !== undefined ? graph.interval : "D";
+        let intervalOverride = interval === Interval.ALL ? "a" : "D";
 
         if (topic?.topicTitle !== undefined) {
             let queryParams: any = { 
@@ -88,7 +88,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             
             const newGraph: AnalyticsGraph = {
                 interval: intervalOverride,
-                numIntervals: numIntervals,
+                numIntervals: data.halalCounts.length,
                 halalCounts: data.halalCounts,
                 haramCounts: data.haramCounts
             }
@@ -97,13 +97,15 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }
 
     const dates = useMemo(() => {
-        let dates: number[] = [];
-        const today = new Date();
-        for (let i = numIntervals; i > 0; i--) {
-            dates.push(new Date().setDate(today.getDate()-i));
-        };
-        return dates;
-    }, [numIntervals]);
+        if (graph) {
+            let dates: number[] = [];
+            const today = new Date();
+            for (let i = graph.numIntervals-1; i >= 0; i--) {
+                dates.push(new Date().setDate(today.getUTCDate()-i));
+            };
+            return dates;
+        } else return [];
+    }, [graph]);
 
     const createGraph = () => {
         if (myChart) {
@@ -247,9 +249,12 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     return (
     <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"} onDoubleClick={doubleTap}>
         <div className={"numeric-display"}>
-            <div className="votes-label">Votes</div>
-            <div className="numeric-display-halal"><span className="numeric-display-label">Halal</span><span className="numeric-display-value">{displayNumbers.halalNumber}</span></div>
-            <div className="numeric-display-haram"><span className="numeric-display-label">Haram</span><span className="numeric-display-value">{displayNumbers.haramNumber}</span></div>
+            <div className="numeric-display-title">Votes</div>
+            <div className="numeric-display-body">
+                <div className="numeric-display-haram"><span className="numeric-display-label">Haram</span><span className="numeric-display-value">{displayNumbers.haramNumber}</span></div>
+                <div className="numeric-display-separator">::</div>
+                <div className="numeric-display-halal"><span className="numeric-display-label">Halal</span><span className="numeric-display-value">{displayNumbers.halalNumber}</span></div>
+            </div>
         </div>
         <div className={'canvas-container'}>
             <canvas 
