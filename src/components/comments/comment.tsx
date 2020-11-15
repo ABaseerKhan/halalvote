@@ -4,13 +4,13 @@ import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { Comment } from '../../types';
 import { convertUTCDateToLocalDate, timeSince } from '../../utils';
 import { commentsConfig } from '../../https-client/config';
-import { postData } from '../../https-client/client';
 import { ReactComponent as UpSVG } from '../../icons/up-arrow.svg';
 import { ReactComponent as DownSVG } from '../../icons/down-arrow.svg';
 import ClipLoader from "react-spinners/ClipLoader";
 import { 
     useHistory,
 } from "react-router-dom";
+import { authenticatedPostDataContext } from '../app-shell';
 
 // type imports
 import { Vote } from '../../types';
@@ -51,6 +51,8 @@ export const CommentComponent = (props: CommentComponentProps) => {
 
     const { commentsState, setCommentsContext } = useContext(commentsContext);
 
+    const { authenticatedPostData } = useContext(authenticatedPostDataContext);
+
     const [state, setState] = useState({
         fetchingReplies: false,
         canShowMore: true,
@@ -83,7 +85,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
     const upVote = async () => {
         const upVotes = (comment.userVote === Vote.UPVOTE) ? comment.upVotes - 1 : comment.upVotes + 1;
         const userVote = (comment.userVote === Vote.UPVOTE) ? undefined : Vote.UPVOTE;
-        const { status } = await postData({
+        const { status } = await authenticatedPostData({
             baseUrl: commentsConfig.url,
             path: 'vote-comment', 
             data: {
@@ -95,7 +97,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                 "sessiontoken": sessiontoken
             } : { },
             setCookie: setCookie,
-        });
+        }, true);
 
         if (status === 200){
             comment.upVotes = upVotes;

@@ -3,17 +3,16 @@ import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
-import { postData } from '../../https-client/client';
 import { commentsConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
 import { SkeletonComponent } from "./comments-skeleton";
+import { topicsContext, fullScreenContext, commentsContext, authenticatedPostDataContext } from '../app-shell';
 
 // type imports
 import { Judgment, userVoteToCommentType } from '../../types';
 
 // style imports
 import './comments.css';
-import { topicsContext, fullScreenContext, commentsContext } from '../app-shell';
 // import { useMedia } from '../../hooks/useMedia';
 
 interface CommentsCardComponentProps {
@@ -46,6 +45,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     // );
 
     const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
+    const { authenticatedPostData } = useContext(authenticatedPostDataContext);
 
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
@@ -81,7 +81,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     const fetchComments = async (pathToParentComment: number[], n?: number, specificCommentId?: number, depth=1) => {
         const parentComment = getCommentFromPath(comments, pathToParentComment);
-        const { data: newComments, status }: { data: Comment[]; status: number } = await postData({
+        const { data: newComments, status }: { data: Comment[]; status: number } = await authenticatedPostData({
             baseUrl: commentsConfig.url,
             path: 'get-comments', 
             data: {
@@ -94,7 +94,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : comments?.map((r) => r.id),
             },
             additionalHeaders: { },
-        });
+        }, true);
         const updatedComments = addCommentsLocally(comments, newComments.map(c => ({ ...c, repliesShown: 0 })), pathToParentComment, true);
         setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
         setState(prevState => ({ ...prevState, loading: false }));
@@ -115,7 +115,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         const isReply = (highlightedComment?.depth || 0) >= 2;
         const parentOfhighlightedComment = isReply ? getCommentFromPath(commentsCopy, state.pathToHighlightedComment?.slice(0,-1)) : undefined;
 
-        const { status, data: comment }: { status: number, data: Comment } = await postData({
+        const { status, data: comment }: { status: number, data: Comment } = await authenticatedPostData({
             baseUrl: commentsConfig.url,
             path: 'add-comment', 
             data: {
@@ -129,7 +129,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 "sessiontoken": sessiontoken
             },
             setCookie: setCookie,
-        });
+        }, true);
         if (status !== 200) {
             return status;
         }
@@ -156,7 +156,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     const deleteComment = async (pathToComment: number[]) => {
         const commentToDelete = getCommentFromPath(comments, pathToComment);
-        const response = await postData({
+        const response = await authenticatedPostData({
             baseUrl: commentsConfig.url,
             path: 'delete-comment', 
             data: { 
@@ -168,7 +168,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             additionalHeaders: {
                 "sessiontoken": sessiontoken
             }
-        });
+        }, true);
         
         if (pathToComment.length === 1) {
             await refreshTopic(topic?.topicTitle);

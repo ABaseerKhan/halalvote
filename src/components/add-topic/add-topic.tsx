@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { postData } from '../../https-client/client';
+import React, { useState, useContext } from 'react';
 import { topicsConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
 import ImageUploader from 'react-images-upload';
 import { resizeImage } from '../../utils';
+import { authenticatedPostDataContext } from '../app-shell';
 
 // styles
 import './add-topic.css';
@@ -23,6 +23,8 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
     const addTopicTitleInputId = "add-topic-title-input";
     const addTopicSubmitButtonId = "add-topic-submit-button";
 
+    const { authenticatedPostData } = useContext(authenticatedPostDataContext);
+
     const getTitleInput = (): HTMLInputElement => {
         return document.getElementById(addTopicTitleInputId) as HTMLInputElement;
     }
@@ -36,7 +38,7 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
                 "topicTitle": titleInput.value
             };
             if (state.picture) body["image"] = state.picture;
-            const { status, data } = await postData({
+            const { status, data } = await authenticatedPostData({
                 baseUrl: topicsConfig.url,
                 path: 'add-topic',
                 data: body,
@@ -44,7 +46,7 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
                     "sessiontoken": sessiontoken
                 },
                 setCookie: setCookie
-            });
+            }, true);
 
             if (status === 200 && titleInput.value === data) {
                 fetchTopics(titleInput.value);

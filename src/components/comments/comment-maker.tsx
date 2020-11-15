@@ -4,15 +4,15 @@ import "quill-mention";
 import { ReactComponent as SendButtonSVG } from '../../icons/send-button.svg';
 import { useMedia } from '../../hooks/useMedia';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
+import { getData } from '../../https-client/client';
+import { usersConfig } from '../../https-client/config';
+import { fullScreenContext } from '../app-shell';
 
 //type imports
 
 //style imports
 import 'react-quill/dist/quill.snow.css';
 import './comments.css';
-import { getData } from '../../https-client/client';
-import { usersConfig } from '../../https-client/config';
-import { fullScreenContext } from '../app-shell';
 
 interface CommentMakerComponentProps {
     submitComment: (comment: any) => Promise<number>,

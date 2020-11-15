@@ -1,7 +1,7 @@
 import React, {memo, useContext} from 'react';
-import { postData } from '../../https-client/client';
 import { topicsConfig } from '../../https-client/config';
 import { VotingSwitch } from './voting-switch';
+import { authenticatedPostDataContext } from '../app-shell';
 
 //type imports
 
@@ -26,9 +26,11 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
+    const { authenticatedPostData } = useContext(authenticatedPostDataContext);
+
     const submitVote = async (value: number) => {
         if (topic?.topicTitle) {
-            const { status, data } = await postData({
+            const { status, data } = await authenticatedPostData({
                 baseUrl: topicsConfig.url,
                 path: 'vote-topic',
                 data: {
@@ -40,7 +42,7 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
                     "sessiontoken": sessiontoken
                 },
                 setCookie: setCookie,
-            });
+            }, true);
             
             if (status === 200 && !("noUpdates" in data) && !("message" in data)) {
                 if (value > 0) {

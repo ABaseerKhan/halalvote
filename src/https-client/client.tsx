@@ -11,7 +11,7 @@ interface Request {
     setCookie?: any,
 };
 
-export const postData = async (request: Request, willRetry: boolean = true): Promise<any> => {
+export const postData = async (request: Request): Promise<any> => {
     const { baseUrl, path, data, additionalHeaders } = request;
 
     const response = await fetch(baseUrl + path, {
@@ -25,19 +25,10 @@ export const postData = async (request: Request, willRetry: boolean = true): Pro
         },
         body: JSON.stringify(data),
     });
-    if(response.status === 401) {
-        handle401(request);
-        if (willRetry) {
-            return await postData(request);
-        }
-    }
-    if(response.status === 400) {
-        handle400();
-    }
     return { status: response.status, data: await response.json() };
 }
 
-export const getData = async (request: Request, willRetry: boolean = true): Promise<any> => {
+export const getData = async (request: Request): Promise<any> => {
     const { baseUrl, path, queryParams={}, additionalHeaders={} } = request;
 
     const query = Object.keys(queryParams)
@@ -55,15 +46,6 @@ export const getData = async (request: Request, willRetry: boolean = true): Prom
             'x-api-key': getApiKey(baseUrl, envConfig),
         },
     });
-    if(response.status === 401) {
-        handle401(request);
-        if (willRetry) {
-            return await getData(request);
-        }
-    }
-    if(response.status === 400) {
-        handle400();
-    }
     return { status: response.status, data: await response.json() };
 }
 
@@ -78,16 +60,4 @@ const getApiKey = (baseUrl: string, envConfig: EnvConfig) => {
         default:
             return envConfig.topics.apiKey;
     }
-}
-
-const handle401 = async ({ data, additionalHeaders }: Request) => {
-    document.cookie = "username= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
-    document.cookie = "sessiontoken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
-    delete additionalHeaders.sessiontoken;
-    delete additionalHeaders.username;
-    if (data) delete data.username;
-}
-
-const handle400 = () => {
-    window.history.replaceState({}, document.title, window.location.href + "&loginScreen=login");
 }

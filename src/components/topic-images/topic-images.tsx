@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef, useContext, useLayoutEffect } from 'react';
-import { getData } from '../../https-client/client';
 import { useCookies } from 'react-cookie';
 import { topicsConfig } from '../../https-client/config';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
-import { postData } from '../../https-client/client';
 import ImageUploader from 'react-images-upload';
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -15,6 +13,8 @@ import { resizeImage } from '../../utils';
 import { 
     useHistory,
 } from "react-router-dom";
+import { authenticatedPostDataContext } from '../app-shell';
+import { authenticatedGetDataContext } from '../app-shell';
 
 // type imports
 import { TopicImages } from '../../types';
@@ -47,6 +47,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const { topicImagesState, setTopicImagesContext } = useContext(topicImagesContext);
     const topicImages = topicImagesState[topicTitle]?.images || [];
     const imageIndex = topicImagesState[topicTitle]?.index || 0;
+
+    const { authenticatedPostData } = useContext(authenticatedPostDataContext);
+    const { authenticatedGetData } = useContext(authenticatedGetDataContext);
 
     const [state, setState] = useState<TopicImagesComponentState>({
         addTopicDisplayed: false,
@@ -106,12 +109,12 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             additionalHeaders['sessiontoken'] = sessiontoken;
         }
 
-        const { data }: { data: TopicImages[] } = await getData({ 
+        const { data }: { data: TopicImages[] } = await authenticatedGetData({ 
             baseUrl: topicsConfig.url,
             path: 'get-topic-images',
             queryParams: queryParams,
             additionalHeaders: additionalHeaders,
-        });
+        }, true);
         if (data.length) {
             data.forEach(async (img, idx) => { 
                 const imgDimensions = await getImageDimensionsFromSource(img.image);
@@ -130,7 +133,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 
     const addImage = async () => {
         if (state.picture) {
-            const { status, data } = await postData({
+            const { status, data } = await authenticatedPostData({
                 baseUrl: topicsConfig.url,
                 path: 'add-topic-image',
                 data: {
@@ -142,7 +145,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     "sessiontoken": sessiontoken
                 },
                 setCookie: setCookie,
-            });
+            }, true);
 
             if (status === 200 && topicTitle === data) {
                 fetchImages();
@@ -152,7 +155,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 
     const deleteImage = (idx: number) => async () => {
         if (isUserImage(idx)) {
-            const { status } = await postData({
+            const { status } = await authenticatedPostData({
                 baseUrl: topicsConfig.url,
                 path: 'delete-topic-image',
                 data: {
@@ -163,7 +166,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     "sessiontoken": sessiontoken
                 },
                 setCookie: setCookie,
-            });
+            }, true);
 
             if (status === 200) {
                 fetchImages();
@@ -173,7 +176,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 
     const updateImageLike = async () => {
         const topicImage = topicImages[imageIndex];
-        const { status, data } = await postData({
+        const { status, data } = await authenticatedPostData({
             baseUrl: topicsConfig.url,
             path: 'update-topic-image-like',
             data: {
@@ -185,7 +188,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 "sessiontoken": sessiontoken
             },
             setCookie: setCookie,
-        });
+        }, true);
 
         if (status === 200) {
             topicImage.likes = data.likes;

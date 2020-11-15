@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
-import { 
-    useHistory,
-} from "react-router-dom";
-
-// styles
-import './account.css';
-import { getData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
 import { Topic, Comment } from '../../types';
 import { timeSince, vhToPixels, setCardQueryParam } from '../../utils';
 import { modalHeightVh } from '../../';
 import { commentsCardId } from '../cards-shell/cards-shell';
 import { useQuery } from '../../hooks/useQuery';
+import { 
+    useHistory,
+} from "react-router-dom";
+import { authenticatedGetDataContext } from '../app-shell';
+
+// styles
+import './account.css';
 
 
 enum Tab {
@@ -46,43 +46,45 @@ export const AccountComponent = (props: AccountComponentProps) => {
         selectedTab: Tab.CREATEDTOPICS,
     });
 
+    const { authenticatedGetData } = useContext(authenticatedGetDataContext);
+
     useEffect(() => {
         onCreatedTopicsTab(); // eslint-disable-next-line
     }, []);
 
     const fetchUserCreatedTopics = async () => {
-        const { data }: { data: Topic[]} = await getData({ 
+        const { data }: { data: Topic[]} = await authenticatedGetData({ 
             baseUrl: usersConfig.url,
             path: 'user-created-topics', 
             queryParams: {
                 "username": props.username,
             },
             additionalHeaders: { },
-        });
+        }, true);
         setState(prevState => ({ ...prevState, userCreatedTopics: data }));
     }
 
     const fetchUserVotedTopics = async () => {
-        const { data }: { data: Topic[]} = await getData({ 
+        const { data }: { data: Topic[]} = await authenticatedGetData({ 
             baseUrl: usersConfig.url,
             path: 'user-voted-topics', 
             queryParams: {
                 "username": props.username,
             },
             additionalHeaders: { },
-        });
+        }, true);
         setState(prevState => ({ ...prevState, userVotedTopics: data }));
     }
 
     const fetchUserComments = async () => {
-        const { data }: { data: Comment[]} = await getData({ 
+        const { data }: { data: Comment[]} = await authenticatedGetData({ 
             baseUrl: usersConfig.url,
             path: 'user-comments', 
             queryParams: {
                 "username": props.username,
             },
             additionalHeaders: { },
-        });
+        }, true);
         setState(prevState => ({ ...prevState, userComments: data }));
     }
 

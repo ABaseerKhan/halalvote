@@ -3,7 +3,7 @@ import { Chart } from "chart.js";
 import { topicsContext, fullScreenContext, analyticsContext, AnalyticsGraph } from '../app-shell';
 import { topicsConfig } from '../../https-client/config';
 import { AnalyticCounts } from '../../types';
-import { getData } from '../../https-client/client';
+import { authenticatedGetDataContext } from '../app-shell';
 
 // type imports
 
@@ -46,6 +46,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     const { analyticsState, setAnalyticsContext } = useContext(analyticsContext);
+    const { authenticatedGetData } = useContext(authenticatedGetDataContext);
     
     const topic = topics?.length ? topics[topicIndex] : undefined;
 
@@ -82,12 +83,12 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             };
             let additionalHeaders: any = {};
     
-            const { data }: { data: AnalyticCounts } = await getData({ 
+            const { data }: { data: AnalyticCounts } = await authenticatedGetData({ 
                 baseUrl: topicsConfig.url,
                 path: 'get-topic-analytics',
                 queryParams: queryParams,
                 additionalHeaders: additionalHeaders,
-            });
+            }, true);
             
             const newGraph: AnalyticsGraph = {
                 interval: intervalOverride,

@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { useCookies } from 'react-cookie';
 import ReactTooltip from 'react-tooltip';
+import { useMedia } from '../../hooks/useMedia';
 
 //type imports
 import { Judgment } from '../../types';
 
 //style imports
 import './voting-switch.css';
-import { useMedia } from '../../hooks/useMedia';
 
 type VotingSwitchProps = {
     submitVote: (value: number) => void,

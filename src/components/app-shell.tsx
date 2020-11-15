@@ -5,16 +5,18 @@ import { SearchComponent } from './search/search';
 import { AnalyticsCardComponent } from './analytics-card/analytics-card';
 import { MenuComponent } from './menu/menu';
 import { Topic, Comment, TopicImages } from '../types';
-import { postData } from '../https-client/client';
+import { postData, getData } from '../https-client/client';
 import { topicsConfig } from '../https-client/config';
 import { arrayMove } from "../utils";
 import { useCookies } from 'react-cookie';
 import { CardsShellComponent } from './cards-shell/cards-shell';
 import { CommentsCardComponent } from './comments/comments-card';
 import {
+  useHistory,
   useParams,
   generatePath
 } from "react-router-dom";
+import { useQuery } from '../hooks/useQuery';
 
 // type imports
 
@@ -76,6 +78,9 @@ export const AppShellComponent = (props: any) => {
   const [cookies] = useCookies(['username', 'sessiontoken']);
   const { username, sessiontoken } = cookies;
 
+  const query = useQuery();
+  const history = useHistory();
+
   // context-setters (they also serve as application cache)
   const setFullScreenModeContext = (fullScreenMode: boolean) => { setState(prevState => ({ ...prevState, fullScreenMode: fullScreenMode })); };
   const setTopicsContext = (topics: Topic[], index: number) => {
@@ -96,6 +101,8 @@ export const AppShellComponent = (props: any) => {
     limitCacheSize(prevState.analytics);
     return { ...prevState };
   });
+  const setAuthenticatedPostData = (postData: (request: Request, willRetry: boolean) => void) => {}
+  const setAuthenticatedGetData = (getData: (request: Request, willRetry: boolean) => void) => {}
 
   useEffect(() => {
     setTimeout(() => {
@@ -186,7 +193,7 @@ export const AppShellComponent = (props: any) => {
       additionalHeaders = { ...additionalHeaders, "sessiontoken": sessiontoken };
     }
 
-    const { status, data }: { status: number, data: Topic[] } = await postData({ baseUrl: topicsConfig.url, path: 'get-topics', data: body, additionalHeaders: additionalHeaders, });
+    const { status, data }: { status: number, data: Topic[] } = await authenticatedPostData({ baseUrl: topicsConfig.url, path: 'get-topics', data: body, additionalHeaders: additionalHeaders, }, true);
     if (status !== 200) {
       console.log("failed to fetch topics");
       return;
@@ -274,43 +281,94 @@ export const AppShellComponent = (props: any) => {
     }
   }
 
+  const handle401 = async ({ data, additionalHeaders }: any) => {
+    document.cookie = "username= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+    document.cookie = "sessiontoken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+    delete additionalHeaders.sessiontoken;
+    delete additionalHeaders.username;
+    if (data) delete data.username;
+  }
+  
+  const handle400 = () => {
+    if (query.has('loginScreen')) {
+        query.set('loginScreen', 'login');
+    } else {
+        query.append('loginScreen', 'login');
+    };
+    history.push({
+      search: "?" + query.toString()
+    });
+  }
+
+  const authenticatedPostData = async (request: any, willRetry: boolean): Promise<any> => {
+    const response: any = await postData(request)
+    if(response.status === 401) {
+      handle401(request);
+      if (willRetry) {
+          return await postData(request);
+      }
+    }
+    if(response.status === 400) {
+        handle400();
+    }
+    return response;
+  };
+
+  const authenticatedGetData = async (request: any, willRetry: boolean): Promise<any> => {
+    const response: any = await getData(request)
+    if(response.status === 401) {
+      handle401(request);
+      if (willRetry) {
+          return await getData(request);
+      }
+    }
+    if(response.status === 400) {
+        handle400();
+    }
+    return response;
+  };
+
   return (
       <div id={appShellId} className={appShellId} style={{ overflowY: state.fullScreenMode ? 'hidden' : 'scroll' }} >
         <SearchComponent onSuggestionClick={searchTopic} />
-        <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenModeContext: setFullScreenModeContext }}>
-          <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
-            <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
-              <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
-                <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
-                  <div id={topicContentId} className={topicContentId}>
-                    {state.fullScreenMode && 
-                      <FullScreenContainer 
-                        fetchTopics={fetchTopics}
-                        MediaCard={<TopicImagesComponent />}
-                        CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                        AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                        TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} />}
-                      />
-                    }
-                    <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}> 
-                        {!state.fullScreenMode && 
-                          <CardsShellComponent
-                            mediaCard={<TopicImagesComponent /> }
-                            commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                            analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+        <authenticatedPostDataContext.Provider value={{authenticatedPostData: authenticatedPostData, setAuthenticatedPostData: setAuthenticatedPostData}}>
+          <authenticatedGetDataContext.Provider value={{authenticatedGetData: authenticatedGetData, setAuthenticatedGetData: setAuthenticatedGetData}}>
+            <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenModeContext: setFullScreenModeContext }}>
+              <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
+                <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
+                  <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
+                    <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
+                      <div id={topicContentId} className={topicContentId}>
+                        {state.fullScreenMode && 
+                          <FullScreenContainer 
+                            fetchTopics={fetchTopics}
+                            MediaCard={<TopicImagesComponent />}
+                            CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                            AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                            TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} />}
                           />
                         }
-                    </div>
-                    {
-                      !state.fullScreenMode && 
-                      <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
-                    }
-                  </div>
-                </analyticsContext.Provider>
-              </commentsContext.Provider>
-            </topicImagesContext.Provider>
-          </topicsContext.Provider>
-        </fullScreenContext.Provider>
+                        <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}> 
+                            {!state.fullScreenMode && 
+                              <CardsShellComponent
+                                mediaCard={<TopicImagesComponent /> }
+                                commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                                analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                              />
+                            }
+                        </div>
+                        {
+                          !state.fullScreenMode && 
+                          <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
+                        }
+                      </div>
+                    </analyticsContext.Provider>
+                  </commentsContext.Provider>
+                </topicImagesContext.Provider>
+              </topicsContext.Provider>
+            </fullScreenContext.Provider>
+          </authenticatedGetDataContext.Provider>
+        </authenticatedPostDataContext.Provider>
         <div className="fixed-content">
           {!state.fullScreenMode && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
           <MenuComponent fetchTopics={searchTopic} showSpecificComment={showSpecificComment} />
@@ -353,6 +411,22 @@ const animatePrevTopic = (cardsShellContainer: any, callback: () => void) => {
     }
   };
 }
+
+const authenticatedPostData = async (request: any, willRetry: boolean): Promise<any> => {
+  return await postData(request)
+};
+export const authenticatedPostDataContext = React.createContext<{authenticatedPostData: (request: any, willRetry: boolean) => Promise<any>; setAuthenticatedPostData: (postData: (request: any, willRetry: boolean) => Promise<any>) => void}>({
+  authenticatedPostData: authenticatedPostData,
+  setAuthenticatedPostData: (postData) => undefined
+});
+
+const authenticatedGetData = async (request: any, willRetry: boolean): Promise<any> => {
+  return await getData(request)
+};
+export const authenticatedGetDataContext = React.createContext<{authenticatedGetData: (request: any, willRetry: boolean) => Promise<any>; setAuthenticatedGetData: (getData: (request: any, willRetry: boolean) => Promise<any>) => void}>({
+  authenticatedGetData: authenticatedGetData,
+  setAuthenticatedGetData: (getData) => undefined
+});
 
 export const fullScreenContext = React.createContext<{fullScreenMode: boolean; setFullScreenModeContext: (fullScreenMode: boolean) => void}>({
   fullScreenMode: false,

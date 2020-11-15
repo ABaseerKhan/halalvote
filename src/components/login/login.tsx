@@ -246,7 +246,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     "password": passwordInput.current,
                 },
                 additionalHeaders: { }
-            }, false);
+            });
 
             if (status === 200) {
                 const sessionToken = data;
@@ -290,7 +290,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         "password": passwordInput.current,
                     },
                     additionalHeaders: { }
-                }, false);
+                });
 
                 if (status === 200 && usernameInput.current === data) {
                     setLoginScreenType(LoginScreenType.REGISTER_COMPLETE, {});
@@ -315,7 +315,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     "value": activationValueParameter
                 },
                 additionalHeaders: {},
-            }, false);
+            });
 
             if (status === 200) {
                 setLoginScreenType(LoginScreenType.ACTIVATION_COMPLETE, {});
