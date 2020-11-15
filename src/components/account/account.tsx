@@ -11,7 +11,7 @@ import { getData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
 import { Topic, Comment } from '../../types';
 import { timeSince, vhToPixels, setCardQueryParam } from '../../utils';
-import { modalHeightVh, modalMaxHeight } from '../../';
+import { modalHeightVh } from '../../';
 import { commentsCardId } from '../cards-shell/cards-shell';
 import { useQuery } from '../../hooks/useQuery';
 
@@ -102,7 +102,7 @@ export const AccountComponent = (props: AccountComponentProps) => {
     }
 
     return (
-        <div className="account-container" style={{ height: `${vhToPixels(modalHeightVh)}px`, maxHeight: modalMaxHeight}}>
+        <div className="account-container" style={{ height: `${vhToPixels(modalHeightVh)}px`}}>
             <div className="account-header-section">
                 <div className="account-title">{`${props.username}`}</div>
                 <div className="account-tabs">
@@ -112,7 +112,7 @@ export const AccountComponent = (props: AccountComponentProps) => {
                 </div>
             </div>
             <div className="account-body">
-                <ul style={{ listStyleType: 'none', paddingInlineStart: '2em' }}>
+                <ul style={{ listStyleType: 'none', paddingInlineStart: '1em' }}>
                     {state.selectedTab===Tab.CREATEDTOPICS && state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => (
                         <UserTopic topic={topic} fetchTopics={props.fetchTopics} closeModal={props.closeModal}/>
                     ))}
@@ -160,29 +160,27 @@ const UserComment = (props: UserCommentProps) => {
     const history = useHistory();
 
     return (
-        <div className="user-comment-container">
-            <div id={`comment-${comment.id}`} className={"comment-container"}>
-                <div className="comment-bubble-container">
-                    <div className="comment-bubble"></div>
-                </div>
-                <div className="comment-body">
-                    <div 
-                        className={"comment-content"}
-                        onClick={async (e) => { setCardQueryParam(history, query, commentsCardId.toLowerCase()); await fetchTopics(comment.topicTitle); showSpecificComment(comment); closeModal(); }}
-                    >
-                        <div className="username" style={{ color: 'var(--site-background-color)' }}>{comment.username}</div>
-                        <div className="comment" style={{ color: 'var(--site-background-color)' }}>
-                            <div style={{ maxWidth: 'calc(100% - 50px)' }} dangerouslySetInnerHTML={{__html: comment.comment}}/>
-                        </div>
-                        <div>
-                            <span className={"time-stamp"} style={{ color: 'var(--site-background-color)' }} >{timeSince(comment.timeStamp)}</span>
-                        </div>
+        <div id={`comment-${comment.id}`} className={"user-comment-container"} >
+            <div className="comment-bubble-container">
+                <div className={`comment-bubble-${comment.commentType.toLowerCase()}`}></div>
+            </div>
+            <div className="comment-body">
+                <div 
+                    className={"comment-content"}
+                    onClick={async (e) => { setCardQueryParam(history, query, commentsCardId.toLowerCase()); await fetchTopics(comment.topicTitle); showSpecificComment(comment); closeModal(); }}
+                >
+                    <div className="user-username">{comment.username}</div>
+                    <div className="user-comment">
+                        <div style={{ maxWidth: 'calc(100% - 50px)' }} dangerouslySetInnerHTML={{__html: comment.comment}}/>
+                    </div>
+                    <div>
+                        <span className={"time-stamp"} style={{ color: 'var(--dark-mode-secondary-text-color)' }} >{timeSince(comment.timeStamp)}</span>
                     </div>
                 </div>
-                <div className="likes-container">
-                    <HeartButtonSVG className={"heart"} style={{ stroke: 'var(--site-background-color)' }} />
-                    <div className={"likes"} style={{ color: 'var(--site-background-color)' }}>{comment.upVotes}</div>
-                </div>
+            </div>
+            <div className="user-likes-container">
+                <HeartButtonSVG className={"user-heart"} />
+                <div className={"likes"} >{comment.upVotes}</div>
             </div>
         </div>
     )

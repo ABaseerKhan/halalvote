@@ -115,7 +115,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             myChart.destroy();
         };
         const myChartRef = chartRef.current?.getContext("2d");
-        console.log(graph?.halalCounts);
         const halalCounts = graph?.halalCounts ? graph.halalCounts : [];
         const haramCounts = graph?.haramCounts ? graph.haramCounts : [];
         // const maxY = Math.max(...[...halalCounts, ...haramCounts]);

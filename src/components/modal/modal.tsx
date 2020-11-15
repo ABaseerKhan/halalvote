@@ -4,13 +4,13 @@ import { ModalType } from '../../types';
 import { LoginComponent } from '../login/login';
 import { useMedia } from '../../hooks/useMedia';
 import { AccountComponent } from '../account/account';
-import { vhToPixelsWithMax, vwToPixelsWithMax } from "../../utils";
+import { vhToPixels, vwToPixelsWithMax } from "../../utils";
 
 // type imports
 
 // styles
 import './modal.css';
-import { modalHeightVh, modalMaxHeight, modalMaxWidth, modalWidthVw } from '../..';
+import { modalHeightVh, modalMaxWidth, modalWidthVw } from '../..';
 
 interface ModalComponentProps {
     removeModal: any,
@@ -35,7 +35,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
     const modalCoverId = "modal-cover";
 
     const getModalHeight = () => {
-        return vhToPixelsWithMax(modalHeightVh, modalMaxHeight);
+        return vhToPixels(modalHeightVh);
     }
 
     const getModalWidth = () => {
@@ -52,7 +52,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
             }
 
             const height = getModalHeight() + "px";
-            const marginTop = `max(-${modalHeightVh/2}vh, -${modalMaxHeight/2}px)`;
+            const marginTop = `-${modalHeightVh/2}vh`;
             const width = getModalWidth() + "px";
             const marginLeft = `max(-${modalWidthVw(isMobile)/2}vw, -${modalMaxWidth/2}px)`;
 

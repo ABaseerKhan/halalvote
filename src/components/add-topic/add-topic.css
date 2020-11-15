@@ -12,7 +12,7 @@
     text-align: center;
     margin-bottom: 20px;
     font-size: 24px;
-    color: var(--site-background-color);
+    color: var(--dark-mode-text-color);
 }
 
 .add-topic-input {

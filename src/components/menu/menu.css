@@ -2,8 +2,8 @@
     position: fixed;
     bottom: 5%;
     right: 5%;
-    background: var(--neutral-color);
-    color: var(--site-background-color);
+    background: var(--light-neutral-color);
+    color: var(--dark-mode-text-color);
     overflow: hidden;
     box-shadow: 0px 0px 0px 0px rgba(106, 124, 138, 0.75);
     animation: pulse 3s infinite cubic-bezier(.16,-0.02,0,1.31);
@@ -16,7 +16,7 @@
     bottom: 0;
     right: 0;
     outline: none;
-    background-color: var(--neutral-color);
+    background-color: var(--light-neutral-color);
     cursor: pointer;
     color: var(--gray);
 }
@@ -26,7 +26,7 @@
     bottom: 0;
     right: 0;
     outline: none;
-    background-color: white;
+    background-color: var(--dark-mode-text-color);
     text-align: center;
     font-weight: bolder;
     overflow: hidden;
@@ -48,10 +48,11 @@ li.menu-item {
     cursor: pointer;
     background: transparent;
     text-align: center;
+    transition: all .2s ease-in-out;
 }
 
 li.menu-item:hover {
-    background-color: var(--light-neutral-color);
+    background-color: var(--neutral-color);
 }
 
 @media only screen and (max-width: 600px) {

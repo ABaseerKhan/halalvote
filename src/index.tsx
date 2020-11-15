@@ -12,7 +12,6 @@ import {
 
 // style imports
 import './index.css';
-import { vhToPixels } from './utils';
 
 export const elementStyles = {
   toolbarHeightVh: 13,
@@ -22,8 +21,7 @@ export const elementStyles = {
 }
 
 export const modalHeightVh = 70;
-export const modalWidthVw = (isMobile: boolean): number => isMobile ? 80 : 40;
-export const modalMaxHeight = window.innerHeight - (Math.max(elementStyles.maxTopicCarouselHeightPx, vhToPixels(elementStyles.topicCarouselHeightVh)) + vhToPixels(10));
+export const modalWidthVw = (isMobile: boolean): number => isMobile ? 90 : 40;
 export const modalMaxWidth = 800;
 
 export const Portal = ({children} : {children: ReactNode}) => ReactDOM.createPortal(children, document.getElementById("portal") || document.createElement("portal"));

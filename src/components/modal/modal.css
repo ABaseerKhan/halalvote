@@ -7,7 +7,7 @@
     margin-top: 0;
     margin-left: 0;
     border-radius: 25px 25px 25px 25px;
-    background-color: var(--neutral-color);
+    background-color: var(--dark-mode-middleground);
     z-index: 4;
     overflow: hidden;
 }
@@ -17,7 +17,7 @@
     bottom: 0;
     width: 100vw;
     position: fixed;
-    background-color: #D3D3D3;
+    background-color: #808080;
     opacity: 0.8;
     z-index: 4;
 }
