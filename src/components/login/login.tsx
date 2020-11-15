@@ -6,6 +6,12 @@ import { useCookies } from 'react-cookie';
 // styles
 import './login.css';
 
+enum LoginScreenType {
+    LOGIN,
+    REGISTER,
+    REGISTER_COMPLETE
+}
+
 interface LoginComponentProps {
     closeModal: any,
     onLogin?: any,
@@ -15,8 +21,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const { closeModal } = props;
     // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
-    const [state, setState] = useState<{ isLogin: boolean, isLoginButtonDisabled: boolean, isRegisterButtonDisabled: boolean }>({
-        isLogin: true,
+    const [state, setState] = useState<{ loginScreenType: LoginScreenType, isLoginButtonDisabled: boolean, isRegisterButtonDisabled: boolean }>({
+        loginScreenType: LoginScreenType.LOGIN,
         isLoginButtonDisabled: true,
         isRegisterButtonDisabled: true
     });
@@ -65,9 +71,9 @@ export const LoginComponent = (props: LoginComponentProps) => {
         setState({...state, isLoginButtonDisabled: false, isRegisterButtonDisabled: false});
     }
 
-    const setLogin = (isLogin: boolean) => {
+    const setLoginScreenType = (loginScreenType: LoginScreenType) => {
         clearInputs();
-        setState({...state, isLogin: isLogin});
+        setState({...state, loginScreenType: loginScreenType});
     }
     
     const login = () => {
@@ -118,7 +124,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 });
 
                 if (status === 200 && usernameInput.value === data) {
-                    closeModal();
+                    setLoginScreenType(LoginScreenType.REGISTER_COMPLETE);
                 }
             }
         }
@@ -173,23 +179,29 @@ export const LoginComponent = (props: LoginComponentProps) => {
 
     return (
         <div>
-        { state.isLogin ?
-            <div className="login-body">
-                <div className="login-section-text">Log In</div>
-                <input id="username-input" className="login-input" type="text" placeholder="Username" onChange={checkLoginInputs} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
-                <input id="password-input" className="login-input" type="password" placeholder="Password" onChange={checkLoginInputs} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
-                <button id="login-submit-button" className="button disabled-button" onClick={ () => { login() } } disabled={state.isLoginButtonDisabled}>Log In</button>
-                <div className="login-switch-button" onClick={() => setLogin(false)}>New user?<br/>Create account</div>
-            </div> :
-            <div className="login-body">
-                <div className="login-section-text">Register</div>
-                <input id="register-email-input" className="login-input" type="text" placeholder="Email" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
-                <input id="register-username-input" className="login-input" type="text" placeholder="Username" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
-                <input id="register-password-input" className="login-input" type="password" placeholder="Password" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
-                <button id="register-submit-button" className="button disabled-button" onClick={ () => { registerUser() } } disabled={state.isRegisterButtonDisabled}>Register</button>
-                <div className="login-switch-button" onClick={() => setLogin(true)}>Have an account?<br/>Log in here.</div>
-            </div> 
-        }
+            {
+                state.loginScreenType === LoginScreenType.REGISTER_COMPLETE ?
+                <div className="login-body">
+                    <div className="login-section-text">Thanks for registering with Halal Vote!</div>
+                    <div className="login-section-text">Check your email to activate your account.</div>
+                </div> :
+                state.loginScreenType === LoginScreenType.LOGIN ?
+                <div className="login-body">
+                    <div className="login-section-text">Log In</div>
+                    <input id="username-input" className="login-input" type="text" placeholder="Username" onChange={checkLoginInputs} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
+                    <input id="password-input" className="login-input" type="password" placeholder="Password" onChange={checkLoginInputs} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
+                    <button id="login-submit-button" className="button disabled-button" onClick={ () => { login() } } disabled={state.isLoginButtonDisabled}>Log In</button>
+                    <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.REGISTER)}>New user?<br/>Create account</div>
+                </div> :
+                <div className="login-body">
+                    <div className="login-section-text">Register</div>
+                    <input id="register-email-input" className="login-input" type="text" placeholder="Email" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                    <input id="register-username-input" className="login-input" type="text" placeholder="Username" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                    <input id="register-password-input" className="login-input" type="password" placeholder="Password" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                    <button id="register-submit-button" className="button disabled-button" onClick={ () => { registerUser() } } disabled={state.isRegisterButtonDisabled}>Register</button>
+                    <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Have an account?<br/>Log in here.</div>
+                </div>
+            }
         </div>
     );
 }
