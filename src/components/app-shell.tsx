@@ -153,7 +153,6 @@ export const AppShellComponent = (props: any) => {
     const appShell = getAppShell();
     const cardsShellContainer = getCardsShellContainer();
 
-    console.log(state.incomingDirection);
     if (appShell && appShell.scrollTop > 0 && cardsShellContainer && state.incomingDirection !== IncomingDirection.NONE) {
         cardsShellContainer.style.transform = state.incomingDirection === IncomingDirection.RIGHT ? "translate(100%)" : "translate(-100%)";
         cardsShellContainer.style.opacity = "1.0";
@@ -200,7 +199,6 @@ export const AppShellComponent = (props: any) => {
         state.topicsState.topics[state.topicsState.topicIndex] = data[0]; // refresh topic with new data from db
         setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex); // trigger re-render
       } else {
-        console.log([...state.topicsState.topics.slice(0, state.topicsState.topicIndex+1), ...data, ...state.topicsState.topics.slice(state.topicsState.topicIndex+1)]);
         setTopicsContext([...state.topicsState.topics.slice(0, state.topicsState.topicIndex+1), ...data, ...state.topicsState.topics.slice(state.topicsState.topicIndex+1)], state.topicsState.topics.length >= 1 ? state.topicsState.topicIndex+1 : 0);
       }
     } else {
