@@ -28,13 +28,14 @@ interface CommentComponentProps {
     specificComment: Comment | undefined,
     pathToHighlightedComment: number[] | undefined,
     highlightComment: (path: number[] | undefined) => void,
-    fetchMoreReplies: (pathToParentComment: number[], specificCommentId?: number | undefined, depth?: number) => Promise<void>,
+    fetchMoreReplies: (pathToParentComment: number[], n?: number, specificCommentId?: number | undefined, depth?: number) => Promise<number>,
     deleteComment: (path: number[]) => void,
     topicIndexOverride?: number;
     level2?: boolean;
+    hide?: boolean;
 }
 export const CommentComponent = (props: CommentComponentProps) => {
-    let { topicIndexOverride, comment, specificComment } = props;
+    let { topicIndexOverride, comment, specificComment, hide } = props;
 
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
@@ -57,7 +58,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
 
     // eslint-disable-next-line
     const hideReplies = () => {
-        comment!.repliesShown = false;
+        comment!.repliesShown = 0;
         setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
         setState({
             ...state,
@@ -66,15 +67,17 @@ export const CommentComponent = (props: CommentComponentProps) => {
 
     // eslint-disable-next-line
     const showReplies = async () => {
-        comment!.repliesShown = true;
-        setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
         setState(prevState => ({ ...prevState, fetchingReplies: true }));
-
-        if(comment.replies.length < comment.numReplies) await props.fetchMoreReplies(props.path);
+        if((comment.replies.length < comment!.numReplies) && (comment.repliesShown+3 > comment.replies.length)) { 
+            comment!.repliesShown += await props.fetchMoreReplies(props.path, 3);
+        } else {
+            comment!.repliesShown += 3;
+        }
         setState(prevState => ({
             ...prevState,
             fetchingReplies: false,
         }));
+        setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
     };
 
     const upVote = async () => {
@@ -105,7 +108,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         }
     }
 
-    const moreReplies = (comment.numReplies - comment.replies.length);
+    const moreReplies = (comment.numReplies - comment.repliesShown);
     const viewMoreReplies = !comment.repliesShown ? (comment.numReplies) : (moreReplies);
 
     const isHighlighted = 
@@ -123,7 +126,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
     };
 
     return (
-        <div id={`comment-${comment.id}`} className={"comment-container"}>
+        <div id={`comment-${comment.id}`} className={"comment-container"} style={{ display: (hide ? 'none' : 'flex')}}>
             <div className="comment-bubble-container">
                 <div className={`comment-bubble-${comment.commentType.toLowerCase()}`}></div>
             </div>
@@ -169,9 +172,9 @@ export const CommentComponent = (props: CommentComponentProps) => {
                         }
                     </div>
                 </div>
-                {comment.repliesShown && <div className="replies">
+                {<div className="replies">
                     {
-                        !!state.fetchingReplies ? <ClipLoader size={25} color={"var(--light-neutral-color)"} loading={state.fetchingReplies}/> : comment.replies.map((reply: Comment, i: number) => {
+                        comment.replies.map((reply: Comment, i: number) => {
                             return <CommentComponent 
                                         key={reply.id}
                                         path={props.path.concat([i])}
@@ -182,20 +185,22 @@ export const CommentComponent = (props: CommentComponentProps) => {
                                         fetchMoreReplies={props.fetchMoreReplies}
                                         deleteComment={props.deleteComment}
                                         level2={true}
+                                        hide={i >= comment.repliesShown}
                                     />
                         })
                     }
+                {!!state.fetchingReplies ? <ClipLoader size={25} color={"var(--light-neutral-color)"} loading={state.fetchingReplies}/> : null}
                 </div>}
                 {
                         (comment.numReplies > 0) && (!props.level2) &&
                         <div className={"show-or-hide-container"}>
-                            {viewMoreReplies > 0 ? <div className="more-replies" onClick={showReplies}><span>{`View replies (${viewMoreReplies})`}</span><DownSVG style={{ marginLeft: '0.5em', fill: 'gray' }} width={'1em'}/></div> : null}
-                            {comment.repliesShown ? <div className="hide-replies" onClick={hideReplies}><span>Hide</span><UpSVG style={{ marginLeft: '0.5em', fill: 'gray' }} width={'1em'}/></div> : null}
+                            {viewMoreReplies > 0 ? <div className={"view-replies"} onClick={showReplies}>{(comment.repliesShown > 0) && <div className="view-more-spacer"></div>}<span>{comment.repliesShown > 0 ? `View more` : `View replies (${viewMoreReplies})`}</span><DownSVG style={{ marginLeft: '0.5em', fill: 'gray' }} width={'1em'} height={'1.5em'}/></div> : null}
+                            {comment.repliesShown > 0 ? <div className="hide-replies" onClick={hideReplies}><span>Hide</span><UpSVG style={{ marginLeft: '0.5em', fill: 'gray' }} width={'1em'}/></div> : null}
                         </div>
                 }
             </div>
-            <div className="likes-container">
-                <HeartButtonSVG className={!!comment.userVote ? "heart-liked" : "heart"} onClick={upVote} />
+            <div onClick={upVote} className="likes-container">
+                <HeartButtonSVG className={!!comment.userVote ? "heart-liked" : "heart"} />
                 <div className={!!comment.userVote ? "likes-liked" : "likes"}>{comment.upVotes}</div>
             </div>
         </div>

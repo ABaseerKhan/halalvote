@@ -134,6 +134,7 @@
     display: flex;
     padding: 0 0 1em 0;
     position: relative;
+    transition: all 2s ease-in-out;
 }
 
 .time-stamp {
@@ -312,8 +313,17 @@
     color: var(--dark-mode-secondary-text-color);
 }
 
-.more-replies {
+.view-replies, .view-more {
     cursor: pointer;
+    display: flex;
+}
+
+.view-more-spacer {
+    width: 35px;
+    height: 0.5px;
+    background: var(--dark-mode-secondary-text-color);
+    margin: auto;
+    margin-right: 15px;
 }
 
 .hide-replies {
@@ -322,7 +332,7 @@
     cursor: pointer;
 }
 
-.more-replies:hover, .hide-replies:hover {
+.view-replies:hover, .hide-replies:hover, .view-more:hover {
     text-decoration: underline;
 }
 

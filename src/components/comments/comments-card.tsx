@@ -79,18 +79,9 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         } // eslint-disable-next-line
     }, [topic?.topicTitle]);
 
-    useEffect(() => {
-        if (topic?.topicTitle && specificComment && (topic.topicTitle === specificComment.topicTitle)) {
-            // eslint-disable-next-line
-            comments = [];
-            state.pathToHighlightedComment = undefined;
-            fetchComments([], specificComment?.id);
-        } // eslint-disable-next-line
-    }, [specificComment]);
-
-    const fetchComments = async (pathToParentComment: number[], specificCommentId?: number, depth=1) => {
+    const fetchComments = async (pathToParentComment: number[], n?: number, specificCommentId?: number, depth=1) => {
         const parentComment = getCommentFromPath(comments, pathToParentComment);
-        const { data: newComments }: { data: Comment[]} = await postData({
+        const { data: newComments, status }: { data: Comment[]; status: number } = await postData({
             baseUrl: commentsConfig.url,
             path: 'get-comments', 
             data: {
@@ -99,12 +90,12 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 "parentId": parentComment?.id,
                 "singleCommentId": specificCommentId,
                 "depth": depth,
-                "n": 50,
+                "n": !!n ? n : 50,
                 "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : comments?.map((r) => r.id),
             },
             additionalHeaders: { },
         });
-        const updatedComments = addCommentsLocally(comments, newComments, pathToParentComment, true);
+        const updatedComments = addCommentsLocally(comments, newComments.map(c => ({ ...c, repliesShown: 0 })), pathToParentComment, true);
         setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
         setState(prevState => ({ ...prevState, loading: false }));
 
@@ -112,18 +103,23 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             const pathToSpecificComment = getPathFromId(updatedComments, specificCommentId, []);
             setState(prevState => ({ ...prevState, pathToHighlightedComment: pathToSpecificComment }));
         }
+
+        if(status===200) {
+            return newComments.length;
+        } else return 0;
     }
 
     const createComment = async (commentText: string) => {
-        const highlightedComment = getCommentFromPath(comments, state.pathToHighlightedComment);
-        const isReplyToReply = (highlightedComment?.depth || 0) >= 2;
-        const parentOfhighlightedComment = isReplyToReply ? getCommentFromPath(comments, state.pathToHighlightedComment?.slice(0,-1)) : undefined;
+        const commentsCopy = comments.map(c => ({...c}));
+        const highlightedComment = getCommentFromPath(commentsCopy, state.pathToHighlightedComment);
+        const isReply = (highlightedComment?.depth || 0) >= 2;
+        const parentOfhighlightedComment = isReply ? getCommentFromPath(commentsCopy, state.pathToHighlightedComment?.slice(0,-1)) : undefined;
 
         const { status, data: comment }: { status: number, data: Comment } = await postData({
             baseUrl: commentsConfig.url,
             path: 'add-comment', 
             data: {
-                "parentId": !isReplyToReply ? highlightedComment?.id : parentOfhighlightedComment?.id,
+                "parentId": !isReply ? highlightedComment?.id : parentOfhighlightedComment?.id,
                 "topicTitle": topic?.topicTitle, 
                 "username": username,
                 "comment": commentText,
@@ -148,9 +144,11 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             numReplies: 0,
             timeStamp: comment.timeStamp,
             depth: comment.depth,
+            repliesShown: 0,
         };
-        
-        const updatedComments = addCommentsLocally(comments, [commentObject], isReplyToReply ? parentOfhighlightedComment && state.pathToHighlightedComment?.slice(0,-1) : highlightedComment && state.pathToHighlightedComment);
+        if (highlightedComment) { highlightedComment.repliesShown++; highlightedComment.numReplies++; };
+        if (parentOfhighlightedComment) { parentOfhighlightedComment.numReplies++; };
+        const updatedComments = addCommentsLocally(commentsCopy, [commentObject], isReply ? parentOfhighlightedComment && state.pathToHighlightedComment?.slice(0,-1) : highlightedComment && state.pathToHighlightedComment);
         setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
         setState(prevState => ({ ...prevState }));
         return status;
@@ -176,7 +174,8 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             await refreshTopic(topic?.topicTitle);
         }
 
-        const updatedComments = deleteCommentLocally(comments, pathToComment, !!response.data?.psuedoDelete);
+        const commentsCopy = comments.map(c => ({...c}));
+        const updatedComments = deleteCommentLocally(commentsCopy, pathToComment, !!response.data?.psuedoDelete);
         setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
         setState(prevState => ({ ...prevState, pathToHighlightedComment: undefined }));
     }
@@ -259,7 +258,6 @@ const addCommentsLocally = (comments: Comment[], data: Comment[], pathToParentCo
     // recursive step
     const updatedReplies = addCommentsLocally(comments[pathToParentComment[0]].replies, data, pathToParentComment.slice(1), appendToEnd);
     comments[pathToParentComment[0]].replies = updatedReplies;
-    comments[pathToParentComment[0]].numReplies = updatedReplies.length;
     return comments;
 }
 
@@ -276,6 +274,7 @@ const deleteCommentLocally = (comments: Comment[], pathToComment: number[], psue
     // decrement numReplies for parent comment
     if (pathToComment.length === 2) {
         comments[pathToComment[0]].numReplies -= 1;
+        comments[pathToComment[0]].repliesShown -= 1;
     }
 
     // recursive step
