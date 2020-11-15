@@ -70,15 +70,14 @@ export const CommentComponent = (props: CommentComponentProps) => {
         setState(prevState => ({ ...prevState, fetchingReplies: true }));
         if((comment.replies.length < comment!.numReplies) && (comment.repliesShown+3 > comment.replies.length)) { 
             comment!.repliesShown += await props.fetchMoreReplies(props.path, 3);
-            setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
         } else {
             comment!.repliesShown += 3;
-            setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
         }
         setState(prevState => ({
             ...prevState,
             fetchingReplies: false,
         }));
+        setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
     };
 
     const upVote = async () => {
@@ -173,7 +172,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                         }
                     </div>
                 </div>
-                {comment.repliesShown > 0 && <div className="replies">
+                {<div className="replies">
                     {
                         comment.replies.map((reply: Comment, i: number) => {
                             return <CommentComponent 
