@@ -40,7 +40,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             numIntervals = 365;
             break;
         case Interval.ALL:
-            numIntervals = 365;
+            numIntervals = -1;
     }
 
     const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
@@ -64,8 +64,10 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }, [interval])
 
     useEffect(() => {
-        setDisplayNumbers({ halalNumber: graph && graph.halalCounts ? graph.halalCounts[graph.halalCounts.length-1] : 0, haramNumber: graph && graph.haramCounts ? graph.haramCounts[graph.haramCounts.length-1] : 0 });
-        createGraph(); // eslint-disable-next-line
+        if (graph) {
+            setDisplayNumbers({ halalNumber: graph && graph.halalCounts ? graph.halalCounts[graph.halalCounts.length-1] : 0, haramNumber: graph && graph.haramCounts ? graph.haramCounts[graph.haramCounts.length-1] : 0 });
+            createGraph();
+        } // eslint-disable-next-line
     }, [graph]);
 
     const fetchAnalytics = async () => {
@@ -112,6 +114,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             myChart.destroy();
         };
         const myChartRef = chartRef.current?.getContext("2d");
+        console.log(graph?.halalCounts);
         const halalCounts = graph?.halalCounts ? graph.halalCounts : [];
         const haramCounts = graph?.haramCounts ? graph.haramCounts : [];
         // const maxY = Math.max(...[...halalCounts, ...haramCounts]);
