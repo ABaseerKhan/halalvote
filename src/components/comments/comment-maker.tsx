@@ -73,7 +73,10 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     const submitComment = async () => {
         if (value !== "") {
             value = value.replace(new RegExp('<img '), '<img style="max-width: 100%;max-height: 65vh;border-radius: 15px;"');
-            if ((await props.submitComment(value)) === 200) { 
+            if ((await props.submitComment(value)) === 200) {
+                if (commentMakerCardRef.current) {
+                    commentMakerCardRef.current.style.height = `4em`;
+                }
                 setValue('')
             }
         }
