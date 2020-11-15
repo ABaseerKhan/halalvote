@@ -32,7 +32,6 @@ export const postData = async (request: Request): Promise<any> => {
     });
     if(response.status === 401) {
         handle401(request);
-        return await postData(request);
     }
     if(response.status === 400) {
         handle400(request);
