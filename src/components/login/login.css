@@ -37,3 +37,8 @@
     text-align: center;
     color: red;
 }
+
+.activation-complete-login-link {
+    cursor: pointer;
+    text-decoration: underline;
+}

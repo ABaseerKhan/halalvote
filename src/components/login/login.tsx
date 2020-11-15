@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { postData } from '../../https-client/client';
+import { postData, getData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
 import { css } from "@emotion/core";
@@ -16,8 +16,11 @@ export enum LoginScreenType {
     LOGIN,
     REGISTER,
     REGISTER_COMPLETE,
+    ACTIVATION_COMPLETE,
+    ACTIVATION_FAILURE,
     LOADING_LOGIN,
     LOADING_REGISTER,
+    LOADING_ACTIVATION,
     NONE
 }
 
@@ -46,6 +49,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const query = useQuery();
 
     const loginScreen = query.get("loginScreen") || undefined;
+    const usernameParameter = query.get("username") || undefined;
+    const activationValueParameter = query.get("activationValue") || undefined;
 
     let loginScreenType: LoginScreenType;
     switch(loginScreen) {
@@ -58,11 +63,20 @@ export const LoginComponent = (props: LoginComponentProps) => {
         case "registerComplete":
             loginScreenType = LoginScreenType.REGISTER_COMPLETE;
             break;
+        case "activationComplete":
+            loginScreenType = LoginScreenType.ACTIVATION_COMPLETE;
+            break;
+        case "activationFailure":
+            loginScreenType = LoginScreenType.ACTIVATION_FAILURE;
+            break;
         case "loadingLogin":
             loginScreenType = LoginScreenType.LOADING_LOGIN;
             break;
         case "loadingRegister":
             loginScreenType = LoginScreenType.LOADING_REGISTER;
+            break;
+        case "loadingActivation":
+            loginScreenType = LoginScreenType.LOADING_ACTIVATION;
             break;
         default:
             loginScreenType = LoginScreenType.NONE;
@@ -73,6 +87,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
             makeLoginCall();
         } else if (loginScreenType === LoginScreenType.LOADING_REGISTER) {
             makeRegisterCall();
+        } else if (loginScreenType === LoginScreenType.LOADING_ACTIVATION) {
+            makeActivationCall();
         } else if (loginScreenType === LoginScreenType.LOGIN || loginScreenType === LoginScreenType.REGISTER) {
             const usernameInputElement = getUsernameInput();
             const passwordInputElement = getPasswordInput();
@@ -96,6 +112,15 @@ export const LoginComponent = (props: LoginComponentProps) => {
         if (loginScreen) {
             if (query.has('loginScreen')) {
                 query.set('loginScreen', loginScreen);
+                
+                if (loginScreen != 'loadingActivation') {
+                    if (query.has('username')) {
+                        query.delete('username');
+                    }
+                    if (query.has('activationValue')) {
+                        query.delete('activationValue');
+                    }
+                }
             } else {
                 query.append('loginScreen', loginScreen);
             };
@@ -177,11 +202,20 @@ export const LoginComponent = (props: LoginComponentProps) => {
             case LoginScreenType.REGISTER_COMPLETE:
                 loginScreen = "registerComplete";
                 break;
+            case LoginScreenType.ACTIVATION_COMPLETE:
+                loginScreen = "activationComplete";
+                break;
+            case LoginScreenType.ACTIVATION_FAILURE:
+                loginScreen = "activationFailure";
+                break;
             case LoginScreenType.LOADING_LOGIN:
                 loginScreen = "loadingLogin";
                 break;
             case LoginScreenType.LOADING_REGISTER:
                 loginScreen = "loadingRegister";
+                break;
+            case LoginScreenType.LOADING_ACTIVATION:
+                loginScreen = "loadingActivation";
                 break;
             default:
                 loginScreen = "login";
@@ -271,6 +305,28 @@ export const LoginComponent = (props: LoginComponentProps) => {
         fetchData();
     }
 
+    const makeActivationCall = () => {
+        const makeCall = async () => {
+            const { status } = await getData({ 
+                baseUrl: usersConfig.url,
+                path: 'activate-user',
+                queryParams: {
+                    "username": usernameParameter,
+                    "value": activationValueParameter
+                },
+                additionalHeaders: {},
+            });
+
+            if (status === 200) {
+                setLoginScreenType(LoginScreenType.ACTIVATION_COMPLETE, {});
+            } else {
+                setLoginScreenType(LoginScreenType.ACTIVATION_FAILURE, {});
+            }
+        }
+
+        makeCall();
+    }
+
     const checkLoginInputs = () => {
         const usernameInput = getUsernameInput();
         const passwordInput = getPasswordInput();
@@ -325,7 +381,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     return (
         <div>
             {
-                loginScreenType === LoginScreenType.LOADING_LOGIN || loginScreenType === LoginScreenType.LOADING_REGISTER ?
+                loginScreenType === LoginScreenType.LOADING_LOGIN || loginScreenType === LoginScreenType.LOADING_REGISTER || loginScreenType === LoginScreenType.LOADING_ACTIVATION ?
                 <div>
                     <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} />
                 </div> :
@@ -333,6 +389,15 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 <div className="login-body">
                     <div className="login-section-text">Thanks for registering with Halal Vote!</div>
                     <div className="login-section-text">Check your email to activate your account.</div>
+                </div> :
+                loginScreenType === LoginScreenType.ACTIVATION_COMPLETE ?
+                <div className="login-body">
+                    <div className="login-section-text">Successfully actived account!</div>
+                    <div className="login-section-text">Click <span className="activation-complete-login-link" onClick={() => setLoginScreenType(LoginScreenType.LOGIN, {})}>here</span> to login.</div>
+                </div> :
+                loginScreenType === LoginScreenType.ACTIVATION_FAILURE ?
+                <div className="login-body">
+                    <div className="login-section-text">Failed to activate account.</div>
                 </div> :
                 loginScreenType === LoginScreenType.LOGIN ?
                 <div className="login-body">

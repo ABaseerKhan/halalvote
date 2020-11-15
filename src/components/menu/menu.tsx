@@ -113,6 +113,12 @@ export const MenuComponent = (props: MenuComponentProps) => {
             if (query.has('loginScreen')) {
                 query.delete('loginScreen');
             }
+            if (query.has('username')) {
+                query.delete('username');
+            }
+            if (query.has('activationValue')) {
+                query.delete('activationValue');
+            }
         }
 
         history.push({
