@@ -199,8 +199,8 @@ export const CommentComponent = (props: CommentComponentProps) => {
                         </div>
                 }
             </div>
-            <div className="likes-container">
-                <HeartButtonSVG className={!!comment.userVote ? "heart-liked" : "heart"} onClick={upVote} />
+            <div onClick={upVote} className="likes-container">
+                <HeartButtonSVG className={!!comment.userVote ? "heart-liked" : "heart"} />
                 <div className={!!comment.userVote ? "likes-liked" : "likes"}>{comment.upVotes}</div>
             </div>
         </div>
