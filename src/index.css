@@ -72,7 +72,7 @@ input[type=text], input[type=password] {
   box-sizing: border-box;
   border: none;
   /* darkmode styles */
-  background: var(--dark-mode-middleground);
+  background: var(--dark-mode-foreground);
   color: var(--dark-mode-text-color);
 }
 
