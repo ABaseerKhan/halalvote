@@ -13,7 +13,7 @@ interface SearchComponentProps {
 export const SearchComponent = (props: SearchComponentProps) => {
     const { inputText, setInputText, searchResults } = useTopicsSearch();
     const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
-    const [autoCompleteIndex, setAutoCompleteIndex] = useState<number>(-1);
+    const [autoCompleteIndex, setAutoCompleteIndex] = useState<number>(0);
 
     useEffect(() => {
         if (searchResults?.result?.data && searchResults?.result?.data.length) {
