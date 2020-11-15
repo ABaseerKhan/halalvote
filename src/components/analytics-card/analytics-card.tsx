@@ -77,7 +77,8 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             let queryParams: any = { 
                 "topicTitle": topic.topicTitle,
                 "interval": intervalOverride,
-                "numIntervals": numIntervals
+                "numIntervals": numIntervals,
+                "userTimestamp": getCurrentTimestamp()
             };
             let additionalHeaders: any = {};
     
@@ -103,7 +104,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             let dates: number[] = [];
             const today = new Date();
             for (let i = graph.numIntervals-1; i >= 0; i--) {
-                dates.push(new Date().setDate(today.getUTCDate()-i));
+                dates.push(new Date().setDate(today.getDate()-i));
             };
             return dates;
         } else return [];
@@ -248,6 +249,22 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     const doubleTap = () => {
         setFullScreenModeContext(!fullScreenMode);
     };
+
+    const padNumber = (value: number) => {
+        return value < 10 ? '0' + value : value;
+    }
+
+    const getCurrentTimestamp = () => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const hours = padNumber(date.getHours());
+        const minutes = padNumber(date.getMinutes());
+        const seconds = padNumber(date.getSeconds());
+
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
 
     return (
     <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"} onDoubleClick={doubleTap}>
