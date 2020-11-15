@@ -68,8 +68,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
     // eslint-disable-next-line
     const showReplies = async () => {
         setState(prevState => ({ ...prevState, fetchingReplies: true }));
-
-        if(comment.replies.length < comment!.numReplies) { 
+        if((comment.replies.length < comment!.numReplies) && (comment.repliesShown+3 > comment.replies.length)) { 
             comment!.repliesShown += await props.fetchMoreReplies(props.path, 3);
             setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
         } else {
@@ -112,7 +111,6 @@ export const CommentComponent = (props: CommentComponentProps) => {
 
     const moreReplies = (comment.numReplies - comment.repliesShown);
     const viewMoreReplies = !comment.repliesShown ? (comment.numReplies) : (moreReplies);
-    console.log(comment.repliesShown);
 
     const isHighlighted = 
     !!props.pathToHighlightedComment;
@@ -197,7 +195,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                 {
                         (comment.numReplies > 0) && (!props.level2) &&
                         <div className={"show-or-hide-container"}>
-                            {viewMoreReplies > 0 ? <div className={"view-replies"} onClick={showReplies}>{(comment.repliesShown > 0) && <div className="view-more-spacer"></div>}<span>{comment.repliesShown > 0 ? `View more` : `View replies (${viewMoreReplies})`}</span><DownSVG style={{ marginLeft: '0.5em', fill: 'gray' }} width={'1em'}/></div> : null}
+                            {viewMoreReplies > 0 ? <div className={"view-replies"} onClick={showReplies}>{(comment.repliesShown > 0) && <div className="view-more-spacer"></div>}<span>{comment.repliesShown > 0 ? `View more` : `View replies (${viewMoreReplies})`}</span><DownSVG style={{ marginLeft: '0.5em', fill: 'gray' }} width={'1em'} height={'1.5em'}/></div> : null}
                             {comment.repliesShown > 0 ? <div className="hide-replies" onClick={hideReplies}><span>Hide</span><UpSVG style={{ marginLeft: '0.5em', fill: 'gray' }} width={'1em'}/></div> : null}
                         </div>
                 }
