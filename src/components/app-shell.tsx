@@ -166,6 +166,7 @@ export const AppShellComponent = (props: any) => {
           fill: "forwards"
         }).onfinish = () => {
           cardsShellContainer.style.transform = "translate(0)";
+          setState(prevState => ({ ...prevState, incomingDirection: IncomingDirection.NONE }));
         }
     } else if (cardsShellContainer && state.incomingDirection !== IncomingDirection.NONE) {
         cardsShellContainer.style.opacity = "1.0";
@@ -198,7 +199,7 @@ export const AppShellComponent = (props: any) => {
         state.topicsState.topics[state.topicsState.topicIndex] = data[0]; // refresh topic with new data from db
         setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex); // trigger re-render
       } else {
-        setTopicsContext([...state.topicsState.topics.slice(0, state.topicsState.topicIndex+1), ...data, ...state.topicsState.topics.slice(state.topicsState.topicIndex+1)], state.topicsState.topics.length > 1 ? state.topicsState.topicIndex+1 : 0);
+        setTopicsContext([...state.topicsState.topics.slice(0, state.topicsState.topicIndex+1), ...data, ...state.topicsState.topics.slice(state.topicsState.topicIndex+1)], state.topicsState.topics.length >= 1 ? state.topicsState.topicIndex+1 : 0);
       }
     } else {
       setTopicsContext([...state.topicsState.topics, ...data], newIndex!==undefined ? newIndex : state.topicsState.topicIndex);
@@ -312,7 +313,7 @@ export const AppShellComponent = (props: any) => {
         </fullScreenContext.Provider>
         <div className="fixed-content">
           {!state.fullScreenMode && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
-          <MenuComponent fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
+          <MenuComponent fetchTopics={searchTopic} showSpecificComment={showSpecificComment} />
         </div>
       </div>
   )

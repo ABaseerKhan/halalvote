@@ -1,6 +1,5 @@
 import React, { ReactElement, useRef, useEffect, useContext } from 'react';
 import { topicsContext } from '../app-shell';
-import { Topic } from '../../types';
 import { FullScreenComponent } from './full-screen';
 
 import './full-screen.css';
@@ -49,17 +48,13 @@ export const FullScreenContainer = (props: FullScreenComponentProps) => {
 
     return (
         <div ref={FSContainerRef} className="full-screen-container">
-            {topics.map((topic: Topic, i: number) => {
-                return <FullScreenComponent
-                    key={i}
-                    MediaCard={MediaCard}
-                    CommentsCard={CommentsCard}
-                    AnalyticsCard={AnalyticsCard}
-                    TopicCarousel={TopicCarousel}
-                    FSTopicIndex={i}
-                />
-                })
-            }
+            <FullScreenComponent
+                MediaCard={MediaCard}
+                CommentsCard={CommentsCard}
+                AnalyticsCard={AnalyticsCard}
+                TopicCarousel={TopicCarousel}
+                FSTopicIndex={topicIndex}
+            />
         </div>
     );
 }
