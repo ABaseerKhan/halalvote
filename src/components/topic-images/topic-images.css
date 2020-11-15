@@ -269,7 +269,7 @@
   width: 100%;
   text-align: center;
   font-size: 24px;
-  color: var(--site-background-color);
+  color: var(--dark-mode-secondary-text-color);
 }
 
 .image-preview-title {

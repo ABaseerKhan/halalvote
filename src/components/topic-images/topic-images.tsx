@@ -302,7 +302,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <div style={{ height: '100px', width: '100%', position: 'absolute', top: 'calc(50% - 100px)'}}>
                             <div className="add-image-section-text">Add Image</div>
                             <ImageUploader 
-                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--site-background-color)", padding: "0", margin: "20px 0 0 0"}} 
+                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--dark-mode-secondary-text-color)", padding: "0", margin: "20px 0 0 0"}} 
                                 buttonClassName="button"
                                 buttonStyles={{width: "auto", transition: "none", margin: "20px 0 0 0"}}
                                 withIcon={false}

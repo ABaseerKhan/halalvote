@@ -24,6 +24,11 @@
         height: 30px !important;
         width: 30px !important;
     }
+
+    .view-more-spacer {
+        width: 25px !important;
+        margin-right: 15px !important;
+    }
     
     .username {
         /* color: rgba(18, 18, 18, 0.5) !important; */
