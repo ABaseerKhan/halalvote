@@ -32,3 +32,8 @@
 .login-switch-button:hover {
     text-decoration: underline;
 }
+
+.login-error-message {
+    text-align: center;
+    color: red;
+}
