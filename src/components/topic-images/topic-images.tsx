@@ -87,8 +87,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             imagesBodyRef.current.onscroll = () => {
                 clearTimeout( isScrolling );
                 isScrolling = setTimeout(function() {
-                    const imgIndex = Math.floor((imagesBodyRef.current!.scrollTop+10) / imagesBodyRef.current!.clientHeight);
-                    setTopicImagesContext(topicTitle, topicImages, Math.min(Math.max(imgIndex, 0), topicImages.length - 1));
+                    if (imagesBodyRef.current) {
+                        const imgIndex = Math.floor((imagesBodyRef.current!.scrollTop+10) / imagesBodyRef.current!.clientHeight);
+                        setTopicImagesContext(topicTitle, topicImages, Math.min(Math.max(imgIndex, 0), topicImages.length - 1));
+                    }
                 }, 66);
             }
         }
