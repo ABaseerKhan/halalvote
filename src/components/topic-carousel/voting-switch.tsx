@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { useCookies } from 'react-cookie';
-import ReactTooltip from 'react-tooltip';
 import { useMedia } from '../../hooks/useMedia';
 
 //type imports
@@ -609,7 +608,6 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
                 <div id={switchId} className="voting-switch" style={{height: switchDimensionPx, width: switchDimensionPx, borderRadius: switchDimensionPx, marginLeft: switchMarginLeftPx, marginTop: switchMarginTopPx}}>
                     <div className="voting-switch-text">VOTE</div>
                 </div>
-                <ReactTooltip className="vote-breakdown-tooltip" id="vote-breakdown-switch" place="bottom" delayShow={100} effect="solid"/>
             </div>
             {<div className="voting-label" style={{ color: 'var(--dark-mode-halal-color)' }}>{'Halal'}<br/>{'حلال'}</div>}
             {<div className="number-halal">{halalPoints}</div>}
