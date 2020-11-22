@@ -14,10 +14,17 @@
     display: none;
 }
 
+.full-screen-footer {
+    display: flex;
+    border-top: 0.5px solid dimgray;
+    width: 100%;
+    height: 60px;
+}
+
 .full-screen-topic {
     display: flex;
     position: relative;
-    height: 100%;
+    height: calc(100% - 60px);
     width: 100%;
     scroll-snap-align: start;
     background: var(--dark-mode-background);
@@ -33,15 +40,8 @@
     display: none;
 }
 
-.topic-carousel-container-fs-absolute {
+.topic-carousel-container-fs {
     position: absolute;
-    top: 0;
-    left: 100%;
-    z-index: 4;
-}
-
-.topic-carousel-container-fs-fixed {
-    position: fixed;
     z-index: 4;
 }
 

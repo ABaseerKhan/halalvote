@@ -1,5 +1,6 @@
 import React, { ReactElement, useRef, useEffect, useContext } from 'react';
 import { topicsContext } from '../app-shell';
+import { TopicVotesComponent } from '../topic-carousel/topic-votes';
 import { FullScreenComponent } from './full-screen';
 
 import './full-screen.css';
@@ -19,6 +20,12 @@ export const FullScreenContainer = (props: FullScreenComponentProps) => {
 
     const { topicsState, setTopicsContext } = useContext(topicsContext);
     const { topics, topicIndex } = topicsState;
+    const topic = topics?.length ? topics[topicIndex] : undefined;
+    const topicTitle = topic?.topicTitle || "";
+    const halalPoints = topic?.halalPoints !== undefined ? topic.halalPoints : 0;
+    const haramPoints = topic?.haramPoints !== undefined ? topic.haramPoints : 0;
+    const numVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
+    const userVote = topic?.vote;
 
     useEffect(() => {
         if (FSContainerRef.current) {
@@ -49,12 +56,18 @@ export const FullScreenContainer = (props: FullScreenComponentProps) => {
     return (
         <div ref={FSContainerRef} className="full-screen-container">
             <FullScreenComponent
+                fetchTopics={fetchTopics}
                 MediaCard={MediaCard}
                 CommentsCard={CommentsCard}
                 AnalyticsCard={AnalyticsCard}
                 TopicCarousel={TopicCarousel}
                 FSTopicIndex={topicIndex}
             />
+            <div className={'full-screen-footer'}>
+                <div style={{ margin: 'auto' }}>
+                    <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />
+                </div>
+            </div>
         </div>
     );
 }

@@ -14,6 +14,7 @@ import { topicsContext } from '../app-shell';
 import './full-screen.css';
 
 interface FullScreenComponentProps {
+    fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
     MediaCard: ReactElement,
     CommentsCard: ReactElement,
     AnalyticsCard: ReactElement,
@@ -25,10 +26,9 @@ const underlineTravelDistance = 85;
 var isScrolling: any;
 
 export const FullScreenComponent = (props: FullScreenComponentProps) => {
-    const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, FSTopicIndex } = props;
+    const { MediaCard, CommentsCard, AnalyticsCard, FSTopicIndex } = props;
 
     const FSTopicRef = useRef<HTMLDivElement>(null);
-    const topicCarouselRef = useRef<HTMLDivElement>(null);
 
     const history = useHistory();
     const query = useQuery();
@@ -90,9 +90,6 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
         <div className="full-screen-topic" ref={FSTopicRef} >
           {(FSTopicIndex === topicIndex) && (
             <Fragment>
-              <div className={'topic-carousel-container-fs-fixed'} ref={topicCarouselRef}>
-                {React.cloneElement(TopicCarousel, { topicIndexOverride: FSTopicIndex })}
-              </div>
               <div className={"feature-selector"}>
                 <span onClick={() => setCardQueryParam(history, query, commentsCardId.toLowerCase())} className={(underlineTranslationPx < -42) ? "feature-selector-selected" : "feature-selector-unselected"}>Arguments</span>
                 <span onClick={() => setCardQueryParam(history, query, mediaCardId.toLowerCase())} className={(underlineTranslationPx > -42 && underlineTranslationPx < 42) ? "feature-selector-selected" : "feature-selector-unselected"}>Canvas</span>

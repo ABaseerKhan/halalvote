@@ -239,7 +239,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 
     const ImageNavigator = (
         <div style={{ height: '100%', width: '100%' }}>
-            <div id="images-body" ref={imagesBodyRef} className={fullScreenMode ? "images-body-fullscreen" : "images-body"} onDoubleClick={doubleTap}>
+            <div id="images-body" ref={imagesBodyRef} className={fullScreenMode ? "images-body-fullscreen" : "images-body"} onClick={doubleTap}>
                 {
                     topicImages.length > 0 ?
                         topicImages.map((topicImg, idx) => {
@@ -273,10 +273,8 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     <DownArrowSVG />
                 </div>}
             </div>
-            <div className={fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
-                <div className={!state.addTopicDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
-                    <AddButtonSVG />
-                </div>
+            <div className={!state.addTopicDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
+                <AddButtonSVG />
             </div>
         </div>
     );
@@ -320,11 +318,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         </div>
                 }
             </div>
-            <div className={fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
-                <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
-                    Cancel
-                </button>
-            </div>
+            <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
+                Cancel
+            </button>
         </div>
     );
 

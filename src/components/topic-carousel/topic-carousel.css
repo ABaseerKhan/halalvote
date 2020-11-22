@@ -6,7 +6,7 @@
 }
 
 .topic-carousel-fs {
-    position: inherit;
+    position: fixed;
     width: 100vw;
     height: 4em;
     top: 0;

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
@@ -72,12 +72,12 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         }
     }, 500, [topic?.topicTitle, sessiontoken]);
 
-    useEffect(() => {
-        if (!state.loading) {
-            setTimeout(() => { setState(prevState => ({ ...prevState, commentsShowable: true })) }, 300);
-            setState(prevState => ({ ...prevState, loading: true, commentsShowable: false }));
-        } // eslint-disable-next-line
-    }, [topic?.topicTitle]);
+    // useEffect(() => {
+    //     if (!state.loading) {
+    //         setTimeout(() => { setState(prevState => ({ ...prevState, commentsShowable: true })) }, 300);
+    //         setState(prevState => ({ ...prevState, loading: true, commentsShowable: false }));
+    //     } // eslint-disable-next-line
+    // }, [topic?.topicTitle]);
 
     const fetchComments = async (pathToParentComment: number[], n?: number, specificCommentId?: number, depth=1) => {
         const parentComment = getCommentFromPath(comments, pathToParentComment);

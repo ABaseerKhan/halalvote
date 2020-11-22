@@ -345,7 +345,7 @@ export const AppShellComponent = (props: any) => {
                             MediaCard={<TopicImagesComponent />}
                             CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                             AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                            TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} />}
+                            TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} fetchTopics={fetchTopics} />}
                           />
                         }
                         <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}> 
@@ -358,8 +358,9 @@ export const AppShellComponent = (props: any) => {
                             }
                         </div>
                         {
-                          !state.fullScreenMode && 
-                          <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
+                          !state.fullScreenMode ? 
+                          <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/> :
+                          <TopicCarouselComponentFS id={topicCarouselId} fetchTopics={fetchTopics} />
                         }
                       </div>
                     </analyticsContext.Provider>

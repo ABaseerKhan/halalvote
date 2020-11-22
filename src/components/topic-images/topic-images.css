@@ -20,7 +20,7 @@
   z-index: 3;
   position: absolute;
   display: block;
-  height: calc(100% - 50px);
+  height: 100%;
   width: 100%;
   overflow: auto;
   text-align: center;
@@ -49,6 +49,7 @@
 }
 
 .show-add-image-button, .hide-add-image-button {
+  z-index: 3;
   position: absolute;
   height: 34px;
   width: 60px;
@@ -252,6 +253,7 @@
 }
 
 .add-image-back-button {
+  z-index: 3;
   position: absolute;
   height: 34px;
   width: 60px;

@@ -28,7 +28,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
 
     const [displayNumbers, setDisplayNumbers] = useState({ halalNumber: 0, haramNumber: 0});
     const [interval, setInterval] = useState<Interval>(Interval.ALL);
-    let numIntervals: number;
+    let numIntervals: number | undefined;
     switch(interval) {
         case Interval.WEEK:
             numIntervals = 7;
@@ -40,7 +40,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             numIntervals = 365;
             break;
         case Interval.ALL:
-            numIntervals = -1;
+            numIntervals = undefined;
     }
 
     const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
@@ -92,7 +92,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             
             const newGraph: AnalyticsGraph = {
                 interval: intervalOverride,
-                numIntervals: data.halalCounts.length,
+                numIntervals: data.halalCounts?.length || 0,
                 halalCounts: data.halalCounts,
                 haramCounts: data.haramCounts
             }
@@ -288,8 +288,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 <div onClick={() => setInterval(Interval.YEAR)} className={interval === Interval.YEAR ? 'interval-selector-selected' : 'interval-selector'}>1Y</div>
                 <div onClick={() => setInterval(Interval.ALL)} className={interval === Interval.ALL ? 'interval-selector-selected' : 'interval-selector'}>All</div>
             </div>
-        </div>
-        <div className={fullScreenMode ? "analytics-footer-fullscreen" : "analytics-footer"}>
         </div>
     </div>
     );
