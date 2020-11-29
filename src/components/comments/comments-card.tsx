@@ -44,7 +44,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     //     false
     // );
 
-    const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
+    const { fullScreenMode } = useContext(fullScreenContext);
     const { authenticatedPostData } = useContext(authenticatedPostDataContext);
 
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
@@ -199,11 +199,8 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const commentsContainerId = `comments-container`;
     const commentsCardId = "comments-card";
 
-    const doubleTap = () => {
-        setFullScreenModeContext(!fullScreenMode);
-    };
     return(
-        <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} onDoubleClick={doubleTap} className={commentsCardId} style={{ zIndex: fullScreenMode ? 3 : 0 }} >
+        <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} style={{ zIndex: fullScreenMode ? 3 : 0 }} >
                 { !state.loading && state.commentsShowable && comments.length === 0 ?
                     <div className="no-comments-to-show-text">No arguments to show</div> :
                         <div id={commentsContainerId} ref={commentsContainerRef} className={fullScreenMode ? "comments-container-fs" : "comments-container"} >

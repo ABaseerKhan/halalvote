@@ -2,14 +2,14 @@
     position: relative;
     height: min(calc(100% - var(--topic-carousel-height-vh)), calc(100% - var(--max-topic-carousel-height-px)));
     width: 100%;
-    padding-top: max(var(--topic-carousel-height-vh), var(--max-topic-carousel-height-px));
+    top: max(var(--topic-carousel-height-vh), var(--max-topic-carousel-height-px));
     margin-left: 27.5vw;
 }
 
 .card-shell {
     display: flex;
     position: absolute;
-    height: min(calc(95% - var(--topic-carousel-height-vh)), calc(95% - var(--max-topic-carousel-height-px)));
+    height: 95%;
     width: 45vw;
     border-radius: 25px;
     margin-left: unset;
@@ -52,15 +52,29 @@
 }
 
 @media only screen and (max-width: 600px) {
-    .card-shell {
-        width: 75vw;
-    }
-    
     .cards-shell {
-        margin-left: 13vw;
+        margin-left: 12.5%;
     }
+
+    .card-shell {
+        height: 50%;
+        width: 75%;
+        top: 25%;
+    }
+
+    .card-shell-cover:hover{
+        background-color: var(--dark-mode-middleground);
+    }
+
     .card-shell-cover-label {
-        right: 0.5vw;
+        width: 100%;
+        right: unset;
+        top: 50%;
         font-size: 1.25em;
+        writing-mode: horizontal-tb;
+        text-align: center;
+
+        /* darkmode styles*/
+        color: var(--dark-mode-text-color);
     }
 }

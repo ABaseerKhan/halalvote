@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, ReactElement, useState } from 'react';
 import './cards-shell.css';
-import { useMedia } from '../../hooks/useMedia';
 import { useQuery } from '../../hooks/useQuery';
 import { 
   useHistory,
@@ -32,20 +31,15 @@ interface CardsShellComponentProps {
 export const CardsShellComponent = (props: CardsShellComponentProps) => {
     const { mediaCard, commentsCard, analyticsCard } = props;
 
-    const isMobile = useMedia(
-      // Media queries
-      ['(max-width: 600px)'],
-      [true],
-      // default value
-      false
-    );
-
     const history = useHistory();
     const query = useQuery();
     const topCard = query.get("card") || undefined;
+
     // eslint-disable-next-line
     const [state, setState] = useState({});
+
     let orderedCards;
+
     switch(topCard?.toUpperCase()) {
       case mediaCardId:
         orderedCards = [mediaCardId, commentsCardId, analyticsCardId];
@@ -59,6 +53,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
       default:
         orderedCards = [mediaCardId, commentsCardId, analyticsCardId];
     };
+
     let positions = useRef<string[]>(orderedCards);
     let canFlip = useRef<boolean>(false);
 
@@ -82,8 +77,9 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
       }, 300) // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const leftCardMarginLeft = isMobile ? -10 : -5;
-    const rightCardMarginLeft = isMobile ? 10 : 5;
+    const leftCardMarginLeft =  -5;
+    const rightCardMarginLeft = 5;
+
     const setCards = () => {
       const leftCard = document.getElementById(positions.current[1]);
       const rightCard = document.getElementById(positions.current[2]);
@@ -171,7 +167,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
       const selectedLabel = document.getElementById(`${cardId}-label`);
 
       if (selected && front && back && selectedCover && frontCover && selectedLabel) {
-        const marginLeftVw = isMobile ? 40 : 23;
+        const marginLeftVw = 23;
         back.style.zIndex = '0';
         selected.style.zIndex = '1';
         selectedLabel.style.display = 'none';
@@ -358,7 +354,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
               positions.current.unshift(last);
 
               onfinish();
-            };;
+            };
             back.animate([
               {
                 marginLeft: `${rightCardMarginLeft}vw`,
@@ -374,7 +370,7 @@ export const CardsShellComponent = (props: CardsShellComponentProps) => {
       }
     };
 
-    return /*isMobile ? MobileView :*/ (
+    return (
         <div className="cards-shell" children={[mediaCardElement, commentsCardElement, analyticsCardElement]}/>
     );
 }

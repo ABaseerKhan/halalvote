@@ -43,7 +43,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             numIntervals = -1;
     }
 
-    const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
+    const { fullScreenMode } = useContext(fullScreenContext);
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     const { analyticsState, setAnalyticsContext } = useContext(analyticsContext);
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
@@ -246,10 +246,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
         });
     }
 
-    const doubleTap = () => {
-        setFullScreenModeContext(!fullScreenMode);
-    };
-
     const padNumber = (value: number) => {
         return value < 10 ? '0' + value : value;
     }
@@ -267,7 +263,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }
 
     return (
-    <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"} onDoubleClick={doubleTap}>
+    <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"}>
         <div className={"numeric-display"}>
             <div className="numeric-display-title">Votes</div>
             <div className="numeric-display-body">

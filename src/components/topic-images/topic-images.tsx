@@ -38,7 +38,7 @@ interface TopicImagesComponentState {
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     let { topicIndexOverride } = props;
 
-    const { fullScreenMode, setFullScreenModeContext } = useContext(fullScreenContext);
+    const { fullScreenMode } = useContext(fullScreenContext);
 
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
@@ -231,15 +231,11 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         });
     };
 
-    const doubleTap = () => {
-        setFullScreenModeContext(!fullScreenMode);
-    };
-
     const moreImagesIndicatorPosition = fullScreenMode ? "fixed" : "absolute";
 
     const ImageNavigator = (
         <div style={{ height: '100%', width: '100%' }}>
-            <div id="images-body" ref={imagesBodyRef} className={fullScreenMode ? "images-body-fullscreen" : "images-body"} onDoubleClick={doubleTap}>
+            <div id="images-body" ref={imagesBodyRef} className={fullScreenMode ? "images-body-fullscreen" : "images-body"}>
                 {
                     topicImages.length > 0 ?
                         topicImages.map((topicImg, idx) => {
@@ -283,7 +279,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 
     const ImageAdder = (
         <div style={{ height: '100%', width: '100%' }}>
-            <div className={fullScreenMode ? "images-body-fullscreen" : "images-body"} style={{ background: 'black'}} onDoubleClick={doubleTap}>
+            <div className={fullScreenMode ? "images-body-fullscreen" : "images-body"} style={{ background: 'black'}}>
                 {
                     state.picture ? 
                         <div className="image-container" style={{ flexDirection: (state.picture?.width || 0) > (state.picture?.height || 0) ? 'unset' : 'column' }}>

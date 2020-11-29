@@ -7,7 +7,7 @@ import { MenuComponent } from './menu/menu';
 import { Topic, Comment, TopicImages } from '../types';
 import { postData, getData } from '../https-client/client';
 import { topicsConfig } from '../https-client/config';
-import { arrayMove } from "../utils";
+import { arrayMove, isMobile } from "../utils";
 import { useCookies } from 'react-cookie';
 import { CardsShellComponent } from './cards-shell/cards-shell';
 import { CommentsCardComponent } from './comments/comments-card';
@@ -17,13 +17,14 @@ import {
   generatePath
 } from "react-router-dom";
 import { useQuery } from '../hooks/useQuery';
+import { TopicImagesComponent } from './topic-images/topic-images';
+import { FullScreenContainer } from './full-screen/full-screen-container';
+import { CardsShellMobileComponent } from './cards-shell/cards-shell-mobile';
 
 // type imports
 
 // style imports
 import './app-shell.css';
-import { TopicImagesComponent } from './topic-images/topic-images';
-import { FullScreenContainer } from './full-screen/full-screen-container';
 
 enum IncomingDirection {
   LEFT,
@@ -350,6 +351,12 @@ export const AppShellComponent = (props: any) => {
                         }
                         <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}> 
                             {!state.fullScreenMode && 
+                              isMobile ?
+                              <CardsShellMobileComponent
+                                mediaCard={<TopicImagesComponent /> }
+                                commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                                analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                              /> :
                               <CardsShellComponent
                                 mediaCard={<TopicImagesComponent /> }
                                 commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
