@@ -1,12 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { topicsConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
-import ImageUploader from 'react-images-upload';
-import { resizeImage } from '../../utils';
 import { authenticatedPostDataContext } from '../app-shell';
 
 // styles
 import './add-topic.css';
+import { MyUploader } from '../topic-images/topic-images';
 
 interface AddTopicComponentProps {
     closeModal: any,
@@ -62,11 +61,6 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
         }
     }
 
-    const onDrop = async (files: File[], picture: string[]) => {
-        const resizedImage = await resizeImage(files[0]);
-        setState({...state, picture: resizedImage});
-    }
-
     return (
         <div className="add-topic-body">
             {
@@ -78,18 +72,9 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
             {
                 state.picture && <img className="add-topic-image" alt="Topic" src={state.picture}/>
             }
-
-            <ImageUploader 
-                fileContainerStyle={{background: "transparent", boxShadow: "none", padding: "0", margin: "20px 0 0 0"}} 
-                buttonClassName="add-topic-image-choose-button"
-                buttonStyles={{background: "none", width: "auto", transition: "none", padding: "0", margin: "20px 0 0 0"}}
-                withIcon={false} 
-                buttonText={state.picture ? "Choose New Image" : "Choose Image"}
-                onChange={onDrop} 
-                imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
-                maxFileSize={5242880} 
-                singleImage={true}
-            />
+            {
+                !state.picture && <MyUploader skipDBUpdate submitCallback={(image: string) => setState(prevState => ({ ...prevState, picture: image }))}/>
+            }
             <button id={addTopicSubmitButtonId} className={`button ${addTopicSubmitButtonId}`} onClick={addTopic}>Add Topic</button>
         </div>
     );
