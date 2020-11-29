@@ -259,7 +259,7 @@
   left: calc(50% - 30px);
   border-radius: 30px;
   background-color: var(--neutral-color);
-  color: var(--site-background-color);
+  color: var(--dark-mode-text-color);
   cursor: pointer;
   box-shadow: 0px 0px 5px 5px rgba(32,33,36,0.5);
   border: none;
@@ -284,41 +284,10 @@
   left: calc(50% - 7vh);
 }
 
-.file-uploader {
-    width: fit-content;
-    height: fit-content;
-    bottom: 60px;
-    position: absolute;
-    font-size: 1.5vh !important;
-    left: calc(50% - 7vh);
-}
-
 .add-image-back-button:hover {
   background: var(--light-neutral-color);
   border: none;
   outline: none;
-}
-
-.add-image-choose-button {
-  color: white;
-}
-
-.add-image-choose-button:hover {
-  text-decoration: underline;
-}
-
-.adding-image {
-  max-width: 250px;
-  max-height: 250px;
-}
-
-.add-image-submit-button {
-  width: 200px !important;
-  left: calc(50% - 100px);
-  position: absolute;
-  margin: 0 0 1em 0 !important;
-  bottom: 0;
-  color: white !important;
 }
 
 .like, .liked {
@@ -354,4 +323,38 @@
   100% {
       transform: scale(1);
   }
+}
+
+
+.dzu-dropzone {
+  overflow: auto !important;
+  border: none !important;
+  height: 100% !important;
+}
+
+.dzu-submitButtonContainer {
+  margin: auto !important;
+  position: absolute;
+  bottom: 5px;
+}
+
+.dzu-inputLabelWithFiles {
+  display: none !important;
+  position: absolute;
+  bottom: 5px;
+}
+
+.cancel-preview {
+  height: 25px;
+  width: 25px;
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.cancel-preview:hover {
+  cursor: pointer;
+  background-color: #ffffff25;
 }

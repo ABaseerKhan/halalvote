@@ -92,7 +92,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             
             const newGraph: AnalyticsGraph = {
                 interval: intervalOverride,
-                numIntervals: data.halalCounts.length,
+                numIntervals: data.halalCounts?.length || 0,
                 halalCounts: data.halalCounts,
                 haramCounts: data.haramCounts
             }

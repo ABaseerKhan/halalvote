@@ -5,24 +5,26 @@ import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
-import ImageUploader from 'react-images-upload';
+import { ReactComponent as LeftArrowSVG } from "../../icons/left-arrow.svg";
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 import { getImageDimensionsFromSource } from '../../utils';
-import { resizeImage } from '../../utils';
 import { 
     useHistory,
 } from "react-router-dom";
 import { authenticatedPostDataContext } from '../app-shell';
 import { authenticatedGetDataContext } from '../app-shell';
+import { useQuery } from '../../hooks/useQuery';
+import { fullScreenContext, topicImagesContext, topicsContext } from '../app-shell';
+import Dropzone, { IFileWithMeta, IUploadParams, StatusValue } from 'react-dropzone-uploader'
+import { v4 as uuidv4 } from 'uuid';
 
 // type imports
 import { TopicImages } from '../../types';
 
 // styles
 import './topic-images.css';
-import { useQuery } from '../../hooks/useQuery';
-import { fullScreenContext, topicImagesContext, topicsContext } from '../app-shell';
+import 'react-dropzone-uploader/dist/styles.css'
 
 interface TopicImagesComponentProps {
     shown?: boolean,
@@ -96,8 +98,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }
     });
 
-    const addImageSubmitId = "add-image-submit-button";
-
     const fetchImages = async () => {
         setState(prevState => ({ ...prevState, topicImages: [], currentIndex: 0, picture: null, loading: true }));
         let queryParams: any = { 
@@ -130,28 +130,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         } else {
             setTopicImagesContext(topicTitle, data, 0);
             setState({...state, addTopicDisplayed: false, loading: false});
-        }
-    }
-
-    const addImage = async () => {
-        if (state.picture) {
-            const { status, data } = await authenticatedPostData({
-                baseUrl: topicsConfig.url,
-                path: 'add-topic-image',
-                data: {
-                    "username": username,
-                    "topicTitle": topicTitle,
-                    "image": state.picture.src
-                },
-                additionalHeaders: {
-                    "sessiontoken": sessiontoken
-                },
-                setCookie: setCookie,
-            }, true);
-
-            if (status === 200 && topicTitle === data) {
-                fetchImages();
-            }
         }
     }
 
@@ -201,14 +179,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 
     const showAddTopic = (addTopicDisplayed: boolean) => {
         setState({...state, addTopicDisplayed: addTopicDisplayed})
-    }
-
-    const onDrop = async (files: File[], picture: string[]) => {
-        const resizedImage = await resizeImage(files[0]);
-        const imgDimensions = await getImageDimensionsFromSource(resizedImage);
-        const basicPicture: BasicPicture = { src: resizedImage, height: imgDimensions.height, width: imgDimensions.width };
-
-        setState({...state, picture: basicPicture});
     }
 
     const isUserImage = (idx: number) => {
@@ -277,44 +247,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         </div>
     );
 
-    const ImageAdder = (
+    const fileUploader = (
         <div style={{ height: '100%', width: '100%' }}>
             <div className={fullScreenMode ? "images-body-fullscreen" : "images-body"} style={{ background: 'black'}}>
-                {
-                    state.picture ? 
-                        <div className="image-container" style={{ flexDirection: (state.picture?.width || 0) > (state.picture?.height || 0) ? 'unset' : 'column' }}>
-                            <div className="image-preview-title">Image Preview</div>
-                            <img className='image' style={{margin: "auto"}} alt="Topic" src={state.picture.src}/>
-                            <ImageUploader 
-                                className={"file-uploader"}
-                                fileContainerStyle={{padding: '5px', background: "rgba(0,0,0,0.4)", height: 'fit-content', boxShadow: "none", color: "white", margin: '0', flexDirection: 'unset'}} 
-                                buttonClassName="add-image-choose-button"
-                                buttonStyles={{background: "none", width: "auto", color: "white", fontStyle: 'italic', textDecoration: 'underline', fontSize: '1.5vh', transition: "none", padding: "0", margin: "0 0 0 0"}}
-                                withIcon={false} 
-                                buttonText="Choose New Image"
-                                onChange={onDrop} 
-                                imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
-                                maxFileSize={5242880} 
-                                singleImage={true}
-                                label={""}
-                            />
-                            <button id={addImageSubmitId} className={`button ${addImageSubmitId}`} onClick={addImage} >Add Image</button>
-                        </div>:
-                        <div style={{ height: '100px', width: '100%', position: 'absolute', top: 'calc(50% - 100px)'}}>
-                            <div className="add-image-section-text">Add Image</div>
-                            <ImageUploader 
-                                fileContainerStyle={{background: "transparent", boxShadow: "none", color: "var(--dark-mode-secondary-text-color)", padding: "0", margin: "20px 0 0 0"}} 
-                                buttonClassName="button"
-                                buttonStyles={{width: "auto", transition: "none", margin: "20px 0 0 0"}}
-                                withIcon={false}
-                                buttonText="Choose Image"
-                                onChange={onDrop} 
-                                imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
-                                maxFileSize={5242880} 
-                                singleImage={true}
-                            />
-                        </div>
-                }
+                <MyUploader submitCallback={fetchImages}/>
             </div>
             <div className={fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
                 <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
@@ -324,5 +260,82 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         </div>
     );
 
-    return !state.addTopicDisplayed ? ImageNavigator : ImageAdder;
+    return !state.addTopicDisplayed ? ImageNavigator : fileUploader;
+}
+
+interface UploaderProps {
+    submitCallback?: any;
+    skipDBUpdate?: boolean;
+};
+
+export const MyUploader = (props: UploaderProps) => {
+    const { authenticatedGetData } = useContext(authenticatedGetDataContext);
+    const { authenticatedPostData } = useContext(authenticatedPostDataContext);
+    const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
+    const { username, sessiontoken } = cookies;
+    const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
+    const topicTitle = topics?.length ? topics[topicIndex]?.topicTitle || '' : '';
+
+    // specify upload params and url for your files
+    const getUploadParams = async ({ meta: { name } }: IFileWithMeta): Promise<IUploadParams> => {
+        const fileName = `${uuidv4()}_${name}`;
+        const { data: { fields, url } }: { data: any} = await authenticatedGetData({ 
+            baseUrl: topicsConfig.url,
+            path: 'get-presigned-media-upload-url',
+            queryParams: {
+                "objectKey": fileName
+            },
+            additionalHeaders: { },
+        }, true);
+        return { fields, meta: { fileUrl: url+fileName }, url: url };
+    }
+    
+    // called every time a file's `status` changes
+    const handleChangeStatus = ({ meta, file }: IFileWithMeta, status: StatusValue) => { console.log(status) }
+    
+    // receives array of files that are done uploading when submit button is clicked
+    const handleSubmit = async (files: (IFileWithMeta & { meta: { fileUrl: string } })[], allFiles: IFileWithMeta[]) => {
+        if (!props.skipDBUpdate) {
+            const { status, data } = await authenticatedPostData({
+                baseUrl: topicsConfig.url,
+                path: 'add-topic-image',
+                data: {
+                    "username": username,
+                    "topicTitle": topicTitle,
+                    "image": files[0].meta.fileUrl,
+                },
+                additionalHeaders: {
+                    "sessiontoken": sessiontoken
+                },
+                setCookie: setCookie,
+            }, true);
+
+            if (status === 200 && topicTitle === data) {
+                allFiles.forEach(f => f.remove());
+                props.submitCallback && props.submitCallback(files[0].meta.fileUrl);
+            }
+        } else {
+            allFiles.forEach(f => f.remove());
+            props.submitCallback && props.submitCallback(files[0].meta.fileUrl);
+        }
+    }
+
+    return (
+        <Dropzone
+            getUploadParams={getUploadParams}
+            onChangeStatus={handleChangeStatus}
+            onSubmit={handleSubmit}
+            accept="image/*,audio/*,video/*"
+            PreviewComponent={props => {
+                return (
+                    <div className="image-container" style={{ flexDirection: (props.meta.width || 0) > (props.meta.height || 0) ? 'unset' : 'column' }}>
+                        <div className="image-preview-title">Image Preview</div>
+                        <img className='image' style={{margin: "auto"}} alt="Topic" src={props.meta.previewUrl}/>
+                        <LeftArrowSVG className='cancel-preview' onClick={() => props.files.forEach((f) => f.remove())}/>
+                    </div>
+                )}
+            }
+            canCancel
+        />
+    )
 }
