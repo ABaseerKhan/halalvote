@@ -65,7 +65,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
     const createCardElement = (id: string, body: ReactElement, index: number) => {
         const isCardExpanded = cardExpanded(id);
         return (
-            <div key={id} id={id} className="card-shell" style={{zIndex: 2 - index, height: isCardExpanded ? "100%" : "50%", width: isCardExpanded ? "100%" : "75%", top: isCardExpanded ? "0" : "25%", marginLeft: isCardExpanded ? "-12.5%" : "unset"}} onClick={() => {expandCard(index, id)}} onDoubleClick={() => {collapseCard(index, id)}}>
+            <div key={id} id={id} className="card-shell" style={{zIndex: 2 - index, height: isCardExpanded ? "100%" : "50%", width: isCardExpanded ? "100%" : "75%", top: isCardExpanded ? "0" : "25%", marginLeft: isCardExpanded ? "-12.5%" : "unset", borderRadius: isCardExpanded ? "25px 25px 0 0" : "25px"}} onClick={() => {expandCard(index, id)}} onDoubleClick={() => {collapseCard(index, id)}}>
             <div id={`${id}-label`} className="card-shell-cover-label" style={{display: isCardExpanded ? "none" : "unset"}}>{id}</div>
             <div id={`${id}-cover`} className="card-shell-cover" style={{opacity: isCardExpanded ? "0" : index === 0 ? '0.75' : '1', display: isCardExpanded ? "none" : "unset"}} onClick={() => {selectCard(index, id)}}></div>
             {body}

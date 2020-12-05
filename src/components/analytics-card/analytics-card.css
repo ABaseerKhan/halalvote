@@ -1,20 +1,9 @@
-.analytics, .analytics-fs {
+.analytics {
   display: table;
   height: 100%;
   width: 100%;
   text-align: center;
   border-radius: 25px;
-}
-
-.analytics {
-}
-
-.analytics-fs {
-  z-index: 3;
-}
-
-.analytics-fs {
-  padding-top: 6em;
 }
 
 .canvas-container {

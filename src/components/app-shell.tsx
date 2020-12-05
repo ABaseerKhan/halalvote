@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { PageScrollerComponent } from './page-scroller/page-scroller';
-import { TopicCarouselComponent, TopicCarouselComponentFS } from './topic-carousel/topic-carousel';
+import { TopicCarouselComponent } from './topic-carousel/topic-carousel';
 import { SearchComponent } from './search/search';
 import { AnalyticsCardComponent } from './analytics-card/analytics-card';
 import { MenuComponent } from './menu/menu';
@@ -18,7 +18,6 @@ import {
 } from "react-router-dom";
 import { useQuery } from '../hooks/useQuery';
 import { TopicImagesComponent } from './topic-images/topic-images';
-import { FullScreenContainer } from './full-screen/full-screen-container';
 import { CardsShellMobileComponent } from './cards-shell/cards-shell-mobile';
 
 // type imports
@@ -73,13 +72,14 @@ export const AppShellComponent = (props: any) => {
   });
   
 
-  let { topicTitle } = useParams();
+  let { topicTitle } = useParams<any>();
   topicTitle = topicTitle?.replace(/_/g, ' ').replace(/%2F/g, '/');
 
   const [cookies] = useCookies(['username', 'sessiontoken']);
   const { username, sessiontoken } = cookies;
 
   const query = useQuery();
+  const isExpanded = query.get("expanded") && query.get("expanded") === "true";
   const history = useHistory();
 
   // context-setters (they also serve as application cache)
@@ -340,17 +340,8 @@ export const AppShellComponent = (props: any) => {
                   <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
                     <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
                       <div id={topicContentId} className={topicContentId}>
-                        {state.fullScreenMode && 
-                          <FullScreenContainer 
-                            fetchTopics={fetchTopics}
-                            MediaCard={<TopicImagesComponent />}
-                            CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                            AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                            TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} />}
-                          />
-                        }
                         <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}> 
-                            {!state.fullScreenMode && 
+                            {
                               isMobile ?
                               <CardsShellMobileComponent
                                 mediaCard={<TopicImagesComponent /> }
@@ -365,7 +356,6 @@ export const AppShellComponent = (props: any) => {
                             }
                         </div>
                         {
-                          !state.fullScreenMode && 
                           <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
                         }
                       </div>
@@ -377,7 +367,7 @@ export const AppShellComponent = (props: any) => {
           </authenticatedGetDataContext.Provider>
         </authenticatedPostDataContext.Provider>
         <div className="fixed-content">
-          {!state.fullScreenMode && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
+          {!isExpanded && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
           <MenuComponent fetchTopics={searchTopic} showSpecificComment={showSpecificComment} />
         </div>
       </div>
