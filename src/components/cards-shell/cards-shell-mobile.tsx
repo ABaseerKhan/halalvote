@@ -347,7 +347,8 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                         height: "100%",
                         width: "100%",
                         top: "0",
-                        marginLeft: "-12.5%"
+                        marginLeft: "-12.5%",
+                        borderRadius: "25px 25px 0 0",
                     }
                     ], {
                         duration: DURATION,
@@ -360,6 +361,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                         currentCard.style.width = "100%";
                         currentCard.style.top = "0";
                         currentCard.style.marginLeft = "-12.5%";
+                        currentCard.style.borderRadius= "25px 25px 0 0";
 
                         setExpandedQuery(history, query, true);
                     };
@@ -390,7 +392,8 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                         height: "50%",
                         width: "75%",
                         top: "25%",
-                        marginLeft: "0"
+                        marginLeft: "0",
+                        borderRadius: "25px",
                     }
                     ], {
                         duration: DURATION,
@@ -402,6 +405,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                         currentCard.style.width = "75%";
                         currentCard.style.top = "25%";
                         currentCard.style.marginLeft = "0";
+                        currentCard.style.borderRadius= "25px";
 
                         currentCardCoverLabel.style.display = "unset";
 
