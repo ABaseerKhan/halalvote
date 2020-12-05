@@ -41,9 +41,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
         if (quillEditor.current) {
             const placeholderText = (props.replyToUsername && "Reply to " + props.replyToUsername) || "Comment";
             quillEditor.current.getEditor().root.dataset.placeholder = placeholderText;
-            if (props.replyToUsername) {
-                quillEditor.current.getEditor().getModule('mention').insertItem({ denotationChar: "@", id: 0, index: 0, value: props.replyToUsername }, true);
-            } else {
+            if (!props.replyToUsername) {
                 setValue('');
                 if (commentMakerCardRef.current) {
                     commentMakerCardRef.current.style.height = `4em`;

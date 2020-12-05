@@ -30,7 +30,7 @@ html, body {
   --dark-mode-middleground: #2a2a2a;
   --dark-mode-foreground: #414141;
   --dark-mode-text-color: rgb(197, 197, 197);
-  --dark-mode-secondary-text-color: rgb(124, 124, 124);
+  --dark-mode-secondary-text-color: rgb(136, 136, 136);
   --dark-mode-highlight-color: rgb(49, 49, 49);
   --dark-mode-red: #9c435d;
   --dark-mode-halal-color: #4f8a82;
@@ -53,8 +53,8 @@ html, body {
   --dark-mode-background: #181818;
   --dark-mode-middleground: #2a2a2a;
   --dark-mode-foreground: #414141;
-  --dark-mode-text-color: rgb(197, 197, 197);
-  --dark-mode-secondary-text-color: rgb(124, 124, 124);
+  --dark-mode-text-color: rgb(221, 221, 221);
+  --dark-mode-secondary-text-color: rgb(141, 141, 141);
   --dark-mode-highlight-color: rgb(49, 49, 49);
   --dark-mode-red: #9a2f4e;
   --dark-mode-halal-color: #4f8a82;

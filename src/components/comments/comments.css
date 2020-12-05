@@ -7,12 +7,13 @@
     }
 
     .comment-extras {
-        font-size: 9px !important;
+        font-size: 10px !important;
     }
     
     .time-stamp {
-        line-height: 5px !important;
-        font-size: 9px !important;
+        line-height: 14px !important;
+        font-size: 12px !important;
+        font-weight: 100;
     }
     
     .comment-body {
@@ -31,17 +32,14 @@
     }
     
     .username {
-        /* color: rgba(18, 18, 18, 0.5) !important; */
         color: var(--dark-mode-secondary-text-color);
-        font-size: 11px !important;
+        font-size: 12px !important;
     }
     
     .comment {
-        /* color: black !important; */
-        color: var(--dark-mode-text-color);
         margin-top: 3px !important;
         margin-bottom: 3px !important;
-        font-size: 12px !important;
+        font-size: 14px !important;
         line-height: 16px !important;
     }
 
@@ -56,7 +54,7 @@
     .likes, .likes-liked {
         line-height: 0.75em;
         height: 10px !important;
-        font-size: 11px !important;
+        font-size: 12px !important;
     }
     
     .heart, .heart-liked {
@@ -70,7 +68,7 @@
     
     .show-or-hide-container {
         margin: 0.5em 0 0 0 !important;
-        font-size: 11px !important;
+        font-size: 12px !important;
     }
 
     .delete-button {
@@ -78,11 +76,11 @@
     }
 
     .comment-maker-input {
-        font-size: 12px !important;
+        font-size: 14px !important;
     }
     
     .comment-maker-input .ql-container {
-        font-size: 12px !important;
+        font-size: 14px !important;
     }
 
     .ql-toolbar button {
@@ -194,7 +192,7 @@
 .username {
     width: fit-content;
     font-family: proxima-semibold, PingFangSC, sans-serif;
-    font-weight: 600;
+    font-weight: 800;
     font-size: 18px;
     /* color: black; */
     color: var(--dark-mode-secondary-text-color);
@@ -316,7 +314,7 @@
 
 .show-or-hide-container {
     display: flex;
-    margin: 1em 0 0 0;
+    margin: 0.5em 0 0 0;
     font-family: proxima-semibold, PingFangSC, sans-serif;
     font-size: 14px;
     font-weight: 600;
