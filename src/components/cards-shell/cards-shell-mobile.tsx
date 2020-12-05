@@ -155,32 +155,42 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
     
                 draggableCard.ontouchend = () => {
                     const cardTop = parseFloat(draggableCard.style.top);
-                    if (cardTop === 50) {
-                        draggableCard.style.zIndex = "1";
-                        topCard.style.zIndex = '2';
-                        bottomLabel.style.top = "5%";
-
-                        const cardId = positions.current[1];
-                        setCardQueryParam(history, query, cardId.toLowerCase());
-
-                        rotate(cardId, () => {
-                            canFlip.current = true;
-                            setState(prevState => ({ ...prevState }));
-                        });
-                    } else if (cardTop === 0) {
-                        draggableCard.style.zIndex = "1";
-                        bottomCard.style.zIndex = '2';
-                        topLabel.style.top = "85%";
-
-                        const cardId = positions.current[2];
-                        setCardQueryParam(history, query, cardId.toLowerCase());
-
-                        rotate(cardId, () => {
-                            canFlip.current = true;
-                            setState(prevState => ({ ...prevState }));
-                        });
+                    if (cardTop > 25) {
+                        if (cardTop === 50) {
+                            draggableCard.style.zIndex = "1";
+                            topCard.style.zIndex = '2';
+                            bottomLabel.style.top = "5%";
+    
+                            const cardId = positions.current[1];
+                            setCardQueryParam(history, query, cardId.toLowerCase());
+    
+                            rotate(cardId, () => {
+                                canFlip.current = true;
+                                setState(prevState => ({ ...prevState }));
+                            });
+                        } else {
+                            const duration = ((cardTop - 25) / 25) * DURATION;
+                            setCards(duration);
+                        }
+                    } else if (cardTop < 25) {
+                        if (cardTop === 0) {
+                            draggableCard.style.zIndex = "1";
+                            bottomCard.style.zIndex = '2';
+                            topLabel.style.top = "85%";
+    
+                            const cardId = positions.current[2];
+                            setCardQueryParam(history, query, cardId.toLowerCase());
+    
+                            rotate(cardId, () => {
+                                canFlip.current = true;
+                                setState(prevState => ({ ...prevState }));
+                            });
+                        } else {
+                            const duration = ((25 - cardTop) / 25) * DURATION;
+                            setCards(duration);
+                        }
                     } else {
-                        setCards();
+                        setCards(0);
                     }
                 }
             } else {
@@ -200,7 +210,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
         }
     }
 
-    const setCards = () => {
+    const setCards = (duration: number | null = null) => {
         const frontCard = document.getElementById(positions.current[0]);
         const topCard = document.getElementById(positions.current[1]);
         const bottomCard = document.getElementById(positions.current[2]);
@@ -214,6 +224,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
 
         if (frontCard && topCard && bottomCard && frontCardCover && topCardCover && bottomCardCover && topCardLabel && bottomCardLabel) {
             const frontCardTop = cardExpanded(positions.current[0]) ? "0" : "25%";
+            const usedDuration = duration !== null ? duration : DURATION;
             
             frontCard.animate([
                 {
@@ -221,7 +232,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     transform:'scale(1)'
                 }
                 ], {
-                    duration: DURATION,
+                    duration: usedDuration,
                     easing: EASEAPART,
                 }).onfinish = () => {
                     frontCard.style.top = frontCardTop;
@@ -247,7 +258,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     opacity: ".75",
                 }
                 ], {
-                    duration: DURATION,
+                    duration: usedDuration,
                     easing: EASEAPART,
                 });
 
@@ -257,7 +268,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     transform:'scale(.9)'
                 }
                 ], {
-                    duration: DURATION,
+                    duration: usedDuration,
                     easing: EASEAPART
                 });
 
@@ -266,7 +277,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     opacity: "1",
                 }
                 ], {
-                    duration: DURATION,
+                    duration: usedDuration,
                     easing: EASEAPART,
                 });
 
@@ -275,7 +286,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     top: "5%"
                 }
                 ], {
-                    duration: DURATION,
+                    duration: usedDuration,
                     easing: EASEAPART,
                 });
 
@@ -285,7 +296,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     transform:'scale(.9)'
                 }
                 ], {
-                    duration: DURATION,
+                    duration: usedDuration,
                     easing: EASEAPART
                 });
 
@@ -294,7 +305,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     opacity: "1",
                 }
                 ], {
-                    duration: DURATION,
+                    duration: usedDuration,
                     easing: EASEAPART,
                 });
             
@@ -303,7 +314,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     top: "85%"
                 }
                 ], {
-                    duration: DURATION,
+                    duration: usedDuration,
                     easing: EASEAPART,
                 });
         }
