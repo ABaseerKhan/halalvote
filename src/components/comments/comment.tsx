@@ -81,7 +81,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         setTimeout(() => {
             comment!.repliesShown = 0;
             setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
-        }, 300);
+        }, 250);
     };
 
     // eslint-disable-next-line

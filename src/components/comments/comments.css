@@ -306,7 +306,7 @@
 .replies {
     margin-top: 0.75em;
     width: 100%;
-    transition: height .5s ease;
+    transition: height .25s ease-in;
     overflow: hidden;
 }
 
