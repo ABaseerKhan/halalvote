@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { Comment } from '../../types';
@@ -11,15 +11,16 @@ import {
     useHistory,
 } from "react-router-dom";
 import { authenticatedPostDataContext } from '../app-shell';
+import { useCookies } from 'react-cookie';
+import { useQuery } from '../../hooks/useQuery';
+import { topicsContext, commentsContext } from '../app-shell';
+
 
 // type imports
 import { Vote } from '../../types';
 
 // style imports
 import './comments.css';
-import { useCookies } from 'react-cookie';
-import { useQuery } from '../../hooks/useQuery';
-import { topicsContext, commentsContext } from '../app-shell';
 
 interface CommentComponentProps {
     key: number,
@@ -30,12 +31,13 @@ interface CommentComponentProps {
     highlightComment: (path: number[] | undefined) => void,
     fetchMoreReplies: (pathToParentComment: number[], n?: number, specificCommentId?: number | undefined, depth?: number) => Promise<number>,
     deleteComment: (path: number[]) => void,
+    setReplyContainerHeight?: React.Dispatch<React.SetStateAction<number>>,
     topicIndexOverride?: number;
     level2?: boolean;
     hide?: boolean;
 }
 export const CommentComponent = (props: CommentComponentProps) => {
-    let { topicIndexOverride, comment, specificComment, hide } = props;
+    let { topicIndexOverride, comment, specificComment, hide, setReplyContainerHeight } = props;
 
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
@@ -44,6 +46,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
     const history = useHistory();
 
     const commentContentRef = useRef<HTMLDivElement>(null);
+    const commentContainerRef = useRef<HTMLDivElement>(null);
 
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
@@ -58,13 +61,27 @@ export const CommentComponent = (props: CommentComponentProps) => {
         canShowMore: true,
     });
 
+    const [containerHeightReadOnly, setContainerHeightReadOnly] = useState<number>(0);
+    const [repliesHeight, setRepliesHeight] = useState<number>(0);
+
+    useEffect(() => {
+        if (hide) setContainerHeightReadOnly(0);
+        if (!hide && commentContainerRef.current) setContainerHeightReadOnly(commentContainerRef.current?.clientHeight);
+    }, [hide]);
+
+    useEffect(()=>{
+        setReplyContainerHeight && setReplyContainerHeight(curr => { 
+            return curr + (containerHeightReadOnly || 0) 
+        });
+    }, [containerHeightReadOnly, setReplyContainerHeight]);
+
     // eslint-disable-next-line
     const hideReplies = () => {
-        comment!.repliesShown = 0;
-        setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
-        setState({
-            ...state,
-        });
+        setRepliesHeight(0);
+        setTimeout(() => {
+            comment!.repliesShown = 0;
+            setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
+        }, 300);
     };
 
     // eslint-disable-next-line
@@ -127,8 +144,12 @@ export const CommentComponent = (props: CommentComponentProps) => {
         });
     };
 
+    if (comment.replies && comment.replies.length) {
+        // console.log(repliesHeight);
+    };
+
     return (
-        <div id={`comment-${comment.id}`} className={"comment-container"} style={{ display: (hide ? 'none' : 'flex')}}>
+        <div ref={commentContainerRef} id={`comment-${comment.id}`} className={"comment-container"} style={{ display: (hide ? 'none' : 'flex')}}>
             <div className="comment-bubble-container">
                 <div className={`comment-bubble-${comment.commentType.toLowerCase()}`}></div>
             </div>
@@ -174,7 +195,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                         }
                     </div>
                 </div>
-                {<div className="replies">
+                {<div className="replies" style={{ height: repliesHeight }}>
                     {
                         comment.replies.map((reply: Comment, i: number) => {
                             return <CommentComponent 
@@ -188,6 +209,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                                         deleteComment={props.deleteComment}
                                         level2={true}
                                         hide={i >= comment.repliesShown}
+                                        setReplyContainerHeight={setRepliesHeight}
                                     />
                         })
                     }
