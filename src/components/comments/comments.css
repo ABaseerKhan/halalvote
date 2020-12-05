@@ -89,6 +89,10 @@
         height: 20px !important;
         padding: 3px 2px !important;
     }
+
+    .comment-spinner {
+        margin-left: calc(50% - 25px - 30px) !important; /* 50% - (half spinner width) - (comment bubble width) */
+    }
 }
 
 .no-comments-to-show-text {
@@ -474,4 +478,8 @@
 .mention > span {
     margin: 0 3px;
     cursor: pointer;
+}
+
+.comment-spinner {
+    margin-left: calc(50% - 25px - 40px); /* 50% - (half spinner width) - (comment bubble width) */
 }

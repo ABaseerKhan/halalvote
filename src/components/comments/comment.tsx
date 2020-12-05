@@ -92,6 +92,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         } else {
             comment!.repliesShown += 3;
         }
+
         setState(prevState => ({
             ...prevState,
             fetchingReplies: false,
@@ -213,10 +214,10 @@ export const CommentComponent = (props: CommentComponentProps) => {
                                     />
                         })
                     }
-                {!!state.fetchingReplies ? <ClipLoader size={25} color={"var(--light-neutral-color)"} loading={state.fetchingReplies}/> : null}
                 </div>}
+                {!!state.fetchingReplies ? <div className="comment-spinner"><ClipLoader size={25} color={"var(--light-neutral-color)"} loading={state.fetchingReplies}/></div> : null}
                 {
-                        (comment.numReplies > 0) && (!props.level2) &&
+                        (comment.numReplies > 0) && (!props.level2) && (!state.fetchingReplies) &&
                         <div className={"show-or-hide-container"}>
                             {viewMoreReplies > 0 ? <div className={"view-replies"} onClick={showReplies}>{(comment.repliesShown > 0) && <div className="view-more-spacer"></div>}<span>{comment.repliesShown > 0 ? `View more` : `View replies (${viewMoreReplies})`}</span><DownSVG style={{ marginLeft: '0.5em', fill: 'gray' }} width={'1em'} height={'1.5em'}/></div> : null}
                             {comment.repliesShown > 0 ? <div className="hide-replies" onClick={hideReplies}><span>Hide</span><UpSVG style={{ marginLeft: '0.5em', fill: 'gray' }} width={'1em'}/></div> : null}
