@@ -253,8 +253,8 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     const getCurrentTimestamp = () => {
         const date = new Date();
         const year = date.getFullYear();
-        const month = date.getMonth() + 1;
-        const day = date.getDate();
+        const month = padNumber(date.getMonth() + 1);
+        const day = padNumber(date.getDate());
         const hours = padNumber(date.getHours());
         const minutes = padNumber(date.getMinutes());
         const seconds = padNumber(date.getSeconds());
