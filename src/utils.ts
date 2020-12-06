@@ -101,6 +101,33 @@ export function getImageDimensionsFromSource(src: string) {
     })
 }
 
+/**
+ Returns the dimensions of a video asynchrounsly.
+ @param {String} url Url of the video to get dimensions from.
+ @return {Promise} Promise which returns the dimensions of the video in 'width' and 'height' properties.
+ */
+export function getVideoDimensionsOf(url: string){
+	return new Promise<{ height: number, width: number }>(function(resolve){
+		// create the video element
+		let video = document.createElement('video');
+
+		// place a listener on it
+		video.addEventListener( "loadedmetadata", function () {
+			// retrieve dimensions
+			let height = this.videoHeight;
+			let width = this.videoWidth;
+			// send back result
+			resolve({
+				height : height,
+				width : width
+			});
+		}, false );
+
+		// start download meta-datas
+		video.src = url;
+	});
+}
+
 export async function resizeImage(file: File) {
     const options = { 
         maxSizeMB: 1,

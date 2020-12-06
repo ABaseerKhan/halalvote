@@ -358,3 +358,20 @@
   cursor: pointer;
   background-color: #ffffff25;
 }
+
+.video-container {
+  margin: auto;
+}
+
+.play-button {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  margin: auto;
+  top: calc(50% - 25px);
+  left: calc(50% - 25px);
+}
+
+.play-button:hover {
+  cursor: pointer;
+}

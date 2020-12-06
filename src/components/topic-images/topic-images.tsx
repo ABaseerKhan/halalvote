@@ -8,16 +8,17 @@ import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
 import { ReactComponent as LeftArrowSVG } from "../../icons/left-arrow.svg";
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
-import { getImageDimensionsFromSource } from '../../utils';
+import { getImageDimensionsFromSource, getVideoDimensionsOf } from '../../utils';
 import { 
     useHistory,
 } from "react-router-dom";
 import { authenticatedPostDataContext } from '../app-shell';
 import { authenticatedGetDataContext } from '../app-shell';
 import { useQuery } from '../../hooks/useQuery';
-import { fullScreenContext, topicImagesContext, topicsContext } from '../app-shell';
+import { topicImagesContext, topicsContext } from '../app-shell';
 import Dropzone, { IFileWithMeta, IUploadParams, StatusValue } from 'react-dropzone-uploader'
 import { v4 as uuidv4 } from 'uuid';
+import { VideoPlayer } from './video-player';
 
 // type imports
 import { TopicImages } from '../../types';
@@ -26,6 +27,14 @@ import { TopicImages } from '../../types';
 import './topic-images.css';
 import 'react-dropzone-uploader/dist/styles.css'
 
+
+const videoFormats = new Set();
+videoFormats.add('MOV');
+videoFormats.add('MP4');
+videoFormats.add('AVI');
+videoFormats.add('FLV');
+videoFormats.add('WEBM');
+videoFormats.add('WMV');
 interface TopicImagesComponentProps {
     shown?: boolean,
     topicIndexOverride?: number;
@@ -39,8 +48,6 @@ interface TopicImagesComponentState {
 };
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     let { topicIndexOverride } = props;
-
-    const { fullScreenMode } = useContext(fullScreenContext);
 
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
@@ -91,6 +98,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 isScrolling = setTimeout(function() {
                     if (imagesBodyRef.current) {
                         const imgIndex = Math.floor((imagesBodyRef.current!.scrollTop+10) / imagesBodyRef.current!.clientHeight);
+                        if ((imgIndex === topicImages.length - 2) && (imgIndex > imageIndex)) {
+                            fetchImages(imgIndex);
+                        }
                         setTopicImagesContext(topicTitle, topicImages, Math.min(Math.max(imgIndex, 0), topicImages.length - 1));
                     }
                 }, 66);
@@ -98,13 +108,13 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }
     });
 
-    const fetchImages = async () => {
+    const fetchImages = async (newIndex?: number) => {
         setState(prevState => ({ ...prevState, topicImages: [], currentIndex: 0, picture: null, loading: true }));
         let queryParams: any = { 
             "topicTitle": topicTitle,
             "n": 3,
-            "exludedIds": topicImages && topicImages.length ? topicImages.map((image) => image.id) : undefined,
         };
+        if (topicImages && topicImages.length) queryParams["excludedIds"] = topicImages.reduce((acc, image) => acc + `${image.id} `, '');
         let additionalHeaders: any = {};
         if (username && username !== "" && sessiontoken && sessiontoken !== "") {
             queryParams['username'] = username;
@@ -119,16 +129,21 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }, true);
         if (data.length) {
             data.forEach(async (img, idx) => { 
-                const imgDimensions = await getImageDimensionsFromSource(img.image);
+                let imgDimensions;
+                if (!isVideo(img.image)) {
+                    imgDimensions = await getImageDimensionsFromSource(img.image);
+                } else {
+                    imgDimensions = await getVideoDimensionsOf(img.image);
+                }
                 img.height = imgDimensions.height;
                 img.width = imgDimensions.width;
                 if (idx === data.length - 1) {
-                    setTopicImagesContext(topicTitle, data, 0);
+                    setTopicImagesContext(topicTitle, [...topicImages, ...data], newIndex || 0);
                     setState({...state, addTopicDisplayed: false, loading: false});
                 }
             });
         } else {
-            setTopicImagesContext(topicTitle, data, 0);
+            setTopicImagesContext(topicTitle, topicImages, newIndex || topicIndex);
             setState({...state, addTopicDisplayed: false, loading: false});
         }
     }
@@ -201,11 +216,11 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         });
     };
 
-    const moreImagesIndicatorPosition = fullScreenMode ? "fixed" : "absolute";
+    const moreImagesIndicatorPosition = "absolute";
 
     const ImageNavigator = (
         <div style={{ height: '100%', width: '100%' }}>
-            <div id="images-body" ref={imagesBodyRef} className={fullScreenMode ? "images-body-fullscreen" : "images-body"}>
+            <div id="images-body" ref={imagesBodyRef} className={"images-body"}>
                 {
                     topicImages.length > 0 ?
                         topicImages.map((topicImg, idx) => {
@@ -224,7 +239,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                             </>
                             const Img = (
                                 <div key={idx} className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
+                                    {isVideo(topicImg.image) ? <VideoPlayer src={topicImg.image} inView={idx===imageIndex} stylesOverride={{ maxHeight: imagesBodyRef.current?.clientHeight, maxWidth: imagesBodyRef.current?.clientWidth }}/> : 
                                     <img id="image" className='image' style={{ margin: "auto"}} alt={topicTitle} src={topicImg.image}/>
+                                    }
                                     {ImgStats}
                                 </div>
                             )
@@ -239,7 +256,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     <DownArrowSVG />
                 </div>}
             </div>
-            <div className={fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
+            <div className={"canvas-footer"}>
                 <div className={!state.addTopicDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
                     <AddButtonSVG />
                 </div>
@@ -249,10 +266,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 
     const fileUploader = (
         <div style={{ height: '100%', width: '100%' }}>
-            <div className={fullScreenMode ? "images-body-fullscreen" : "images-body"} style={{ background: 'black'}}>
+            <div className={"images-body"} style={{ background: 'black'}}>
                 <MyUploader submitCallback={fetchImages}/>
             </div>
-            <div className={fullScreenMode ? "canvas-footer-fullscreen" : "canvas-footer"}>
+            <div className={"canvas-footer"}>
                 <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
                     Cancel
                 </button>
@@ -339,3 +356,7 @@ export const MyUploader = (props: UploaderProps) => {
         />
     )
 }
+
+const isVideo = (url: string) => {
+    return videoFormats.has(url.split('.').pop()?.toUpperCase());
+};
