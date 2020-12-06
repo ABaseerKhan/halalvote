@@ -452,7 +452,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
 
     const expandCard = (index: number, id: string) => {
         if (index === 0 && !cardExpanded(id) && canExpandCard.current) {
-            setMuted(false);
+            if(id===mediaCardId) setMuted(false);
             canSelectCard.current = false;
             canDragCard.current = false;
             canExpandCard.current = false;
