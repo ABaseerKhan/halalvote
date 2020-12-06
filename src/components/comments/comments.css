@@ -103,19 +103,8 @@
 .comments-container {
     position: relative;
     height: calc(100% - 4em);
-    border-radius: 25px 25px 25px 0px;
     overflow: scroll;
     scroll-behavior: smooth;
-}
-
-.comments-container-fs {
-    position: absolute;
-    width: 100%;
-    height: calc(100% - 4em - 6em);
-    top: 6em;
-    overflow: auto;
-    scroll-behavior: smooth;
-    z-index: 1;
 }
 
 .comments-container-padding-div {
@@ -345,7 +334,7 @@
     text-decoration: underline;
 }
 
-.comment-maker-card, .comment-maker-card-fs {
+.comment-maker-card {
     display: table;
     position: absolute;
     bottom: 0px;
@@ -353,18 +342,13 @@
     height: 4em;
     box-shadow: 0 5px 50px 0 rgba(32,33,36,0.28);
     z-index: 3;
-    /* transition: all ease-out 0.3s; */
+    border-radius: 25px;
+    background: #505050;
+    width: calc(100% - 4px);
+    padding: 2px;
+    /* transition: all ease-out 0.2s; */
 }
 
-.comment-maker-card {
-    border-radius: 0px 0px 25px 25px;
-    /* background: white; */
-    background: var(--dark-mode-foreground);
-}
-
-.comment-maker-card-fs {
-    background: var(--dark-mode-background);
-}
 
 .comment-maker-input {
     width: 100%;
@@ -391,7 +375,7 @@
 
 .comment-maker-button {
     position: absolute;
-    bottom: 5px;
+    top: 2em;
     right: 1.75%;
     width: 34.5px;
     padding: 0px;

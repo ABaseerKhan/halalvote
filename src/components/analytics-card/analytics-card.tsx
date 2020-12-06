@@ -263,7 +263,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }
 
     return (
-    <div id={id} className={fullScreenMode ? "analytics-fs" : "analytics"}>
+    <div id={id} className={"analytics"}>
         <div className={"numeric-display"}>
             <div className="numeric-display-title">Votes</div>
             <div className="numeric-display-body">

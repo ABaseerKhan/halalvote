@@ -58,7 +58,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
         },
         setHeight: (height: number) => {
             if (commentMakerCardRef.current) {
-                commentMakerCardRef.current.style.height = `${height}px`;
+                commentMakerCardRef.current.style.height = `${height - 4}px`;
             }
         },
         getCommentMakerCardRef: () => {
