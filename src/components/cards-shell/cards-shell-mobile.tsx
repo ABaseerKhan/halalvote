@@ -193,9 +193,9 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
 
                         const cardTop = parseFloat(draggableCard.style.top);
                         const milliseconds = new Date().getMilliseconds();
-                        const acceleration = .001;
+                        const acceleration = .0001;
     
-                        if (cardTop > 25) {
+                        if (cardTop > 25 && cardTop < 50) {
                             if (swipeDet.e2Y > swipeDet.e1Y) {
                                 const distanceDiff = ((swipeDet.e2Y - swipeDet.e1Y) / window.innerHeight) * 100;
                                 const millisecondsDiff = milliseconds - swipeDet.e1Milliseconds;
@@ -237,7 +237,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                                 const duration = ((cardTop - 25) / 25) * DURATION;
                                 setCards(duration);
                             }
-                        } else if (cardTop < 25) {
+                        } else if (cardTop < 25 && cardTop > 0) {
                             if (swipeDet.e2Y < swipeDet.e1Y) {
                                 const distanceDiff = ((swipeDet.e1Y - swipeDet.e2Y) / window.innerHeight) * 100;
                                 const millisecondsDiff = milliseconds - swipeDet.e1Milliseconds;
@@ -279,6 +279,8 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                                 const duration = ((25 - cardTop) / 25) * DURATION;
                                 setCards(duration);
                             }
+                        } else if (cardTop === 0 || cardTop === 50) {
+                            setCards();
                         } else {
                             setCards(0);
                         }
