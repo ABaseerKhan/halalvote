@@ -104,33 +104,51 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                 let swipeDet = {
                     sX: 0,
                     sY: 0,
-                    eX: 0,
-                    eY: 0
+                    e1X: 0,
+                    e1Y: 0,
+                    e1Milliseconds: 0,
+                    e2X: 0,
+                    e2Y: 0,
+                    e2Milliseconds: 0
                 }
 
                 draggableCard.ontouchstart = (e: TouchEvent) => {
                     canFlip.current = false;
-                    const t = e.touches[0]
+
+                    const milliseconds = new Date().getMilliseconds();
+                    const t = e.touches[0];
+
                     swipeDet.sX = t.screenX;
                     swipeDet.sY = t.screenY;
-                    swipeDet.eX = t.screenX;
-                    swipeDet.eY = t.screenY;
+
+                    swipeDet.e1X = t.screenX;
+                    swipeDet.e1Y = t.screenY;
+                    swipeDet.e1Milliseconds = milliseconds;
+
+                    swipeDet.e2X = t.screenX;
+                    swipeDet.e2Y = t.screenY;
+                    swipeDet.e2Milliseconds = milliseconds;
                 }
     
                 draggableCard.ontouchmove = (e: TouchEvent) => {
-                    const prevY = swipeDet.eY;
-                    const t = e.touches[0]
-                    swipeDet.eX = t.screenX;
-                    swipeDet.eY = t.screenY;
-                    const deltaX = Math.abs(swipeDet.eX - swipeDet.sX);
-                    const deltaY = Math.abs(swipeDet.eY - swipeDet.sY);
+                    swipeDet.e1X = swipeDet.e2X;
+                    swipeDet.e1Y = swipeDet.e2Y;
+                    swipeDet.e1Milliseconds = swipeDet.e2Milliseconds;
+
+                    const t = e.touches[0];
+                    swipeDet.e2X = t.screenX;
+                    swipeDet.e2Y = t.screenY;
+                    swipeDet.e2Milliseconds = new Date().getMilliseconds();
+
+                    const deltaX = Math.abs(swipeDet.e2X - swipeDet.sX);
+                    const deltaY = Math.abs(swipeDet.e2Y - swipeDet.sY);
 
                     if (deltaY > (deltaX)/2) {
                         e.preventDefault();
                         e.stopPropagation();
                         
-                        const currentY = swipeDet.eY;
-                        const partialScreenRatio = (prevY - currentY) / window.innerHeight;
+                        const currentY = swipeDet.e2Y;
+                        const partialScreenRatio = (swipeDet.e1Y - currentY) / window.innerHeight;
                         draggableCard.style.top = `${Math.max(0, Math.min(50, parseFloat(draggableCard.style.top) - (partialScreenRatio * 100)))}%`;
                         topCard.style.top = `${12.5 - ((parseFloat(draggableCard.style.top) - 25) / 2)}%`;
                         bottomCard.style.top = `${37.5 + ((25 - parseFloat(draggableCard.style.top)) / 2)}%`;
@@ -155,36 +173,83 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
     
                 draggableCard.ontouchend = () => {
                     const cardTop = parseFloat(draggableCard.style.top);
+                    const milliseconds = new Date().getMilliseconds();
+                    const acceleration = .001;
+
                     if (cardTop > 25) {
-                        if (cardTop === 50) {
-                            draggableCard.style.zIndex = "1";
-                            topCard.style.zIndex = '2';
-                            bottomLabel.style.top = "5%";
-    
-                            const cardId = positions.current[1];
-                            setCardQueryParam(history, query, cardId.toLowerCase());
-    
-                            rotate(cardId, () => {
-                                canFlip.current = true;
-                                setState(prevState => ({ ...prevState }));
-                            });
+                        if (swipeDet.e2Y > swipeDet.e1Y) {
+                            const distanceDiff = ((swipeDet.e2Y - swipeDet.e1Y) / window.innerHeight) * 100;
+                            const millisecondsDiff = swipeDet.e1Milliseconds === swipeDet.e2Milliseconds ? milliseconds - swipeDet.e1Milliseconds : swipeDet.e2Milliseconds - swipeDet.e1Milliseconds;
+                            const velocity = Math.max(0, distanceDiff / millisecondsDiff);
+
+                            let duration = velocity / acceleration;
+                            let distance = (velocity * duration) - (.5 * (acceleration * (duration ** 2)));
+
+                            if (cardTop + distance > 50) {
+                                const overflowRatio = (50 - cardTop) / distance;
+                                duration = duration * overflowRatio;
+                                distance = distance * overflowRatio;
+                            }
+
+                            const completionRatio = (cardTop + distance - 25) / 25;
+
+                            makeRoom(positions.current[1], () => {
+                                if (completionRatio < 1) {
+                                    const duration = completionRatio * DURATION;
+                                    setCards(duration);
+                                } else {
+                                    draggableCard.style.zIndex = "1";
+                                    topCard.style.zIndex = '2';
+                                    bottomLabel.style.top = "5%";
+            
+                                    const cardId = positions.current[1];
+                                    setCardQueryParam(history, query, cardId.toLowerCase());
+            
+                                    rotate(cardId, () => {
+                                        canFlip.current = true;
+                                        setState(prevState => ({ ...prevState }));
+                                    });
+                                }
+                            }, duration, completionRatio);
                         } else {
                             const duration = ((cardTop - 25) / 25) * DURATION;
                             setCards(duration);
                         }
                     } else if (cardTop < 25) {
-                        if (cardTop === 0) {
-                            draggableCard.style.zIndex = "1";
-                            bottomCard.style.zIndex = '2';
-                            topLabel.style.top = "85%";
-    
-                            const cardId = positions.current[2];
-                            setCardQueryParam(history, query, cardId.toLowerCase());
-    
-                            rotate(cardId, () => {
-                                canFlip.current = true;
-                                setState(prevState => ({ ...prevState }));
-                            });
+                        if (swipeDet.e2Y < swipeDet.e1Y) {
+                            const distanceDiff = ((swipeDet.e1Y - swipeDet.e2Y) / window.innerHeight) * 100;
+                            const millisecondsDiff = swipeDet.e1Milliseconds === swipeDet.e2Milliseconds ? milliseconds - swipeDet.e1Milliseconds : swipeDet.e2Milliseconds - swipeDet.e1Milliseconds;
+                            const velocity = Math.max(0, distanceDiff / millisecondsDiff);
+
+                            let duration = velocity / acceleration;
+                            let distance = (velocity * duration) - (.5 * (acceleration * (duration ** 2)));
+
+                            if (distance > cardTop) {
+                                const overflowRatio = cardTop / distance;
+                                duration = duration * overflowRatio;
+                                distance = distance * overflowRatio;
+                            }
+
+                            const completionRatio = (25 - cardTop + distance) / 25;
+
+                            makeRoom(positions.current[2], () => {
+                                if (completionRatio < 1) {
+                                    const duration = completionRatio * DURATION;
+                                    setCards(duration);
+                                } else {
+                                    draggableCard.style.zIndex = "1";
+                                    bottomCard.style.zIndex = '2';
+                                    topLabel.style.top = "85%";
+            
+                                    const cardId = positions.current[2];
+                                    setCardQueryParam(history, query, cardId.toLowerCase());
+            
+                                    rotate(cardId, () => {
+                                        canFlip.current = true;
+                                        setState(prevState => ({ ...prevState }));
+                                    });
+                                }
+                            }, duration, completionRatio);
                         } else {
                             const duration = ((25 - cardTop) / 25) * DURATION;
                             setCards(duration);
@@ -210,7 +275,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
         }
     }
 
-    const setCards = (duration: number | null = null) => {
+    const setCards = (duration: number = DURATION) => {
         const frontCard = document.getElementById(positions.current[0]);
         const topCard = document.getElementById(positions.current[1]);
         const bottomCard = document.getElementById(positions.current[2]);
@@ -224,7 +289,6 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
 
         if (frontCard && topCard && bottomCard && frontCardCover && topCardCover && bottomCardCover && topCardLabel && bottomCardLabel) {
             const frontCardTop = cardExpanded(positions.current[0]) ? "0" : "25%";
-            const usedDuration = duration !== null ? duration : DURATION;
             
             frontCard.animate([
                 {
@@ -232,7 +296,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     transform:'scale(1)'
                 }
                 ], {
-                    duration: usedDuration,
+                    duration: duration,
                     easing: EASEAPART,
                 }).onfinish = () => {
                     frontCard.style.top = frontCardTop;
@@ -258,7 +322,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     opacity: ".75",
                 }
                 ], {
-                    duration: usedDuration,
+                    duration: duration,
                     easing: EASEAPART,
                 });
 
@@ -268,7 +332,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     transform:'scale(.9)'
                 }
                 ], {
-                    duration: usedDuration,
+                    duration: duration,
                     easing: EASEAPART
                 });
 
@@ -277,7 +341,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     opacity: "1",
                 }
                 ], {
-                    duration: usedDuration,
+                    duration: duration,
                     easing: EASEAPART,
                 });
 
@@ -286,7 +350,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     top: "5%"
                 }
                 ], {
-                    duration: usedDuration,
+                    duration: duration,
                     easing: EASEAPART,
                 });
 
@@ -296,7 +360,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     transform:'scale(.9)'
                 }
                 ], {
-                    duration: usedDuration,
+                    duration: duration,
                     easing: EASEAPART
                 });
 
@@ -305,7 +369,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     opacity: "1",
                 }
                 ], {
-                    duration: usedDuration,
+                    duration: duration,
                     easing: EASEAPART,
                 });
             
@@ -314,7 +378,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     top: "85%"
                 }
                 ], {
-                    duration: usedDuration,
+                    duration: duration,
                     easing: EASEAPART,
                 });
         }
@@ -426,7 +490,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
         }
     }
 
-    const makeRoom = (cardId: string, onfinish: () => void) => {
+    const makeRoom = (cardId: string, onfinish: () => void, duration: number | null = null, completionRatio: number = 1) => {
         const selectedPosition = positions.current.indexOf(cardId);
         const selectedCard = document.getElementById(cardId);
         const frontCard = document.getElementById(positions.current[0]);
@@ -441,78 +505,93 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
             backCard.style.zIndex = '0';
             selectedCard.style.zIndex = '1';
 
+            const usedDuration = duration !== null ? duration : DURATION;
+            const easing = duration !== null ? 'cubic-bezier(0, 0, 0, 1)' : EASEAPART;
+
+            const frontCardTop = `${25 + (selectedPosition === 1 ? (25 * completionRatio) : -(25 * completionRatio))}%`;
+            const frontCardScale = `scale(${1 - (.05 * completionRatio)})`;
+            const frontCoverOpacity = `${.75 + (.125 * completionRatio)}`;
+            const backCardTop = `${selectedPosition === 1 ? 37.5 - (12.5 * completionRatio) : 12.5 + (12.5 * completionRatio)}%`;
+            const selectedCardTop = `${selectedPosition === 1 ? 12.5 - (12.5 * completionRatio) : 37.5 + (12.5 * completionRatio)}%`;
+            const selectedCardScale = `scale(${.9 + (.05 * completionRatio)})`;
+            const selectedCoverOpacity = `${1 - (.125 * completionRatio)}`;
+            const selectedLabelTop = `${selectedPosition === 1 ? 5 + (45 * completionRatio) : 85 - (35 * completionRatio)}%`;
+
             frontCard.animate([
                 {
-                    top: `${selectedPosition === 1 ? 50 : 0}%`,
-                    transform: 'scale(.95)'
+                    top: frontCardTop,
+                    transform: frontCardScale
                 }
                 ], {
-                    duration: DURATION,
-                    easing: EASEAPART
+                    duration: usedDuration,
+                    easing: easing
                 });
 
             frontCover.animate([
                 {
-                    opacity: "0.875"
+                    opacity: frontCoverOpacity
                 }
                 ], {
-                    duration: DURATION,
-                    easing: EASEAPART
+                    duration: usedDuration,
+                    easing: easing
                 });
             
             backCard.animate([
                 {
-                    top: "25%",
+                    top: backCardTop,
                 }
                 ], {
-                    duration: DURATION,
-                    easing: EASEAPART
+                    duration: usedDuration,
+                    easing: easing
                 });
 
             selectedCard.animate([
                 {
-                    top: `${selectedPosition === 1 ? 0 : 50}%`,
-                    transform: 'scale(.95)'
+                    top: selectedCardTop,
+                    transform: selectedCardScale
                 }
                 ], {
-                    duration: DURATION,
-                    easing: EASEAPART
+                    duration: usedDuration,
+                    easing: easing
                 }).onfinish = () => {
-                    frontCard.style.top = `${selectedPosition === 1 ? 50 : 0}%`;
-                    frontCard.style.transform = "scale(.95)";
-                    frontCard.style.zIndex = "1";
+                    frontCard.style.top = frontCardTop;
+                    frontCard.style.transform = frontCardScale;
 
-                    frontCover.style.opacity = "0.875";
+                    frontCover.style.opacity = frontCoverOpacity;
 
-                    backCard.style.top = "25%";
+                    backCard.style.top = backCardTop;
                     
-                    selectedCard.style.top = `${selectedPosition === 1 ? 0 : 50}%`;
-                    selectedCard.style.transform = "scale(.95)";
-                    selectedCard.style.zIndex = "2";
+                    selectedCard.style.top = selectedCardTop;
+                    selectedCard.style.transform = selectedCardScale;
 
-                    selectedCover.style.opacity = "0.875";
+                    selectedCover.style.opacity = selectedCoverOpacity;
 
-                    selectedLabel.style.top = "50%";
+                    selectedLabel.style.top = selectedLabelTop;
+
+                    if (completionRatio === 1) {
+                        frontCard.style.zIndex = "1";
+                        selectedCard.style.zIndex = "2";
+                    }
 
                     onfinish();
                 };
 
             selectedCover.animate([
                 {
-                    opacity: "0.875"
+                    opacity: selectedCoverOpacity
                 }
                 ], {
-                    duration: DURATION,
-                    easing: EASEAPART
+                    duration: usedDuration,
+                    easing: easing
                 });
 
             selectedLabel.animate([
                 {
-                    top: "50%",
+                    top: selectedLabelTop,
                 }
                 ], {
-                    duration: DURATION,
-                    easing: EASEAPART
+                    duration: usedDuration,
+                    easing: easing
                 });
         }
     };
