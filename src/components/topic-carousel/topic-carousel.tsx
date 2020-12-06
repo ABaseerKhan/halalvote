@@ -71,6 +71,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     eY: 0
                 }
                 let swipeDirection = SwipeDirection.NONE;
+                let correctDirection: boolean | undefined = undefined;
 
                 const touchStartListener = (e: TouchEvent) => {
                     const t = e.touches[0]
@@ -87,8 +88,13 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     const deltaX = Math.abs(swipeDet.eX - swipeDet.sX);
                     const deltaY = Math.abs(swipeDet.eY - swipeDet.sY);
 
-                    if (deltaX > (deltaY)/2) {
+                    if (correctDirection === undefined) {
+                        correctDirection = deltaX > (deltaY)/2;
+                    }
+
+                    if (correctDirection) {
                         e.preventDefault();
+
                         const cappedDelta = Math.min(deltaX, deltaMin);
 
                         if (swipeDet.eX > swipeDet.sX && (swipeDirection === SwipeDirection.LEFT || swipeDirection === SwipeDirection.NONE)) {
@@ -106,7 +112,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 const touchEndListener = (e: TouchEvent) => {
                     const deltaX = Math.abs(swipeDet.eX - swipeDet.sX);
 
-                    if (deltaX >= deltaMin) {
+                    if (correctDirection && deltaX >= deltaMin) {
                         if (swipeDet.eX > swipeDet.sX) {
                             e.preventDefault();
                             iterateTopic(-1)();
@@ -123,10 +129,13 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                         eY: 0
                     }
                     swipeDirection = SwipeDirection.NONE;
+                    
                     leftTopicNavigatorDisplay.style.left = "0";
                     leftTopicNavigatorDisplay.style.width = "0px";
                     rightTopicNavigatorDisplay.style.right = "0";
                     rightTopicNavigatorDisplay.style.width = "0px";
+
+                    correctDirection = undefined;
                 }
 
                 window.addEventListener("touchstart", touchStartListener, {passive: false});

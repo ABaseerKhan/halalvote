@@ -17,6 +17,10 @@ const DURATION = 300;
 const EASEAPART = `cubic-bezier(${x1},${y1},${x2},${y2})`;
 const EASECLOSER = `cubic-bezier(${x1r},${y1r},${x2r},${y2r})`;
 
+const BACK_COVER_OPACITY = 1;
+const FRONT_COVER_OPACITY = .5;
+const COVER_OPACITY_STEP = .25;
+
 export const mediaCardId = "CANVAS";
 export const commentsCardId = "ARGUMENTS";
 export const analyticsCardId = "ANALYTICS";
@@ -67,8 +71,8 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
         const isCardExpanded = cardExpanded(id);
         return (
             <div key={id} id={id} className="card-shell" style={{zIndex: 2 - index, height: isCardExpanded ? "100%" : "50%", width: isCardExpanded ? "100%" : "75%", top: isCardExpanded ? "0" : "25%", marginLeft: isCardExpanded ? "-12.5%" : "unset", borderRadius: isCardExpanded ? "25px 25px 0 0" : "25px"}} onClick={() => {expandCard(index, id)}} onDoubleClick={() => {collapseCard(index, id)}}>
-            <div id={`${id}-label`} className="card-shell-cover-label" style={{display: isCardExpanded ? "none" : "unset"}}>{id}</div>
-            <div id={`${id}-cover`} className="card-shell-cover" style={{opacity: isCardExpanded ? "0" : index === 0 ? '0.75' : '1', display: isCardExpanded ? "none" : "unset"}} onClick={() => {selectCard(index, id)}}></div>
+            <div id={`${id}-label`} className="card-shell-cover-label" style={{opacity: index === 0 ? '0' : '1', display: isCardExpanded ? "none" : "unset"}}>{id}</div>
+            <div id={`${id}-cover`} className="card-shell-cover" style={{opacity: isCardExpanded ? "0" : index === 0 ? `${FRONT_COVER_OPACITY}` : `${BACK_COVER_OPACITY}`, display: isCardExpanded ? "none" : "unset"}} onClick={() => {selectCard(index, id)}}></div>
             {body}
             </div>
         );
@@ -97,10 +101,11 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
         const topCover = document.getElementById(`${positions.current[1]}-cover`);
         const bottomCover = document.getElementById(`${positions.current[2]}-cover`);
 
+        const draggableLabel = document.getElementById(`${positions.current[0]}-label`);
         const topLabel = document.getElementById(`${positions.current[1]}-label`);
         const bottomLabel = document.getElementById(`${positions.current[2]}-label`);
 
-        if (draggableCard && topCard && bottomCard && draggableCover && topCover && bottomCover && topLabel && bottomLabel) {
+        if (draggableCard && topCard && bottomCard && draggableCover && topCover && bottomCover && draggableLabel && topLabel && bottomLabel) {
             if (!cardExpanded(positions.current[0])) {
                 let swipeDet = {
                     sX: 0,
@@ -112,6 +117,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     e2Y: 0,
                     e2Milliseconds: 0
                 }
+                let correctDirection: boolean | undefined = undefined;
 
                 draggableCard.ontouchstart = (e: TouchEvent) => {
                     if (canDragCard.current) {
@@ -145,10 +151,13 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                         swipeDet.e2Y = t.screenY;
                         swipeDet.e2Milliseconds = new Date().getMilliseconds();
     
-                        const deltaX = Math.abs(swipeDet.e2X - swipeDet.sX);
-                        const deltaY = Math.abs(swipeDet.e2Y - swipeDet.sY);
+                        if (correctDirection === undefined) {
+                            const deltaX = Math.abs(swipeDet.e2X - swipeDet.sX);
+                            const deltaY = Math.abs(swipeDet.e2Y - swipeDet.sY);
+                            correctDirection = deltaY > (deltaX)/2;
+                        }
     
-                        if (deltaY > (deltaX)/2) {
+                        if (correctDirection) {
                             e.preventDefault();
                             e.stopPropagation();
                             
@@ -167,9 +176,10 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                             topCard.style.transform = `scale(${draggedRatio > 0 ? .9 + (draggedRatio * .05) : .9})`;
                             bottomCard.style.transform = `scale(${draggedRatio < 0 ? .9 - (draggedRatio * .05) : .9})`;
         
-                            draggableCover.style.opacity = `${.75 + Math.abs(draggedRatio * .125)}`;
-                            topCover.style.opacity = `${draggedRatio > 0 ? 1 - Math.abs(draggedRatio * .125) : 1}`;
-                            bottomCover.style.opacity = `${draggedRatio < 0 ? 1 - Math.abs(draggedRatio * .125): 1}`;
+                            draggableCover.style.opacity = `${FRONT_COVER_OPACITY + Math.abs(draggedRatio * COVER_OPACITY_STEP)}`;
+                            topCover.style.opacity = `${draggedRatio > 0 ? BACK_COVER_OPACITY - Math.abs(draggedRatio * COVER_OPACITY_STEP) : BACK_COVER_OPACITY}`;
+                            bottomCover.style.opacity = `${draggedRatio < 0 ? BACK_COVER_OPACITY - Math.abs(draggedRatio * COVER_OPACITY_STEP): BACK_COVER_OPACITY}`;
+                            draggableLabel.style.opacity = `${Math.abs(draggedRatio)}`
         
                             topLabel.style.top = `${draggedRatio > 0 ? 5 + Math.abs(draggedRatio * 45) : 5}%`;
                             bottomLabel.style.top = `${draggedRatio < 0 ? 85 - Math.abs(draggedRatio * 35) : 85}%`;
@@ -178,7 +188,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                 }
     
                 draggableCard.ontouchend = () => {
-                    if (canDragCard.current) {
+                    if (canDragCard.current && correctDirection) {
                         canDragCard.current = false;
 
                         const cardTop = parseFloat(draggableCard.style.top);
@@ -188,7 +198,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                         if (cardTop > 25) {
                             if (swipeDet.e2Y > swipeDet.e1Y) {
                                 const distanceDiff = ((swipeDet.e2Y - swipeDet.e1Y) / window.innerHeight) * 100;
-                                const millisecondsDiff = swipeDet.e1Milliseconds === swipeDet.e2Milliseconds ? milliseconds - swipeDet.e1Milliseconds : swipeDet.e2Milliseconds - swipeDet.e1Milliseconds;
+                                const millisecondsDiff = milliseconds - swipeDet.e1Milliseconds;
                                 const velocity = Math.max(0, distanceDiff / millisecondsDiff);
     
                                 let duration = velocity / acceleration;
@@ -230,7 +240,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                         } else if (cardTop < 25) {
                             if (swipeDet.e2Y < swipeDet.e1Y) {
                                 const distanceDiff = ((swipeDet.e1Y - swipeDet.e2Y) / window.innerHeight) * 100;
-                                const millisecondsDiff = swipeDet.e1Milliseconds === swipeDet.e2Milliseconds ? milliseconds - swipeDet.e1Milliseconds : swipeDet.e2Milliseconds - swipeDet.e1Milliseconds;
+                                const millisecondsDiff = milliseconds - swipeDet.e1Milliseconds;
                                 const velocity = Math.max(0, distanceDiff / millisecondsDiff);
     
                                 let duration = velocity / acceleration;
@@ -272,7 +282,12 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                         } else {
                             setCards(0);
                         }
+                    } else {
+                        canSelectCard.current = true;
+                        canExpandCard.current = true;
                     }
+
+                    correctDirection = undefined;
                 }
             } else {
                 draggableCard.ontouchstart = undefined;
@@ -300,10 +315,11 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
         const topCardCover = document.getElementById(`${positions.current[1]}-cover`);
         const bottomCardCover = document.getElementById(`${positions.current[2]}-cover`);
 
+        const frontCardLabel = document.getElementById(`${positions.current[0]}-label`);
         const topCardLabel = document.getElementById(`${positions.current[1]}-label`);
         const bottomCardLabel = document.getElementById(`${positions.current[2]}-label`);
 
-        if (frontCard && topCard && bottomCard && frontCardCover && topCardCover && bottomCardCover && topCardLabel && bottomCardLabel) {
+        if (frontCard && topCard && bottomCard && frontCardCover && topCardCover && bottomCardCover && frontCardLabel && topCardLabel && bottomCardLabel) {
             const frontCardTop = cardExpanded(positions.current[0]) ? "0" : "25%";
             
             frontCard.animate([
@@ -322,9 +338,10 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     bottomCard.style.top = "37.5%";
                     bottomCard.style.transform = "scale(.9)";
 
-                    frontCardCover.style.opacity = ".75";
-                    topCardCover.style.opacity = "1";
-                    bottomCardCover.style.opacity = "1";
+                    frontCardCover.style.opacity = `${FRONT_COVER_OPACITY}`;
+                    topCardCover.style.opacity = `${BACK_COVER_OPACITY}`;
+                    bottomCardCover.style.opacity = `${BACK_COVER_OPACITY}`;
+                    frontCardLabel.style.opacity = "0";
 
                     topCardLabel.style.top = "5%";
                     bottomCardLabel.style.top = "85%";
@@ -336,7 +353,16 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
 
             frontCardCover.animate([
                 {
-                    opacity: ".75",
+                    opacity: `${FRONT_COVER_OPACITY}`,
+                }
+                ], {
+                    duration: duration,
+                    easing: EASEAPART,
+                });
+            
+            frontCardLabel.animate([
+                {
+                    opacity: "0",
                 }
                 ], {
                     duration: duration,
@@ -355,7 +381,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
 
             topCardCover.animate([
                 {
-                    opacity: "1",
+                    opacity: `${BACK_COVER_OPACITY}`,
                 }
                 ], {
                     duration: duration,
@@ -383,7 +409,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
 
             bottomCardCover.animate([
                 {
-                    opacity: "1",
+                    opacity: `${BACK_COVER_OPACITY}`,
                 }
                 ], {
                     duration: duration,
@@ -488,7 +514,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                 
                 currentCardCover.animate([
                     {
-                        opacity: "0.75"
+                        opacity: `${FRONT_COVER_OPACITY}`
                     }
                     ], {
                         duration: DURATION,
@@ -507,7 +533,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                         duration: DURATION,
                         easing: EASEAPART
                     }).onfinish = () => {
-                        currentCardCover.style.opacity = "0.75";
+                        currentCardCover.style.opacity = `${FRONT_COVER_OPACITY}`;
 
                         currentCard.style.height = "50%";
                         currentCard.style.width = "75%";
@@ -536,9 +562,10 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
         const selectedCover = document.getElementById(`${cardId}-cover`);
         const frontCover = document.getElementById(`${positions.current[0]}-cover`);
 
+        const frontLabel = document.getElementById(`${positions.current[0]}-label`);
         const selectedLabel = document.getElementById(`${cardId}-label`);
 
-        if (selectedCard && frontCard && backCard && selectedCover && frontCover && selectedLabel) {
+        if (selectedCard && frontCard && backCard && selectedCover && frontCover && frontLabel && selectedLabel) {
             backCard.style.zIndex = '0';
             selectedCard.style.zIndex = '1';
 
@@ -547,11 +574,14 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
 
             const frontCardTop = `${25 + (selectedPosition === 1 ? (25 * completionRatio) : -(25 * completionRatio))}%`;
             const frontCardScale = `scale(${1 - (.05 * completionRatio)})`;
-            const frontCoverOpacity = `${.75 + (.125 * completionRatio)}`;
+            const frontCoverOpacity = `${FRONT_COVER_OPACITY + (COVER_OPACITY_STEP * completionRatio)}`;
+            const frontLabelOpacity = `${1 * completionRatio}`;
+
             const backCardTop = `${selectedPosition === 1 ? 37.5 - (12.5 * completionRatio) : 12.5 + (12.5 * completionRatio)}%`;
+
             const selectedCardTop = `${selectedPosition === 1 ? 12.5 - (12.5 * completionRatio) : 37.5 + (12.5 * completionRatio)}%`;
             const selectedCardScale = `scale(${.9 + (.05 * completionRatio)})`;
-            const selectedCoverOpacity = `${1 - (.125 * completionRatio)}`;
+            const selectedCoverOpacity = `${BACK_COVER_OPACITY - (COVER_OPACITY_STEP * completionRatio)}`;
             const selectedLabelTop = `${selectedPosition === 1 ? 5 + (45 * completionRatio) : 85 - (35 * completionRatio)}%`;
 
             frontCard.animate([
@@ -567,6 +597,15 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
             frontCover.animate([
                 {
                     opacity: frontCoverOpacity
+                }
+                ], {
+                    duration: usedDuration,
+                    easing: easing
+                });
+
+            frontLabel.animate([
+                {
+                    opacity: frontLabelOpacity
                 }
                 ], {
                     duration: usedDuration,
@@ -595,6 +634,8 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     frontCard.style.transform = frontCardScale;
 
                     frontCover.style.opacity = frontCoverOpacity;
+
+                    frontLabel.style.opacity = frontLabelOpacity;
 
                     backCard.style.top = backCardTop;
                     
@@ -642,10 +683,11 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
         const selectedCover = document.getElementById(`${cardId}-cover`);
         const frontCover = document.getElementById(`${positions.current[0]}-cover`);
 
+        const selectedLabel = document.getElementById(`${cardId}-label`);
         const frontLabel = document.getElementById(`${positions.current[0]}-label`);
         const backLabel = document.getElementById(`${positions.current[selectedPosition === 1 ? 2 : 1]}-label`);
 
-        if (selectedCard && frontCard && backCard && selectedCover && frontCover && frontLabel && backLabel) {
+        if (selectedCard && frontCard && backCard && selectedCover && frontCover && selectedLabel && frontLabel && backLabel) {
             frontCard.animate([
                 {
                     top: `${selectedPosition === 1 ? 37.5 : 12.5}%`,
@@ -658,7 +700,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
 
             frontCover.animate([
                 {
-                    opacity: "1"
+                    opacity: `${BACK_COVER_OPACITY}`
                 }
                 ], {
                     duration: DURATION,
@@ -695,7 +737,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     frontCard.style.top = `${selectedPosition === 1 ? 37.5 : 12.5}%`;
                     frontCard.style.transform = "scale(.9)";
 
-                    frontCover.style.opacity = "1";
+                    frontCover.style.opacity = `${BACK_COVER_OPACITY}`;
 
                     frontLabel.style.top = `${selectedPosition === 1 ? 85 : 5}%`;
 
@@ -706,7 +748,9 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     selectedCard.style.top = "25%";
                     selectedCard.style.transform = "scale(1)";
 
-                    selectedCover.style.opacity = ".75";
+                    selectedCover.style.opacity = `${FRONT_COVER_OPACITY}`;
+
+                    selectedLabel.style.opacity = "0";
 
                     if (selectedPosition === 1) {
                         const first = positions.current[0];
@@ -723,7 +767,16 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
 
             selectedCover.animate([
                 {
-                    opacity: "0.75"
+                    opacity: `${FRONT_COVER_OPACITY}`
+                }
+                ], {
+                    duration: DURATION,
+                    easing: EASECLOSER
+                });
+
+            selectedLabel.animate([
+                {
+                    opacity: "0"
                 }
                 ], {
                     duration: DURATION,
