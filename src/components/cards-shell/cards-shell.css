@@ -17,6 +17,7 @@
     /* background: white; */
     /* box-shadow: 0 5px 50px 0 rgba(32,33,36,0.28); */
     background: var(--dark-mode-foreground);
+    overflow: hidden;
 }
 
 .card-shell-cover {

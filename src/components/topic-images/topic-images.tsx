@@ -200,12 +200,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         return topicImages.length > imageIndex && topicImages[idx].username === username;
     }
 
-    const loaderCssOverride = css`
-        position: absolute;
-        top: calc(50% - 25px);
-        left: calc(50% - 25px);
-    `;
-
     const onUserClick = (user: string) => (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.preventDefault();
         event.stopPropagation();
@@ -239,7 +233,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                             </>
                             const Img = (
                                 <div key={idx} className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
-                                    {isVideo(topicImg.image) ? <VideoPlayer src={topicImg.image} inView={idx===imageIndex} stylesOverride={{ maxHeight: imagesBodyRef.current?.clientHeight, maxWidth: imagesBodyRef.current?.clientWidth }}/> : 
+                                    {isVideo(topicImg.image) ? <VideoPlayer src={topicImg.image} inView={idx===imageIndex} stylesOverride={{ height: imagesBodyRef.current?.clientHeight, width: imagesBodyRef.current?.clientWidth }}/> : 
                                     <img id="image" className='image' style={{ margin: "auto"}} alt={topicTitle} src={topicImg.image}/>
                                     }
                                     {ImgStats}
@@ -360,3 +354,9 @@ export const MyUploader = (props: UploaderProps) => {
 const isVideo = (url: string) => {
     return videoFormats.has(url.split('.').pop()?.toUpperCase());
 };
+
+export const loaderCssOverride = css`
+        position: absolute;
+        top: calc(50% - 25px);
+        left: calc(50% - 25px);
+    `;
