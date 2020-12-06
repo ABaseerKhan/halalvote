@@ -117,6 +117,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                     e2Y: 0,
                     e2Milliseconds: 0
                 }
+                let correctDirection: boolean | undefined = undefined;
 
                 draggableCard.ontouchstart = (e: TouchEvent) => {
                     if (canDragCard.current) {
@@ -150,10 +151,13 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                         swipeDet.e2Y = t.screenY;
                         swipeDet.e2Milliseconds = new Date().getMilliseconds();
     
-                        const deltaX = Math.abs(swipeDet.e2X - swipeDet.sX);
-                        const deltaY = Math.abs(swipeDet.e2Y - swipeDet.sY);
+                        if (correctDirection === undefined) {
+                            const deltaX = Math.abs(swipeDet.e2X - swipeDet.sX);
+                            const deltaY = Math.abs(swipeDet.e2Y - swipeDet.sY);
+                            correctDirection = deltaY > (deltaX)/2;
+                        }
     
-                        if (deltaY > (deltaX)/2) {
+                        if (correctDirection) {
                             e.preventDefault();
                             e.stopPropagation();
                             
@@ -184,7 +188,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                 }
     
                 draggableCard.ontouchend = () => {
-                    if (canDragCard.current) {
+                    if (canDragCard.current && correctDirection) {
                         canDragCard.current = false;
 
                         const cardTop = parseFloat(draggableCard.style.top);
@@ -278,7 +282,12 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
                         } else {
                             setCards(0);
                         }
+                    } else {
+                        canSelectCard.current = true;
+                        canExpandCard.current = true;
                     }
+
+                    correctDirection = undefined;
                 }
             } else {
                 draggableCard.ontouchstart = undefined;
