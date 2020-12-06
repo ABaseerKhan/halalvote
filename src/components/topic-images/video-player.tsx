@@ -1,11 +1,13 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { ClipLoader } from 'react-spinners';
 import { ReactComponent as PlayButtonSVG } from "../../icons/play-button.svg";
+import { loaderCssOverride } from './topic-images';
 
 import './topic-images.css';
 
 export const _VideoPlayer = ({ src, inView, stylesOverride }: { src: string; inView: boolean; stylesOverride?: any }, ref: any) => {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [state, setState] = useState<{ isPlaying: boolean | undefined }>({ isPlaying: undefined });
+    const [state, setState] = useState<{ isPlaying: boolean | undefined; loading: boolean; }>({ isPlaying: undefined, loading: true });
 
     useEffect(() => {
         if (!inView) {
@@ -36,9 +38,9 @@ export const _VideoPlayer = ({ src, inView, stylesOverride }: { src: string; inV
         if (videoRef.current) {
             videoRef.current.currentTime = 0;
             try { 
-                await videoRef.current.play(); 
+                await videoRef.current.play();
             } catch(e) {
-                setState(prevState => ({ ...prevState, isPlaying: false }));
+                setState(prevState => ({ ...prevState, isPlaying: false, loading: false }));
                 console.log(e);
                 return;
             }
@@ -48,18 +50,18 @@ export const _VideoPlayer = ({ src, inView, stylesOverride }: { src: string; inV
 
     const pausePlayback = () => {
         if (videoRef.current) {
-            if (!videoRef.current.paused) {
-                videoRef.current.pause();
-                setState(prevState => ({ ...prevState, isPlaying: undefined }));
-            }
+            videoRef.current.pause();
+            setState(prevState => ({ ...prevState, isPlaying: undefined }));
         }
     };
 
     return (
         <div className="video-container" onClick={togglePlayback} >
-            <video ref={videoRef} className="video-player" style={stylesOverride ? stylesOverride : undefined} loop playsInline>
+            <video ref={videoRef} className="video-player" style={stylesOverride ? stylesOverride : undefined} onCanPlay={() => setState(prevState => ({ ...prevState, loading: false }))} loop playsInline>
                 <source src={src} type="video/mp4"/>
+                Your browser doesn't support embedded videos.
             </video>
+            {state.loading && <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/>}
             {state.isPlaying===false && <PlayButtonSVG className="play-button"/>}
         </div>
     )
