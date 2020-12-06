@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, ReactElement, useState } from 'react';
+import React, { useEffect, useRef, ReactElement, useState, useContext } from 'react';
 import './cards-shell.css';
 import { useQuery } from '../../hooks/useQuery';
 import { 
     useHistory,
 } from "react-router-dom";
 import { setCardQueryParam, setExpandedQuery } from '../../utils';
+import { muteContext } from '../app-shell';
 
 // type imports
 
@@ -33,6 +34,7 @@ interface CardsShellMobileComponentProps {
 
 export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps) => {
     const { mediaCard, commentsCard, analyticsCard } = props;
+    const { setMuted } = useContext(muteContext);
 
     const history = useHistory();
     const query = useQuery();
@@ -450,6 +452,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
 
     const expandCard = (index: number, id: string) => {
         if (index === 0 && !cardExpanded(id) && canExpandCard.current) {
+            setMuted(false);
             canSelectCard.current = false;
             canDragCard.current = false;
             canExpandCard.current = false;
@@ -503,6 +506,7 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
 
     const collapseCard = (index: number, id: string) => {
         if (index === 0 && cardExpanded(id)) {
+            setMuted(true);
             canSelectCard.current = false;
             canDragCard.current = false;
             canExpandCard.current = false;
