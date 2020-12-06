@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useContext, useState, useMemo } from 'react';
 import { Chart } from "chart.js";
-import { topicsContext, fullScreenContext, analyticsContext, AnalyticsGraph } from '../app-shell';
+import { topicsContext, analyticsContext, AnalyticsGraph } from '../app-shell';
 import { topicsConfig } from '../../https-client/config';
 import { AnalyticCounts } from '../../types';
 import { authenticatedGetDataContext } from '../app-shell';
@@ -43,7 +43,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             numIntervals = -1;
     }
 
-    const { fullScreenMode } = useContext(fullScreenContext);
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     const { analyticsState, setAnalyticsContext } = useContext(analyticsContext);
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
@@ -284,8 +283,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 <div onClick={() => setInterval(Interval.YEAR)} className={interval === Interval.YEAR ? 'interval-selector-selected' : 'interval-selector'}>1Y</div>
                 <div onClick={() => setInterval(Interval.ALL)} className={interval === Interval.ALL ? 'interval-selector-selected' : 'interval-selector'}>All</div>
             </div>
-        </div>
-        <div className={fullScreenMode ? "analytics-footer-fullscreen" : "analytics-footer"}>
         </div>
     </div>
     );
