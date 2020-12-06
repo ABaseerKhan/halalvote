@@ -4,6 +4,7 @@ import { topicsContext, fullScreenContext, analyticsContext, AnalyticsGraph } fr
 import { topicsConfig } from '../../https-client/config';
 import { AnalyticCounts } from '../../types';
 import { authenticatedGetDataContext } from '../app-shell';
+import { isMobile } from '../../utils';
 
 // type imports
 
@@ -272,7 +273,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 <div className="numeric-display-halal"><span className="numeric-display-label">Halal</span><span className="numeric-display-value">{displayNumbers.halalNumber}</span></div>
             </div>
         </div>
-        <div className={'canvas-container'}>
+        <div className={'canvas-container'} style={{marginTop: isMobile ? 'max(0px, calc(50vh - (45vw * 1.75)))' : '0'}}>
             <canvas 
                 ref={chartRef}
                 className="chart" 
@@ -284,8 +285,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 <div onClick={() => setInterval(Interval.YEAR)} className={interval === Interval.YEAR ? 'interval-selector-selected' : 'interval-selector'}>1Y</div>
                 <div onClick={() => setInterval(Interval.ALL)} className={interval === Interval.ALL ? 'interval-selector-selected' : 'interval-selector'}>All</div>
             </div>
-        </div>
-        <div className={fullScreenMode ? "analytics-footer-fullscreen" : "analytics-footer"}>
         </div>
     </div>
     );
