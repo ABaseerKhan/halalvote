@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import React, { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { ClipLoader } from 'react-spinners';
 import { ReactComponent as PlayButtonSVG } from "../../icons/play-button.svg";
 import { ReactComponent as MuteButtonSVG } from "../../icons/mute-button.svg";
@@ -6,15 +6,16 @@ import { ReactComponent as UnMuteButtonSVG } from "../../icons/unmute-button.svg
 import { loaderCssOverride } from './topic-images';
 
 import './topic-images.css';
+import { muteContext } from '../app-shell';
 
 interface VideoPlayerProps { 
     src: string; 
-    inView: boolean; 
-    muted: boolean; 
-    setMuted: React.Dispatch<React.SetStateAction<boolean>>; 
-    stylesOverride?: any 
+    inView: boolean;
+    stylesOverride?: any;
 }
-export const _VideoPlayer = ({ src, inView, muted, setMuted, stylesOverride }: VideoPlayerProps, ref: any) => {
+export const _VideoPlayer = ({ src, inView, stylesOverride }: VideoPlayerProps, ref: any) => {
+    const { muted, setMuted } = useContext(muteContext);
+
     const videoRef = useRef<HTMLVideoElement>(null);
     const [state, setState] = useState<{ isPlaying: boolean | undefined; loading: boolean; }>({ isPlaying: undefined, loading: true });
 
@@ -80,7 +81,16 @@ export const _VideoPlayer = ({ src, inView, muted, setMuted, stylesOverride }: V
 
     return (
         <div className="video-container" onClick={togglePlayback} >
-            <video loop ref={videoRef} className="video-player" style={stylesOverride ? stylesOverride : undefined} onCanPlay={() => setState(prevState => ({ ...prevState, loading: false }))} webkit-playsinline={'true'} muted={muted} playsInline>
+            <video 
+                loop 
+                ref={videoRef} 
+                className="video-player" 
+                style={stylesOverride ? stylesOverride : undefined} 
+                onCanPlay={() => setState(prevState => ({ ...prevState, loading: false }))} 
+                webkit-playsinline={'true'} 
+                muted={muted} 
+                playsInline
+            >
                 <source src={src} type="video/mp4"/>
                 Your browser doesn't support embedded videos.
             </video>

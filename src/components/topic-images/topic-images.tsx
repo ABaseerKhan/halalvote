@@ -65,7 +65,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         picture: null,
         loading: false,
     });
-    const [muted, setMuted] = useState<boolean>(true);
 
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
@@ -96,13 +95,14 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         if (imagesBodyRef.current) {
             imagesBodyRef.current.onscroll = () => {
                 clearTimeout( isScrolling );
-                isScrolling = setTimeout(function() {
+                isScrolling = setTimeout(async function() {
                     if (imagesBodyRef.current) {
                         const imgIndex = Math.floor((imagesBodyRef.current!.scrollTop+10) / imagesBodyRef.current!.clientHeight);
                         if ((imgIndex === topicImages.length - 2) && (imgIndex > imageIndex)) {
-                            fetchImages(imgIndex);
+                            await fetchImages(imgIndex);
+                        } else {
+                            setTopicImagesContext(topicTitle, topicImages, Math.min(Math.max(imgIndex, 0), topicImages.length - 1));
                         }
-                        setTopicImagesContext(topicTitle, topicImages, Math.min(Math.max(imgIndex, 0), topicImages.length - 1));
                     }
                 }, 66);
             }
@@ -234,7 +234,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                             </>
                             const Img = (
                                 <div key={idx} className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
-                                    {isVideo(topicImg.image) ? <VideoPlayer src={topicImg.image} inView={idx===imageIndex} muted={muted} setMuted={setMuted} stylesOverride={{ height: imagesBodyRef.current?.clientHeight, width: imagesBodyRef.current?.clientWidth }}/> : 
+                                    {isVideo(topicImg.image) ? <VideoPlayer src={topicImg.image} inView={idx===imageIndex} stylesOverride={{ height: imagesBodyRef.current?.clientHeight, width: imagesBodyRef.current?.clientWidth }}/> : 
                                     <img id="image" className='image' style={{ margin: "auto"}} alt={topicTitle} src={topicImg.image}/>
                                     }
                                     {ImgStats}

@@ -54,6 +54,7 @@ type AppShellState = {
   specificComment?: Comment, 
   incomingDirection: IncomingDirection, 
   fullScreenMode: boolean,
+  muted: boolean,
   analytics: AnalyticsState
 };
 export const AppShellComponent = (props: any) => {
@@ -68,6 +69,7 @@ export const AppShellComponent = (props: any) => {
     specificComment: undefined,
     incomingDirection: IncomingDirection.NONE,
     fullScreenMode: false,
+    muted: true,
     analytics: { }
   });
   
@@ -84,6 +86,7 @@ export const AppShellComponent = (props: any) => {
 
   // context-setters (they also serve as application cache)
   const setFullScreenModeContext = (fullScreenMode: boolean) => { setState(prevState => ({ ...prevState, fullScreenMode: fullScreenMode })); };
+  const setMutedContext = (mute: boolean) => { setState(prevState => ({ ...prevState, muted: mute })); };
   const setTopicsContext = (topics: Topic[], index: number) => {
     setState(prevState => ({ ...prevState, topicsState: { topics: topics, topicIndex: index }}));
   };
@@ -230,7 +233,7 @@ export const AppShellComponent = (props: any) => {
     if ((state.topicsState.topicIndex + iteration) < state.topicsState.topics.length && (state.topicsState.topicIndex + iteration) >= 0) {
       state.topicsState.topicIndex = state.topicsState.topicIndex + iteration;
       setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex);
-      setState({ ...state, incomingDirection: incomingDirection});
+      setState({ ...state, incomingDirection: incomingDirection, muted: true });
       props.history.push({
         pathname: generatePath(props.match.path, { topicTitle: state.topicsState.topics[state.topicsState.topicIndex].topicTitle.replace(/ /g,"_") }),
         search: window.location.search
@@ -239,7 +242,7 @@ export const AppShellComponent = (props: any) => {
       fetchTopics();
       state.topicsState.topicIndex = state.topicsState.topicIndex + iteration;
       setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex);
-      setState({ ...state, incomingDirection: incomingDirection});
+      setState({ ...state, incomingDirection: incomingDirection, muted: true });
     } // eslint-disable-next-line
   }, [props.match.path, props.history]);
 
@@ -335,34 +338,36 @@ export const AppShellComponent = (props: any) => {
         <authenticatedPostDataContext.Provider value={{authenticatedPostData: authenticatedPostData, setAuthenticatedPostData: setAuthenticatedPostData}}>
           <authenticatedGetDataContext.Provider value={{authenticatedGetData: authenticatedGetData, setAuthenticatedGetData: setAuthenticatedGetData}}>
             <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenModeContext: setFullScreenModeContext }}>
-              <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
-                <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
-                  <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
-                    <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
-                      <div id={topicContentId} className={topicContentId}>
-                        <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}> 
-                            {
-                              isMobile ?
-                              <CardsShellMobileComponent
-                                mediaCard={<TopicImagesComponent /> }
-                                commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                                analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                              /> :
-                              <CardsShellComponent
-                                mediaCard={<TopicImagesComponent /> }
-                                commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                                analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                              />
-                            }
+              <muteContext.Provider value={{ muted: state.muted, setMuted: setMutedContext }}>
+                <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
+                  <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
+                    <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
+                      <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
+                        <div id={topicContentId} className={topicContentId}>
+                          <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}> 
+                              {
+                                isMobile ?
+                                <CardsShellMobileComponent
+                                  mediaCard={<TopicImagesComponent /> }
+                                  commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                                  analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                                /> :
+                                <CardsShellComponent
+                                  mediaCard={<TopicImagesComponent /> }
+                                  commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                                  analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                                />
+                              }
+                          </div>
+                          {
+                            <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
+                          }
                         </div>
-                        {
-                          <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
-                        }
-                      </div>
-                    </analyticsContext.Provider>
-                  </commentsContext.Provider>
-                </topicImagesContext.Provider>
-              </topicsContext.Provider>
+                      </analyticsContext.Provider>
+                    </commentsContext.Provider>
+                  </topicImagesContext.Provider>
+                </topicsContext.Provider>
+              </muteContext.Provider>
             </fullScreenContext.Provider>
           </authenticatedGetDataContext.Provider>
         </authenticatedPostDataContext.Provider>
@@ -428,6 +433,11 @@ export const authenticatedGetDataContext = React.createContext<{authenticatedGet
 export const fullScreenContext = React.createContext<{fullScreenMode: boolean; setFullScreenModeContext: (fullScreenMode: boolean) => void}>({
   fullScreenMode: false,
   setFullScreenModeContext: (fullScreenMode) => undefined
+});
+
+export const muteContext = React.createContext<{muted: boolean; setMuted: (mute: boolean) => void}>({
+  muted: true,
+  setMuted: (mute) => undefined
 });
 
 export type TopicsState = { topics: Topic[]; topicIndex: number };
