@@ -1,10 +1,9 @@
 import React, { useRef, useEffect, useContext, useState, useMemo } from 'react';
 import { Chart } from "chart.js";
-import { topicsContext, analyticsContext, AnalyticsGraph } from '../app-shell';
+import { topicsContext, fullScreenContext, analyticsContext, AnalyticsGraph } from '../app-shell';
 import { topicsConfig } from '../../https-client/config';
 import { AnalyticCounts } from '../../types';
 import { authenticatedGetDataContext } from '../app-shell';
-import { isMobile } from '../../utils';
 
 // type imports
 
@@ -44,6 +43,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             numIntervals = -1;
     }
 
+    const { fullScreenMode } = useContext(fullScreenContext);
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     const { analyticsState, setAnalyticsContext } = useContext(analyticsContext);
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
@@ -272,7 +272,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 <div className="numeric-display-halal"><span className="numeric-display-label">Halal</span><span className="numeric-display-value">{displayNumbers.halalNumber}</span></div>
             </div>
         </div>
-        <div className={'canvas-container'} style={{marginTop: isMobile ? 'max(0px, calc(50vh - (45vw * 1.75)))' : '0'}}>
+        <div className={'canvas-container'}>
             <canvas 
                 ref={chartRef}
                 className="chart" 
