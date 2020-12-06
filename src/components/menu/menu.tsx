@@ -360,9 +360,9 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 menuButtonInterior.style.left = "0";
                 break;
             case MenuLocation.NONE:
-                menu.style.top = isMobile ? "10px" : "unset";
-                menu.style.right = isMobile ? "10px" : Math.round(window.innerWidth - rect.x - menuWidth) + "px";
-                menu.style.bottom = isMobile ? "unset" : Math.round(window.innerHeight - rect.y - menuHeight) + "px";
+                menu.style.top = "unset";
+                menu.style.right = Math.round(window.innerWidth - rect.x - menuWidth) + "px";
+                menu.style.bottom = Math.round(window.innerHeight - rect.y - menuHeight) + "px";
                 menu.style.left = "unset";
                 menuButton.style.top = "unset";
                 menuButton.style.right = "unset";
