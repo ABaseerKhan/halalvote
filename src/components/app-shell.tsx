@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageScrollerComponent } from './page-scroller/page-scroller';
 import { TopicCarouselComponent } from './topic-carousel/topic-carousel';
 import { SearchComponent } from './search/search';
@@ -130,6 +130,12 @@ export const AppShellComponent = (props: any) => {
   }, [sessiontoken]);
 
   useEffect(() => {
+    if (state.topicsState.topics.length === 1) {
+      fetchTopics();
+    }; // eslint-disable-next-line
+  }, [state.topicsState]);
+
+  useEffect(() => {
     const appShell = getAppShell();
     const topicCarousel = getTopicCarousel();
 
@@ -228,34 +234,29 @@ export const AppShellComponent = (props: any) => {
     }
   }
 
-  const animationCallback = useCallback((state: AppShellState, iteration: any, setState: any, fetchTopics: any) => () => {
+  const animationCallback = (iteration: number) => () => {
     const incomingDirection = iteration === 0 ? IncomingDirection.NONE : iteration > 0 ? IncomingDirection.RIGHT : IncomingDirection.LEFT;
-    if ((state.topicsState.topicIndex + iteration) < state.topicsState.topics.length && (state.topicsState.topicIndex + iteration) >= 0) {
-      state.topicsState.topicIndex = state.topicsState.topicIndex + iteration;
-      setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex);
-      setState({ ...state, incomingDirection: incomingDirection, muted: true });
-      props.history.push({
-        pathname: generatePath(props.match.path, { topicTitle: state.topicsState.topics[state.topicsState.topicIndex].topicTitle.replace(/ /g,"_") }),
-        search: window.location.search
-      });
-    } else if ((state.topicsState.topicIndex + iteration) === state.topicsState.topics.length) {
-      fetchTopics();
-      state.topicsState.topicIndex = state.topicsState.topicIndex + iteration;
-      setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex);
-      setState({ ...state, incomingDirection: incomingDirection, muted: true });
-    } // eslint-disable-next-line
-  }, [props.match.path, props.history]);
+
+    setState((prevState: AppShellState) => ({ ...prevState, incomingDirection: incomingDirection, muted: true }));
+
+    if ((state.topicsState.topicIndex + iteration) >= (state.topicsState.topics.length - 2)) {
+      fetchTopics(undefined, state.topicsState.topicIndex + iteration);
+    } else if ((state.topicsState.topicIndex + iteration) >= 0) {
+      setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex+iteration);
+    }
+
+  };
 
   const iterateTopic = (iteration: number) => () => {
     const cardsShellContainer = getCardsShellContainer();
 
     if (cardsShellContainer) {
       if (iteration === 1) {
-        animateNextTopic(cardsShellContainer, animationCallback(state, iteration, setState, fetchTopics));
+        animateNextTopic(cardsShellContainer, animationCallback(iteration));
       }
       if (iteration === -1) {
         if ((state.topicsState.topicIndex + iteration) >= 0) {
-          animatePrevTopic(cardsShellContainer, animationCallback(state, iteration, setState, fetchTopics));
+          animatePrevTopic(cardsShellContainer, animationCallback(iteration));
         }
       }
     }

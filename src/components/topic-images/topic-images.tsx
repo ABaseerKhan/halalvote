@@ -271,7 +271,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             </div>
         </div>
     );
-
     return !state.addTopicDisplayed ? ImageNavigator : fileUploader;
 }
 

@@ -29,7 +29,7 @@
     background-color: var(--dark-mode-middleground);
     opacity: 0;
     cursor: pointer;
-    z-index: 1;
+    z-index: 2;
 }
 
 .card-shell-cover:hover{
@@ -43,7 +43,7 @@
     width: 0;
     right: 1vw;
     font-size: 2em;
-    z-index: 2;
+    z-index: 3;
     pointer-events: none;
     writing-mode: vertical-rl;
     text-align: center;
