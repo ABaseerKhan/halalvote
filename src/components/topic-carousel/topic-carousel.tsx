@@ -54,6 +54,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
     const rightTopicNavigatorDisplayId = "right-topic-navigator-display";
 
     const searchContainerId = "search-component-container";
+    const topicTitleAndVotingSwitch = "topic-title-and-voting-switch";
 
     const searchContainerAnimationDuration = 100;
 
@@ -69,8 +70,6 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
             const navigatorDeltaMin = 100;
             const leftTopicNavigatorDisplay = document.getElementById(leftTopicNavigatorDisplayId);
             const rightTopicNavigatorDisplay = document.getElementById(rightTopicNavigatorDisplayId);
-
-            const searchContainerTopMin = 285;
             const searchContainer = document.getElementById(searchContainerId);
             
             if (leftTopicNavigatorDisplay && rightTopicNavigatorDisplay && searchContainer) {
@@ -111,26 +110,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     const deltaX = Math.abs(swipeDet.eX - swipeDet.sX);
                     const deltaY = Math.abs(swipeDet.eY - swipeDet.sY);
 
-                    if (swipeDet.sY <= 105) {
-                        // pull down search component
-                        if (correctDirection === undefined) {
-                            correctDirection = deltaY > (deltaX)/2;
-                        }
-
-                        if (correctDirection) {
-                            e.preventDefault();
-
-                            const cappedTop = Math.min(deltaY, searchContainerTopMin);
-
-                            if (swipeDet.eY > swipeDet.sY && (swipeDirection === SwipeDirection.DOWN || swipeDirection === SwipeDirection.NONE)) {
-                                swipeDirection = SwipeDirection.DOWN;
-
-                                searchContainer.style.top = (cappedTop - 285) + "px";
-                            } else {
-                                searchContainer.style.top = "-285px";
-                            }
-                        }
-                    } else {
+                    if (swipeDet.sY > 105) {
                         // navigate topics
                         if (correctDirection === undefined) {
                             correctDirection = deltaX > (deltaY)/2;
@@ -161,35 +141,8 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
 
                 const touchEndListener = (e: TouchEvent) => {
                     const deltaX = Math.abs(swipeDet.eX - swipeDet.sX);
-                    const deltaY = Math.abs(swipeDet.eY - swipeDet.sY);
 
-                    if (swipeDet.sY <= 105) {
-                        // pull down search component
-                        if (correctDirection && deltaY >= (285 / 2)) {
-                            searchContainer.animate(
-                                {
-                                    top: "0"
-                                },{
-                                    duration: searchContainerAnimationDuration * (Math.abs(deltaY - 285) / 285),
-                                    easing: 'ease-out'
-                                }
-                            ).onfinish = () => {
-                                searchContainer.style.top = "0";
-                            };
-                        } else {
-                            searchContainer.animate(
-                                {
-                                    top: "-285px"
-                                },{
-                                    duration: searchContainerAnimationDuration * (Math.abs(285 - deltaY) / 285),
-                                    easing: 'ease-out'
-                                }
-                            ).onfinish = () => {
-                                searchContainer.style.top = "-285px";
-                            };
-
-                        }
-                    } else {
+                    if (swipeDet.sY > 105) {
                         // navigate topics
                         if (correctDirection && deltaX >= navigatorDeltaMin) {
                             if (swipeDet.eX > swipeDet.sX) {
@@ -208,12 +161,6 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     
                     swipeDirection = SwipeDirection.NONE;
                     correctDirection = undefined;
-                    swipeDet = {
-                        sX: 0,
-                        sY: 0,
-                        eX: 0,
-                        eY: 0
-                    };
                 }
 
                 window.addEventListener("touchstart", touchStartListener, {passive: false});
@@ -289,7 +236,98 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 }
             }
         } // eslint-disable-next-line
-    }, [iterateTopic]);
+    }, []);
+
+    useEffect(() => {
+        if (isMobile) {
+            const searchPullDownArea = document.getElementById(topicTitleAndVotingSwitch);
+
+            const searchContainerTopMin = 285;
+            const searchContainer = document.getElementById(searchContainerId);
+            
+            if (searchPullDownArea && searchContainer) {
+                let swipeDet = {
+                    sX: 0,
+                    sY: 0,
+                    eX: 0,
+                    eY: 0
+                }
+                let swipeDirection = SwipeDirection.NONE;
+                let correctDirection: boolean | undefined = undefined;
+
+                searchPullDownArea.ontouchstart = (e: TouchEvent) => {
+                    const t = e.touches[0];
+                    swipeDet.sX = t.screenX;
+                    swipeDet.sY = t.screenY;
+                    swipeDet.eX = t.screenX;
+                    swipeDet.eY = t.screenY;
+                }
+
+                searchPullDownArea.ontouchmove = (e: TouchEvent) => {
+                    const t = e.touches[0];
+                    swipeDet.eX = t.screenX;
+                    swipeDet.eY = t.screenY;
+                    const deltaX = Math.abs(swipeDet.eX - swipeDet.sX);
+                    const deltaY = Math.abs(swipeDet.eY - swipeDet.sY);
+
+                    if (swipeDet.sY <= 105) {
+                        // pull down search component
+                        if (correctDirection === undefined) {
+                            correctDirection = deltaY > (deltaX)/2;
+                        }
+
+                        if (correctDirection) {
+                            e.preventDefault();
+
+                            const cappedTop = Math.min(deltaY, searchContainerTopMin);
+
+                            if (swipeDet.eY > swipeDet.sY && (swipeDirection === SwipeDirection.DOWN || swipeDirection === SwipeDirection.NONE)) {
+                                swipeDirection = SwipeDirection.DOWN;
+                                searchContainer.style.top = (cappedTop - 285) + "px";
+                            } else {
+                                searchContainer.style.top = "-285px";
+                            }
+                        }
+                    }
+                }
+
+                searchPullDownArea.ontouchend = (e: TouchEvent) => {
+                    const deltaY = Math.abs(swipeDet.eY - swipeDet.sY);
+
+                    if (swipeDet.sY <= 105) {
+                        // pull down search component
+                        if (correctDirection && deltaY >= (285 / 2)) {
+                            searchContainer.animate(
+                                {
+                                    top: "0"
+                                },{
+                                    duration: searchContainerAnimationDuration * (Math.abs(deltaY - 285) / 285),
+                                    easing: 'ease-out'
+                                }
+                            ).onfinish = () => {
+                                searchContainer.style.top = "0";
+                            };
+                        } else {
+                            searchContainer.animate(
+                                {
+                                    top: "-285px"
+                                },{
+                                    duration: searchContainerAnimationDuration * (Math.abs(285 - deltaY) / 285),
+                                    easing: 'ease-out'
+                                }
+                            ).onfinish = () => {
+                                searchContainer.style.top = "-285px";
+                            };
+
+                        }
+                    }
+                    
+                    swipeDirection = SwipeDirection.NONE;
+                    correctDirection = undefined;
+                }
+            }
+        } // eslint-disable-next-line
+    }, []);
 
     const closeAndSearchTopic = (topicTofetch?: string) => {
         const searchContainer = document.getElementById(searchContainerId);
@@ -321,9 +359,6 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                         <ChevronLeftSVG color={'var(--neutral-color)'} style={{position: "absolute", right: 15, top: "calc(25vh - 15px)"}}/>
                     </div>
                 }
-                <div id="topic-title" className='topic-title'>
-                    {topicTitle}
-                </div>
                 {
                     !isMobile ?
                     <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button-right'>
@@ -334,7 +369,12 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     </div>
                 }
             </div>
-            {!fullScreenMode && <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />}
+            <div id={topicTitleAndVotingSwitch}>
+                <div id="topic-title" className='topic-title'>
+                    {topicTitle}
+                </div>
+                {!fullScreenMode && <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />}
+            </div>
             { isMobile && <div id={searchContainerId} className="search-component-container"><SearchComponent onSuggestionClick={closeAndSearchTopic} /></div>}
         </div>
     );

@@ -181,6 +181,6 @@
         top: -285px;
         padding-bottom: 100px;
         background-color: var(--dark-mode-foreground);
-        border-radius: 50px;
+        border-radius: 25px;
     }
 }
