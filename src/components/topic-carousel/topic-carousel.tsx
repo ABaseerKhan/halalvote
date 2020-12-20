@@ -89,6 +89,19 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     swipeDet.sY = t.screenY;
                     swipeDet.eX = t.screenX;
                     swipeDet.eY = t.screenY;
+
+                    if (swipeDet.sY > 105) {
+                        searchContainer.animate(
+                            {
+                                top: "-285px"
+                            },{
+                                duration: searchContainerAnimationDuration,
+                                easing: 'ease-out'
+                            }
+                        ).onfinish = () => {
+                            searchContainer.style.top = "-285px";
+                        };
+                    }
                 }
 
                 const touchMoveListener = (e: TouchEvent) => {
