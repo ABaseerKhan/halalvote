@@ -352,7 +352,7 @@ export const AppShellComponent = (props: any) => {
                                   CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                                   AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
                                   TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} fetchTopics={fetchTopics} />}
-                                  Search={<SearchComponent onSuggestionClick={searchTopic} />}
+                                  searchTopic={searchTopic}
                                 /> :
                                 <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}>
                                   <CardsShellComponent

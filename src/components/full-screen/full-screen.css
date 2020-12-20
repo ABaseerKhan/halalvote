@@ -1,5 +1,5 @@
 .full-screen-container {
-    position: absolute;
+    position: fixed;
     display: block;
     height: 100%;
     width: 100%;
@@ -8,7 +8,7 @@
 }
 
 .full-screen-footer {
-    position: absolute;
+    position: fixed;
     top: calc(100% - 110px);
     height: 100%;
     display: flex;
