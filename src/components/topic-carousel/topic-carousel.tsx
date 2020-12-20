@@ -309,7 +309,7 @@ export const TopicCarouselComponentFS = (props: TopicCarouselComponentFSProps) =
                                 }
                             } else {
                                 translationVW = 15;
-                                className = "topic-title";
+                                className = "topic-title-fs";
                                 onClick = () => props.setDisplayTopicCover();
                             }
 

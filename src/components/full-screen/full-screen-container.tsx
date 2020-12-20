@@ -1,5 +1,6 @@
 import React, { ReactElement, useRef, useEffect, useContext, useState, useLayoutEffect } from 'react';
 import { topicsContext } from '../app-shell';
+import { SearchComponent } from '../search/search';
 import { FullScreenComponent } from './full-screen';
 
 import './full-screen.css';
@@ -11,10 +12,10 @@ interface FullScreenComponentProps {
     CommentsCard: ReactElement,
     AnalyticsCard: ReactElement,
     TopicCarousel: ReactElement,
-    Search: ReactElement,
+    searchTopic: (topicTofetch?: string) => void,
 };
 export const FullScreenContainer = (props: FullScreenComponentProps) => {
-    const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, Search, fetchTopics } = props;
+    const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, searchTopic, fetchTopics } = props;
 
     const [displayTopicCover, setDisplayTopicCover] = useState(false);
     const [, setDisplayTopicCarousel] = useState(true);
@@ -46,7 +47,7 @@ export const FullScreenContainer = (props: FullScreenComponentProps) => {
             startY: any,
             distX,
             distY,
-            threshold = 90, //required min distance traveled to be considered swipe
+            threshold = 45, //required min distance traveled to be considered swipe
             restraint = 90, // maximum distance allowed at the same time in perpendicular direction
             allowedTime = 500, // maximum time allowed to travel that distance
             elapsedTime,
@@ -97,7 +98,7 @@ export const FullScreenContainer = (props: FullScreenComponentProps) => {
                 // e.preventDefault()
             };
             touchsurface.addEventListener('touchstart', touchStartCB, { passive: true });
-            touchsurface.addEventListener('touchmove', touchMoveCB);
+            touchsurface.addEventListener('touchmove', touchMoveCB, { passive: true });
             touchsurface.addEventListener('touchend', touchendCB, { passive: true });
 
             return () => {
@@ -113,11 +114,21 @@ export const FullScreenContainer = (props: FullScreenComponentProps) => {
         setTimeout(() => setDisplayTopicCover(false), 600);
     }, [topicTitle]);
 
+    const onSearchResultSelected = (topicTofetch?: string) => {
+        FSFooterRef.current!.style.transform = 'translate(0, 0)';
+        if (topicCarouselRef.current) topicCarouselRef.current.style.transform = 'translate(0, 0)';
+        if (searchRef.current) searchRef.current.style.transform = 'translate(0, 0)';
+        setDisplayTopicCarousel(true);
+        if (topicTofetch) {
+            searchTopic(topicTofetch);
+        }
+    };
+
     return (
         <div ref={FSContainerRef} className="full-screen-container">
             <div ref={FSFooterRef} className={'full-screen-footer'}>
                 <div className="full-screen-footer-content">
-                    <div ref={searchRef} className={"search-container"}>{React.cloneElement(Search)}</div>
+                    <div ref={searchRef} className={"search-container"}><SearchComponent onSuggestionClick={onSearchResultSelected} /></div>
                     <div ref={topicCarouselRef} className={"topic-carousel-container"}>{React.cloneElement(TopicCarousel, { setDisplayTopicCover: () => { setDisplayTopicCover(true); setTimeout(() => setDisplayTopicCover(false), 600); }})}</div>
                 </div>
             </div>

@@ -43,6 +43,20 @@
 }
 
 .topic-title {
+    height: 50px;
+    line-height: 50px;
+    width: 100%;
+    text-align: center;
+    font-size: 2em;
+    /* color: var(--neutral-color); */
+    color: var(--dark-mode-text-color);
+    overflow-x: auto;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+    overflow-y: hidden;
+}
+
+.topic-title-fs {
     position: absolute;
     width: 68vw;
     min-height: calc(var(--max-toolbar-height-px));
@@ -177,7 +191,7 @@
         margin-left: 5px !important;
         margin-right: 5px !important;
     }
-    .topic-title {
+    .topic-title, .topic-title-fs {
         font-size: 1.5em;
         min-height: 40px;
     }
