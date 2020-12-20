@@ -227,7 +227,6 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 }
 
                 searchContainer.ontouchstart = (e: TouchEvent) => {
-                    e.preventDefault();
                     e.stopPropagation();
 
                     const t = e.touches[0];
@@ -246,7 +245,6 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 }
 
                 searchContainer.ontouchend = (e: TouchEvent) => {
-                    e.preventDefault();
                     e.stopPropagation();
 
                     const deltaY = Math.abs(swipeDet.eY - swipeDet.sY);
@@ -280,6 +278,24 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
         } // eslint-disable-next-line
     }, [iterateTopic]);
 
+    const closeAndSearchTopic = (topicTofetch?: string) => {
+        const searchContainer = document.getElementById(searchContainerId);
+
+        if (searchContainer) {
+            searchTopic(topicTofetch);
+            searchContainer.animate(
+                {
+                    top: "-285px"
+                },{
+                    duration: searchContainerAnimationDuration,
+                    easing: 'ease-out'
+                }
+            ).onfinish = () => {
+                searchContainer.style.top = "-285px";
+            };
+        }
+    }
+
     return (
         <div id={id} style={props.style} className='topic-carousel'>
             <div className="topic-navigator">
@@ -306,7 +322,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 }
             </div>
             {!fullScreenMode && <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />}
-            { isMobile && <div id={searchContainerId} className="search-component-container"><SearchComponent onSuggestionClick={searchTopic} /></div>}
+            { isMobile && <div id={searchContainerId} className="search-component-container"><SearchComponent onSuggestionClick={closeAndSearchTopic} /></div>}
         </div>
     );
 }

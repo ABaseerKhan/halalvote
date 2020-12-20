@@ -50,7 +50,6 @@ type AppShellState = {
   topicsState: TopicsState; 
   topicImages: TopicImagesState,
   comments: CommentsState,
-  scrollPosition: number, 
   specificComment?: Comment, 
   incomingDirection: IncomingDirection, 
   fullScreenMode: boolean,
@@ -65,7 +64,6 @@ export const AppShellComponent = (props: any) => {
     },
     topicImages: { },
     comments: { },
-    scrollPosition: window.innerHeight,
     specificComment: undefined,
     incomingDirection: IncomingDirection.NONE,
     fullScreenMode: false,

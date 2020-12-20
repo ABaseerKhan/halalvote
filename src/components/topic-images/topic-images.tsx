@@ -105,6 +105,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     }
                 }, 66);
             }
+
+            imagesBodyRef.current.ontouchstart = (e: TouchEvent) => {e.stopPropagation()}
+            imagesBodyRef.current.ontouchmove = (e: TouchEvent) => {e.stopPropagation()}
+            imagesBodyRef.current.ontouchend = (e: TouchEvent) => {e.stopPropagation()}
         }
     });
 
