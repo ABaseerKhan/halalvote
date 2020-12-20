@@ -111,7 +111,7 @@
     position: absolute;
     width: 100%;
     height: calc(100% - 4em);
-    top: 4em;
+    top: 2.5em;
     overflow: auto;
     scroll-behavior: smooth;
     z-index: 1;

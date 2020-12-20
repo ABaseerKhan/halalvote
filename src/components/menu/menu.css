@@ -1,6 +1,6 @@
 .menu {
     position: fixed;
-    top: 1%;
+    bottom: 10%;
     left: 2%;
     background: var(--light-neutral-color);
     color: var(--dark-mode-text-color);

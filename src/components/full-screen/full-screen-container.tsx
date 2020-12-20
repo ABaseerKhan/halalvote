@@ -80,17 +80,17 @@ export const FullScreenContainer = (props: FullScreenComponentProps) => {
                 }
                 switch(swipedir) {
                     case 'up':
-                        FSFooterRef.current!.style.transform = 'translate(0, -350px)';
-                        if (topicCarouselRef.current) topicCarouselRef.current.style.transform = 'translate(0, -110px)';
-                        if (searchRef.current) searchRef.current.style.transform = 'translate(0, -110px)';
-                        setDisplayTopicCarousel(false);
-                        e.preventDefault()
-                        break;
-                    case 'down':
                         FSFooterRef.current!.style.transform = 'translate(0, 0)';
                         if (topicCarouselRef.current) topicCarouselRef.current.style.transform = 'translate(0, 0)';
                         if (searchRef.current) searchRef.current.style.transform = 'translate(0, 0)';
                         setDisplayTopicCarousel(true);
+                        e.preventDefault()
+                        break;
+                    case 'down':
+                        FSFooterRef.current!.style.transform = 'translate(0, 350px)';
+                        if (topicCarouselRef.current) topicCarouselRef.current.style.transform = 'translate(0, var(--max-topic-carousel-height-px))';
+                        if (searchRef.current) searchRef.current.style.transform = 'translate(0, var(--max-topic-carousel-height-px))';
+                        setDisplayTopicCarousel(false);
                         e.preventDefault()
                         break;
                 };
@@ -115,6 +115,12 @@ export const FullScreenContainer = (props: FullScreenComponentProps) => {
 
     return (
         <div ref={FSContainerRef} className="full-screen-container">
+            <div ref={FSFooterRef} className={'full-screen-footer'}>
+                <div className="full-screen-footer-content">
+                    <div ref={searchRef} className={"search-container"}>{React.cloneElement(Search)}</div>
+                    <div ref={topicCarouselRef} className={"topic-carousel-container"}>{React.cloneElement(TopicCarousel, { setDisplayTopicCover: () => { setDisplayTopicCover(true); setTimeout(() => setDisplayTopicCover(false), 600); }})}</div>
+                </div>
+            </div>
             {!displayTopicCover && <FullScreenComponent
                 MediaCard={MediaCard}
                 CommentsCard={CommentsCard}
@@ -123,12 +129,6 @@ export const FullScreenContainer = (props: FullScreenComponentProps) => {
                 FSTopicIndex={topicIndex}
             />}
             <div className={"topic-cover"} style={displayTopicCover ? { opacity: 1, zIndex: 1, background: topicCoverColor } : { opacity: 0, zIndex: -1 }}><span className="topic-cover-label">{topicTitle}</span></div>
-            <div ref={FSFooterRef} className={'full-screen-footer'}>
-                <div className="full-screen-footer-content">
-                    <div ref={topicCarouselRef} className={"topic-carousel-container"}>{React.cloneElement(TopicCarousel, { setDisplayTopicCover: () => { setDisplayTopicCover(true); setTimeout(() => setDisplayTopicCover(false), 600); }})}</div>
-                    <div ref={searchRef} className={"search-container"}>{React.cloneElement(Search)}</div>
-                </div>
-            </div>
         </div>
     );
 }

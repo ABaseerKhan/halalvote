@@ -42,9 +42,9 @@ html, body {
   --site-background-color: #181818;
 
   --toolbar-height-vh: 11vh;
-  --max-toolbar-height-px: 40px;
+  --max-toolbar-height-px: 50px;
   --topic-carousel-height-vh: 13vh;
-  --max-topic-carousel-height-px: 135px;
+  --max-topic-carousel-height-px: 120px;
 
   --highlight-color: var(--light-neutral-color);
 

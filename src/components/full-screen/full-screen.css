@@ -9,29 +9,35 @@
 
 .full-screen-footer {
     position: absolute;
-    top: calc(100% - 110px);
-    height: 100%;
     display: flex;
-    border-top: 1px solid dimgray;
+    height: 100%;
+    bottom: calc(100% - var(--max-topic-carousel-height-px));
+    border-bottom: 1px solid dimgray;
     width: 100%;
     background: var(--dark-mode-background-lighter);
     transition: all 0.3s ease;
     overflow: hidden;
+    z-index: 4;
 }
 
 .full-screen-footer-content {
-    position: relative;
+    /* position: relative; */
     width: 100%;
 }
 
 .topic-carousel-container {
     transform: translate(0, 0);
     transition: all 0.3s ease-in-out;
+    position: absolute;
+    bottom: var(--max-topic-carousel-height-px);
 }
 
 .search-container {
+    width: 100%;
     transform: translate(0, 0);
     transition: all 0.3s ease-in-out;
+    position: absolute;
+    bottom: calc(var(--max-topic-carousel-height-px) * 3);
 }
 
 .full-screen-container::-webkit-scrollbar {
@@ -40,7 +46,8 @@
 
 .topic-cover {
     position: absolute;
-    height: calc(100% - 110px);
+    bottom: 0;
+    height: calc(100% - var(--max-topic-carousel-height-px));
     width: 100%;
     /* background: rgba(136, 136, 136); */
     opacity: 0;
@@ -59,7 +66,8 @@
 .full-screen-topic {
     display: flex;
     position: absolute;
-    height: calc(100% - 110px);
+    bottom: 0;
+    height: calc(100% - var(--max-topic-carousel-height-px));
     width: 100%;
     scroll-snap-align: start;
     background: var(--dark-mode-background);
@@ -89,12 +97,12 @@
 
 .feature-selector {
     position: fixed;
-    top: 0.75em;
+    top: calc(var(--max-topic-carousel-height-px) + 5px);
     width: 260px;
     left: calc(50% - 130px);
     font-size: 14px;
     font-weight: 600;
-    z-index: 4;
+    z-index: 3;
     display: flex;
 }
 
@@ -118,10 +126,10 @@
 
 .selector-underline {
     position: fixed;
-    top: 2em;
+    top: calc(var(--max-topic-carousel-height-px) + 1.75em);
     width: 3em;
     left: calc(50% - 1.5em);
-    z-index: 4;
+    z-index: 3;
     height: 3px;
     background: white;
     border-radius: 5px;
