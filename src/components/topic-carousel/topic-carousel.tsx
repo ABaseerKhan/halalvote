@@ -283,19 +283,21 @@ export const TopicCarouselComponentFS = (props: TopicCarouselComponentFSProps) =
                         {topicTitles.map((topicTitle: string, idx: number) => {
                             const distance = idx - topicIndex;
 
-                            const className: string = (idx === topicIndex) ? "topic-title" : "prev-next-topic-titles";
-
+                            let className: string;
                             let translationVW;
                             if (distance < 0) {
                                 translationVW = ((distance * 16) + 17);
+                                className = "prev-topic-titles";
                             } else if (distance > 0) {
-                                translationVW = ((distance * 16) + 68);
+                                translationVW = ((distance * 16) + 70);
+                                className = "next-topic-titles";
                             } else {
-                                translationVW = 16;
+                                translationVW = 15;
+                                className = "topic-title";
                             }
 
                             return <div ref={(el) => topicTitleRefs.current.push(el)} className={className} style={{ transform: `translate(${translationVW}vw, 0)` }} >
-                                {topicTitles[idx]}
+                                <span>{topicTitles[idx]}</span>
                             </div>
                         })}
             </div>
