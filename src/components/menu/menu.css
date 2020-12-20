@@ -57,5 +57,7 @@ li.menu-item:hover {
 
 @media only screen and (max-width: 600px) {
     .menu {
+        bottom: 0;
+        right: 0;
     }
 }
