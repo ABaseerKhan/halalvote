@@ -22,22 +22,14 @@
     border-radius: 5em;
 }
 
-.topic-label {
-    display: block;
-    font-size: 0.8em;
-    font-weight: 600;
-    /* color: gray; */
-    color: var(--dark-mode-secondary-text-color);
-    font-style: italic;
-    text-align: center;
-}
 .topic-title::-webkit-scrollbar {
     display: none;
 }
 
 .topic-title {
-    min-height: calc(var(--max-toolbar-height-px));
-    min-width: 100%;
+    height: 50px;
+    line-height: 50px;
+    width: 100%;
     text-align: center;
     font-size: 2em;
     /* color: var(--neutral-color); */
