@@ -16,7 +16,6 @@ import { authenticatedPostDataContext } from '../app-shell';
 import { authenticatedGetDataContext } from '../app-shell';
 import { useQuery } from '../../hooks/useQuery';
 import { topicImagesContext, topicsContext } from '../app-shell';
-import { frozenContext } from '../app-shell';
 import Dropzone, { IFileWithMeta, IUploadParams, StatusValue } from 'react-dropzone-uploader'
 import { v4 as uuidv4 } from 'uuid';
 import { VideoPlayer } from './video-player';
@@ -58,8 +57,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const topicImages = topicImagesState[topicTitle]?.images || [];
     const imageIndex = topicImagesState[topicTitle]?.index || 0;
 
-    const {isFrozen} = useContext(frozenContext);
-
     const { authenticatedPostData } = useContext(authenticatedPostDataContext);
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
 
@@ -99,7 +96,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             imagesBodyRef.current.onscroll = () => {
                 clearTimeout( isScrolling );
                 isScrolling = setTimeout(async function() {
-                    if (imagesBodyRef.current && !isFrozen) {
+                    if (imagesBodyRef.current) {
                         const imgIndex = Math.floor((imagesBodyRef.current!.scrollTop+10) / imagesBodyRef.current!.clientHeight);
                         if ((imgIndex >= topicImages.length - 2) && (imgIndex > imageIndex)) {
                             await fetchImages(imgIndex);
@@ -111,15 +108,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             }
         }
     });
-
-    useEffect(() => {
-        if (imagesBodyRef.current && !isFrozen) {
-            const imgIndex = Math.floor((imagesBodyRef.current!.scrollTop+10) / imagesBodyRef.current!.clientHeight);
-            if (imgIndex !== imageIndex) {
-                imagesBodyRef.current?.scroll(0, (imageIndex * imagesBodyRef.current.clientHeight));
-            }
-        } // eslint-disable-next-line
-    }, [isFrozen]);
 
     const fetchImages = async (newIndex?: number) => {
         setState(prevState => ({ ...prevState, topicImages: [], currentIndex: 0, picture: null, loading: true }));
@@ -259,14 +247,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                         <div className='no-image-text'>No images to show</div>
                 }
-                {topicImages.length > imageIndex + 1 && <div className={"more-images-below"} style={{ position: moreImagesIndicatorPosition }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) + 500)) }>
-                    <DownArrowSVG />
-                </div>}
             </div>
-            <div className={"canvas-footer"}>
-                <div className={!state.addTopicDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
-                    <AddButtonSVG />
-                </div>
+            <div className={!state.addTopicDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
+                <AddButtonSVG />
             </div>
         </div>
     );

@@ -5,7 +5,6 @@ import {
 } from "react-router-dom";
 import { setCardQueryParam } from '../../utils';
 import { muteContext } from '../app-shell';
-import { frozenContext } from '../app-shell';
 
 // type imports
 
@@ -36,7 +35,6 @@ interface CardsShellMobileComponentProps {
 export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps) => {
     const { mediaCard, commentsCard, analyticsCard } = props;
     const { setMuted } = useContext(muteContext);
-    const {setFrozen} = useContext(frozenContext);
 
     const history = useHistory();
     const query = useQuery();
@@ -93,7 +91,6 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
     const selectCard = (selectedIndex: number) => {
         if (canSwitchCards.current) {
             canSwitchCards.current = false;
-            setFrozen(true);
             if (positions.current[0] === mediaCardId) {
                 setMuted(true);
             }
@@ -302,10 +299,6 @@ export const CardsShellMobileComponent = (props: CardsShellMobileComponentProps)
             ).onfinish = () => {
                 selectedCardCover.style.opacity = "0";
                 selectedCardCover.style.display = "none";
-
-                if (selectedCardId === mediaCardId) {
-                    setFrozen(false);
-                }
             };
 
             selectedCardLabel.animate([

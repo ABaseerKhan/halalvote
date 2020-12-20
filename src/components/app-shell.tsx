@@ -55,7 +55,6 @@ type AppShellState = {
   incomingDirection: IncomingDirection, 
   fullScreenMode: boolean,
   muted: boolean,
-  isFrozen: boolean,
   analytics: AnalyticsState
 };
 export const AppShellComponent = (props: any) => {
@@ -71,7 +70,6 @@ export const AppShellComponent = (props: any) => {
     incomingDirection: IncomingDirection.NONE,
     fullScreenMode: false,
     muted: true,
-    isFrozen: false,
     analytics: { }
   });
   
@@ -89,7 +87,6 @@ export const AppShellComponent = (props: any) => {
   // context-setters (they also serve as application cache)
   const setFullScreenModeContext = (fullScreenMode: boolean) => { setState(prevState => ({ ...prevState, fullScreenMode: fullScreenMode })); };
   const setMutedContext = (mute: boolean) => { setState(prevState => ({ ...prevState, muted: mute })); };
-  const setFrozenContext = (isFrozen: boolean) => { setState(prevState => ({ ...prevState, isFrozen: isFrozen })); };
   const setTopicsContext = (topics: Topic[], index: number) => {
     setState(prevState => ({ ...prevState, topicsState: { topics: topics, topicIndex: index }}));
   };
@@ -343,36 +340,34 @@ export const AppShellComponent = (props: any) => {
           <authenticatedGetDataContext.Provider value={{authenticatedGetData: authenticatedGetData, setAuthenticatedGetData: setAuthenticatedGetData}}>
             <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenModeContext: setFullScreenModeContext }}>
               <muteContext.Provider value={{ muted: state.muted, setMuted: setMutedContext }}>
-                <frozenContext.Provider value={{ isFrozen: state.isFrozen, setFrozen: setFrozenContext }}>
-                  <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
-                    <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
-                      <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
-                        <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
-                          <div id={topicContentId} className={topicContentId}>
-                            <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}> 
-                                {
-                                  isMobile ?
-                                  <CardsShellMobileComponent
-                                    mediaCard={<TopicImagesComponent /> }
-                                    commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                                    analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                                  /> :
-                                  <CardsShellComponent
-                                    mediaCard={<TopicImagesComponent /> }
-                                    commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                                    analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                                  />
-                                }
-                            </div>
-                            {
-                              <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
-                            }
+                <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
+                  <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
+                    <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
+                      <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
+                        <div id={topicContentId} className={topicContentId}>
+                          <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}> 
+                              {
+                                isMobile ?
+                                <CardsShellMobileComponent
+                                  mediaCard={<TopicImagesComponent /> }
+                                  commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                                  analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                                /> :
+                                <CardsShellComponent
+                                  mediaCard={<TopicImagesComponent /> }
+                                  commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                                  analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                                />
+                              }
                           </div>
-                        </analyticsContext.Provider>
-                      </commentsContext.Provider>
-                    </topicImagesContext.Provider>
-                  </topicsContext.Provider>
-                </frozenContext.Provider>
+                          {
+                            <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
+                          }
+                        </div>
+                      </analyticsContext.Provider>
+                    </commentsContext.Provider>
+                  </topicImagesContext.Provider>
+                </topicsContext.Provider>
               </muteContext.Provider>
             </fullScreenContext.Provider>
           </authenticatedGetDataContext.Provider>
@@ -444,11 +439,6 @@ export const fullScreenContext = React.createContext<{fullScreenMode: boolean; s
 export const muteContext = React.createContext<{muted: boolean; setMuted: (mute: boolean) => void}>({
   muted: true,
   setMuted: (mute) => undefined
-});
-
-export const frozenContext = React.createContext<{isFrozen: boolean; setFrozen: (isFrozen: boolean) => void}>({
-  isFrozen: false,
-  setFrozen: (isFrozen) => undefined
 });
 
 export type TopicsState = { topics: Topic[]; topicIndex: number };
