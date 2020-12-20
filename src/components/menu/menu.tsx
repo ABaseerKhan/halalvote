@@ -121,7 +121,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
             }
         }
 
-        history.push({
+        history.replace({
             search: "?" + query.toString()
         });
     }, [history, query]);

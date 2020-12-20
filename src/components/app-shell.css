@@ -21,7 +21,7 @@
 }
 
 .cards-shell-container {
-  height: 100vh;
+  height: 100%;
   width: 100%;
   overflow: hidden;
   opacity: 0;
@@ -32,4 +32,14 @@
   height: 100%;
   width: 100%;
   z-index: 4;
+}
+
+@media only screen and (max-width: 600px) {
+  .app-shell {
+    scroll-snap-type: unset;
+  }
+
+  .topic-content {
+    scroll-snap-align: unset;
+  }
 }

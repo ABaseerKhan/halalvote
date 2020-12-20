@@ -81,7 +81,6 @@ export const AppShellComponent = (props: any) => {
   const { username, sessiontoken } = cookies;
 
   const query = useQuery();
-  const isExpanded = query.get("expanded") && query.get("expanded") === "true";
   const history = useHistory();
 
   // context-setters (they also serve as application cache)
@@ -158,9 +157,9 @@ export const AppShellComponent = (props: any) => {
     const { topics, topicIndex } = state.topicsState;
     if (topics[topicIndex]) {
       if (props.match.path === "/") {
-        props.history.push(`${topics[topicIndex].topicTitle.replace(/ /g,"_")}`);
+        props.history.replace(`${topics[topicIndex].topicTitle.replace(/ /g,"_")}`);
       } else {
-        props.history.push({
+        props.history.replace({
           pathname: generatePath(props.match.path, { topicTitle: topics[topicIndex].topicTitle.replace(/ /g,"_") }),
           search: window.location.search
         });
@@ -170,19 +169,19 @@ export const AppShellComponent = (props: any) => {
     const appShell = getAppShell();
     const cardsShellContainer = getCardsShellContainer();
 
-    if (appShell && appShell.scrollTop > 0 && cardsShellContainer && state.incomingDirection !== IncomingDirection.NONE) {
-        cardsShellContainer.style.transform = state.incomingDirection === IncomingDirection.RIGHT ? "translate(100%)" : "translate(-100%)";
+    if (appShell && cardsShellContainer && state.incomingDirection !== IncomingDirection.NONE) {
+        cardsShellContainer.style.marginLeft = state.incomingDirection === IncomingDirection.RIGHT ? "100%" : "-100%";
         cardsShellContainer.style.opacity = "1.0";
         cardsShellContainer.animate([
           {
-            transform: 'translate(0)'
+            marginLeft: '0',
           }
         ], {
           duration: prevNextTopicAnimationDuration,
           easing: 'ease-out',
           fill: "forwards"
         }).onfinish = () => {
-          cardsShellContainer.style.transform = "translate(0)";
+          cardsShellContainer.style.marginLeft = "0";
           setState(prevState => ({ ...prevState, incomingDirection: IncomingDirection.NONE }));
         }
     } else if (cardsShellContainer && state.incomingDirection !== IncomingDirection.NONE) {
@@ -300,7 +299,7 @@ export const AppShellComponent = (props: any) => {
     } else {
         query.append('loginScreen', 'login');
     };
-    history.push({
+    history.replace({
       search: "?" + query.toString()
     });
   }
@@ -335,7 +334,7 @@ export const AppShellComponent = (props: any) => {
 
   return (
       <div id={appShellId} className={appShellId} style={{ overflowY: state.fullScreenMode ? 'hidden' : 'scroll' }} >
-        <SearchComponent onSuggestionClick={searchTopic} />
+        {!isMobile && <SearchComponent onSuggestionClick={searchTopic} />}
         <authenticatedPostDataContext.Provider value={{authenticatedPostData: authenticatedPostData, setAuthenticatedPostData: setAuthenticatedPostData}}>
           <authenticatedGetDataContext.Provider value={{authenticatedGetData: authenticatedGetData, setAuthenticatedGetData: setAuthenticatedGetData}}>
             <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenModeContext: setFullScreenModeContext }}>
@@ -361,7 +360,7 @@ export const AppShellComponent = (props: any) => {
                               }
                           </div>
                           {
-                            <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
+                            <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} searchTopic={searchTopic}/>
                           }
                         </div>
                       </analyticsContext.Provider>
@@ -373,7 +372,7 @@ export const AppShellComponent = (props: any) => {
           </authenticatedGetDataContext.Provider>
         </authenticatedPostDataContext.Provider>
         <div className="fixed-content">
-          {!isExpanded && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
+          {!isMobile && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
           <MenuComponent fetchTopics={searchTopic} showSpecificComment={showSpecificComment} />
         </div>
       </div>
@@ -383,10 +382,10 @@ export const AppShellComponent = (props: any) => {
 const prevNextTopicAnimationDuration = 300;
 const animateNextTopic = (cardsShellContainer: HTMLElement | null, callback: () => void) => {
   if(cardsShellContainer) {
-    cardsShellContainer.style.transform = "translate(0)";
+    cardsShellContainer.style.marginLeft = "0";
     cardsShellContainer.animate([
       {
-        transform: 'translate(-100%)'
+        marginLeft: '-100%'
       }
     ], {
       duration: prevNextTopicAnimationDuration,
@@ -400,10 +399,10 @@ const animateNextTopic = (cardsShellContainer: HTMLElement | null, callback: () 
 
 const animatePrevTopic = (cardsShellContainer: any, callback: () => void) => {
   if(cardsShellContainer) {
-    cardsShellContainer.style.transform = "translate(0)";
+    cardsShellContainer.style.marginLeft = "0";
     cardsShellContainer.animate([
       {
-        transform: 'translate(100%)'
+        marginLeft: '100%'
       }
     ], {
       duration: prevNextTopicAnimationDuration,

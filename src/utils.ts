@@ -144,7 +144,7 @@ export const setCardQueryParam = (history: any, query: any, cardId: string) => {
     } else {
         query.append('card', cardId);
     };
-    history.push({
+    history.replace({
         search: "?" + query.toString()
     });
 };

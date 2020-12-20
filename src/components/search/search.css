@@ -3,14 +3,14 @@
     height: 100%;
     width: 100%;
     text-align: center;
-    padding-top: min(var(--toolbar-height-vh), var(--max-toolbar-height-px));
-    padding-bottom: 0px;
+    padding-top: 25px;
     scroll-snap-align: start;
 }
 
 @media only screen and (max-width: 600px) {
     .search-bar {
-        top: 10vh !important;
+        position: absolute;
+        top: 0 !important;
         width: 90% !important;
     }
 }
@@ -112,3 +112,9 @@
     position: absolute;
     padding: 1.55em 1.2em;
 }
+
+@media only screen and (max-width: 600px) {
+    .search-page {
+        scroll-snap-align: unset;
+    }
+  }

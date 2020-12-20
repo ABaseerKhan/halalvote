@@ -124,7 +124,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
             } else {
                 query.append('loginScreen', loginScreen);
             };
-            history.push({
+            history.replace({
                 search: "?" + query.toString()
             });
         }

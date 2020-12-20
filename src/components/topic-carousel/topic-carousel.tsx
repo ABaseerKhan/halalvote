@@ -9,8 +9,11 @@ import { topicsContext, fullScreenContext } from '../app-shell';
 
 // styles
 import './topic-carousel.css';
+import { SearchComponent } from '../search/search';
 
 enum SwipeDirection {
+    UP,
+    DOWN,
     LEFT,
     RIGHT,
     NONE
@@ -19,10 +22,11 @@ enum SwipeDirection {
 interface TopicCarouselComponentProps {
     id: string,
     iterateTopic: any,
-    style?: any;
+    style?: any,
+    searchTopic: (topicTofetch?: string) => void
 };
 export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
-    const { id, iterateTopic } = props;
+    const { id, iterateTopic, searchTopic } = props;
 
     const { fullScreenMode } = useContext(fullScreenContext);
 
@@ -49,6 +53,10 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
     const leftTopicNavigatorDisplayId = "left-topic-navigator-display";
     const rightTopicNavigatorDisplayId = "right-topic-navigator-display";
 
+    const searchContainerId = "search-component-container";
+
+    const searchContainerAnimationDuration = 100;
+
     useEffect(() => {
         if (!isMobile) {
             const leftCarouselButton = document.getElementById(leftCarouselButtonId);
@@ -58,12 +66,14 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 rightCarouselButton.classList.add("carousel-button-computer");
             }
         } else {
-            const deltaMin = 100;
-            const itemCarousel = document.getElementById(id);
+            const navigatorDeltaMin = 100;
             const leftTopicNavigatorDisplay = document.getElementById(leftTopicNavigatorDisplayId);
             const rightTopicNavigatorDisplay = document.getElementById(rightTopicNavigatorDisplayId);
+
+            const searchContainerTopMin = 285;
+            const searchContainer = document.getElementById(searchContainerId);
             
-            if (itemCarousel && leftTopicNavigatorDisplay && rightTopicNavigatorDisplay) {
+            if (leftTopicNavigatorDisplay && rightTopicNavigatorDisplay && searchContainer) {
                 let swipeDet = {
                     sX: 0,
                     sY: 0,
@@ -74,7 +84,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 let correctDirection: boolean | undefined = undefined;
 
                 const touchStartListener = (e: TouchEvent) => {
-                    const t = e.touches[0]
+                    const t = e.touches[0];
                     swipeDet.sX = t.screenX;
                     swipeDet.sY = t.screenY;
                     swipeDet.eX = t.screenX;
@@ -82,60 +92,115 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 }
 
                 const touchMoveListener = (e: TouchEvent) => {
-                    const t = e.touches[0]
+                    const t = e.touches[0];
                     swipeDet.eX = t.screenX;
                     swipeDet.eY = t.screenY;
                     const deltaX = Math.abs(swipeDet.eX - swipeDet.sX);
                     const deltaY = Math.abs(swipeDet.eY - swipeDet.sY);
 
-                    if (correctDirection === undefined) {
-                        correctDirection = deltaX > (deltaY)/2;
-                    }
+                    if (swipeDet.sY <= 105) {
+                        // pull down search component
+                        if (correctDirection === undefined) {
+                            correctDirection = deltaY > (deltaX)/2;
+                        }
 
-                    if (correctDirection) {
-                        e.preventDefault();
+                        if (correctDirection) {
+                            e.preventDefault();
 
-                        const cappedDelta = Math.min(deltaX, deltaMin);
+                            const cappedTop = Math.min(deltaY, searchContainerTopMin);
 
-                        if (swipeDet.eX > swipeDet.sX && (swipeDirection === SwipeDirection.LEFT || swipeDirection === SwipeDirection.NONE)) {
-                            swipeDirection = SwipeDirection.LEFT;
-                            leftTopicNavigatorDisplay.style.left = -(cappedDelta/2) + "px";
-                            leftTopicNavigatorDisplay.style.width = cappedDelta + "px";
-                        } else if (swipeDet.eX < swipeDet.sX && (swipeDirection === SwipeDirection.RIGHT || swipeDirection === SwipeDirection.NONE)) {
-                            swipeDirection = SwipeDirection.RIGHT;
-                            rightTopicNavigatorDisplay.style.right = -(cappedDelta/2) + "px";
-                            rightTopicNavigatorDisplay.style.width = cappedDelta + "px";
+                            if (swipeDet.eY > swipeDet.sY && (swipeDirection === SwipeDirection.DOWN || swipeDirection === SwipeDirection.NONE)) {
+                                swipeDirection = SwipeDirection.DOWN;
+
+                                searchContainer.style.top = (cappedTop - 285) + "px";
+                            } else {
+                                searchContainer.style.top = "-285px";
+                            }
+                        }
+                    } else {
+                        // navigate topics
+                        if (correctDirection === undefined) {
+                            correctDirection = deltaX > (deltaY)/2;
+                        }
+    
+                        if (correctDirection) {
+                            e.preventDefault();
+    
+                            const cappedDelta = Math.min(deltaX, navigatorDeltaMin);
+    
+                            if (swipeDet.eX > swipeDet.sX && (swipeDirection === SwipeDirection.LEFT || swipeDirection === SwipeDirection.NONE)) {
+                                swipeDirection = SwipeDirection.LEFT;
+                                leftTopicNavigatorDisplay.style.left = -(cappedDelta/2) + "px";
+                                leftTopicNavigatorDisplay.style.width = cappedDelta + "px";
+                            } else if (swipeDet.eX < swipeDet.sX && (swipeDirection === SwipeDirection.RIGHT || swipeDirection === SwipeDirection.NONE)) {
+                                swipeDirection = SwipeDirection.RIGHT;
+                                rightTopicNavigatorDisplay.style.right = -(cappedDelta/2) + "px";
+                                rightTopicNavigatorDisplay.style.width = cappedDelta + "px";
+                            } else {
+                                leftTopicNavigatorDisplay.style.left = "0";
+                                leftTopicNavigatorDisplay.style.width = "0px";
+                                rightTopicNavigatorDisplay.style.right = "0";
+                                rightTopicNavigatorDisplay.style.width = "0px";
+                            }
                         }
                     }
                 }
 
                 const touchEndListener = (e: TouchEvent) => {
                     const deltaX = Math.abs(swipeDet.eX - swipeDet.sX);
+                    const deltaY = Math.abs(swipeDet.eY - swipeDet.sY);
 
-                    if (correctDirection && deltaX >= deltaMin) {
-                        if (swipeDet.eX > swipeDet.sX) {
-                            e.preventDefault();
-                            iterateTopic(-1)();
-                        } else if (swipeDet.eX < swipeDet.sX) {
-                            e.preventDefault();
-                            iterateTopic(1)();
+                    if (swipeDet.sY <= 105) {
+                        // pull down search component
+                        if (correctDirection && deltaY >= (285 / 2)) {
+                            searchContainer.animate(
+                                {
+                                    top: "0"
+                                },{
+                                    duration: searchContainerAnimationDuration * (Math.abs(deltaY - 285) / 285),
+                                    easing: 'ease-out'
+                                }
+                            ).onfinish = () => {
+                                searchContainer.style.top = "0";
+                            };
+                        } else {
+                            searchContainer.animate(
+                                {
+                                    top: "-285px"
+                                },{
+                                    duration: searchContainerAnimationDuration * (Math.abs(285 - deltaY) / 285),
+                                    easing: 'ease-out'
+                                }
+                            ).onfinish = () => {
+                                searchContainer.style.top = "-285px";
+                            };
+
                         }
+                    } else {
+                        // navigate topics
+                        if (correctDirection && deltaX >= navigatorDeltaMin) {
+                            if (swipeDet.eX > swipeDet.sX) {
+                                e.preventDefault();
+                                iterateTopic(-1)();
+                            } else if (swipeDet.eX < swipeDet.sX) {
+                                e.preventDefault();
+                                iterateTopic(1)();
+                            }
+                        }
+                        leftTopicNavigatorDisplay.style.left = "0";
+                        leftTopicNavigatorDisplay.style.width = "0px";
+                        rightTopicNavigatorDisplay.style.right = "0";
+                        rightTopicNavigatorDisplay.style.width = "0px";
                     }
-
+                    
+                    swipeDirection = SwipeDirection.NONE;
+                    correctDirection = undefined;
                     swipeDet = {
                         sX: 0,
                         sY: 0,
                         eX: 0,
                         eY: 0
-                    }
-                    swipeDirection = SwipeDirection.NONE;
-                    
-                    leftTopicNavigatorDisplay.style.left = "0";
-                    leftTopicNavigatorDisplay.style.width = "0px";
-                    rightTopicNavigatorDisplay.style.right = "0";
-                    rightTopicNavigatorDisplay.style.width = "0px";
-
-                    correctDirection = undefined;
+                    };
                 }
 
                 window.addEventListener("touchstart", touchStartListener, {passive: false});
@@ -146,6 +211,70 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                     window.removeEventListener("touchstart", touchStartListener);
                     window.removeEventListener("touchmove", touchMoveListener);
                     window.removeEventListener("touchend", touchEndListener);
+                }
+            }
+        } // eslint-disable-next-line
+    }, [iterateTopic]);
+
+    useEffect(() => {
+        if (isMobile) {
+            const searchContainer = document.getElementById(searchContainerId);
+
+            if (searchContainer) {
+                let swipeDet = {
+                    sY: 0,
+                    eY: 0
+                }
+
+                searchContainer.ontouchstart = (e: TouchEvent) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const t = e.touches[0];
+                    swipeDet.sY = t.screenY;
+                    swipeDet.eY = t.screenY;
+                }
+
+                searchContainer.ontouchmove = (e: TouchEvent) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const t = e.touches[0];
+                    swipeDet.eY = t.screenY;
+
+                    searchContainer.style.top = Math.min(0, Math.max(-285, swipeDet.eY - swipeDet.sY)) + "px";
+                }
+
+                searchContainer.ontouchend = (e: TouchEvent) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const deltaY = Math.abs(swipeDet.eY - swipeDet.sY);
+
+                    if (deltaY <= (285 / 2)) {
+                        searchContainer.animate(
+                            {
+                                top: "0"
+                            },{
+                                duration: searchContainerAnimationDuration * (deltaY / 285),
+                                easing: 'ease-out'
+                            }
+                        ).onfinish = () => {
+                            searchContainer.style.top = "0";
+                        };
+                    } else {
+                        searchContainer.animate(
+                            {
+                                top: "-285px"
+                            },{
+                                duration: searchContainerAnimationDuration * (Math.abs(deltaY - 285) / 285),
+                                easing: 'ease-out'
+                            }
+                        ).onfinish = () => {
+                            searchContainer.style.top = "-285px";
+                        };
+
+                    }
                 }
             }
         } // eslint-disable-next-line
@@ -177,6 +306,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                 }
             </div>
             {!fullScreenMode && <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />}
+            { isMobile && <div id={searchContainerId} className="search-component-container"><SearchComponent onSuggestionClick={searchTopic} /></div>}
         </div>
     );
 }

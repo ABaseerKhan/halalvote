@@ -140,7 +140,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         event.preventDefault();
         event.stopPropagation();
         query.set('userProfile', comment.username);
-        history.push({
+        history.replace({
             search: "?" + query.toString()
         });
     };
