@@ -148,14 +148,3 @@ export const setCardQueryParam = (history: any, query: any, cardId: string) => {
         search: "?" + query.toString()
     });
 };
-
-export const setExpandedQuery = (history: any, query: any, expanded: boolean) => {
-    if (query.has('expanded')) {
-        query.set('expanded', expanded);
-    } else {
-        query.append('expanded', expanded);
-    };
-    history.push({
-        search: "?" + query.toString()
-    });
-}
