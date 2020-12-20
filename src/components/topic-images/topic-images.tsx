@@ -4,6 +4,7 @@ import { topicsConfig } from '../../https-client/config';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
+import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
 import { ReactComponent as LeftArrowSVG } from "../../icons/left-arrow.svg";
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -210,6 +211,8 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         });
     };
 
+    const moreImagesIndicatorPosition = "absolute";
+
     const ImageNavigator = (
         <div style={{ height: '100%', width: '100%' }}>
             <div id="images-body" ref={imagesBodyRef} className={"images-body"}>
@@ -244,6 +247,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                         <div className='no-image-text'>No images to show</div>
                 }
+                {topicImages.length > imageIndex + 1 && <div className={"more-images-below"} style={{ position: moreImagesIndicatorPosition }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) + 500)) }>
+                    <DownArrowSVG />
+                </div>}
             </div>
             <div className={!state.addTopicDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
                 <AddButtonSVG />
