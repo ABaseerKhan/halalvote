@@ -25,10 +25,9 @@ const underlineTravelDistance = 85;
 var isScrolling: any;
 
 export const FullScreenComponent = (props: FullScreenComponentProps) => {
-    const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, FSTopicIndex } = props;
+    const { MediaCard, CommentsCard, AnalyticsCard, FSTopicIndex } = props;
 
     const FSTopicRef = useRef<HTMLDivElement>(null);
-    const topicCarouselRef = useRef<HTMLDivElement>(null);
 
     const history = useHistory();
     const query = useQuery();
@@ -66,20 +65,22 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
               setUnderlineTranslationPx(underlineTravelDistance * ((FSTopicRef.current!.scrollLeft - FSTopicRef.current!.clientWidth) / FSTopicRef.current!.clientWidth));
               clearTimeout(isScrolling);
               isScrolling = setTimeout(function() {
-                const index = Math.floor((FSTopicRef.current!.scrollLeft + (FSTopicRef.current!.clientWidth/2)) / FSTopicRef.current!.clientWidth);
-                switch(index) {
-                  case 0:
-                    setCardQueryParam(history, query, commentsCardId.toLowerCase());
-                    break;
-                  case 1:
-                    setCardQueryParam(history, query, mediaCardId.toLowerCase());
-                    break;
-                  case 2:
-                    setCardQueryParam(history, query, analyticsCardId.toLowerCase())
-                    break;
-                  default:
-                    setCardQueryParam(history, query, mediaCardId.toLowerCase());
-                };
+                if (FSTopicRef.current) {
+                  const index = Math.floor((FSTopicRef.current!.scrollLeft + (FSTopicRef.current!.clientWidth/2)) / FSTopicRef.current!.clientWidth);
+                  switch(index) {
+                    case 0:
+                      setCardQueryParam(history, query, commentsCardId.toLowerCase());
+                      break;
+                    case 1:
+                      setCardQueryParam(history, query, mediaCardId.toLowerCase());
+                      break;
+                    case 2:
+                      setCardQueryParam(history, query, analyticsCardId.toLowerCase())
+                      break;
+                    default:
+                      setCardQueryParam(history, query, mediaCardId.toLowerCase());
+                  };
+                }
               }, 66);
             }
           }
@@ -90,9 +91,6 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
         <div className="full-screen-topic" ref={FSTopicRef} >
           {(FSTopicIndex === topicIndex) && (
             <Fragment>
-              <div className={'topic-carousel-container-fs-fixed'} ref={topicCarouselRef}>
-                {React.cloneElement(TopicCarousel, { topicIndexOverride: FSTopicIndex })}
-              </div>
               <div className={"feature-selector"}>
                 <span onClick={() => setCardQueryParam(history, query, commentsCardId.toLowerCase())} className={(underlineTranslationPx < -42) ? "feature-selector-selected" : "feature-selector-unselected"}>Arguments</span>
                 <span onClick={() => setCardQueryParam(history, query, mediaCardId.toLowerCase())} className={(underlineTranslationPx > -42 && underlineTranslationPx < 42) ? "feature-selector-selected" : "feature-selector-unselected"}>Canvas</span>
@@ -102,10 +100,10 @@ export const FullScreenComponent = (props: FullScreenComponentProps) => {
             </Fragment>
           )}
           <div className={"fs-1"} style={{ transform: 'translate(0, 0)' }}>
-            {React.cloneElement(CommentsCard, { topicIndexOverride: FSTopicIndex })}
+            {React.cloneElement(CommentsCard)}
           </div>
           <div className={"fs-2"} style={{ transform: 'translate(100%, 0)' }} >
-            {React.cloneElement(MediaCard, { topicIndexOverride: FSTopicIndex })}
+            {React.cloneElement(MediaCard)}
           </div>
           <div className={"fs-3"} style={{ transform: 'translate(200%, 0)' }}>
             {AnalyticsCard}

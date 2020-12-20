@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageScrollerComponent } from './page-scroller/page-scroller';
-import { TopicCarouselComponent } from './topic-carousel/topic-carousel';
+import { TopicCarouselComponent, TopicCarouselComponentFS } from './topic-carousel/topic-carousel';
 import { SearchComponent } from './search/search';
 import { AnalyticsCardComponent } from './analytics-card/analytics-card';
 import { MenuComponent } from './menu/menu';
@@ -18,12 +18,12 @@ import {
 } from "react-router-dom";
 import { useQuery } from '../hooks/useQuery';
 import { TopicImagesComponent } from './topic-images/topic-images';
-import { CardsShellMobileComponent } from './cards-shell/cards-shell-mobile';
 
 // type imports
 
 // style imports
 import './app-shell.css';
+import { FullScreenContainer } from './full-screen/full-screen-container';
 
 enum IncomingDirection {
   LEFT,
@@ -81,7 +81,6 @@ export const AppShellComponent = (props: any) => {
   const { username, sessiontoken } = cookies;
 
   const query = useQuery();
-  const isExpanded = query.get("expanded") && query.get("expanded") === "true";
   const history = useHistory();
 
   // context-setters (they also serve as application cache)
@@ -334,8 +333,8 @@ export const AppShellComponent = (props: any) => {
   };
 
   return (
-      <div id={appShellId} className={appShellId} style={{ overflowY: state.fullScreenMode ? 'hidden' : 'scroll' }} >
-        <SearchComponent onSuggestionClick={searchTopic} />
+      <div id={appShellId} className={appShellId} style={{ overflowY: isMobile ? 'hidden' : 'scroll' }} >
+        {isMobile ? null : <SearchComponent onSuggestionClick={searchTopic} />}
         <authenticatedPostDataContext.Provider value={{authenticatedPostData: authenticatedPostData, setAuthenticatedPostData: setAuthenticatedPostData}}>
           <authenticatedGetDataContext.Provider value={{authenticatedGetData: authenticatedGetData, setAuthenticatedGetData: setAuthenticatedGetData}}>
             <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenModeContext: setFullScreenModeContext }}>
@@ -344,24 +343,27 @@ export const AppShellComponent = (props: any) => {
                   <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
                     <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
                       <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
-                        <div id={topicContentId} className={topicContentId}>
-                          <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}> 
+                        <div id={topicContentId} className={topicContentId}> 
                               {
                                 isMobile ?
-                                <CardsShellMobileComponent
-                                  mediaCard={<TopicImagesComponent /> }
-                                  commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                                  analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                                <FullScreenContainer 
+                                  fetchTopics={fetchTopics}
+                                  MediaCard={<TopicImagesComponent />}
+                                  CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                                  AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                                  TopicCarousel={<TopicCarouselComponentFS id={topicCarouselId} fetchTopics={fetchTopics} />}
+                                  Search={<SearchComponent onSuggestionClick={searchTopic} />}
                                 /> :
-                                <CardsShellComponent
-                                  mediaCard={<TopicImagesComponent /> }
-                                  commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                                  analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                                />
+                                <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}>
+                                  <CardsShellComponent
+                                    mediaCard={<TopicImagesComponent /> }
+                                    commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                                    analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                                  />
+                                </div>
                               }
-                          </div>
                           {
-                            <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
+                            isMobile ? null : <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic}/>
                           }
                         </div>
                       </analyticsContext.Provider>
@@ -373,7 +375,7 @@ export const AppShellComponent = (props: any) => {
           </authenticatedGetDataContext.Provider>
         </authenticatedPostDataContext.Provider>
         <div className="fixed-content">
-          {!isExpanded && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
+          {!isMobile && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
           <MenuComponent fetchTopics={searchTopic} showSpecificComment={showSpecificComment} />
         </div>
       </div>

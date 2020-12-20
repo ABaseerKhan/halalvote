@@ -13,6 +13,7 @@ import { Judgment, userVoteToCommentType } from '../../types';
 
 // style imports
 import './comments.css';
+import { isMobile } from '../../utils';
 // import { useMedia } from '../../hooks/useMedia';
 
 interface CommentsCardComponentProps {
@@ -74,8 +75,8 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     useEffect(() => {
         if (!state.loading) {
-            setTimeout(() => { setState(prevState => ({ ...prevState, commentsShowable: true })) }, 300);
             setState(prevState => ({ ...prevState, loading: true, commentsShowable: false }));
+            setTimeout(() => setState(prevState => ({ ...prevState, loading: false, commentsShowable: true })), 300);
         } // eslint-disable-next-line
     }, [topic?.topicTitle]);
 
@@ -192,7 +193,9 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             const viewPortOffsetMakerBottom = commentMakerRef.current.getCommentMakerCardRef()!.getBoundingClientRect().bottom;
             commentMakerRef.current.setHeight(vh - viewPortOffsetCommentContentBottom - (vh - viewPortOffsetMakerBottom));
             commentMakerRef.current.focus();
-        };
+        } else if (commentMakerRef.current && path === undefined) {
+            commentMakerRef.current.collapse();
+        }
     }
 
     const highlightedComment = getCommentFromPath(comments, state.pathToHighlightedComment);
@@ -203,7 +206,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} style={{ zIndex: fullScreenMode ? 3 : 0 }} >
                 { !state.loading && state.commentsShowable && comments.length === 0 ?
                     <div className="no-comments-to-show-text">No arguments to show</div> :
-                        <div id={commentsContainerId} ref={commentsContainerRef} className={fullScreenMode ? "comments-container-fs" : "comments-container"} >
+                        <div id={commentsContainerId} ref={commentsContainerRef} className={isMobile ? "comments-container-fs" : "comments-container"} >
                         <div className={"comments-container-padding-div"}>
                             {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
                                 comments.map((comment: Comment, i: number) => {
@@ -225,7 +228,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 }
                 <CommentMakerComponent 
                     ref={commentMakerRef}
-                    submitComment={createComment} 
+                    submitComment={createComment}
                     replyToUsername={highlightedComment?.username}
                 />
                 <br/>

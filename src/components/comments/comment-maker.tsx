@@ -1,18 +1,21 @@
-import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import "quill-mention";
 import { ReactComponent as SendButtonSVG } from '../../icons/send-button.svg';
+import { ReactComponent as PencilSVG } from '../../icons/pencil.svg';
 import { useMedia } from '../../hooks/useMedia';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import { getData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
-import { fullScreenContext } from '../app-shell';
 
 //type imports
 
 //style imports
 import 'react-quill/dist/quill.snow.css';
 import './comments.css';
+
+const expandedStyles = { width: 'calc(100% - 10px)', height: '4em', right: 0, bottom: '0.5em', borderRadius: '25px', boxShadow: '0 5px 50px 0 rgba(32,33,36,0.28)' };
+const collapsedStyles = { width: '50px', height: '50px', borderRadius: '50%', right: 15, bottom: 15, boxShadow: '0px 0px 5px 5px rgba(0, 0, 0, 0.5)' };
 
 interface CommentMakerComponentProps {
     submitComment: (comment: any) => Promise<number>,
@@ -28,7 +31,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
         false
     );
 
-    const { fullScreenMode } = useContext(fullScreenContext);
+    const [commentMakerCardStyles, setCommentMakerCardStyles] = useState<any>(collapsedStyles);
     const [state, setState] = useState({
         holdingDownShift: false,
         cancelSubmissionOnEnter: false,
@@ -43,22 +46,27 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
             quillEditor.current.getEditor().root.dataset.placeholder = placeholderText;
             if (!props.replyToUsername) {
                 setValue('');
-                if (commentMakerCardRef.current) {
-                    commentMakerCardRef.current.style.height = `4em`;
-                }
             }
         }
     }, [props.replyToUsername])
 
     useImperativeHandle(ref, () => ({
+        collapse: collapse,
         focus: () => {
             if (quillEditor.current) {
-                quillEditor.current.focus();
+                focusAndOpenKeyboard(quillEditor.current, 250);
             }
         },
         setHeight: (height: number) => {
             if (commentMakerCardRef.current) {
-                commentMakerCardRef.current.style.height = `${height - 4}px`;
+                commentMakerCardRef.current.style.height = `${height - 10}px`;
+                commentMakerCardRef.current.style.width = expandedStyles.width;
+                commentMakerCardRef.current.style.bottom = expandedStyles.bottom;
+                commentMakerCardRef.current.style.borderRadius = expandedStyles.borderRadius;
+                commentMakerCardRef.current.style.boxShadow = expandedStyles.boxShadow;
+                commentMakerCardRef.current.style.right = 'unset';
+
+                setCommentMakerCardStyles({ ...expandedStyles, height: `${height - 10}px` });
             }
         },
         getCommentMakerCardRef: () => {
@@ -67,6 +75,14 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
             }
         }
     }));
+
+    const expand = () => {
+        if (commentMakerCardStyles.width === '50px') setCommentMakerCardStyles(expandedStyles);
+    };
+
+    const collapse = () => {
+        if (commentMakerCardStyles.width !== '50px') setCommentMakerCardStyles(collapsedStyles);
+    };
 
     const submitComment = async () => {
         if (value !== "") {
@@ -110,10 +126,11 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
     modules.mention.onClose = () => setState(prevState => ({ ...prevState, cancelSubmissionOnEnter: true }));
 
     return (
-        <div id="comment-maker-card" ref={commentMakerCardRef} className={fullScreenMode ? "comment-maker-card-fs" : "comment-maker-card"} onClick={(e) => { e.stopPropagation()}}>
+        <div id="comment-maker-card" ref={commentMakerCardRef} className={"comment-maker-card"} style={commentMakerCardStyles} onClick={(e) => { e.stopPropagation(); }}>
             <ReactQuill
                 ref={quillEditor} 
-                className={"comment-maker-input"} 
+                className={"comment-maker-input"}
+                style={commentMakerCardStyles.width !== '50px' ? { opacity:'unset' } : { opacity: 0 }}
                 theme="snow"
                 value={value}
                 onChange={setValue}
@@ -123,7 +140,8 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
                 formats={formats}
                 preserveWhitespace
             />
-            <SendButtonSVG className={"comment-maker-button"} onClick={submitComment}/>
+            <SendButtonSVG className={"comment-maker-button"} style={{ display: commentMakerCardStyles.width !== '50px' ? 'unset' : 'none' }} onClick={submitComment}/>
+            {commentMakerCardStyles.width === '50px' && <div className="pencil-container" onClick={(e) => { expand(); e.stopPropagation(); }} ><PencilSVG className={"pencil-icon"} /></div>}
         </div>
     )
 }
@@ -216,3 +234,30 @@ CustomMentionBlot.className = "mention";
 
 Quill.register(CustomMentionBlot);
 Quill.register(CustomLink);
+
+function focusAndOpenKeyboard(el: any, timeout: any) {
+    if(!timeout) {
+        timeout = 100;
+    }
+    if(el) {
+        // Align temp input element approximately where the input element is
+        // so the cursor doesn't jump around
+        var __tempEl__: any = document.createElement('input');
+        __tempEl__.style.position = 'absolute';
+        __tempEl__.style.top = (el.offsetTop + 7) + 'px';
+        __tempEl__.style.left = el.offsetLeft + 'px';
+        __tempEl__.style.height = 0;
+        __tempEl__.style.opacity = 0;
+        // Put this temp element as a child of the page <body> and focus on it
+        document.body.appendChild(__tempEl__);
+        __tempEl__.focus();
+    
+        // The keyboard is open. Now do a delayed focus on the target element
+        setTimeout(function() {
+            el.focus();
+            //el.click();
+            // Remove the temp element
+            document.body.removeChild(__tempEl__);
+        }, timeout);
+    }
+}

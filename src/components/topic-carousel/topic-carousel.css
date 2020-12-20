@@ -8,7 +8,6 @@
 .topic-carousel-fs {
     position: inherit;
     width: 100vw;
-    height: 4em;
     top: 0;
     z-index: 4;
 }
@@ -35,9 +34,18 @@
     display: none;
 }
 
-.topic-title {
+.topic-titles-container {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    display: flex;
     min-height: calc(var(--max-toolbar-height-px));
-    min-width: 100%;
+    color: var(--dark-mode-text-color);
+}
+
+.topic-title {
+    position: absolute;
+    width: 68vw;
+    min-height: calc(var(--max-toolbar-height-px));
     text-align: center;
     font-size: 2em;
     /* color: var(--neutral-color); */
@@ -46,6 +54,16 @@
     white-space: nowrap;
     scroll-behavior: smooth;
     overflow-y: hidden;
+    transition: all 0.3s ease;
+}
+
+.prev-next-topic-titles {
+    position: absolute;
+    width: 13vw;
+    font-size: 9px;
+    text-align: center;
+    transition: all 0.3s ease;
+    overflow: hidden;
 }
 
 @keyframes jump {
@@ -153,17 +171,19 @@
     }
     .topic-title {
         font-size: 1.5em;
+        min-height: 40px;
     }
     .left-topic-navigator-display, .right-topic-navigator-display {
         position: absolute;
-        top: 25vh;
+        top: 0;
         width: 0px;
-        height: 50vh;
+        height: 110px;
         border-radius: 50%;
         color: var(--site-background-color);
         background: transparent;
         -webkit-box-shadow: inset 0 0 100px 20px var(--light-neutral-color);
         box-shadow: inset 0 0 100px 20px var(--light-neutral-color);
+        z-index: 10;
     }
     .left-topic-navigator-display {
         left: 0;

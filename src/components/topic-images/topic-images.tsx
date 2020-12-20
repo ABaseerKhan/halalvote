@@ -247,14 +247,12 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                         <div className='no-image-text'>No images to show</div>
                 }
-                {topicImages.length > imageIndex + 1 && <div className={"more-images-below"} style={{ position: moreImagesIndicatorPosition }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) + 500)) }>
-                    <DownArrowSVG />
-                </div>}
             </div>
-            <div className={"canvas-footer"}>
-                <div className={!state.addTopicDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
-                    <AddButtonSVG />
-                </div>
+            {(topicImages.length > imageIndex + 1) ? <div className={"more-images-below"} style={{ position: moreImagesIndicatorPosition }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) + 500)) }>
+                    <DownArrowSVG />
+                </div> : null}
+            <div className={"show-add-image-button"} onClick={() => {showAddTopic(true)}}>
+                <AddButtonSVG />
             </div>
         </div>
     );
@@ -264,11 +262,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             <div className={"images-body"} style={{ background: 'black'}}>
                 <MyUploader submitCallback={fetchImages}/>
             </div>
-            <div className={"canvas-footer"}>
-                <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
-                    Cancel
-                </button>
-            </div>
+            <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
+                Cancel
+            </button>
         </div>
     );
     return !state.addTopicDisplayed ? ImageNavigator : fileUploader;

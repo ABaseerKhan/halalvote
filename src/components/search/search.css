@@ -10,8 +10,12 @@
 
 @media only screen and (max-width: 600px) {
     .search-bar {
-        top: 10vh !important;
+        top: 1em !important;
         width: 90% !important;
+    }
+
+    .search-page {
+        padding-top: 0 !important;
     }
 }
 

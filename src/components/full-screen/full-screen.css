@@ -1,23 +1,65 @@
 .full-screen-container {
     position: absolute;
     display: block;
-    overflow: auto;
-    scroll-behavior: auto;
-    scroll-snap-type: y mandatory;
     height: 100%;
     width: 100%;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
 
+.full-screen-footer {
+    position: absolute;
+    top: calc(100% - 110px);
+    height: 100%;
+    display: flex;
+    border-top: 1px solid dimgray;
+    width: 100%;
+    background: var(--dark-mode-background-lighter);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.full-screen-footer-content {
+    position: relative;
+    width: 100%;
+}
+
+.topic-carousel-container {
+    transform: translate(0, 0);
+    transition: all 0.3s ease-in-out;
+}
+
+.search-container {
+    transform: translate(0, 0);
+    transition: all 0.3s ease-in-out;
+}
+
 .full-screen-container::-webkit-scrollbar {
     display: none;
 }
 
+.topic-cover {
+    position: absolute;
+    height: calc(100% - 110px);
+    width: 100%;
+    /* background: rgba(136, 136, 136); */
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.topic-cover-label {
+    font-size: 3em;
+    color: var(--dark-mode-text-color);
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: calc(50% - 1.3em);
+}
+
 .full-screen-topic {
     display: flex;
-    position: relative;
-    height: 100%;
+    position: absolute;
+    height: calc(100% - 110px);
     width: 100%;
     scroll-snap-align: start;
     background: var(--dark-mode-background);
@@ -47,7 +89,7 @@
 
 .feature-selector {
     position: fixed;
-    top: 4em;
+    top: 0.75em;
     width: 260px;
     left: calc(50% - 130px);
     font-size: 14px;
@@ -76,7 +118,7 @@
 
 .selector-underline {
     position: fixed;
-    top: 5em;
+    top: 2em;
     width: 3em;
     left: calc(50% - 1.5em);
     z-index: 4;

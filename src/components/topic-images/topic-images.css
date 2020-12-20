@@ -1,8 +1,7 @@
 .images-body {
   display: block;
-  height: calc(100% - 50px);
+  height: 100%;
   width: 100%;
-  border-radius: 25px 25px 0px 0px;
   overflow: auto;
   text-align: center;
   scroll-behavior: auto;
@@ -48,7 +47,7 @@
   border-right: 0.5px solid dimgray;
 }
 
-.show-add-image-button, .hide-add-image-button {
+.show-add-image-button {
   position: absolute;
   height: 34px;
   width: 60px;
@@ -59,34 +58,28 @@
   color: var(--dark-mode-text-color);
   cursor: pointer;
   box-shadow: 0px 0px 5px 5px rgba(32,33,36,0.5);
+  animation: filler 0.75s infinite ease-out alternate;
 }
 
-.show-add-image-button, .show-add-image-button-fullscreen {
-  transform: scale(0);
-  animation: appear 0.3s ease-in-out forwards;
-}
-
-.hide-add-image-button, .hide-add-image-button-fullscreen {
-  transform: scale(1);
-  animation: disappear 0.3s ease-in-out forwards;
-}
-
-.more-images-above, .more-images-below {
+.more-images-below {
   position: absolute;
   height: 30px;
   width: 30px;
   left: calc(50% - 15px);
   fill: gray;
-}
-
-.more-images-below {
   bottom: 50px;
   animation: jumpdown 0.75s infinite ease-out alternate;
 }
 
-.more-images-above {
-  animation: jumpup 0.75s infinite ease-out alternate;
+@keyframes filler {
+  from {
+    transform: translate(0, 0.1px)
+  }
+  to {
+      transform: translate(0, 0);
+  }
 }
+
 
 @keyframes jumpdown {
   from {
@@ -94,15 +87,6 @@
   }
   to {
       transform: translate(0, 0);
-  }
-}
-
-@keyframes jumpup {
-  from {
-    transform: translate(0, 0)
-  }
-  to {
-      transform: translate(0, 0.3em);
   }
 }
 

@@ -7,6 +7,7 @@ html, body {
   background-color: var(--dark-mode-background);
   position: relative;
   transition: background-color 0.5s linear;
+  overscroll-behavior: none;
 }
 
 :root {
@@ -27,6 +28,7 @@ html, body {
   --link-color: #5f5f5f;
   --gray: #232B2F;
   --dark-mode-background: #181818;
+  --dark-mode-background-lighter: #222222;
   --dark-mode-middleground: #2a2a2a;
   --dark-mode-foreground: #414141;
   --dark-mode-text-color: rgb(197, 197, 197);
@@ -40,7 +42,7 @@ html, body {
   --site-background-color: #181818;
 
   --toolbar-height-vh: 11vh;
-  --max-toolbar-height-px: 50px;
+  --max-toolbar-height-px: 40px;
   --topic-carousel-height-vh: 13vh;
   --max-topic-carousel-height-px: 135px;
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import { TopicVotesComponent } from './topic-votes';
 import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
 import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
@@ -190,22 +190,116 @@ interface TopicCarouselComponentFSProps {
     id: string,
     style?: any;
     topicIndexOverride?: number;
+    fetchTopics: any;
 };
 export const TopicCarouselComponentFS = (props: TopicCarouselComponentFSProps) => {
-    let { id, topicIndexOverride } = props;
+    let { id, fetchTopics } = props;
 
-    const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
-    topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
-    const topicTitle = topics?.length ? topics[topicIndexOverride]?.topicTitle || '' : '';
+    const topicCarouselRef = useRef<HTMLDivElement>(null);
+    const topicTitleRefs = useRef<any>([]);
+
+    const { topicsState: { topics, topicIndex }, setTopicsContext } = useContext(topicsContext);
+    const topicTitles = topics.map((topic) => topic.topicTitle);
+    const topic = topics?.length ? topics[topicIndex] : undefined;
+    const topicTitle = topic?.topicTitle || "";
+    const halalPoints = topic?.halalPoints !== undefined ? topic.halalPoints : 0;
+    const haramPoints = topic?.haramPoints !== undefined ? topic.haramPoints : 0;
+    const numVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
+    const userVote = topic?.vote;
+
+    useEffect(() => {
+        if (topicCarouselRef.current) {
+            var touchsurface = topicCarouselRef.current,
+            swipedir: any,
+            startX: any,
+            startY: any,
+            distX,
+            distY,
+            threshold = 45, //required min distance traveled to be considered swipe
+            restraint = 90, // maximum distance allowed at the same time in perpendicular direction
+            allowedTime = 500, // maximum time allowed to travel that distance
+            elapsedTime,
+            startTime: any;
+
+            const touchStartCB = function(e: any){
+                var touchobj = e.changedTouches[0];
+                swipedir = 'none';
+                distX = 0;
+                distY = 0;
+                startX = touchobj.pageX;
+                startY = touchobj.pageY;
+                startTime = new Date().getTime(); // record time when finger first makes contact with surface
+                e.preventDefault();
+            };
+            const touchMoveCB = function(e: any){
+                e.preventDefault() // prevent scrolling when inside DIV
+            };
+            const touchendCB = function(e: any){
+                var touchobj = e.changedTouches[0];
+                distX = touchobj.pageX - startX; // get horizontal dist traveled by finger while in contact with surface
+                distY = touchobj.pageY - startY; // get vertical dist traveled by finger while in contact with surface
+                elapsedTime = new Date().getTime() - startTime; // get time elapsed
+                if (elapsedTime <= allowedTime){ // first condition for awipe met
+                    if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){ // 2nd condition for horizontal swipe met
+                        swipedir = (distX < 0)? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
+                    }
+                    else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+                        swipedir = (distY < 0)? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
+                    }
+                }
+                switch(swipedir) {
+                    case 'left':
+                        if ((topicIndex + 1) >= topics.length - 2) {
+                            fetchTopics(undefined, topicIndex+1);
+                        } else {
+                            setTopicsContext(topics, topicIndex+1);
+                        };
+                        break;
+                    case 'right':
+                        if ((topicIndex - 1) >= 0) setTopicsContext(topics, topicIndex-1);
+                };
+                e.preventDefault()
+            };
+            touchsurface.addEventListener('touchstart', touchStartCB, { passive: true });
+            touchsurface.addEventListener('touchmove', touchMoveCB, { passive: true });
+            touchsurface.addEventListener('touchend', touchendCB, { passive: true });
+
+            return () => {
+                touchsurface.removeEventListener('touchstart', touchStartCB);
+                touchsurface.removeEventListener('touchmove', touchMoveCB);
+                touchsurface.removeEventListener('touchend', touchendCB);
+            };
+        };
+    }, [topicIndex, fetchTopics, setTopicsContext, topics]);
 
     return (
-        <div id={id} style={props.style} className='topic-carousel-fs'>
-            <span className="topic-label">Topic:</span>
-            <div id="topic-title" className='topic-title' onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+        <div id={id} ref={topicCarouselRef} style={props.style} className='topic-carousel-fs'>
+            <span className="topic-label" onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                    onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                    onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}>Topic:</span>
+            <div id="topic-title" className='topic-titles-container' onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                     onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                     onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} >
-                        {topicTitle}
+                        {topicTitles.map((topicTitle: string, idx: number) => {
+                            const distance = idx - topicIndex;
+
+                            const className: string = (idx === topicIndex) ? "topic-title" : "prev-next-topic-titles";
+
+                            let translationVW;
+                            if (distance < 0) {
+                                translationVW = ((distance * 16) + 17);
+                            } else if (distance > 0) {
+                                translationVW = ((distance * 16) + 68);
+                            } else {
+                                translationVW = 16;
+                            }
+
+                            return <div ref={(el) => topicTitleRefs.current.push(el)} className={className} style={{ transform: `translate(${translationVW}vw, 0)` }} >
+                                {topicTitles[idx]}
+                            </div>
+                        })}
             </div>
+            <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />
         </div>
     );
 }

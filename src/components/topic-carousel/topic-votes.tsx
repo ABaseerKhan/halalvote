@@ -72,7 +72,7 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
     };
 
     return (
-        <div className={"topic-votes-container"}>
+        <div className={"topic-votes-container"} style={(window.innerHeight > window.screen.height-100) ? { marginBottom: '40px' } : undefined}>
             <VotingSwitch
                 submitVote={submitVote}
                 userVote={topic?.vote}
