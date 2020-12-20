@@ -8,7 +8,7 @@
 }
 
 .full-screen-footer {
-    position: absolute;
+    position: fixed;
     display: flex;
     height: 100%;
     bottom: calc(100% - var(--max-topic-carousel-height-px));

@@ -55,8 +55,8 @@
     scroll-behavior: smooth;
     overflow-y: hidden;
     transition: all 0.3s ease;
-    border-left: 1px solid dimgray;
-    border-right: 1px solid dimgray;
+    /* border-left: 1px solid dimgray;
+    border-right: 1px solid dimgray; */
     padding: 0 5px;
 }
 
