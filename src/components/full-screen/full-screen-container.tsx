@@ -125,7 +125,7 @@ export const FullScreenContainer = (props: FullScreenComponentProps) => {
             <div className={"topic-cover"} style={displayTopicCover ? { opacity: 1, zIndex: 1, background: topicCoverColor } : { opacity: 0, zIndex: -1 }}><span className="topic-cover-label">{topicTitle}</span></div>
             <div ref={FSFooterRef} className={'full-screen-footer'}>
                 <div className="full-screen-footer-content">
-                    <div ref={topicCarouselRef} className={"topic-carousel-container"}>{React.cloneElement(TopicCarousel)}</div>
+                    <div ref={topicCarouselRef} className={"topic-carousel-container"}>{React.cloneElement(TopicCarousel, { setDisplayTopicCover: () => { setDisplayTopicCover(true); setTimeout(() => setDisplayTopicCover(false), 600); }})}</div>
                     <div ref={searchRef} className={"search-container"}>{React.cloneElement(Search)}</div>
                 </div>
             </div>

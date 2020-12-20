@@ -191,6 +191,7 @@ interface TopicCarouselComponentFSProps {
     style?: any;
     topicIndexOverride?: number;
     fetchTopics: any;
+    setDisplayTopicCover?: any;
 };
 export const TopicCarouselComponentFS = (props: TopicCarouselComponentFSProps) => {
     let { id, fetchTopics } = props;
@@ -283,20 +284,36 @@ export const TopicCarouselComponentFS = (props: TopicCarouselComponentFSProps) =
                         {topicTitles.map((topicTitle: string, idx: number) => {
                             const distance = idx - topicIndex;
 
+                            let onClick;
                             let className: string;
                             let translationVW;
                             if (distance < 0) {
                                 translationVW = ((distance * 16) + 17);
                                 className = "prev-topic-titles";
+                                if (distance === -1) {
+                                    onClick = () => { 
+                                        if ((topicIndex - 1) >= 0) setTopicsContext(topics, topicIndex-1);
+                                    };
+                                }
                             } else if (distance > 0) {
                                 translationVW = ((distance * 16) + 70);
                                 className = "next-topic-titles";
+                                if (distance === 1) {
+                                    onClick = () => {
+                                        if ((topicIndex + 1) >= topics.length - 2) {
+                                            fetchTopics(undefined, topicIndex+1);
+                                        } else {
+                                            setTopicsContext(topics, topicIndex+1);
+                                        };
+                                    };
+                                }
                             } else {
                                 translationVW = 15;
                                 className = "topic-title";
+                                onClick = () => props.setDisplayTopicCover();
                             }
 
-                            return <div ref={(el) => topicTitleRefs.current.push(el)} className={className} style={{ transform: `translate(${translationVW}vw, 0)` }} >
+                            return <div ref={(el) => topicTitleRefs.current.push(el)} className={className} style={{ transform: `translate(${translationVW}vw, 0)` }} onClick={onClick} >
                                 <span>{topicTitles[idx]}</span>
                             </div>
                         })}

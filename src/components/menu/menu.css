@@ -1,7 +1,7 @@
 .menu {
     position: fixed;
-    bottom: 5%;
-    right: 5%;
+    top: 1%;
+    left: 2%;
     background: var(--light-neutral-color);
     color: var(--dark-mode-text-color);
     overflow: hidden;
