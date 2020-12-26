@@ -14,7 +14,7 @@
 .topic-media-container {
     display: flex;
     position: absolute;
-    height: calc(100% - 110px);
+    height: calc(100% - var(--max-topic-carousel-height-px));
     width: 100%;
     background: var(--dark-mode-background);
     overflow-y: hidden;
@@ -24,8 +24,9 @@
 
 .topic-container-footer {
     position: fixed;
-    top: calc(100% - 110px);
-    height: calc(100% - 110px);
+    top: 100%;
+    height: 80%;
+    transform: translate(0px, calc(-1 * var(--max-topic-carousel-height-px)));
     display: flex;
     border-top: 1px solid dimgray;
     width: 100%;

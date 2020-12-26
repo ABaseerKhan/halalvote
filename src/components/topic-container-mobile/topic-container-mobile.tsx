@@ -71,11 +71,12 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                 }
                 switch(swipedir) {
                     case 'up':
-                        FSFooterRef.current!.style.transform = 'translate(0, -550px)';
+                        const translation = (FSContainerRef.current?.clientHeight || 0) * -0.8;
+                        FSFooterRef.current!.style.transform = `translate(0, ${translation}px)`;
                         setDisplayTopicCarousel(false);
                         break;
                     case 'down':
-                        FSFooterRef.current!.style.transform = 'translate(0, 0)';
+                        FSFooterRef.current!.style.transform = `translate(0, calc(-1 * var(--max-topic-carousel-height-px)))`;
                         setDisplayTopicCarousel(true);
                         break;
                 };

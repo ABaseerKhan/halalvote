@@ -7,6 +7,7 @@
 
 .topic-carousel-mobile {
     position: relative;
+    height: var(--max-topic-carousel-height-px);
     width: 100vw;
     top: 0;
     z-index: 4;

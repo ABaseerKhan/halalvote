@@ -42,7 +42,7 @@ html, body {
   --toolbar-height-vh: 11vh;
   --max-toolbar-height-px: 50px;
   --topic-carousel-height-vh: 13vh;
-  --max-topic-carousel-height-px: 135px;
+  --max-topic-carousel-height-px: 130px;
 
   --highlight-color: var(--light-neutral-color);
 
