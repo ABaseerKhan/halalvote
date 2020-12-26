@@ -28,6 +28,7 @@ html, body {
   --gray: #232B2F;
   --dark-mode-background: #181818;
   --dark-mode-middleground: #2a2a2a;
+  --dark-mode-middleground-transparent: #2a2a2a75;
   --dark-mode-foreground: #414141;
   --dark-mode-text-color: rgb(197, 197, 197);
   --dark-mode-secondary-text-color: rgb(136, 136, 136);

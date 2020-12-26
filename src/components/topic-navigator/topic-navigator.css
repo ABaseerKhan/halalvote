@@ -26,6 +26,7 @@
     border-radius: 0;
     color: var(--site-background-color);
     outline: none;
+    z-index: 4;
 }
 
 .carousel-button-left {
@@ -37,7 +38,7 @@
 }
 
 .carousel-button-computer:hover {
-    background: var(--dark-mode-middleground);
+    background: var(--dark-mode-middleground-transparent);
 }
 
 .carousel-button:hover {
