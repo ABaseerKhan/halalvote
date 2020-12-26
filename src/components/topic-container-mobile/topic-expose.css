@@ -13,6 +13,10 @@
     scrollbar-width: none;  /* Firefox */
 }
 
+.topic-expose-container::-webkit-scrollbar {
+    display: none;
+}
+
 .expose-item {
     scroll-snap-align: start;
     scroll-snap-stop: always !important;
