@@ -1,8 +1,8 @@
 .cards-shell {
     position: relative;
-    height: calc(100% - 105px);
+    height: calc(100% - var(--max-topic-carousel-height-px));
     width: 100%;
-    top: 105px;
+    top: var(--max-topic-carousel-height-px);
     margin-left: 27.5vw;
 }
 

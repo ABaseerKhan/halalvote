@@ -1,0 +1,63 @@
+.topic-expose-container {
+    display: flex;
+    position: absolute;
+    height: calc(100% - 110px);
+    width: 100%;
+    scroll-snap-align: start;
+    background: var(--dark-mode-background);
+    scroll-behavior: auto;
+    scroll-snap-type: x mandatory;
+    scroll-snap-stop: always !important;
+    overflow-y: hidden;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.expose-item {
+    scroll-snap-align: start;
+    scroll-snap-stop: always !important;
+    position: absolute;
+    margin-top: 4em;
+    height: 100%;
+    width: 100%;
+}
+
+.feature-selector {
+    position: fixed;
+    line-height: 4em;
+    width: 260px;
+    left: calc(50% - 130px);
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 4;
+    display: flex;
+}
+
+.feature-selector:hover {
+    cursor: pointer;
+}
+
+.feature-selector-selected, .feature-selector-unselected {
+    margin: auto;
+    width: 100px;
+    text-align: center;
+}
+
+.feature-selector-selected {
+    color: white;
+}
+
+.feature-selector-unselected {
+    color: gray;
+}
+
+.selector-underline {
+    position: fixed;
+    top: 9.25em;
+    width: 3em;
+    left: calc(25%);
+    z-index: 4;
+    height: 3px;
+    background: white;
+    border-radius: 5px;
+}

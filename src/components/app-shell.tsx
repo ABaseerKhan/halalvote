@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageScrollerComponent } from './page-scroller/page-scroller';
-import { TopicCarouselComponent } from './topic-carousel/topic-carousel';
+import { TopicCarouselComponent, TopicCarouselMobileComponent } from './topic-carousel/topic-carousel';
 import { SearchComponent } from './search/search';
 import { AnalyticsCardComponent } from './analytics-card/analytics-card';
 import { MenuComponent } from './menu/menu';
@@ -18,7 +18,8 @@ import {
 } from "react-router-dom";
 import { useQuery } from '../hooks/useQuery';
 import { TopicImagesComponent } from './topic-images/topic-images';
-import { CardsShellMobileComponent } from './cards-shell/cards-shell-mobile';
+import { TopicContainerMobile } from './topic-container-mobile/topic-container-mobile';
+
 
 // type imports
 
@@ -38,13 +39,12 @@ const topicContentId = "topic-content";
 const topicCarouselId = "topicCarousel";
 const pageZeroId = "Search";
 const pageOneId = "Topics";
-const cardsShellContainerId = "cards-shell-container";
 
 const getAppShell = () => { return document.getElementById(appShellId); }
 const getTopicCarousel = () => { return document.getElementById(topicCarouselId); }
 const getPageZero = () => { return document.getElementById(pageZeroId); }
 const getPageOne = () => { return document.getElementById(pageOneId); }
-const getCardsShellContainer = () => { return document.getElementById(cardsShellContainerId); }
+const getTopicContentContainer = () => { return document.getElementById(topicContentId); }
 
 type AppShellState = { 
   topicsState: TopicsState; 
@@ -108,11 +108,10 @@ export const AppShellComponent = (props: any) => {
   useEffect(() => {
     setTimeout(() => {
       const appShell = getAppShell();
-      const cardsShellContainer = getCardsShellContainer();
+      const topicContentContainer = getTopicContentContainer();
 
-      if (appShell && cardsShellContainer) {
+      if (appShell && topicContentContainer) {
         appShell.scrollTo(0, window.innerHeight);
-        cardsShellContainer.style.opacity = "1.0";
       }
     }, 500) // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -165,25 +164,22 @@ export const AppShellComponent = (props: any) => {
     }
 
     const appShell = getAppShell();
-    const cardsShellContainer = getCardsShellContainer();
+    const topicContentContainer = getTopicContentContainer();
 
-    if (appShell && cardsShellContainer && state.incomingDirection !== IncomingDirection.NONE) {
-        cardsShellContainer.style.marginLeft = state.incomingDirection === IncomingDirection.RIGHT ? "100%" : "-100%";
-        cardsShellContainer.style.opacity = "1.0";
-        cardsShellContainer.animate([
+    if (appShell && topicContentContainer && state.incomingDirection !== IncomingDirection.NONE) {
+        topicContentContainer.style.marginLeft = state.incomingDirection === IncomingDirection.RIGHT ? "100%" : "-100%";
+        topicContentContainer.animate([
           {
             marginLeft: '0',
           }
         ], {
           duration: prevNextTopicAnimationDuration,
           easing: 'ease-out',
-          fill: "forwards"
         }).onfinish = () => {
-          cardsShellContainer.style.marginLeft = "0";
+          topicContentContainer.style.marginLeft = "0";
           setState(prevState => ({ ...prevState, incomingDirection: IncomingDirection.NONE }));
         }
-    } else if (cardsShellContainer && state.incomingDirection !== IncomingDirection.NONE) {
-        cardsShellContainer.style.opacity = "1.0";
+    } else if (topicContentContainer && state.incomingDirection !== IncomingDirection.NONE) {
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.topicsState]);
 
@@ -223,11 +219,10 @@ export const AppShellComponent = (props: any) => {
   const searchTopic = async (topicTofetch?: string) => {
     await fetchTopics(topicTofetch);
     const appShell = getAppShell();
-    const cardsShellContainer = getCardsShellContainer();
+    const topicContentContainer = getTopicContentContainer();
     
-    if (appShell && cardsShellContainer) {
+    if (appShell && topicContentContainer) {
       appShell.scrollTo(0, window.innerHeight);
-      cardsShellContainer.style.opacity = "1.0";
     }
   }
 
@@ -245,15 +240,15 @@ export const AppShellComponent = (props: any) => {
   };
 
   const iterateTopic = (iteration: number) => () => {
-    const cardsShellContainer = getCardsShellContainer();
+    const topicContentContainer = getTopicContentContainer();
 
-    if (cardsShellContainer) {
+    if (topicContentContainer) {
       if (iteration === 1) {
-        animateNextTopic(cardsShellContainer, animationCallback(iteration));
+        animateNextTopic(topicContentContainer, animationCallback(iteration));
       }
       if (iteration === -1) {
         if ((state.topicsState.topicIndex + iteration) >= 0) {
-          animatePrevTopic(cardsShellContainer, animationCallback(iteration));
+          animatePrevTopic(topicContentContainer, animationCallback(iteration));
         }
       }
     }
@@ -342,23 +337,23 @@ export const AppShellComponent = (props: any) => {
                     <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
                       <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
                         <div id={topicContentId} className={topicContentId}>
-                          <div key={state.topicsState.topicIndex} id={cardsShellContainerId} className={cardsShellContainerId} style={{ height: (state.fullScreenMode ? '0' : '100%') }}> 
-                              {
-                                isMobile ?
-                                <CardsShellMobileComponent
-                                  mediaCard={<TopicImagesComponent /> }
-                                  commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                                  analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                                /> :
-                                <CardsShellComponent
-                                  mediaCard={<TopicImagesComponent /> }
-                                  commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                                  analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                                />
-                              }
-                          </div>
                           {
-                            <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} searchTopic={searchTopic}/>
+                            isMobile ?
+                            <TopicContainerMobile
+                              fetchTopics={fetchTopics}
+                              MediaCard={<TopicImagesComponent /> }
+                              CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                              AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                              TopicCarousel={<TopicCarouselMobileComponent id={topicCarouselId} fetchTopics={fetchTopics} iterateTopic={iterateTopic} />}
+                            /> :
+                            <CardsShellComponent
+                              mediaCard={<TopicImagesComponent /> }
+                              commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                              analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                            />
+                          }
+                          {
+                            !isMobile && <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} />
                           }
                         </div>
                       </analyticsContext.Provider>
@@ -378,35 +373,35 @@ export const AppShellComponent = (props: any) => {
 }
 
 const prevNextTopicAnimationDuration = 300;
-const animateNextTopic = (cardsShellContainer: HTMLElement | null, callback: () => void) => {
-  if(cardsShellContainer) {
-    cardsShellContainer.style.marginLeft = "0";
-    cardsShellContainer.animate([
+const animateNextTopic = (topicContentContainer: HTMLElement | null, callback: () => void) => {
+  if(topicContentContainer) {
+    topicContentContainer.style.marginLeft = "0";
+    topicContentContainer.animate([
       {
         marginLeft: '-100%'
       }
     ], {
       duration: prevNextTopicAnimationDuration,
       easing: 'ease-in',
-      fill: 'forwards',
     }).onfinish = () => {
+      topicContentContainer.style.marginLeft = "-100%";
       callback();
     }
   };
 }
 
-const animatePrevTopic = (cardsShellContainer: any, callback: () => void) => {
-  if(cardsShellContainer) {
-    cardsShellContainer.style.marginLeft = "0";
-    cardsShellContainer.animate([
+const animatePrevTopic = (topicContentContainer: any, callback: () => void) => {
+  if(topicContentContainer) {
+    topicContentContainer.style.marginLeft = "0";
+    topicContentContainer.animate([
       {
         marginLeft: '100%'
       }
     ], {
       duration: prevNextTopicAnimationDuration,
       easing: 'ease-in',
-      fill: 'forwards',
     }).onfinish = () => {
+      topicContentContainer.style.marginLeft = "100%";
       callback();
     }
   };

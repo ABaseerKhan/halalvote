@@ -1,0 +1,63 @@
+.topic-container-mobile {
+    position: fixed;
+    display: block;
+    height: 100%;
+    width: 100%;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.topic-container-mobile::-webkit-scrollbar {
+    display: none;
+}
+
+.topic-media-container {
+    display: flex;
+    position: absolute;
+    height: calc(100% - 110px);
+    width: 100%;
+    background: var(--dark-mode-background);
+    overflow-y: hidden;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.topic-container-footer {
+    position: fixed;
+    top: calc(100% - 110px);
+    height: 100%;
+    display: flex;
+    border-top: 1px solid dimgray;
+    width: 100%;
+    background: var(--dark-mode-background-lighter);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.topic-container-footer-content {
+    position: relative;
+    width: 100%;
+    background: var(--dark-mode-background);
+}
+
+.topic-carousel-container {
+    transform: translate(0, 0);
+    transition: all 0.3s ease-in-out;
+}
+
+.full-screen-topic::-webkit-scrollbar {
+    display: none;
+}
+
+.topic-carousel-container-fs-absolute {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: 4;
+}
+
+.topic-carousel-container-fs-fixed {
+    position: fixed;
+    z-index: 4;
+}

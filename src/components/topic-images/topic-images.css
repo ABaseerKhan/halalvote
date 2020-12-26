@@ -2,7 +2,6 @@
   display: block;
   height: 100%;
   width: 100%;
-  border-radius: 25px 25px 0px 0px;
   overflow: auto;
   text-align: center;
   scroll-behavior: auto;
