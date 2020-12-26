@@ -22,6 +22,7 @@ export const commentsCardId = "ARGUMENTS";
 export const analyticsCardId = "ANALYTICS";
 
 interface TopicContainerComponentProps {
+    movingTopicContentId: string,
     mediaCard: ReactElement,
     commentsCard: ReactElement,
     analyticsCard: ReactElement,
@@ -30,7 +31,7 @@ interface TopicContainerComponentProps {
 };
 
 export const TopicContainerComponent = (props: TopicContainerComponentProps) => {
-    const { mediaCard, commentsCard, analyticsCard, TopicCarousel, TopicNavigator } = props;
+    const { movingTopicContentId, mediaCard, commentsCard, analyticsCard, TopicCarousel, TopicNavigator } = props;
 
     const history = useHistory();
     const query = useQuery();
@@ -373,7 +374,9 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
 
     return (
       <div>
-        <div className="cards-shell" children={[mediaCardElement, commentsCardElement, analyticsCardElement]}/>
+        <div id={movingTopicContentId}>
+          <div className="cards-shell" children={[mediaCardElement, commentsCardElement, analyticsCardElement]}/>
+        </div>
         {TopicCarousel}
         {TopicNavigator}
       </div>

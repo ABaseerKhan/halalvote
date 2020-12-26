@@ -6,6 +6,7 @@ import { TopicExposeComponent } from './topic-expose';
 import './topic-container-mobile.css';
 
 interface TopicContainerMobileComponentProps {
+    movingTopicContentId: string,
     fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
     MediaCard: ReactElement,
     CommentsCard: ReactElement,
@@ -14,7 +15,7 @@ interface TopicContainerMobileComponentProps {
     TopicNavigator: ReactElement
 };
 export const TopicContainerMobileComponent = (props: TopicContainerMobileComponentProps) => {
-    const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, TopicNavigator, fetchTopics } = props;
+    const { movingTopicContentId, MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, TopicNavigator, fetchTopics } = props;
 
     const [, setDisplayTopicCarousel] = useState(true);
 
@@ -95,7 +96,7 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     return (
         <div ref={FSContainerRef} className="topic-container-mobile">
             {TopicNavigator}
-            <div className="topic-media-container">
+            <div id={movingTopicContentId} className="topic-media-container">
                 {MediaCard}
             </div>
             <div ref={FSFooterRef} className={'topic-container-footer'}>

@@ -36,7 +36,7 @@ enum IncomingDirection {
 const maxTopicsDataCacheSize = 20;
 
 const appShellId = "app-shell";
-const topicContentId = "topic-content";
+const movingTopicContentId = "moving-topic-content";
 const topicCarouselId = "topicCarousel";
 const pageZeroId = "Search";
 const pageOneId = "Topics";
@@ -45,7 +45,7 @@ const getAppShell = () => { return document.getElementById(appShellId); }
 const getTopicCarousel = () => { return document.getElementById(topicCarouselId); }
 const getPageZero = () => { return document.getElementById(pageZeroId); }
 const getPageOne = () => { return document.getElementById(pageOneId); }
-const getTopicContentContainer = () => { return document.getElementById(topicContentId); }
+const getMovingTopicContent = () => { return document.getElementById(movingTopicContentId); }
 
 type AppShellState = { 
   topicsState: TopicsState; 
@@ -109,9 +109,8 @@ export const AppShellComponent = (props: any) => {
   useEffect(() => {
     setTimeout(() => {
       const appShell = getAppShell();
-      const topicContentContainer = getTopicContentContainer();
 
-      if (appShell && topicContentContainer) {
+      if (appShell) {
         appShell.scrollTo(0, window.innerHeight);
       }
     }, 500) // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -165,11 +164,11 @@ export const AppShellComponent = (props: any) => {
     }
 
     const appShell = getAppShell();
-    const topicContentContainer = getTopicContentContainer();
+    const movingTopicContent = getMovingTopicContent();
 
-    if (appShell && topicContentContainer && state.incomingDirection !== IncomingDirection.NONE) {
-        topicContentContainer.style.marginLeft = state.incomingDirection === IncomingDirection.RIGHT ? "100%" : "-100%";
-        topicContentContainer.animate([
+    if (appShell && movingTopicContent && state.incomingDirection !== IncomingDirection.NONE) {
+        movingTopicContent.style.marginLeft = state.incomingDirection === IncomingDirection.RIGHT ? "100%" : "-100%";
+        movingTopicContent.animate([
           {
             marginLeft: '0',
           }
@@ -177,10 +176,10 @@ export const AppShellComponent = (props: any) => {
           duration: prevNextTopicAnimationDuration,
           easing: 'ease-out',
         }).onfinish = () => {
-          topicContentContainer.style.marginLeft = "0";
+          movingTopicContent.style.marginLeft = "0";
           setState(prevState => ({ ...prevState, incomingDirection: IncomingDirection.NONE }));
         }
-    } else if (topicContentContainer && state.incomingDirection !== IncomingDirection.NONE) {
+    } else if (movingTopicContent && state.incomingDirection !== IncomingDirection.NONE) {
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.topicsState]);
 
@@ -220,9 +219,8 @@ export const AppShellComponent = (props: any) => {
   const searchTopic = async (topicTofetch?: string) => {
     await fetchTopics(topicTofetch);
     const appShell = getAppShell();
-    const topicContentContainer = getTopicContentContainer();
     
-    if (appShell && topicContentContainer) {
+    if (appShell) {
       appShell.scrollTo(0, window.innerHeight);
     }
   }
@@ -241,15 +239,15 @@ export const AppShellComponent = (props: any) => {
   };
 
   const iterateTopic = (iteration: number) => () => {
-    const topicContentContainer = getTopicContentContainer();
+    const movingTopicContent = getMovingTopicContent();
 
-    if (topicContentContainer) {
+    if (movingTopicContent) {
       if (iteration === 1) {
-        animateNextTopic(topicContentContainer, animationCallback(iteration));
+        animateNextTopic(movingTopicContent, animationCallback(iteration));
       }
       if (iteration === -1) {
         if ((state.topicsState.topicIndex + iteration) >= 0) {
-          animatePrevTopic(topicContentContainer, animationCallback(iteration));
+          animatePrevTopic(movingTopicContent, animationCallback(iteration));
         }
       }
     }
@@ -337,10 +335,11 @@ export const AppShellComponent = (props: any) => {
                   <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
                     <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
                       <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
-                        <div id={topicContentId} className={topicContentId}>
+                        <div className="topic-content">
                           {
                             isMobile ?
                             <TopicContainerMobileComponent
+                              movingTopicContentId={movingTopicContentId}
                               fetchTopics={fetchTopics}
                               MediaCard={<TopicImagesComponent /> }
                               CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
@@ -349,6 +348,7 @@ export const AppShellComponent = (props: any) => {
                               TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
                             /> :
                             <TopicContainerComponent
+                              movingTopicContentId={movingTopicContentId}
                               mediaCard={<TopicImagesComponent /> }
                               commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                               analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
@@ -374,10 +374,10 @@ export const AppShellComponent = (props: any) => {
 }
 
 const prevNextTopicAnimationDuration = 300;
-const animateNextTopic = (topicContentContainer: HTMLElement | null, callback: () => void) => {
-  if(topicContentContainer) {
-    topicContentContainer.style.marginLeft = "0";
-    topicContentContainer.animate([
+const animateNextTopic = (movingTopicContent: HTMLElement | null, callback: () => void) => {
+  if(movingTopicContent) {
+    movingTopicContent.style.marginLeft = "0";
+    movingTopicContent.animate([
       {
         marginLeft: '-100%'
       }
@@ -385,16 +385,16 @@ const animateNextTopic = (topicContentContainer: HTMLElement | null, callback: (
       duration: prevNextTopicAnimationDuration,
       easing: 'ease-in',
     }).onfinish = () => {
-      topicContentContainer.style.marginLeft = "-100%";
+      movingTopicContent.style.marginLeft = "-100%";
       callback();
     }
   };
 }
 
-const animatePrevTopic = (topicContentContainer: any, callback: () => void) => {
-  if(topicContentContainer) {
-    topicContentContainer.style.marginLeft = "0";
-    topicContentContainer.animate([
+const animatePrevTopic = (movingTopicContent: any, callback: () => void) => {
+  if(movingTopicContent) {
+    movingTopicContent.style.marginLeft = "0";
+    movingTopicContent.animate([
       {
         marginLeft: '100%'
       }
@@ -402,7 +402,7 @@ const animatePrevTopic = (topicContentContainer: any, callback: () => void) => {
       duration: prevNextTopicAnimationDuration,
       easing: 'ease-in',
     }).onfinish = () => {
-      topicContentContainer.style.marginLeft = "100%";
+      movingTopicContent.style.marginLeft = "100%";
       callback();
     }
   };
