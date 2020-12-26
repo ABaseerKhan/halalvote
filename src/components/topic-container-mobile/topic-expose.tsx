@@ -6,7 +6,6 @@ import {
 import { setCardQueryParam } from '../../utils';
 import { commentsCardId, analyticsCardId } from '../topic-container/topic-container';
 import { topicsContext } from '../app-shell';
-// import { useMedia } from '../../hooks/useMedia';
 
 // type imports
 

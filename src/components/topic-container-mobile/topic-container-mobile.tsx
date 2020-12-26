@@ -2,9 +2,10 @@ import React, { ReactElement, useRef, useEffect, useContext, useState } from 're
 import { topicsContext } from '../app-shell';
 import { TopicExposeComponent } from './topic-expose';
 
+// styles
 import './topic-container-mobile.css';
 
-interface TopicContainerMobileProps {
+interface TopicContainerMobileComponentProps {
     fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
     MediaCard: ReactElement,
     CommentsCard: ReactElement,
@@ -12,7 +13,7 @@ interface TopicContainerMobileProps {
     TopicCarousel: ReactElement,
     TopicNavigator: ReactElement
 };
-export const TopicContainerMobile = (props: TopicContainerMobileProps) => {
+export const TopicContainerMobileComponent = (props: TopicContainerMobileComponentProps) => {
     const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, TopicNavigator, fetchTopics } = props;
 
     const [, setDisplayTopicCarousel] = useState(true);

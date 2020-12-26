@@ -1,5 +1,5 @@
 .cards-shell {
-    position: relative;
+    position: absolute;
     height: calc(100% - var(--max-topic-carousel-height-px));
     width: 100%;
     top: var(--max-topic-carousel-height-px);

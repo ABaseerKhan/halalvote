@@ -4,7 +4,6 @@ import {
   useHistory,
 } from "react-router-dom";
 import { setCardQueryParam } from '../../utils';
-// import { useMedia } from '../../hooks/useMedia';
 
 // type imports
 
@@ -25,11 +24,13 @@ export const analyticsCardId = "ANALYTICS";
 interface TopicContainerComponentProps {
     mediaCard: ReactElement,
     commentsCard: ReactElement,
-    analyticsCard: ReactElement
+    analyticsCard: ReactElement,
+    TopicCarousel: ReactElement,
+    TopicNavigator: ReactElement
 };
 
 export const TopicContainerComponent = (props: TopicContainerComponentProps) => {
-    const { mediaCard, commentsCard, analyticsCard } = props;
+    const { mediaCard, commentsCard, analyticsCard, TopicCarousel, TopicNavigator } = props;
 
     const history = useHistory();
     const query = useQuery();
@@ -67,9 +68,9 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
       );
     };
 
-    const mediaCardElement = createCardElement(mediaCardId, React.cloneElement(mediaCard, { shown: positions.current[0] === mediaCardId }), positions.current.indexOf(mediaCardId));
-    const commentsCardElement = createCardElement(commentsCardId, commentsCard, positions.current.indexOf(commentsCardId));
-    const analyticsCardElement = createCardElement(analyticsCardId, analyticsCard, positions.current.indexOf(analyticsCardId));
+    const mediaCardElement: ReactElement = createCardElement(mediaCardId, React.cloneElement(mediaCard, { shown: positions.current[0] === mediaCardId }), positions.current.indexOf(mediaCardId));
+    const commentsCardElement: ReactElement = createCardElement(commentsCardId, commentsCard, positions.current.indexOf(commentsCardId));
+    const analyticsCardElement: ReactElement = createCardElement(analyticsCardId, analyticsCard, positions.current.indexOf(analyticsCardId));
 
     useEffect(() => {
       setTimeout(() => {
@@ -371,6 +372,10 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
     };
 
     return (
+      <div>
         <div className="cards-shell" children={[mediaCardElement, commentsCardElement, analyticsCardElement]}/>
+        {TopicCarousel}
+        {TopicNavigator}
+      </div>
     );
 }

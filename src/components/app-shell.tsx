@@ -18,7 +18,7 @@ import {
 } from "react-router-dom";
 import { useQuery } from '../hooks/useQuery';
 import { TopicImagesComponent } from './topic-images/topic-images';
-import { TopicContainerMobile } from './topic-container-mobile/topic-container-mobile';
+import { TopicContainerMobileComponent } from './topic-container-mobile/topic-container-mobile';
 
 
 // type imports
@@ -340,7 +340,7 @@ export const AppShellComponent = (props: any) => {
                         <div id={topicContentId} className={topicContentId}>
                           {
                             isMobile ?
-                            <TopicContainerMobile
+                            <TopicContainerMobileComponent
                               fetchTopics={fetchTopics}
                               MediaCard={<TopicImagesComponent /> }
                               CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
@@ -352,14 +352,9 @@ export const AppShellComponent = (props: any) => {
                               mediaCard={<TopicImagesComponent /> }
                               commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                               analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                              TopicCarousel={<TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} />}
+                              TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
                             />
-                          }
-                          {
-                            !isMobile && 
-                            <div>
-                              <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} />
-                              <TopicNavigatorComponent iterateTopic={iterateTopic}/>
-                            </div>
                           }
                         </div>
                       </analyticsContext.Provider>

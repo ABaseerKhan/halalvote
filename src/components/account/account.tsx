@@ -15,7 +15,6 @@ import { authenticatedGetDataContext } from '../app-shell';
 // styles
 import './account.css';
 
-
 enum Tab {
     CREATEDTOPICS,
     VOTEDTOPICS,
