@@ -7,12 +7,12 @@ import { topicsContext } from '../app-shell';
 // styles
 import './topic-carousel.css';
 
-interface TopicCarouselMobileComponentProps {
+interface TopicCarouselComponentProps {
     id: string,
     fetchTopics: any,
     style?: any,
 };
-export const TopicCarouselMobileComponent = (props: TopicCarouselMobileComponentProps) => {
+export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
     const { id, fetchTopics } = props;
 
     const topicTitleRefs = useRef<any>([]);
@@ -71,48 +71,6 @@ export const TopicCarouselMobileComponent = (props: TopicCarouselMobileComponent
                 </div>
                 <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />
             </div>
-        </div>
-    );
-}
-
-interface TopicCarouselComponentProps {
-    id: string,
-    iterateTopic: any,
-    style?: any;
-};
-export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
-    const { id, iterateTopic } = props;
-
-    const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
-
-    const topic = topics?.length ? topics[topicIndex] : undefined;
-    const topicTitle = topic?.topicTitle || "";
-    const halalPoints = topic?.halalPoints !== undefined ? topic.halalPoints : 0;
-    const haramPoints = topic?.haramPoints !== undefined ? topic.haramPoints : 0;
-    const numVotes = topic?.numVotes !== undefined ? topic.numVotes : 0;
-    const userVote = topic?.vote;
-
-    const leftCarouselButtonId = "left-carousel-button";
-    const rightCarouselButtonId = "right-carousel-button";
-
-    useEffect(() => {
-        const leftCarouselButton = document.getElementById(leftCarouselButtonId);
-        const rightCarouselButton = document.getElementById(rightCarouselButtonId);
-        if (leftCarouselButton && rightCarouselButton) {
-            leftCarouselButton.classList.add("carousel-button-computer");
-            rightCarouselButton.classList.add("carousel-button-computer");
-        }
-    }, [iterateTopic]);
-
-    return (
-        <div id={id} style={props.style} className='topic-carousel'>
-            <div>
-                <span className="topic-label">Topic:</span>
-                <div id="topic-title" className='topic-title'>
-                    {topicTitle}
-                </div>
-            </div>
-            <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />
         </div>
     );
 }

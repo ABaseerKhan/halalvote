@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageScrollerComponent } from './page-scroller/page-scroller';
-import { TopicCarouselComponent, TopicCarouselMobileComponent } from './topic-carousel/topic-carousel';
+import {TopicCarouselComponent } from './topic-carousel/topic-carousel';
 import { SearchComponent } from './search/search';
 import { AnalyticsCardComponent } from './analytics-card/analytics-card';
 import { MenuComponent } from './menu/menu';
@@ -344,7 +344,7 @@ export const AppShellComponent = (props: any) => {
                               MediaCard={<TopicImagesComponent /> }
                               CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                               AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                              TopicCarousel={<TopicCarouselMobileComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
+                              TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
                               TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
                             /> :
                             <TopicContainerComponent
@@ -352,7 +352,7 @@ export const AppShellComponent = (props: any) => {
                               mediaCard={<TopicImagesComponent /> }
                               commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                               analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                              TopicCarousel={<TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} />}
+                              TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
                               TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
                             />
                           }
