@@ -5,7 +5,7 @@ import { usersConfig } from '../../https-client/config';
 import { Topic, Comment } from '../../types';
 import { timeSince, vhToPixels, setCardQueryParam } from '../../utils';
 import { modalHeightVh } from '../../';
-import { commentsCardId } from '../cards-shell/cards-shell';
+import { commentsCardId } from '../topic-container/topic-container';
 import { useQuery } from '../../hooks/useQuery';
 import { 
     useHistory,

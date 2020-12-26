@@ -9,7 +9,7 @@ import { postData, getData } from '../https-client/client';
 import { topicsConfig } from '../https-client/config';
 import { arrayMove, isMobile } from "../utils";
 import { useCookies } from 'react-cookie';
-import { CardsShellComponent } from './cards-shell/cards-shell';
+import { TopicContainerComponent } from './topic-container/topic-container';
 import { CommentsCardComponent } from './comments/comments-card';
 import {
   useHistory,
@@ -25,7 +25,7 @@ import { TopicContainerMobile } from './topic-container-mobile/topic-container-m
 
 // style imports
 import './app-shell.css';
-import { TopicNavigatorComponent } from './topic-carousel/topic-navigator';
+import { TopicNavigatorComponent } from './topic-navigator/topic-navigator';
 
 enum IncomingDirection {
   LEFT,
@@ -348,7 +348,7 @@ export const AppShellComponent = (props: any) => {
                               TopicCarousel={<TopicCarouselMobileComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
                               TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
                             /> :
-                            <CardsShellComponent
+                            <TopicContainerComponent
                               mediaCard={<TopicImagesComponent /> }
                               commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                               analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}

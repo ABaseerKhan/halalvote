@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, ReactElement, useState } from 'react';
-import './cards-shell.css';
 import { useQuery } from '../../hooks/useQuery';
 import { 
   useHistory,
@@ -10,6 +9,7 @@ import { setCardQueryParam } from '../../utils';
 // type imports
 
 // styles
+import './topic-container.css';
 
 const x1 = .25, y1 = .1, x2 = .25, y2 = 1;
 const x1r = 1-x2, y1r = 1-y2, x2r = 1-x1, y2r = 1-y1;
@@ -22,13 +22,13 @@ export const mediaCardId = "CANVAS";
 export const commentsCardId = "ARGUMENTS";
 export const analyticsCardId = "ANALYTICS";
 
-interface CardsShellComponentProps {
+interface TopicContainerComponentProps {
     mediaCard: ReactElement,
     commentsCard: ReactElement,
     analyticsCard: ReactElement
 };
 
-export const CardsShellComponent = (props: CardsShellComponentProps) => {
+export const TopicContainerComponent = (props: TopicContainerComponentProps) => {
     const { mediaCard, commentsCard, analyticsCard } = props;
 
     const history = useHistory();
