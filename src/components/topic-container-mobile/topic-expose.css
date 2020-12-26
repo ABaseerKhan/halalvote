@@ -1,7 +1,7 @@
 .topic-expose-container {
     display: flex;
-    position: absolute;
-    height: calc(100% - 110px);
+    position: relative;
+    height: calc(100% - var(--max-topic-carousel-height-px));
     width: 100%;
     scroll-snap-align: start;
     background: var(--dark-mode-background);
@@ -17,14 +17,13 @@
     scroll-snap-align: start;
     scroll-snap-stop: always !important;
     position: absolute;
-    margin-top: 4em;
+    margin-top: 2em;
     height: 100%;
     width: 100%;
 }
 
 .feature-selector {
     position: fixed;
-    line-height: 4em;
     width: 260px;
     left: calc(50% - 130px);
     font-size: 14px;
