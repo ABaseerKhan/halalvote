@@ -3,7 +3,6 @@ import { topicsContext } from '../app-shell';
 import { TopicExposeComponent } from './topic-expose';
 
 import './topic-container-mobile.css';
-import { TopicNavigatorComponent } from '../topic-carousel/topic-navigator';
 
 interface TopicContainerMobileProps {
     fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
