@@ -61,6 +61,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     const [state, setState] = useState<CommentsCardState>(initialState);
 
+    const commentCardRef = useRef<HTMLDivElement>(null);
     const commentMakerRef = useRef<any>(null);
     const commentsContainerRef = useRef<HTMLDivElement>(null);
 
@@ -79,6 +80,31 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             setTimeout(() => setState(prevState => ({ ...prevState, loading: false, commentsShowable: true })), 300);
         } // eslint-disable-next-line
     }, [topic?.topicTitle]);
+
+    useEffect(() => {
+        if (commentCardRef.current) {
+            var touchsurface = commentCardRef.current;
+
+            const touchStartCB = function(e: any){
+                e.stopPropagation();
+            };
+            const touchMoveCB = function(e: any){
+                e.stopPropagation();
+            };
+            const touchendCB = function(e: any){
+                e.stopPropagation();
+            };
+            touchsurface.addEventListener('touchstart', touchStartCB, { passive: true });
+            touchsurface.addEventListener('touchmove', touchMoveCB, { passive: true });
+            touchsurface.addEventListener('touchend', touchendCB, { passive: true });
+
+            return () => {
+                touchsurface.removeEventListener('touchstart', touchStartCB);
+                touchsurface.removeEventListener('touchmove', touchMoveCB);
+                touchsurface.removeEventListener('touchend', touchendCB);
+            };
+        }; // eslint-disable-next-line
+    }, []);
 
     const fetchComments = async (pathToParentComment: number[], n?: number, specificCommentId?: number, depth=1) => {
         const parentComment = getCommentFromPath(comments, pathToParentComment);
@@ -203,7 +229,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const commentsCardId = "comments-card";
 
     return(
-        <div id={commentsCardId} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} style={{ zIndex: fullScreenMode ? 3 : 0 }} >
+        <div id={commentsCardId} ref={commentCardRef} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} style={{ zIndex: fullScreenMode ? 3 : 0 }} >
                 { !state.loading && state.commentsShowable && comments.length === 0 ?
                     <div className="no-comments-to-show-text">No arguments to show</div> :
                         <div id={commentsContainerId} ref={commentsContainerRef} className={isMobile ? "comments-container-fs" : "comments-container"} >
@@ -224,7 +250,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                                 })
                             }
                         </div>
-                </div>
+                    </div>
                 }
                 <CommentMakerComponent 
                     ref={commentMakerRef}
