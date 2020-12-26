@@ -53,7 +53,6 @@
 
 .selector-underline {
     position: fixed;
-    top: 9.25em;
     width: 3em;
     left: calc(25%);
     z-index: 4;

@@ -49,7 +49,7 @@ export const TopicExposeComponent = (props: FullScreenComponentProps) => {
                 scrollPosition = 0;
         }
             topicExposeRef.current.scrollLeft = scrollPosition;
-            setUnderlineTranslationPx(underlineTravelDistance * ((topicExposeRef.current!.scrollLeft) / topicExposeRef.current!.clientWidth));
+            setUnderlineTranslationPx((underlineTravelDistance * ((topicExposeRef.current!.scrollLeft) / topicExposeRef.current!.clientWidth))+15);
         };
     }, [topCard]);
 
@@ -57,7 +57,7 @@ export const TopicExposeComponent = (props: FullScreenComponentProps) => {
         if (topicExposeRef.current) {
             topicExposeRef.current.onscroll = (e: Event) => {
                 if (topicExposeRef.current) {
-                    setUnderlineTranslationPx(underlineTravelDistance * ((topicExposeRef.current!.scrollLeft) / topicExposeRef.current!.clientWidth));
+                    setUnderlineTranslationPx((underlineTravelDistance * ((topicExposeRef.current!.scrollLeft) / topicExposeRef.current!.clientWidth))+15);
                     clearTimeout(isScrolling);
                     isScrolling = setTimeout(function() {
                         if (topicExposeRef.current) {
@@ -87,7 +87,7 @@ export const TopicExposeComponent = (props: FullScreenComponentProps) => {
                         <span onClick={() => setCardQueryParam(history, query, commentsCardId.toLowerCase())} className={(underlineTranslationPx <= 42) ? "feature-selector-selected" : "feature-selector-unselected"}>Arguments</span>
                         <span onClick={() => setCardQueryParam(history, query, analyticsCardId.toLowerCase())} className={(underlineTranslationPx > 42) ? "feature-selector-selected" : "feature-selector-unselected"}>Analytics</span>
                     </div>
-                    <div className={"selector-underline"} style={{ transform: `translate(${underlineTranslationPx}px, 0)` }}></div>
+                    <div className={"selector-underline"} style={{ transform: `translate(${underlineTranslationPx}px, 2.5em)` }}></div>
                 </Fragment>
             )}
             <div className={"expose-item"} style={{ transform: 'translate(0, 0)' }}>
