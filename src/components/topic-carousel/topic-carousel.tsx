@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { TopicVotesComponent } from './topic-votes';
 import { topicsContext } from '../app-shell';
 
