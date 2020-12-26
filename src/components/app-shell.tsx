@@ -25,6 +25,7 @@ import { TopicContainerMobile } from './topic-container-mobile/topic-container-m
 
 // style imports
 import './app-shell.css';
+import { TopicNavigatorComponent } from './topic-carousel/topic-navigator';
 
 enum IncomingDirection {
   LEFT,
@@ -344,7 +345,8 @@ export const AppShellComponent = (props: any) => {
                               MediaCard={<TopicImagesComponent /> }
                               CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                               AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                              TopicCarousel={<TopicCarouselMobileComponent id={topicCarouselId} fetchTopics={fetchTopics} iterateTopic={iterateTopic} />}
+                              TopicCarousel={<TopicCarouselMobileComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
+                              TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
                             /> :
                             <CardsShellComponent
                               mediaCard={<TopicImagesComponent /> }
@@ -353,7 +355,11 @@ export const AppShellComponent = (props: any) => {
                             />
                           }
                           {
-                            !isMobile && <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} />
+                            !isMobile && 
+                            <div>
+                              <TopicCarouselComponent id={topicCarouselId} iterateTopic={iterateTopic} />
+                              <TopicNavigatorComponent iterateTopic={iterateTopic}/>
+                            </div>
                           }
                         </div>
                       </analyticsContext.Provider>

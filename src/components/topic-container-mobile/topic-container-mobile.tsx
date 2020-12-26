@@ -3,22 +3,23 @@ import { topicsContext } from '../app-shell';
 import { TopicExposeComponent } from './topic-expose';
 
 import './topic-container-mobile.css';
+import { TopicNavigatorComponent } from '../topic-carousel/topic-navigator';
 
 interface TopicContainerMobileProps {
     fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
     MediaCard: ReactElement,
     CommentsCard: ReactElement,
     AnalyticsCard: ReactElement,
-    TopicCarousel: ReactElement
+    TopicCarousel: ReactElement,
+    TopicNavigator: ReactElement
 };
 export const TopicContainerMobile = (props: TopicContainerMobileProps) => {
-    const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, fetchTopics } = props;
+    const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, TopicNavigator, fetchTopics } = props;
 
     const [, setDisplayTopicCarousel] = useState(true);
 
     const FSContainerRef = useRef<HTMLDivElement>(null);
     const FSFooterRef = useRef<HTMLDivElement>(null);
-    const topicCarouselRef = useRef<HTMLDivElement>(null);
 
     const { topicsState } = useContext(topicsContext);
     const { topics, topicIndex } = topicsState;
@@ -70,14 +71,10 @@ export const TopicContainerMobile = (props: TopicContainerMobileProps) => {
                 switch(swipedir) {
                     case 'up':
                         FSFooterRef.current!.style.transform = 'translate(0, -550px)';
-                        // if (topicCarouselRef.current) topicCarouselRef.current.style.transform = 'translate(0, -110px)';
-                        // if (topicExposeRef.current) topicExposeRef.current.style.transform = 'translate(0, -110px)';
                         setDisplayTopicCarousel(false);
                         break;
                     case 'down':
                         FSFooterRef.current!.style.transform = 'translate(0, 0)';
-                        // if (topicCarouselRef.current) topicCarouselRef.current.style.transform = 'translate(0, 0)';
-                        // if (topicExposeRef.current) topicExposeRef.current.style.transform = 'translate(0, 0)';
                         setDisplayTopicCarousel(true);
                         break;
                 };
@@ -97,12 +94,13 @@ export const TopicContainerMobile = (props: TopicContainerMobileProps) => {
 
     return (
         <div ref={FSContainerRef} className="topic-container-mobile">
+            {TopicNavigator}
             <div className="topic-media-container">
                 {MediaCard}
             </div>
             <div ref={FSFooterRef} className={'topic-container-footer'}>
                 <div className="topic-container-footer-content">
-                    <div ref={topicCarouselRef} className={"topic-carousel-container"}>{React.cloneElement(TopicCarousel)}</div>
+                    {TopicCarousel}
                     <TopicExposeComponent
                         CommentsCard={CommentsCard}
                         AnalyticsCard={AnalyticsCard}
