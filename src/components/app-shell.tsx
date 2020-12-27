@@ -149,7 +149,7 @@ export const AppShellComponent = (props: any) => {
 
   useEffect(() => {
     const { topics, topicIndex } = state.topicsState;
-    if (topics[topicIndex]) {
+    if (topics[topicIndex] && topics[topicIndex].topicTitle) {
       if (props.match.path === "/") {
         props.history.replace(`${topics[topicIndex].topicTitle.replace(/ /g,"_")}`);
       } else {
