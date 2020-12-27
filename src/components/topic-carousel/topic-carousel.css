@@ -62,6 +62,12 @@
     overflow-y: hidden;
     transition: all 0.3s ease;
     padding: 0 5px;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.topic-title-mobile::-webkit-scrollbar {
+    display: none;
 }
 
 .prev-topic-titles, .next-topic-titles {

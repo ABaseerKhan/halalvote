@@ -64,8 +64,16 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                                     className = "topic-title-mobile";
                                 }
 
-                                return <div key={`title-${idx}`} ref={(el) => topicTitleRefs.current.push(el)} className={className} style={{ transform: `translate(${translationVW}vw, 0)` }} onClick={onClick} >
-                                    <span>{topicTitles[idx]}</span>
+                                return <div 
+                                    key={`title-${idx}`} 
+                                    ref={(el) => topicTitleRefs.current.push(el)}
+                                    className={className} style={{ transform: `translate(${translationVW}vw, 0)` }}
+                                    onTouchStart={(e) => {e.stopPropagation()}}
+                                    onTouchMove={(e) => {e.stopPropagation()}}
+                                    onTouchEnd={(e) => {e.stopPropagation()}}
+                                    onClick={onClick} 
+                                    >
+                                        <span>{topicTitles[idx]}</span>
                                 </div>
                             })}
                 </div>
