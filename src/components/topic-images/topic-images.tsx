@@ -49,6 +49,7 @@ interface TopicImagesComponentState {
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     let { topicIndexOverride } = props;
 
+    console.log(topicIndexOverride);
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
     const topicTitle = topics?.length ? topics[topicIndexOverride]?.topicTitle || '' : '';
@@ -84,7 +85,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         if (imagesBodyRef.current) {
             imagesBodyRef.current?.scroll(0, (imageIndex * imagesBodyRef.current.clientHeight));
         } // eslint-disable-next-line
-    }, []);
+    }, [topicTitle]);
 
     useEffect(() => {
         setState(prevState=> prevState)
