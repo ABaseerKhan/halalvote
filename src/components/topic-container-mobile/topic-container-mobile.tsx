@@ -6,7 +6,8 @@ import { TopicExposeComponent } from './topic-expose';
 import './topic-container-mobile.css';
 
 
-const TOPIC_SWITCHING_DURATION = 300;
+const TOPIC_SWITCHING_DURATION = 350;
+const topicPerspectivePx = 2000;
 interface TopicContainerMobileComponentProps {
     fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
     MediaCard: ReactElement,
@@ -47,14 +48,14 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
             if (currentTopicMediaContainerElement && nextTopicMediaContainerElement) {
                 currentTopicMediaContainerElement.animate(
                 {
-                    transform: topicIndex > currentTopicIndex ? "rotateY(-90deg) translateX(-100%)" : "rotateY(90deg) translateX(100%)",
+                    transform: topicIndex > currentTopicIndex ? `perspective(${topicPerspectivePx}px) rotateY(-89deg) translateZ(100vw)` : `perspective(${topicPerspectivePx}px) rotateY(89deg) translateZ(100vw)`,
                 }, {
                     duration: TOPIC_SWITCHING_DURATION,
                     easing: 'linear'
                 });
                 nextTopicMediaContainerElement.animate(
                 {
-                    transform: "rotateY(0deg) translateX(0)",
+                    transform: `perspective(${topicPerspectivePx}px) rotateY(0deg) translateX(0) translateZ(0)`,
                     easing: 'linear'
                 }, {
                     duration: TOPIC_SWITCHING_DURATION
@@ -142,12 +143,12 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     return (
         <div ref={FSContainerRef} className="topic-container-mobile">
             {TopicNavigator}
-            <div ref={currentTopicMediaContainer} className="topic-media-container" style={{transform: "rotateY(0deg) translateX(0)", transformOrigin: topicIndex > currentTopicIndex ? 'left' : 'right' }}>
+            <div ref={currentTopicMediaContainer} className="topic-media-container" style={{transform: `perspective(${topicPerspectivePx}px) rotateY(0) translateX(0) translateZ(0)`, transformOrigin: topicIndex > currentTopicIndex ? 'right' : 'left' }}>
                 {React.cloneElement(MediaCard, {topicIndexOverride: currentTopicIndex})}
             </div>
             {
                 topicIndex !== currentTopicIndex &&
-                <div ref={nextTopicMediaContainer} className="topic-media-container" style={topicIndex > currentTopicIndex ? {transform: "rotateY(90deg) translateX(100%)", transformOrigin: "right"} :  {transform: "rotateY(-90deg) translateX(-100%)", transformOrigin: "left"}}>
+                <div ref={nextTopicMediaContainer} className="topic-media-container" style={topicIndex > currentTopicIndex ? {transform: `perspective(${topicPerspectivePx}px) rotateY(89deg) translateZ(100vw)`, transformOrigin: "left"} :  {transform: `perspective(${topicPerspectivePx}px) rotateY(-89deg) translateZ(100vw)`, transformOrigin: "right"}}>
                     {MediaCard}
                 </div>
             }
