@@ -7,7 +7,7 @@ import './topic-container-mobile.css';
 
 
 const TOPIC_SWITCHING_DURATION = 350;
-const topicPerspectivePx = 3000;
+const topicPerspectivePx = 2000;
 interface TopicContainerMobileComponentProps {
     fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
     MediaCard: ReactElement,
