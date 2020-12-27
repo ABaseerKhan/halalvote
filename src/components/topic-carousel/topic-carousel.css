@@ -60,7 +60,7 @@
     white-space: nowrap;
     scroll-behavior: smooth;
     overflow-y: hidden;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
     padding: 0 5px;
 }
 
@@ -73,7 +73,7 @@
     height: 4em;
     font-size: 9px;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
     color: var(--dark-mode-secondary-text-color);
     overflow-x: hidden;
 }
