@@ -93,26 +93,46 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
     }, []);
 
     useEffect(() => {
-      if (topicIndex !== currentTopicIndex) {
-          const currentTopicContainerElement = currentTopicContainer.current;
-          const nextTopicContainerElement = nextTopicContainer.current;
+      setCards(); // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentTopicIndex]);
 
-          if (currentTopicContainerElement && nextTopicContainerElement) {
-              currentTopicContainerElement.animate(
-              {
-                  marginLeft: topicIndex > currentTopicIndex ? "-100%" : "100%"
-              }, {
-                  duration: TOPIC_SWITCHING_DURATION
-              });
-              nextTopicContainerElement.animate(
+    useEffect(() => {
+      if (topicIndex !== currentTopicIndex) {
+        const currentTopicContainerElement = currentTopicContainer.current;
+        const nextTopicContainerElement = nextTopicContainer.current;
+        const leftCard = document.getElementById(positions.current[1]);
+        const rightCard = document.getElementById(positions.current[2]);
+
+        if (currentTopicContainerElement && nextTopicContainerElement && leftCard && rightCard) {
+          currentTopicContainerElement.animate(
+          {
+              marginLeft: topicIndex > currentTopicIndex ? "-100%" : "100%"
+          }, {
+              duration: TOPIC_SWITCHING_DURATION
+          });
+          nextTopicContainerElement.animate(
+          {
+              marginLeft: "0"
+          }, {
+              duration: TOPIC_SWITCHING_DURATION
+          }).onfinish = () => {
+            leftCard.animate(
               {
                   marginLeft: "0"
               }, {
-                  duration: TOPIC_SWITCHING_DURATION
-              }).onfinish = () => {
-                  setCurrentTopicIndex(topicIndex);
-              };
-          }
+                  duration: 0,
+                  fill: "forwards"
+              });
+              rightCard.animate(
+              {
+                  marginLeft: "0"
+              }, {
+                  duration: 0,
+                  fill: "forwards"
+              });
+            setCurrentTopicIndex(topicIndex);
+          };
+        }
       } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topicIndex]);
 
