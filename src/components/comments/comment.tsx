@@ -145,10 +145,6 @@ export const CommentComponent = (props: CommentComponentProps) => {
         });
     };
 
-    if (comment.replies && comment.replies.length) {
-        // console.log(repliesHeight);
-    };
-
     return (
         <div ref={commentContainerRef} id={`comment-${comment.id}`} className={"comment-container"} style={{ display: (hide ? 'none' : 'flex')}}>
             <div className="comment-bubble-container">

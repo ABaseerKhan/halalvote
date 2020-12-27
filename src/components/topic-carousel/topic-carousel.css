@@ -54,7 +54,7 @@
     width: 68vw;
     min-height: calc(var(--max-toolbar-height-px));
     text-align: center;
-    font-size: 2em;
+    font-size: 1.6em;
     color: var(--dark-mode-text-color);
     overflow-x: auto;
     white-space: nowrap;
