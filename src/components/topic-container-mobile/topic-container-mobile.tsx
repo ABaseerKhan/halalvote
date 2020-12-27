@@ -6,7 +6,7 @@ import { TopicExposeComponent } from './topic-expose';
 import './topic-container-mobile.css';
 
 
-const TOPIC_SWITCHING_DURATION = 350;
+const TOPIC_SWITCHING_DURATION = 300;
 const topicPerspectivePx = 2000;
 interface TopicContainerMobileComponentProps {
     fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
