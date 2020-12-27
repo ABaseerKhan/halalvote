@@ -7,6 +7,18 @@
     scroll-snap-align: start;
 }
 
+.search-page-mobile {
+    z-index: 4;
+    display: table;
+    position: fixed;
+    background: var(--dark-mode-background);
+    height: 25vh;
+    width: 100%;
+    text-align: center;
+    transform: translate(0, -25vh);
+    transition: all 0.3s ease;
+}
+
 @media only screen and (max-width: 600px) {
     .search-bar {
         position: absolute;

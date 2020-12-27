@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PageScrollerComponent } from './page-scroller/page-scroller';
 import {TopicCarouselComponent } from './topic-carousel/topic-carousel';
-import { SearchComponent } from './search/search';
+import { SearchComponent, SearchComponentMobile } from './search/search';
 import { AnalyticsCardComponent } from './analytics-card/analytics-card';
 import { MenuComponent } from './menu/menu';
 import { Topic, Comment, TopicImages } from '../types';
@@ -52,8 +52,7 @@ type AppShellState = {
   topicImages: TopicImagesState,
   comments: CommentsState,
   specificComment?: Comment, 
-  incomingDirection: IncomingDirection, 
-  fullScreenMode: boolean,
+  incomingDirection: IncomingDirection,
   muted: boolean,
   analytics: AnalyticsState
 };
@@ -67,7 +66,6 @@ export const AppShellComponent = (props: any) => {
     comments: { },
     specificComment: undefined,
     incomingDirection: IncomingDirection.NONE,
-    fullScreenMode: false,
     muted: true,
     analytics: { }
   });
@@ -83,7 +81,6 @@ export const AppShellComponent = (props: any) => {
   const history = useHistory();
 
   // context-setters (they also serve as application cache)
-  const setFullScreenModeContext = (fullScreenMode: boolean) => { setState(prevState => ({ ...prevState, fullScreenMode: fullScreenMode })); };
   const setMutedContext = (mute: boolean) => { setState(prevState => ({ ...prevState, muted: mute })); };
   const setTopicsContext = (topics: Topic[], index: number) => {
     setState(prevState => ({ ...prevState, topicsState: { topics: topics, topicIndex: index }}));
@@ -327,47 +324,45 @@ export const AppShellComponent = (props: any) => {
   return (
     <authenticatedPostDataContext.Provider value={{authenticatedPostData: authenticatedPostData, setAuthenticatedPostData: setAuthenticatedPostData}}>
         <authenticatedGetDataContext.Provider value={{authenticatedGetData: authenticatedGetData, setAuthenticatedGetData: setAuthenticatedGetData}}>
-          <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenModeContext: setFullScreenModeContext }}>
-            <muteContext.Provider value={{ muted: state.muted, setMuted: setMutedContext }}>
-              <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
-                <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
-                  <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
-                    <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
-                      <div id={appShellId} className={appShellId} style={{ overflowY: state.fullScreenMode ? 'hidden' : 'scroll' }} >
-                        {!isMobile && <SearchComponent onSuggestionClick={searchTopic} />}
-                        <div className="topic-content">
-                          {
-                            isMobile ?
-                            <TopicContainerMobileComponent
-                              movingTopicContentId={movingTopicContentId}
-                              fetchTopics={fetchTopics}
-                              MediaCard={<TopicImagesComponent /> }
-                              CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                              AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                              TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
-                              TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
-                            /> :
-                            <TopicContainerComponent
-                              movingTopicContentId={movingTopicContentId}
-                              mediaCard={<TopicImagesComponent /> }
-                              commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                              analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                              TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
-                              TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
-                            />
-                          }
-                        </div>
-                        <div className="fixed-content">
-                          {!isMobile && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
-                          <MenuComponent fetchTopics={searchTopic} showSpecificComment={showSpecificComment} />
-                        </div>
+          <muteContext.Provider value={{ muted: state.muted, setMuted: setMutedContext }}>
+            <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
+              <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
+                <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
+                  <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
+                    <div id={appShellId} className={appShellId} style={{ overflowY: isMobile ? 'hidden' : 'scroll' }} >
+                      {isMobile ? <SearchComponentMobile onSuggestionClick={searchTopic} /> : <SearchComponent onSuggestionClick={searchTopic} />}
+                      <div className="topic-content">
+                        {
+                          isMobile ?
+                          <TopicContainerMobileComponent
+                            movingTopicContentId={movingTopicContentId}
+                            fetchTopics={fetchTopics}
+                            MediaCard={<TopicImagesComponent /> }
+                            CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                            AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                            TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
+                            TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
+                          /> :
+                          <TopicContainerComponent
+                            movingTopicContentId={movingTopicContentId}
+                            mediaCard={<TopicImagesComponent /> }
+                            commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                            analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                            TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
+                            TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
+                          />
+                        }
                       </div>
-                    </analyticsContext.Provider>
-                  </commentsContext.Provider>
-                </topicImagesContext.Provider>
-              </topicsContext.Provider>
-            </muteContext.Provider>
-          </fullScreenContext.Provider>
+                      <div className="fixed-content">
+                        {!isMobile && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
+                        <MenuComponent fetchTopics={searchTopic} showSpecificComment={showSpecificComment} />
+                      </div>
+                    </div>
+                  </analyticsContext.Provider>
+                </commentsContext.Provider>
+              </topicImagesContext.Provider>
+            </topicsContext.Provider>
+          </muteContext.Provider>
         </authenticatedGetDataContext.Provider>
       </authenticatedPostDataContext.Provider>
   )
