@@ -18,13 +18,15 @@ enum Interval {
 };
 
 interface AnalyticsCardComponentProps {
-    id: string
+    id: string,
+    topicIndexOverride?: number
 };
 
 var myChart: Chart;
 
 export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     const { id } = props;
+    let { topicIndexOverride } = props;
 
     const [displayNumbers, setDisplayNumbers] = useState({ halalNumber: 0, haramNumber: 0});
     const [interval, setInterval] = useState<Interval>(Interval.ALL);
@@ -44,10 +46,11 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }
 
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
+    topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
     const { analyticsState, setAnalyticsContext } = useContext(analyticsContext);
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
     
-    const topic = topics?.length ? topics[topicIndex] : undefined;
+    const topic = topics?.length ? topics[topicIndexOverride] : undefined;
 
     const graph = topic?.topicTitle !== undefined ? analyticsState[topic?.topicTitle]?.graph : undefined;
 

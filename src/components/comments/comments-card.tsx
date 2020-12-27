@@ -19,7 +19,7 @@ import { isMobile } from '../../utils';
 interface CommentsCardComponentProps {
     refreshTopic: (topicTofetch: string | undefined) => any,
     switchCards: (judgement: Judgment) => any,
-    topicIndexOverride?: number;
+    topicIndexOverride?: number
 };
 
 interface CommentsCardState {
@@ -36,14 +36,6 @@ const initialState = {
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const { refreshTopic } = props;
     let { topicIndexOverride } = props;
-
-    // const isMobile = useMedia(
-    //     // Media queries
-    //     ['(max-width: 600px)'],
-    //     [true],
-    //     // default value
-    //     false
-    // );
 
     const { fullScreenMode } = useContext(fullScreenContext);
     const { authenticatedPostData } = useContext(authenticatedPostDataContext);

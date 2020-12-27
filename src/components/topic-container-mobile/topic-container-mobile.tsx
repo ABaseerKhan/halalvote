@@ -1,12 +1,13 @@
-import React, { ReactElement, useRef, useEffect, useContext } from 'react';
+import React, { ReactElement, useRef, useEffect, useContext, useState } from 'react';
 import { topicsContext } from '../app-shell';
 import { TopicExposeComponent } from './topic-expose';
 
 // styles
 import './topic-container-mobile.css';
 
+const TOPIC_SWITCHING_DURATION = 300;
+
 interface TopicContainerMobileComponentProps {
-    movingTopicContentId: string,
     fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
     MediaCard: ReactElement,
     CommentsCard: ReactElement,
@@ -15,13 +16,17 @@ interface TopicContainerMobileComponentProps {
     TopicNavigator: ReactElement
 };
 export const TopicContainerMobileComponent = (props: TopicContainerMobileComponentProps) => {
-    const { movingTopicContentId, MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, TopicNavigator, fetchTopics } = props;
+    const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, TopicNavigator, fetchTopics } = props;
 
     const FSContainerRef = useRef<HTMLDivElement>(null);
     const FSFooterRef = useRef<HTMLDivElement>(null);
 
     const { topicsState } = useContext(topicsContext);
     const { topics, topicIndex } = topicsState;
+
+    const currentTopicMediaContainer = useRef<HTMLDivElement>(null);
+    const nextTopicMediaContainer = useRef<HTMLDivElement>(null);
+    const [currentTopicIndex, setCurrentTopicIndex] = useState<number>(topicIndex);
 
     const handleClick = (e: any) => {
         if (FSFooterRef.current && FSFooterRef.current.contains(e.target)) {
@@ -33,6 +38,30 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
             FSFooterRef.current!.style.transform = `translate(0, calc(-1 * var(--max-topic-carousel-height-px)))`;
         }
     };
+
+    useEffect(() => {
+        if (topicIndex !== currentTopicIndex) {
+            const currentTopicMediaContainerElement = currentTopicMediaContainer.current;
+            const nextTopicMediaContainerElement = nextTopicMediaContainer.current;
+
+            if (currentTopicMediaContainerElement && nextTopicMediaContainerElement) {
+                currentTopicMediaContainerElement.animate(
+                {
+                    marginLeft: topicIndex > currentTopicIndex ? "-100%" : "100%"
+                }, {
+                    duration: TOPIC_SWITCHING_DURATION
+                });
+                nextTopicMediaContainerElement.animate(
+                {
+                    marginLeft: "0"
+                }, {
+                    duration: TOPIC_SWITCHING_DURATION
+                }).onfinish = () => {
+                    setCurrentTopicIndex(topicIndex);
+                };
+            }
+        } // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [topicIndex]);
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClick);
@@ -111,8 +140,17 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     return (
         <div ref={FSContainerRef} className="topic-container-mobile">
             {TopicNavigator}
-            <div id={movingTopicContentId} className="topic-media-container">
-                {MediaCard}
+            <div ref={currentTopicMediaContainer} className="topic-media-container" style={{marginLeft: "0"}}>
+                {React.cloneElement(MediaCard, {topicIndexOverride: currentTopicIndex})}
+            </div>
+            {
+                topicIndex !== currentTopicIndex &&
+                <div ref={nextTopicMediaContainer} className="topic-media-container" style={{marginLeft: topicIndex > currentTopicIndex ? "100%" : "-100%"}}>
+                    {MediaCard}
+                </div>
+            }
+            <div>
+
             </div>
             <div ref={FSFooterRef} className={'topic-container-footer'}>
                 <div className="topic-container-footer-content">

@@ -36,7 +36,6 @@ enum IncomingDirection {
 const maxTopicsDataCacheSize = 20;
 
 const appShellId = "app-shell";
-const movingTopicContentId = "moving-topic-content";
 const topicCarouselId = "topicCarousel";
 const pageZeroId = "Search";
 const pageOneId = "Topics";
@@ -45,7 +44,6 @@ const getAppShell = () => { return document.getElementById(appShellId); }
 const getTopicCarousel = () => { return document.getElementById(topicCarouselId); }
 const getPageZero = () => { return document.getElementById(pageZeroId); }
 const getPageOne = () => { return document.getElementById(pageOneId); }
-const getMovingTopicContent = () => { return document.getElementById(movingTopicContentId); }
 
 type AppShellState = { 
   topicsState: TopicsState; 
@@ -161,25 +159,6 @@ export const AppShellComponent = (props: any) => {
           search: window.location.search
         });
       }
-    }
-
-    const appShell = getAppShell();
-    const movingTopicContent = getMovingTopicContent();
-
-    if (appShell && movingTopicContent && state.incomingDirection !== IncomingDirection.NONE) {
-        movingTopicContent.style.marginLeft = state.incomingDirection === IncomingDirection.RIGHT ? "100%" : "-100%";
-        movingTopicContent.animate([
-          {
-            marginLeft: '0',
-          }
-        ], {
-          duration: prevNextTopicAnimationDuration,
-          easing: 'ease-out',
-        }).onfinish = () => {
-          movingTopicContent.style.marginLeft = "0";
-          setState(prevState => ({ ...prevState, incomingDirection: IncomingDirection.NONE }));
-        }
-    } else if (movingTopicContent && state.incomingDirection !== IncomingDirection.NONE) {
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.topicsState]);
 
@@ -225,7 +204,7 @@ export const AppShellComponent = (props: any) => {
     }
   }
 
-  const animationCallback = (iteration: number) => () => {
+  const iterateTopic = (iteration: number) => () => {
     const incomingDirection = iteration === 0 ? IncomingDirection.NONE : iteration > 0 ? IncomingDirection.RIGHT : IncomingDirection.LEFT;
 
     setState((prevState: AppShellState) => ({ ...prevState, incomingDirection: incomingDirection, muted: true }));
@@ -236,21 +215,6 @@ export const AppShellComponent = (props: any) => {
       setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex+iteration);
     }
 
-  };
-
-  const iterateTopic = (iteration: number) => () => {
-    const movingTopicContent = getMovingTopicContent();
-
-    if (movingTopicContent) {
-      if (iteration === 1) {
-        animateNextTopic(movingTopicContent, animationCallback(iteration));
-      }
-      if (iteration === -1) {
-        if ((state.topicsState.topicIndex + iteration) >= 0) {
-          animatePrevTopic(movingTopicContent, animationCallback(iteration));
-        }
-      }
-    }
   };
 
   const showSpecificComment = (comment: Comment) => {
@@ -339,7 +303,6 @@ export const AppShellComponent = (props: any) => {
                                           {
                                             isMobile ?
                                             <TopicContainerMobileComponent
-                                              movingTopicContentId={movingTopicContentId}
                                               fetchTopics={fetchTopics}
                                               MediaCard={<TopicImagesComponent /> }
                                               CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
@@ -348,7 +311,6 @@ export const AppShellComponent = (props: any) => {
                                               TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
                                             /> :
                                             <TopicContainerComponent
-                                              movingTopicContentId={movingTopicContentId}
                                               mediaCard={<TopicImagesComponent /> }
                                               commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                                               analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
@@ -371,41 +333,6 @@ export const AppShellComponent = (props: any) => {
         </authenticatedGetDataContext.Provider>
       </authenticatedPostDataContext.Provider>
   )
-}
-
-const prevNextTopicAnimationDuration = 300;
-const animateNextTopic = (movingTopicContent: HTMLElement | null, callback: () => void) => {
-  if(movingTopicContent) {
-    movingTopicContent.style.marginLeft = "0";
-    movingTopicContent.animate([
-      {
-        marginLeft: '-100%'
-      }
-    ], {
-      duration: prevNextTopicAnimationDuration,
-      easing: 'ease-in',
-    }).onfinish = () => {
-      movingTopicContent.style.marginLeft = "-100%";
-      callback();
-    }
-  };
-}
-
-const animatePrevTopic = (movingTopicContent: any, callback: () => void) => {
-  if(movingTopicContent) {
-    movingTopicContent.style.marginLeft = "0";
-    movingTopicContent.animate([
-      {
-        marginLeft: '100%'
-      }
-    ], {
-      duration: prevNextTopicAnimationDuration,
-      easing: 'ease-in',
-    }).onfinish = () => {
-      movingTopicContent.style.marginLeft = "100%";
-      callback();
-    }
-  };
 }
 
 const authenticatedPostData = async (request: any, willRetry: boolean): Promise<any> => {

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, ReactElement, useState } from 'react';
+import React, { useEffect, useRef, ReactElement, useState, useContext } from 'react';
 import { useQuery } from '../../hooks/useQuery';
 import { 
   useHistory,
 } from "react-router-dom";
 import { setCardQueryParam } from '../../utils';
+import { topicsContext } from '../app-shell';
 
 // type imports
 
@@ -13,16 +14,17 @@ import './topic-container.css';
 const x1 = .25, y1 = .1, x2 = .25, y2 = 1;
 const x1r = 1-x2, y1r = 1-y2, x2r = 1-x1, y2r = 1-y1;
 
-const DURATION = 300;
+const CARD_SWITCHING_DURATION = 300;
 const EASEAPART = `cubic-bezier(${x1},${y1},${x2},${y2})`;
 const EASECLOSER = `cubic-bezier(${x1r},${y1r},${x2r},${y2r})`;
+
+const TOPIC_SWITCHING_DURATION = 300;
 
 export const mediaCardId = "CANVAS";
 export const commentsCardId = "ARGUMENTS";
 export const analyticsCardId = "ANALYTICS";
 
 interface TopicContainerComponentProps {
-    movingTopicContentId: string,
     mediaCard: ReactElement,
     commentsCard: ReactElement,
     analyticsCard: ReactElement,
@@ -31,7 +33,14 @@ interface TopicContainerComponentProps {
 };
 
 export const TopicContainerComponent = (props: TopicContainerComponentProps) => {
-    const { movingTopicContentId, mediaCard, commentsCard, analyticsCard, TopicCarousel, TopicNavigator } = props;
+    const { mediaCard, commentsCard, analyticsCard, TopicCarousel, TopicNavigator } = props;
+
+    const { topicsState } = useContext(topicsContext);
+    const { topicIndex } = topicsState;
+
+    const currentTopicContainer = useRef<HTMLDivElement>(null);
+    const nextTopicContainer = useRef<HTMLDivElement>(null);
+    const [currentTopicIndex, setCurrentTopicIndex] = useState<number>(topicIndex);
 
     const history = useHistory();
     const query = useQuery();
@@ -69,15 +78,43 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
       );
     };
 
-    const mediaCardElement: ReactElement = createCardElement(mediaCardId, React.cloneElement(mediaCard, { shown: positions.current[0] === mediaCardId }), positions.current.indexOf(mediaCardId));
-    const commentsCardElement: ReactElement = createCardElement(commentsCardId, commentsCard, positions.current.indexOf(commentsCardId));
-    const analyticsCardElement: ReactElement = createCardElement(analyticsCardId, analyticsCard, positions.current.indexOf(analyticsCardId));
+    const currentMediaCardElement: ReactElement = createCardElement(mediaCardId, React.cloneElement(mediaCard, { shown: positions.current[0] === mediaCardId, topicIndexOverride: currentTopicIndex }), positions.current.indexOf(mediaCardId));
+    const currentCommentsCardElement: ReactElement = createCardElement(commentsCardId, React.cloneElement(commentsCard, { topicIndexOverride: currentTopicIndex }), positions.current.indexOf(commentsCardId));
+    const currentAnalyticsCardElement: ReactElement = createCardElement(analyticsCardId, React.cloneElement(analyticsCard, { topicIndexOverride: currentTopicIndex }), positions.current.indexOf(analyticsCardId));
+
+    const nextMediaCardElement: ReactElement = createCardElement(mediaCardId, React.cloneElement(mediaCard, { shown: positions.current[0] === mediaCardId }), positions.current.indexOf(mediaCardId));
+    const nextCommentsCardElement: ReactElement = createCardElement(commentsCardId, commentsCard, positions.current.indexOf(commentsCardId));
+    const nextAnalyticsCardElement: ReactElement = createCardElement(analyticsCardId, analyticsCard, positions.current.indexOf(analyticsCardId));
 
     useEffect(() => {
       setTimeout(() => {
         setCards();
       }, 300) // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+      if (topicIndex !== currentTopicIndex) {
+          const currentTopicContainerElement = currentTopicContainer.current;
+          const nextTopicContainerElement = nextTopicContainer.current;
+
+          if (currentTopicContainerElement && nextTopicContainerElement) {
+              currentTopicContainerElement.animate(
+              {
+                  marginLeft: topicIndex > currentTopicIndex ? "-100%" : "100%"
+              }, {
+                  duration: TOPIC_SWITCHING_DURATION
+              });
+              nextTopicContainerElement.animate(
+              {
+                  marginLeft: "0"
+              }, {
+                  duration: TOPIC_SWITCHING_DURATION
+              }).onfinish = () => {
+                  setCurrentTopicIndex(topicIndex);
+              };
+          }
+      } // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topicIndex]);
 
     const leftCardMarginLeft =  -5;
     const rightCardMarginLeft = 5;
@@ -107,7 +144,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
             transform:'scale(.95)'
           }
         ], {
-            duration: DURATION,
+            duration: CARD_SWITCHING_DURATION,
             easing: EASEAPART,
             fill: "forwards"
         }).onfinish = () => {
@@ -119,7 +156,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
             transform:'scale(.95)'
           }
         ], {
-            duration: DURATION,
+            duration: CARD_SWITCHING_DURATION,
             easing: EASEAPART,
             fill: "forwards"
         });
@@ -128,7 +165,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
             opacity: '1'
           }
         ], {
-            duration: DURATION,
+            duration: CARD_SWITCHING_DURATION,
             easing: EASEAPART,
             fill: "forwards"
         });
@@ -137,7 +174,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
             opacity: '1'
           }
         ], {
-            duration: DURATION,
+            duration: CARD_SWITCHING_DURATION,
             easing: EASEAPART,
             fill: "forwards"
         });
@@ -181,7 +218,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
             transform:'scale(.975)'
           }
         ], {
-            duration: DURATION,
+            duration: CARD_SWITCHING_DURATION,
             easing: EASEAPART,
             fill: "forwards"
         });
@@ -190,7 +227,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
             marginLeft: '0vw'
           }
         ], {
-            duration: DURATION,
+            duration: CARD_SWITCHING_DURATION,
             easing: EASECLOSER,
             fill: "forwards"
         });
@@ -199,7 +236,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
             opacity: '0.5'
           }
         ], {
-            duration: DURATION,
+            duration: CARD_SWITCHING_DURATION,
             easing: EASEAPART,
             fill: "forwards"
         });
@@ -208,7 +245,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
             opacity: '0.5'
           }
         ], {
-            duration: DURATION,
+            duration: CARD_SWITCHING_DURATION,
             easing: EASEAPART,
             fill: "forwards"
         });
@@ -220,7 +257,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
                 transform:'scale(.975)'
               }
             ], {
-                duration: DURATION,
+                duration: CARD_SWITCHING_DURATION,
                 easing: EASEAPART,
                 fill: "forwards"
             }).onfinish = () => {
@@ -237,7 +274,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
                 transform:'scale(.975)'
               }
             ], {
-                duration: DURATION,
+                duration: CARD_SWITCHING_DURATION,
                 easing: EASEAPART,
                 fill: "forwards"
             }).onfinish = () => {
@@ -271,7 +308,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
             transform:'scale(1)'
           }
         ], {
-            duration: DURATION,
+            duration: CARD_SWITCHING_DURATION,
             easing: EASECLOSER,
             fill: "forwards"
         });
@@ -280,7 +317,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
             opacity: '0'
           }
         ], {
-            duration: DURATION,
+            duration: CARD_SWITCHING_DURATION,
             easing: EASEAPART,
             fill: "forwards"
         });
@@ -289,7 +326,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
             opacity: '1'
           }
         ], {
-            duration: DURATION,
+            duration: CARD_SWITCHING_DURATION,
             easing: EASEAPART,
             fill: "forwards"
         });
@@ -301,7 +338,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
                 transform:'scale(.95)'
               }
             ], {
-                duration: DURATION,
+                duration: CARD_SWITCHING_DURATION,
                 easing: EASECLOSER,
                 fill: "forwards"
             }).onfinish = () => {
@@ -326,7 +363,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
                 transform:'scale(.95)'
               }
             ], {
-                duration: DURATION,
+                duration: CARD_SWITCHING_DURATION,
                 easing: EASECLOSER,
                 fill: "forwards"
             });
@@ -338,7 +375,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
                 transform:'scale(.95)'
               }
             ], {
-                duration: DURATION,
+                duration: CARD_SWITCHING_DURATION,
                 easing: EASECLOSER,
                 fill: "forwards"
             }).onfinish = () => {
@@ -363,7 +400,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
                 transform:'scale(.95)'
               }
             ], {
-                duration: DURATION,
+                duration: CARD_SWITCHING_DURATION,
                 easing: EASECLOSER,
                 fill: "forwards"
             });
@@ -374,9 +411,15 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
 
     return (
       <div>
-        <div id={movingTopicContentId}>
-          <div className="cards-shell" children={[mediaCardElement, commentsCardElement, analyticsCardElement]}/>
+        <div ref={currentTopicContainer} style={{marginLeft: "0"}}>
+          <div className="cards-shell" children={[currentMediaCardElement, currentCommentsCardElement, currentAnalyticsCardElement]}/>
         </div>
+        {
+          topicIndex !== currentTopicIndex &&
+          <div ref={nextTopicContainer} style={{marginLeft: topicIndex > currentTopicIndex ? "100%" : "-100%"}}>
+            <div className="cards-shell" children={[nextMediaCardElement, nextCommentsCardElement, nextAnalyticsCardElement]}/>
+          </div>
+        }
         {TopicCarousel}
         {TopicNavigator}
       </div>
