@@ -58,8 +58,8 @@
 
 .selector-underline {
     position: fixed;
-    width: 3em;
-    left: calc(50% - 25vw);
+    width: 2em;
+    left: calc(50% - 30vw + 2em);
     z-index: 4;
     height: 3px;
     background: white;
