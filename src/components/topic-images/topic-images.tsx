@@ -211,8 +211,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         });
     };
 
-    const moreImagesIndicatorPosition = "absolute";
-
     const ImageNavigator = (
         <div style={{ height: '100%', width: '100%' }}>
             <div id="images-body" ref={imagesBodyRef} className={"images-body"}>
@@ -247,9 +245,16 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
                         <div className='no-image-text'>No images to show</div>
                 }
-                {topicImages.length > imageIndex + 1 && <div className={"more-images-below"} style={{ position: moreImagesIndicatorPosition }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) + 500)) }>
-                    <DownArrowSVG />
-                </div>}
+                {topicImages.length > (imageIndex + 1) && 
+                    <div className={"more-images-below"} style={{ left: 'calc(35% - 11px)' }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) + 500)) }>
+                        <DownArrowSVG />
+                    </div>
+                }
+                {topicImages.length > (imageIndex + 1) && 
+                    <div className={"more-images-below"} style={{ left: 'calc(65% - 11px)' }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) + 500)) }>
+                        <DownArrowSVG />
+                    </div>
+                }
             </div>
             <div className={!state.addTopicDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
                 <AddButtonSVG />
