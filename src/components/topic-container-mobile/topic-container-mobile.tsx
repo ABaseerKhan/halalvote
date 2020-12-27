@@ -5,8 +5,12 @@ import { TopicExposeComponent } from './topic-expose';
 // styles
 import './topic-container-mobile.css';
 
-const TOPIC_SWITCHING_DURATION = 150;
+const TOPIC_SWITCHING_DURATION = 1000;
+const x1 = .25, y1 = .1, x2 = .25, y2 = 1;
+const x1r = 1-x2, y1r = 1-y2, x2r = 1-x1, y2r = 1-y1;
 
+const EASEAPART = `cubic-bezier(${x1},${y1},${x2},${y2})`;
+const EASECLOSER = `cubic-bezier(${x1r},${y1r},${x2r},${y2r})`;
 interface TopicContainerMobileComponentProps {
     fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
     MediaCard: ReactElement,
@@ -47,13 +51,15 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
             if (currentTopicMediaContainerElement && nextTopicMediaContainerElement) {
                 currentTopicMediaContainerElement.animate(
                 {
-                    marginLeft: topicIndex > currentTopicIndex ? "-100%" : "100%"
+                    transform: topicIndex > currentTopicIndex ? "rotateY(-90deg) translateX(-100%)" : "rotateY(90deg) translateX(100%)",
                 }, {
-                    duration: TOPIC_SWITCHING_DURATION
+                    duration: TOPIC_SWITCHING_DURATION,
+                    easing: 'linear'
                 });
                 nextTopicMediaContainerElement.animate(
                 {
-                    marginLeft: "0"
+                    transform: "rotateY(0deg) translateX(0)",
+                    easing: 'linear'
                 }, {
                     duration: TOPIC_SWITCHING_DURATION
                 }).onfinish = () => {
@@ -140,12 +146,12 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     return (
         <div ref={FSContainerRef} className="topic-container-mobile">
             {TopicNavigator}
-            <div ref={currentTopicMediaContainer} className="topic-media-container" style={{marginLeft: "0"}}>
+            <div ref={currentTopicMediaContainer} className="topic-media-container" style={{transform: "rotateY(0deg) translateX(0)", transformOrigin: topicIndex > currentTopicIndex ? 'left' : 'right' }}>
                 {React.cloneElement(MediaCard, {topicIndexOverride: currentTopicIndex})}
             </div>
             {
                 topicIndex !== currentTopicIndex &&
-                <div ref={nextTopicMediaContainer} className="topic-media-container" style={{marginLeft: topicIndex > currentTopicIndex ? "100%" : "-100%"}}>
+                <div ref={nextTopicMediaContainer} className="topic-media-container" style={topicIndex > currentTopicIndex ? {transform: "rotateY(90deg) translateX(100%)", transformOrigin: "right"} :  {transform: "rotateY(-90deg) translateX(-100%)", transformOrigin: "left"}}>
                     {MediaCard}
                 </div>
             }
