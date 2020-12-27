@@ -3,7 +3,7 @@ import { useQuery } from '../../hooks/useQuery';
 import { 
     useHistory,
 } from "react-router-dom";
-import { setCardQueryParam } from '../../utils';
+import { setCardQueryParam, vwToPixels } from '../../utils';
 import { commentsCardId, analyticsCardId } from '../topic-container/topic-container';
 import { topicsContext } from '../app-shell';
 
@@ -18,7 +18,7 @@ interface FullScreenComponentProps {
     FSTopicIndex: number,
 };
 
-const underlineTravelDistance = 135;
+const underlineTravelDistance = vwToPixels(30);
 var isScrolling: any;
 
 export const TopicExposeComponent = (props: FullScreenComponentProps) => {

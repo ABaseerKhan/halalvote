@@ -28,8 +28,8 @@
 
 .feature-selector {
     position: fixed;
-    width: 260px;
-    left: calc(50% - 130px);
+    width: 60vw;
+    left: calc(50% - 30vw);
     font-size: 14px;
     font-weight: 600;
     z-index: 4;
@@ -58,8 +58,8 @@
 
 .selector-underline {
     position: fixed;
-    width: 3em;
-    left: calc(25%);
+    width: 2em;
+    left: calc(50% - 30vw + 2em);
     z-index: 4;
     height: 3px;
     background: white;
