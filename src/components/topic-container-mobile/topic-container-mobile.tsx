@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useEffect, useContext, useState } from 'react';
+import React, { ReactElement, useRef, useEffect, useContext } from 'react';
 import { topicsContext } from '../app-shell';
 import { TopicExposeComponent } from './topic-expose';
 
@@ -17,13 +17,29 @@ interface TopicContainerMobileComponentProps {
 export const TopicContainerMobileComponent = (props: TopicContainerMobileComponentProps) => {
     const { movingTopicContentId, MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, TopicNavigator, fetchTopics } = props;
 
-    const [, setDisplayTopicCarousel] = useState(true);
-
     const FSContainerRef = useRef<HTMLDivElement>(null);
     const FSFooterRef = useRef<HTMLDivElement>(null);
 
     const { topicsState } = useContext(topicsContext);
     const { topics, topicIndex } = topicsState;
+
+    const handleClick = (e: any) => {
+        if (FSFooterRef.current && FSFooterRef.current.contains(e.target)) {
+          // inside click
+            return;
+        }
+        // outside click 
+        if (FSFooterRef.current) {
+            FSFooterRef.current!.style.transform = `translate(0, calc(-1 * var(--max-topic-carousel-height-px)))`;
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClick);
+        return () => {
+            document.removeEventListener("mousedown", handleClick);
+        };
+    }, []);
     
     useEffect(() => {
         if (topics.length === 1) {
@@ -73,11 +89,9 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                     case 'up':
                         const translation = (FSContainerRef.current?.clientHeight || 0) * -0.8;
                         FSFooterRef.current!.style.transform = `translate(0, ${translation}px)`;
-                        setDisplayTopicCarousel(false);
                         break;
                     case 'down':
                         FSFooterRef.current!.style.transform = `translate(0, calc(-1 * var(--max-topic-carousel-height-px)))`;
-                        setDisplayTopicCarousel(true);
                         break;
                 };
                 // e.preventDefault()

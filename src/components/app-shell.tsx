@@ -325,51 +325,51 @@ export const AppShellComponent = (props: any) => {
   };
 
   return (
-      <div id={appShellId} className={appShellId} style={{ overflowY: state.fullScreenMode ? 'hidden' : 'scroll' }} >
-        {!isMobile && <SearchComponent onSuggestionClick={searchTopic} />}
-        <authenticatedPostDataContext.Provider value={{authenticatedPostData: authenticatedPostData, setAuthenticatedPostData: setAuthenticatedPostData}}>
-          <authenticatedGetDataContext.Provider value={{authenticatedGetData: authenticatedGetData, setAuthenticatedGetData: setAuthenticatedGetData}}>
-            <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenModeContext: setFullScreenModeContext }}>
-              <muteContext.Provider value={{ muted: state.muted, setMuted: setMutedContext }}>
-                <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
-                  <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
-                    <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
-                      <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
-                        <div className="topic-content">
-                          {
-                            isMobile ?
-                            <TopicContainerMobileComponent
-                              movingTopicContentId={movingTopicContentId}
-                              fetchTopics={fetchTopics}
-                              MediaCard={<TopicImagesComponent /> }
-                              CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                              AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                              TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
-                              TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
-                            /> :
-                            <TopicContainerComponent
-                              movingTopicContentId={movingTopicContentId}
-                              mediaCard={<TopicImagesComponent /> }
-                              commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                              analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                              TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
-                              TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
-                            />
-                          }
+    <authenticatedPostDataContext.Provider value={{authenticatedPostData: authenticatedPostData, setAuthenticatedPostData: setAuthenticatedPostData}}>
+        <authenticatedGetDataContext.Provider value={{authenticatedGetData: authenticatedGetData, setAuthenticatedGetData: setAuthenticatedGetData}}>
+          <fullScreenContext.Provider value={{ fullScreenMode: state.fullScreenMode, setFullScreenModeContext: setFullScreenModeContext }}>
+            <muteContext.Provider value={{ muted: state.muted, setMuted: setMutedContext }}>
+              <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
+                <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
+                  <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
+                    <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
+                      <div id={appShellId} className={appShellId} style={{ overflowY: state.fullScreenMode ? 'hidden' : 'scroll' }} >
+                        {!isMobile && <SearchComponent onSuggestionClick={searchTopic} />}
+                                        <div className="topic-content">
+                                          {
+                                            isMobile ?
+                                            <TopicContainerMobileComponent
+                                              movingTopicContentId={movingTopicContentId}
+                                              fetchTopics={fetchTopics}
+                                              MediaCard={<TopicImagesComponent /> }
+                                              CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                                              AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                                              TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
+                                              TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
+                                            /> :
+                                            <TopicContainerComponent
+                                              movingTopicContentId={movingTopicContentId}
+                                              mediaCard={<TopicImagesComponent /> }
+                                              commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                                              analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                                              TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
+                                              TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
+                                            />
+                                          }
+                                        </div>
+                        <div className="fixed-content">
+                          {!isMobile && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
+                          <MenuComponent fetchTopics={searchTopic} showSpecificComment={showSpecificComment} />
                         </div>
-                      </analyticsContext.Provider>
-                    </commentsContext.Provider>
-                  </topicImagesContext.Provider>
-                </topicsContext.Provider>
-              </muteContext.Provider>
-            </fullScreenContext.Provider>
-          </authenticatedGetDataContext.Provider>
-        </authenticatedPostDataContext.Provider>
-        <div className="fixed-content">
-          {!isMobile && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
-          <MenuComponent fetchTopics={searchTopic} showSpecificComment={showSpecificComment} />
-        </div>
-      </div>
+                      </div>
+                    </analyticsContext.Provider>
+                  </commentsContext.Provider>
+                </topicImagesContext.Provider>
+              </topicsContext.Provider>
+            </muteContext.Provider>
+          </fullScreenContext.Provider>
+        </authenticatedGetDataContext.Provider>
+      </authenticatedPostDataContext.Provider>
   )
 }
 
