@@ -114,7 +114,7 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
             <div id={movingTopicContentId} className="topic-media-container">
                 {MediaCard}
             </div>
-            <div ref={FSFooterRef} className={'topic-container-footer'}>
+            <div id="topic-container-footer" ref={FSFooterRef} className={'topic-container-footer'}>
                 <div className="topic-container-footer-content">
                     {TopicCarousel}
                     <TopicExposeComponent

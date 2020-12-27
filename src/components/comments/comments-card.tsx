@@ -175,7 +175,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         };
         if (highlightedComment) { highlightedComment.repliesShown++; highlightedComment.numReplies++; };
         if (parentOfhighlightedComment) { parentOfhighlightedComment.numReplies++; };
-        const updatedComments = addCommentsLocally(commentsCopy, [commentObject], isReply ? parentOfhighlightedComment && state.pathToHighlightedComment?.slice(0,-1) : highlightedComment && state.pathToHighlightedComment);
+        const updatedComments = addCommentsLocally(commentsCopy, [commentObject], isReply ? parentOfhighlightedComment && state.pathToHighlightedComment?.slice(0,-1) : highlightedComment && state.pathToHighlightedComment, !!isReply);
         setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
         setState(prevState => ({ ...prevState }));
         return status;
@@ -284,6 +284,7 @@ const addCommentsLocally = (comments: Comment[], data: Comment[], pathToParentCo
     // recursive step
     const updatedReplies = addCommentsLocally(comments[pathToParentComment[0]].replies, data, pathToParentComment.slice(1), appendToEnd);
     comments[pathToParentComment[0]].replies = updatedReplies;
+    comments[pathToParentComment[0]].repliesShown++;
     return comments;
 }
 
