@@ -450,7 +450,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 </div> :
                 loginScreenType === LoginScreenType.REGISTER_COMPLETE ?
                 <div className="login-body">
-                    <div className="login-section-text">Thanks for registering with Halal Vote!</div>
+                    <div className="login-section-text">Successfully created account for Halal Vote!</div>
                     <div className="login-section-text">Check your email to activate your account.</div>
                     <div className="login-section-text">Click <span className="login-link" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>here</span> to login.</div>
                 </div> :
@@ -537,7 +537,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     {
                         registerErrorMessage && <div className="login-error-message">{registerErrorMessage}</div>
                     }
-                    <button id="register-submit-button" className={`button ${isRegisterButtonDisabled && "disabled-button"}`} onClick={ () => { registerUser() } } disabled={isRegisterButtonDisabled}>Register</button>
+                    <button id="register-submit-button" className={`button ${isRegisterButtonDisabled && "disabled-button"}`} onClick={ () => { registerUser() } } disabled={isRegisterButtonDisabled}>Submit</button>
                     <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Already have an account?<br/>Log in here.</div>
                 </div> :
                 loginScreenType === LoginScreenType.FORGOT_PASSWORD_PAGE ?
