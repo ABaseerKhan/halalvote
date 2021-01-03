@@ -60,7 +60,7 @@ export enum Vote {
 export enum ModalType {
     LOGIN,
     ADD_TOPIC,
-    ACCOUNT,
+    PROFILE,
 }
 
 export enum MenuLocation {

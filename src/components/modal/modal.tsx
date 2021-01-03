@@ -3,7 +3,7 @@ import { AddTopicComponent } from '../add-topic/add-topic';
 import { ModalType } from '../../types';
 import { LoginComponent } from '../login/login';
 import { useMedia } from '../../hooks/useMedia';
-import { AccountComponent } from '../account/account';
+import { ProfileComponent } from '../profile/profile';
 import { vhToPixels, vwToPixelsWithMax } from "../../utils";
 
 // type imports
@@ -92,7 +92,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
                         onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}>
                 { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> }
                 { modalType === ModalType.ADD_TOPIC && <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> }
-                { modalType === ModalType.ACCOUNT && <AccountComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> }
+                { modalType === ModalType.PROFILE && <ProfileComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> }
             </div>
         </div>
     );

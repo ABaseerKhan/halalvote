@@ -1,13 +1,13 @@
-.account-container {
+.profile-container {
     color: var(--dark-mode-text-color);
     overflow: auto;
 }
 
-.account-container::-webkit-scrollbar {
+.profile-container::-webkit-scrollbar {
     display: none;
 }
 
-.account-header-section {
+.profile-header-section {
     z-index: 10;
     border-radius: 25px 25px 0 0;
     position: absolute;
@@ -16,20 +16,20 @@
     box-shadow: 0 5px 50px 0 rgba(32,33,36,0.28);
 }
 
-.account-title {
+.profile-title {
     font-weight: 600;
     font-size: 18px;
     text-align: center;
     padding-top: 1em;
 }
 
-.account-tabs {
+.profile-tabs {
     padding-top: 1em;
     display: flex;
     height: 3.5em;
 }
 
-.account-tab, .account-tab-selected {
+.profile-tab, .profile-tab-selected {
     font-size: 14px;
     line-height: 4em;
     margin: auto;
@@ -40,21 +40,21 @@
     white-space: nowrap;
 }
 
-.account-tab:hover, .account-tab-selected:hover {
+.profile-tab:hover, .profile-tab-selected:hover {
     cursor: pointer;
     color: white;
 }
 
-.account-tab {
+.profile-tab {
 
 }
 
-.account-tab-selected {
+.profile-tab-selected {
     color: white;
     box-shadow: inset 0 0 10px var(--gray);
 }
 
-.account-body {
+.profile-body {
     padding-top: 6em;
 }
 
