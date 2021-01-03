@@ -51,13 +51,24 @@
   animation: disappear 0.3s ease-in-out forwards;
 }
 
-.more-images-below {
+.more-images-below, .more-images-above {
   position: absolute;
   height: 22px;
   width: 22px;
   fill: gray;
-  bottom: 2px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 10px;
+  padding: 4px;
+}
+.more-images-below {
+  bottom: 3px;
+  line-height: 28px;
   animation: jumpdown 0.75s infinite ease-out alternate;
+}
+.more-images-above {
+  top: 0px;
+  line-height: 20px;
+  animation: jumpup 0.75s infinite ease-out alternate;
 }
 
 @keyframes jumpdown {

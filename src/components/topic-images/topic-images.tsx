@@ -5,6 +5,7 @@ import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
+import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
 import { ReactComponent as LeftArrowSVG } from "../../icons/left-arrow.svg";
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -246,13 +247,23 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                         <div className='no-image-text'>No images to show</div>
                 }
                 {topicImages.length > (imageIndex + 1) && 
-                    <div className={"more-images-below"} style={{ left: 'calc(35% - 11px)' }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) + 500)) }>
+                    <div className={"more-images-below"} style={{ left: 'calc(35% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((imageIndex + 1) * imagesBodyRef.current.clientHeight))) }>
                         <DownArrowSVG />
                     </div>
                 }
                 {topicImages.length > (imageIndex + 1) && 
-                    <div className={"more-images-below"} style={{ left: 'calc(65% - 11px)' }} onClick={() => imagesBodyRef.current?.scroll(0, ((imageIndex * imagesBodyRef.current.clientHeight) + 500)) }>
+                    <div className={"more-images-below"} style={{ left: 'calc(65% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((imageIndex + 1) * imagesBodyRef.current.clientHeight))) }>
                         <DownArrowSVG />
+                    </div>
+                }
+                {imageIndex > 0 && 
+                    <div className={"more-images-above"} style={{ left: 'calc(35% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((imageIndex - 1) * imagesBodyRef.current.clientHeight))) }>
+                        <UpArrowSVG />
+                    </div>
+                }
+                {imageIndex > 0 && 
+                    <div className={"more-images-above"} style={{ left: 'calc(65% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((imageIndex - 1) * imagesBodyRef.current.clientHeight))) }>
+                        <UpArrowSVG />
                     </div>
                 }
             </div>
