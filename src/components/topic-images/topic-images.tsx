@@ -49,7 +49,6 @@ interface TopicImagesComponentState {
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     let { topicIndexOverride } = props;
 
-    console.log(topicIndexOverride);
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
     const topicTitle = topics?.length ? topics[topicIndexOverride]?.topicTitle || '' : '';
