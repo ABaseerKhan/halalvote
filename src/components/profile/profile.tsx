@@ -18,7 +18,7 @@ import './profile.css';
 enum Tab {
     CREATEDTOPICS,
     VOTEDTOPICS,
-    COMMENTS,
+    ARGUMENTS,
 };
 
 interface ProfileComponentProps {
@@ -97,8 +97,8 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
         fetchUserVotedTopics();
     }
 
-    const onCommentsTab = () => {
-        setState({ ...state, selectedTab: Tab.COMMENTS });
+    const onArgumentsTab = () => {
+        setState({ ...state, selectedTab: Tab.ARGUMENTS });
         fetchUserComments();
     }
 
@@ -109,7 +109,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
                 <div className="profile-tabs">
                     <div className={state.selectedTab===Tab.CREATEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedTopicsTab} >Created Topics</div>
                     <div className={state.selectedTab===Tab.VOTEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onVotedTopicsTab} >Voted Topics</div>
-                    <div className={state.selectedTab===Tab.COMMENTS ? "profile-tab-selected" : "profile-tab"} onClick={onCommentsTab} >Comments</div>
+                    <div className={state.selectedTab===Tab.ARGUMENTS ? "profile-tab-selected" : "profile-tab"} onClick={onArgumentsTab} >Arguments</div>
                 </div>
             </div>
             <div className="profile-body">
@@ -120,7 +120,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
                     {state.selectedTab===Tab.VOTEDTOPICS && state.userVotedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => (
                         <UserTopic topic={topic} fetchTopics={props.fetchTopics} closeModal={props.closeModal}/>
                     ))}
-                    {state.selectedTab===Tab.COMMENTS && state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
+                    {state.selectedTab===Tab.ARGUMENTS && state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
                         <UserComment comment={comment} fetchTopics={props.fetchTopics} showSpecificComment={props.showSpecificComment} closeModal={props.closeModal} />
                     ))}
                 </ul>
