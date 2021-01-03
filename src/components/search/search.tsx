@@ -44,7 +44,9 @@ export const SearchComponent = (props: SearchComponentProps) => {
         } 
         // enter key should execute topicClick
         else if (e.keyCode === 13) {
-            onClickSuggestion(searchResults.result.data[autoCompleteIndex][0])();
+            if (searchResults.result.data && searchResults.result.data.length) {
+                onClickSuggestion(searchResults.result.data[autoCompleteIndex][0])();
+            }
         }
     }
 
@@ -195,7 +197,9 @@ export const SearchComponentMobile = (props: SearchComponentProps) => {
         } 
         // enter key should execute topicClick
         else if (e.keyCode === 13) {
-            onClickSuggestion(searchResults.result.data[autoCompleteIndex][0])();
+            if (searchResults.result.data && searchResults.result.data.length) {
+                onClickSuggestion(searchResults.result.data[autoCompleteIndex][0])();
+            }
         }
     }
 
