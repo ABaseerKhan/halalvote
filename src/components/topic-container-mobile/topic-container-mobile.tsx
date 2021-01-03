@@ -30,7 +30,11 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     const [currentTopicIndex, setCurrentTopicIndex] = useState<number>(topicIndex);
 
     const handleClick = (e: any) => {
-        if (FSFooterRef.current && FSFooterRef.current.contains(e.target)) {
+        if (
+            (FSFooterRef.current && FSFooterRef.current.contains(e.target)) || 
+            (document.getElementById("modal-cover") && document.getElementById("modal-cover")!.contains(e.target)) ||
+            (document.getElementById("modal") && document.getElementById("modal")!.contains(e.target))
+        ) {
           // inside click
             return;
         }
@@ -39,6 +43,16 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
             FSFooterRef.current!.style.transform = `translate(0, calc(-1 * var(--max-topic-carousel-height-px)))`;
         }
     };
+
+    // useEffect(() => {
+    //     if (currentTopicMediaContainer.current) {
+    //         disableBodyScroll(currentTopicMediaContainer.current);
+    //     }
+    
+    //     return () => {
+    //         clearAllBodyScrollLocks();
+    //     }
+    // }, [])
 
     useEffect(() => {
         if (topicIndex !== currentTopicIndex) {
