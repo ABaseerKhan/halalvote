@@ -4,7 +4,7 @@ import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { usersConfig } from '../../https-client/config';
 import { Topic, Comment } from '../../types';
 import { timeSince, vhToPixels, setCardQueryParam } from '../../utils';
-import { modalHeightVh } from '../../';
+import { modalHeightVh } from '../..';
 import { commentsCardId } from '../topic-container/topic-container';
 import { useQuery } from '../../hooks/useQuery';
 import { 
@@ -13,7 +13,7 @@ import {
 import { authenticatedGetDataContext } from '../app-shell';
 
 // styles
-import './account.css';
+import './profile.css';
 
 enum Tab {
     CREATEDTOPICS,
@@ -21,7 +21,7 @@ enum Tab {
     COMMENTS,
 };
 
-interface AccountComponentProps {
+interface ProfileComponentProps {
     username: string,
     fetchTopics: (topicTofetch?: string) => Promise<void>;
     showSpecificComment: any;
@@ -35,7 +35,7 @@ interface State {
     selectedTab: Tab | undefined;
 }
 
-export const AccountComponent = (props: AccountComponentProps) => {
+export const ProfileComponent = (props: ProfileComponentProps) => {
     // eslint-disable-next-line
     const [cookies] = useCookies(['username', 'sessiontoken']);
     const [state, setState] = useState<State>({ 
@@ -103,16 +103,16 @@ export const AccountComponent = (props: AccountComponentProps) => {
     }
 
     return (
-        <div className="account-container" style={{ height: `${vhToPixels(modalHeightVh)}px`}}>
-            <div className="account-header-section">
-                <div className="account-title">{`${props.username}`}</div>
-                <div className="account-tabs">
-                    <div className={state.selectedTab===Tab.CREATEDTOPICS ? "account-tab-selected" : "account-tab"} onClick={onCreatedTopicsTab} >Created Topics</div>
-                    <div className={state.selectedTab===Tab.VOTEDTOPICS ? "account-tab-selected" : "account-tab"} onClick={onVotedTopicsTab} >Voted Topics</div>
-                    <div className={state.selectedTab===Tab.COMMENTS ? "account-tab-selected" : "account-tab"} onClick={onCommentsTab} >Comments</div>
+        <div className="profile-container" style={{ height: `${vhToPixels(modalHeightVh)}px`}}>
+            <div className="profile-header-section">
+                <div className="profile-title">{`${props.username}`}</div>
+                <div className="profile-tabs">
+                    <div className={state.selectedTab===Tab.CREATEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedTopicsTab} >Created Topics</div>
+                    <div className={state.selectedTab===Tab.VOTEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onVotedTopicsTab} >Voted Topics</div>
+                    <div className={state.selectedTab===Tab.COMMENTS ? "profile-tab-selected" : "profile-tab"} onClick={onCommentsTab} >Comments</div>
                 </div>
             </div>
-            <div className="account-body">
+            <div className="profile-body">
                 <ul style={{ listStyleType: 'none', paddingInlineStart: '1em' }}>
                     {state.selectedTab===Tab.CREATEDTOPICS && state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => (
                         <UserTopic topic={topic} fetchTopics={props.fetchTopics} closeModal={props.closeModal}/>

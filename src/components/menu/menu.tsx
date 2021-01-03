@@ -153,9 +153,9 @@ export const MenuComponent = (props: MenuComponentProps) => {
         closeMenu({...state, menuLocation: MenuLocation.NONE, addTopicDisplayed: addTopicDisplayed}, () => {});
     }
 
-    const setAccountDisplayed = (accountDisplayed: boolean) => {
+    const setProfileDisplayed = (profileDisplayed: boolean) => {
         closeMenu({...state, menuLocation: MenuLocation.NONE}, () => { 
-            if (accountDisplayed) {
+            if (profileDisplayed) {
                 updateUrl(username, undefined);
             } else {
                 updateUrl(undefined, undefined);
@@ -400,14 +400,14 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_TOPIC} fetchTopics={fetchTopics}/></Portal>
             }
             { userProfile &&
-                <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT} fetchTopics={fetchTopics} showSpecificComment={props.showSpecificComment} accountUsername={userProfile}/></Portal>
+                <Portal><ModalComponent removeModal={() => setProfileDisplayed(false)} modalType={ModalType.PROFILE} fetchTopics={fetchTopics} showSpecificComment={props.showSpecificComment} accountUsername={userProfile}/></Portal>
             }
             {
                 state.menuLocation !== MenuLocation.NONE && 
                     <ul className="menu-items-list" style={{padding: state.menuLocation === MenuLocation.UPPER_LEFT || state.menuLocation === MenuLocation.UPPER_RIGHT ? `${menuHeight / 3}px 0 ${menuHeight}px 0` : `${menuHeight}px 0 ${menuHeight / 3}px 0`}}>
                         <li className="menu-item" style={listItemStyles} onClick={setSearchDisplayed}>Search</li>
                         <li className="menu-item" style={listItemStyles} onClick={() => {setAddTopicDisplayed(true)}}>Add Topic</li>
-                        {usernameExists() && <li className="menu-item" style={listItemStyles} onClick={() => setAccountDisplayed(true)}>Account</li>}
+                        {usernameExists() && <li className="menu-item" style={listItemStyles} onClick={() => setProfileDisplayed(true)}>Profile</li>}
                         <li className="menu-item" style={listItemStyles} onClick={login}>
                             { usernameExists() ? "Logout" : "Login" }
                         </li>
