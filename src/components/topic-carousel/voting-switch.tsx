@@ -494,14 +494,14 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
         const votingSwitchContainerElement = getVotingSwitchContainerElement();
 
         if (votingSwitchContainerElement) {
-            const containerRects = votingSwitchContainerElement.getClientRects();
-            const containerLeft = containerRects[0].x;
+            const containerRects = votingSwitchContainerElement.getBoundingClientRect();
+            const containerLeft = containerRects.x;
             const containerMid = containerLeft + (switchContainerWidth / 2);
 
-            if (e.screenX < containerMid + (switchDimension / 2)) {
-                vote(undefined);
-            } else {
+            if (userVote === undefined || userVote === 0 || !username || !sessiontoken || (userVote < 0 && e.clientX > containerMid + (switchDimension / 2))) {
                 vote(Judgment.HALAL);
+            } else {
+                vote(undefined);
             }
         }
     }
@@ -510,14 +510,14 @@ export const VotingSwitch = (props: VotingSwitchProps) => {
         const votingSwitchContainerElement = getVotingSwitchContainerElement();
 
         if (votingSwitchContainerElement) {
-            const containerRects = votingSwitchContainerElement.getClientRects();
-            const containerLeft = containerRects[0].x;
+            const containerRects = votingSwitchContainerElement.getBoundingClientRect();
+            const containerLeft = containerRects.x;
             const containerMid = containerLeft + (switchContainerWidth / 2);
 
-            if (e.screenX > containerMid - (switchDimension / 2)) {
-                vote(undefined);
-            } else {
+            if (userVote === undefined || userVote === 0 || !username || !sessiontoken || (userVote > 0 && e.clientX < containerMid - (switchDimension / 2))) {
                 vote(Judgment.HARAM);
+            } else {
+                vote(undefined);
             }
         }
     }
