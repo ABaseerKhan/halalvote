@@ -96,6 +96,7 @@ input[type=text], input[type=password] {
 }
 
 .disabled-button:hover {
-  cursor: unset;
+  cursor: unset !important;
   border: 1px solid #dfe1e5;
+  background-color: var(--dark-mode-foreground) !important;
 }

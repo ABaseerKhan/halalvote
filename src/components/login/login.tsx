@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { postData, getData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
@@ -8,6 +8,8 @@ import {
     useHistory,
 } from "react-router-dom";
 import { useQuery } from '../../hooks/useQuery';
+import { ReactComponent as CheckIcon} from '../../icons/check-icon.svg'
+import { ReactComponent as CrossIcon} from '../../icons/cross-icon.svg'
 
 // styles
 import './login.css';
@@ -33,17 +35,19 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const { closeModal } = props;
     // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
-    const [state, setState] = useState<{
-        isLoginButtonDisabled: boolean, 
-        isRegisterButtonDisabled: boolean }>({
-        isLoginButtonDisabled: true,
-        isRegisterButtonDisabled: true
-    });
 
-    let emailInput = useRef<string | undefined>(undefined);
-    let usernameInput = useRef<string | undefined>(undefined);
-    let passwordInput = useRef<string | undefined>(undefined);
-    let errorMessage = useRef<string | undefined>(undefined);
+    const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState<boolean>();
+    const [isRegisterButtonDisabled, setIsRegisterButtonDisabled] = useState<boolean>();
+
+    const [loginUsernameInput, setLoginUsernameInput] = useState<string>("");
+    const [loginPasswordInput, setLoginPasswordInput] = useState<string>("");
+    const [loginErrorMessage, setLoginErrorMessage] = useState<string>("");
+
+    const [registerEmailInput, setRegisterEmailInput] = useState<string>("");
+    const [registerUsernameInput, setRegisterUsernameInput] = useState<string>("");
+    const [registerPasswordInput, setRegisterPasswordInput] = useState<string>("");
+    const [registerPasswordRepeatInput, setRegisterPasswordRepeatInput] = useState<string>("");
+    const [registerErrorMessage, setRegisterErrorMessage] = useState<string>("");
 
     const history = useHistory();
     const query = useQuery();
@@ -89,24 +93,28 @@ export const LoginComponent = (props: LoginComponentProps) => {
             makeRegisterCall();
         } else if (loginScreenType === LoginScreenType.LOADING_ACTIVATION) {
             makeActivationCall();
-        } else if (loginScreenType === LoginScreenType.LOGIN || loginScreenType === LoginScreenType.REGISTER) {
-            const usernameInputElement = getUsernameInput();
-            const passwordInputElement = getPasswordInput();
-            
-            if (usernameInputElement && passwordInputElement) {
-                usernameInputElement.value = usernameInput.current ? usernameInput.current : "";
-                passwordInputElement.value = passwordInput.current ? passwordInput.current : "";
-            }
-
-            if (loginScreenType === LoginScreenType.REGISTER) {
-                const emailInputElement = getRegisterEmailInput();
-
-                if (emailInputElement) {
-                    emailInputElement.value = emailInput.current ? emailInput.current : "";
-                }
-            }
         } // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loginScreenType]);
+
+    useEffect(() => {
+        setIsLoginButtonDisabled(loginUsernameInput === "" || loginPasswordInput === ""); // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loginUsernameInput, loginPasswordInput]);
+
+    useEffect(() => {
+        setIsRegisterButtonDisabled(!validRegisterEmail() || registerUsernameInput === "" || !validRegisterPassword() || !registerPasswordsMatch()); // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [registerEmailInput, registerUsernameInput, registerPasswordInput, registerPasswordRepeatInput]);
+
+    const validRegisterEmail = () => {
+        return /^.*@.*\.com$/.test(registerEmailInput);
+    }
+
+    const validRegisterPassword = () => {
+        return registerPasswordInput !== "";
+    }
+
+    const registerPasswordsMatch = () => {
+        return registerPasswordInput === registerPasswordRepeatInput;
+    }
 
     const updateURL = useCallback((loginScreen) => {
         if (loginScreen) {
@@ -130,66 +138,9 @@ export const LoginComponent = (props: LoginComponentProps) => {
         }
     }, [history, query]);
 
-    const getUsernameInput = (): HTMLInputElement => {
-        return document.getElementById("username-input") as HTMLInputElement;
-    }
-
-    const getPasswordInput = (): HTMLInputElement => {
-        return document.getElementById("password-input") as HTMLInputElement;
-    }
-
-    const getRegisterEmailInput = (): HTMLInputElement => {
-        return document.getElementById("register-email-input") as HTMLInputElement;
-    }
-
-    const getRegisterUsernameInput = (): HTMLInputElement => {
-        return document.getElementById("register-username-input") as HTMLInputElement;
-    }
-
-    const getRegisterPasswordInput = (): HTMLInputElement => {
-        return document.getElementById("register-password-input") as HTMLInputElement;
-    }
-
-    const getLoginSubmitButton = (): HTMLButtonElement => {
-        return document.getElementById("login-submit-button") as HTMLButtonElement;
-    }
-
-    const getRegisterSubmitButton = (): HTMLButtonElement => {
-        return document.getElementById("register-submit-button") as HTMLButtonElement;
-    }
-
-    const clearInputs = () => {
-        const usernameInput = getUsernameInput();
-        const passwordInput = getPasswordInput();
-        const registerEmailInput = getRegisterEmailInput();
-        const registerUsernameInput = getRegisterUsernameInput();
-        const registerPasswordInput = getRegisterPasswordInput();
-
-        if (usernameInput) {usernameInput.value = ""};
-        if (passwordInput) {passwordInput.value = ""};
-        if (registerEmailInput) {registerEmailInput.value = ""};
-        if (registerUsernameInput) {registerUsernameInput.value = ""};
-        if (registerPasswordInput) {registerPasswordInput.value = ""};
-
-        setState({...state, isLoginButtonDisabled: false, isRegisterButtonDisabled: false});
-    }
-
-    const setLoginScreenType = (loginScreenType: LoginScreenType, options: any) => {
-        clearInputs();
-        if (options.hasOwnProperty("usernameInput")) {
-            usernameInput.current = options.usernameInput;
-        }
-        if (options.hasOwnProperty("passwordInput")) {
-            passwordInput.current = options.passwordInput;
-        }
-        if (options.hasOwnProperty("emailInput")) {
-            emailInput.current = options.emailInput;
-        }
-        if (options.hasOwnProperty("errorMessage")) {
-            errorMessage.current = options.errorMessage;
-        } else {
-            errorMessage.current = undefined;
-        }
+    const setLoginScreenType = (loginScreenType: LoginScreenType) => {
+        setLoginErrorMessage("");
+        setRegisterErrorMessage("");
 
         let loginScreen: string;
         switch(loginScreenType) {
@@ -225,15 +176,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     }
     
     const login = () => {
-        const usernameInput = getUsernameInput();
-        const passwordInput = getPasswordInput();
-        
-        if (usernameInput && passwordInput) {
-            setLoginScreenType(LoginScreenType.LOADING_LOGIN, {
-                usernameInput: usernameInput.value, 
-                passwordInput: passwordInput.value
-            });
-        }
+        setLoginScreenType(LoginScreenType.LOADING_LOGIN);
     }
 
     const makeLoginCall = () => {
@@ -242,22 +185,21 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 baseUrl: usersConfig.url,
                 path: 'login',
                 data: {
-                    "username": usernameInput.current,
-                    "password": passwordInput.current,
+                    "username": loginUsernameInput,
+                    "password": loginPasswordInput,
                 },
                 additionalHeaders: { }
             });
 
             if (status === 200) {
                 const sessionToken = data;
-                setCookie('username', usernameInput.current, { path: '/' });
+                setCookie('username', loginUsernameInput, { path: '/' });
                 setCookie('sessiontoken', sessionToken, { path: '/ '});
                 if(props.onLogin) props.onLogin('username', 'sessiontoken');
                 closeModal();
             } else {
-                setLoginScreenType(LoginScreenType.LOGIN, {
-                    errorMessage: data.message
-                });
+                setLoginScreenType(LoginScreenType.LOGIN);
+                setLoginErrorMessage(data.message);
             }
         }
 
@@ -265,40 +207,27 @@ export const LoginComponent = (props: LoginComponentProps) => {
     }
 
     const registerUser = () => {
-        const emailInput = getRegisterEmailInput();
-        const usernameInput = getRegisterUsernameInput();
-        const passwordInput = getRegisterPasswordInput();
-
-        if (emailInput && usernameInput && passwordInput) {
-            setLoginScreenType(LoginScreenType.LOADING_REGISTER, {
-                emailInput: emailInput.value,
-                usernameInput: usernameInput.value, 
-                passwordInput: passwordInput.value
-            });
-        }
+        setLoginScreenType(LoginScreenType.LOADING_REGISTER)
     }
 
     const makeRegisterCall = () => {
         const fetchData = async () => {
-            if (emailInput.current && usernameInput.current && passwordInput.current) {
-                const { status, data } = await postData({
-                    baseUrl: usersConfig.url,
-                    path: 'register-user',
-                    data: {
-                        "email": emailInput.current,
-                        "username": usernameInput.current,
-                        "password": passwordInput.current,
-                    },
-                    additionalHeaders: { }
-                });
+            const { status, data } = await postData({
+                baseUrl: usersConfig.url,
+                path: 'register-user',
+                data: {
+                    "email": registerEmailInput,
+                    "username": registerUsernameInput,
+                    "password": registerPasswordInput,
+                },
+                additionalHeaders: { }
+            });
 
-                if (status === 200 && usernameInput.current === data) {
-                    setLoginScreenType(LoginScreenType.REGISTER_COMPLETE, {});
-                } else {
-                    setLoginScreenType(LoginScreenType.REGISTER, {
-                        errorMessage: data.message
-                    });
-                }
+            if (status === 200 && registerUsernameInput === data) {
+                setLoginScreenType(LoginScreenType.REGISTER_COMPLETE);
+            } else {
+                setLoginScreenType(LoginScreenType.REGISTER);
+                setRegisterErrorMessage(data.message);
             }
         }
 
@@ -318,56 +247,23 @@ export const LoginComponent = (props: LoginComponentProps) => {
             });
 
             if (status === 200) {
-                setLoginScreenType(LoginScreenType.ACTIVATION_COMPLETE, {});
+                setLoginScreenType(LoginScreenType.ACTIVATION_COMPLETE);
             } else {
-                setLoginScreenType(LoginScreenType.ACTIVATION_FAILURE, {});
+                setLoginScreenType(LoginScreenType.ACTIVATION_FAILURE);
             }
         }
 
         makeCall();
     }
 
-    const checkLoginInputs = () => {
-        const usernameInput = getUsernameInput();
-        const passwordInput = getPasswordInput();
-        const submitButton = getLoginSubmitButton();
-
-        if (usernameInput && passwordInput && submitButton) {
-            if (usernameInput.value === "" || passwordInput.value === "") {
-                submitButton.classList.add("disabled-button");
-                setState({...state, isLoginButtonDisabled: true});
-            } else {
-                submitButton.classList.remove("disabled-button");
-                setState({...state, isLoginButtonDisabled: false});
-            }
-        }
-    }
-
-    const checkRegisterInputs = () => {
-        const emailInput = getRegisterEmailInput();
-        const usernameInput = getRegisterUsernameInput();
-        const passwordInput = getRegisterPasswordInput();
-        const submitButton = getRegisterSubmitButton();
-
-        if (emailInput && usernameInput && passwordInput && submitButton) {
-            if (emailInput.value === "" || usernameInput.value === "" || passwordInput.value === "") {
-                submitButton.classList.add("disabled-button");
-                setState({...state, isRegisterButtonDisabled: true});
-            } else {
-                submitButton.classList.remove("disabled-button");
-                setState({...state, isRegisterButtonDisabled: false});
-            }
-        }
-    }
-
     const handleLoginKeyPress = (event: any) => {
-        if (!state.isLoginButtonDisabled && event.charCode === 13) {
+        if (!isLoginButtonDisabled && event.charCode === 13) {
             login();
         }
     }
 
     const handleRegisterKeyPress = (event: any) => {
-        if (!state.isRegisterButtonDisabled && event.charCode === 13) {
+        if (!isRegisterButtonDisabled && event.charCode === 13) {
             registerUser();
         }
     }
@@ -389,11 +285,12 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 <div className="login-body">
                     <div className="login-section-text">Thanks for registering with Halal Vote!</div>
                     <div className="login-section-text">Check your email to activate your account.</div>
+                    <div className="login-section-text">Click <span className="login-link" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>here</span> to login.</div>
                 </div> :
                 loginScreenType === LoginScreenType.ACTIVATION_COMPLETE ?
                 <div className="login-body">
                     <div className="login-section-text">Successfully actived account!</div>
-                    <div className="login-section-text">Click <span className="activation-complete-login-link" onClick={() => setLoginScreenType(LoginScreenType.LOGIN, {})}>here</span> to login.</div>
+                    <div className="login-section-text">Click <span className="login-link" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>here</span> to login.</div>
                 </div> :
                 loginScreenType === LoginScreenType.ACTIVATION_FAILURE ?
                 <div className="login-body">
@@ -402,24 +299,61 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 loginScreenType === LoginScreenType.LOGIN ?
                 <div className="login-body">
                     <div className="login-section-text">Log In</div>
-                    <input id="username-input" className="login-input" type="text" placeholder="Username" onChange={checkLoginInputs} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
-                    <input id="password-input" className="login-input" type="password" placeholder="Password" onChange={checkLoginInputs} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
+                    <input id="username-input" className="login-input" type="text" placeholder="Username" value={loginUsernameInput} onChange={e => setLoginUsernameInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
+                    <input id="password-input" className="login-input" type="password" placeholder="Password" value={loginPasswordInput} onChange={e => setLoginPasswordInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                     {
-                        errorMessage.current && <div className="login-error-message">{errorMessage.current}</div>
+                        loginErrorMessage && <div className="login-error-message">{loginErrorMessage}</div>
                     }
-                    <button id="login-submit-button" className="button disabled-button" onClick={ () => { login() } } disabled={state.isLoginButtonDisabled}>Log In</button>
-                    <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.REGISTER, {})}>New user?<br/>Create account</div>
+                    <button id="login-submit-button" className={`button ${isLoginButtonDisabled && "disabled-button"}`} onClick={ () => { login() } } disabled={isLoginButtonDisabled}>Log In</button>
+                    <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.REGISTER)}>New user?<br/>Create account</div>
                 </div> :
                 <div className="login-body">
                     <div className="login-section-text">Register</div>
-                    <input id="register-email-input" className="login-input" type="text" placeholder="Email" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
-                    <input id="register-username-input" className="login-input" type="text" placeholder="Username" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
-                    <input id="register-password-input" className="login-input" type="password" placeholder="Password" onChange={checkRegisterInputs} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                    <input id="register-username-input" className="login-input" type="text" placeholder="Username" value={registerUsernameInput} onChange={e => setRegisterUsernameInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                    <div className="login-input-container">
+                        <input id="register-email-input" className="login-input" type="text" placeholder="Email" value={registerEmailInput} onChange={e => setRegisterEmailInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                        {
+                            registerEmailInput !== "" &&
+                            <div className="login-input-error">
+                                {
+                                    validRegisterEmail() ?
+                                    <CheckIcon style={{color: "green"}} /> :
+                                    <CrossIcon style={{color: "red"}} />
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div className="login-input-container">
+                        <input id="register-password-input" className="login-input" type="password" placeholder="Password" value={registerPasswordInput} onChange={e => setRegisterPasswordInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                        {
+                            registerPasswordInput !== "" &&
+                            <div className="login-input-error">
+                                {
+                                    validRegisterPassword() ?
+                                    <CheckIcon style={{color: "green"}} /> :
+                                    <CrossIcon style={{color: "red"}} />
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div className="login-input-container">
+                        <input id="register-password-repeat-input" className="login-input" type="password" placeholder="Retype Password" value={registerPasswordRepeatInput} onChange={e => setRegisterPasswordRepeatInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                        {
+                            registerPasswordRepeatInput !== "" &&
+                            <div className="login-input-error">
+                                {
+                                    registerPasswordsMatch() ?
+                                    <CheckIcon style={{color: "green"}} /> :
+                                    <CrossIcon style={{color: "red"}} />
+                                }
+                            </div>
+                        }
+                    </div>
                     {
-                        errorMessage.current && <div className="login-error-message">{errorMessage.current}</div>
+                        registerErrorMessage && <div className="login-error-message">{registerErrorMessage}</div>
                     }
-                    <button id="register-submit-button" className="button disabled-button" onClick={ () => { registerUser() } } disabled={state.isRegisterButtonDisabled}>Register</button>
-                    <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN, {})}>Have an account?<br/>Log in here.</div>
+                    <button id="register-submit-button" className={`button ${isRegisterButtonDisabled && "disabled-button"}`} onClick={ () => { registerUser() } } disabled={isRegisterButtonDisabled}>Register</button>
+                    <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Have an account?<br/>Log in here.</div>
                 </div>
             }
         </div>

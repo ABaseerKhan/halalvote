@@ -9,14 +9,22 @@
 .login-section-text {
     width: 100%;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     font-size: 24px;
     color: var(--dark-mode-text-color);
+}
+
+.login-input-container {
+    display: flex;
 }
 
 .login-input {
     width: 80% !important;
     margin: 10px 0 10px 10%;
+}
+
+.login-input-error {
+    margin: auto;
 }
 
 .login-switch-button {
@@ -38,7 +46,7 @@
     color: red;
 }
 
-.activation-complete-login-link {
+.login-link {
     cursor: pointer;
     text-decoration: underline;
 }
