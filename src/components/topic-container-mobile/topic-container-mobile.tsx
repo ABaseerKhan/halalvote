@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useEffect, useContext, useState } from 'react';
+import React, { ReactElement, useRef, useEffect, useContext, useState, useLayoutEffect } from 'react';
 import { topicsContext } from '../app-shell';
 import { TopicExposeComponent } from './topic-expose';
 
@@ -8,6 +8,7 @@ import './topic-container-mobile.css';
 
 const TOPIC_SWITCHING_DURATION = 300;
 const topicPerspectivePx = 2000;
+var prevHeight = 0;
 interface TopicContainerMobileComponentProps {
     fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
     MediaCard: ReactElement,
@@ -44,15 +45,26 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
         }
     };
 
-    // useEffect(() => {
-    //     if (currentTopicMediaContainer.current) {
-    //         disableBodyScroll(currentTopicMediaContainer.current);
-    //     }
-    
-    //     return () => {
-    //         clearAllBodyScrollLocks();
-    //     }
-    // }, [])
+    useLayoutEffect(() => {
+        prevHeight = window.innerHeight;
+        function updateSize(e?: UIEvent) {
+            console.log(e);
+            if (e?.srcElement) {
+                if (FSContainerRef.current) {
+                    if (window.innerHeight < prevHeight) {
+                        FSContainerRef.current.style.height = `${prevHeight}px`;
+                        FSContainerRef.current.style.transform = `translate(0, -${prevHeight - window.innerHeight}px)`;
+                    } else {
+                        FSContainerRef.current.style.height = `${window.innerHeight}px`;
+                        FSContainerRef.current.style.transform = `translate(0, 0)`;
+                    }
+                }
+            }
+        }
+        window.addEventListener('resize', updateSize);
+        updateSize();
+        return () => window.removeEventListener('resize', updateSize);
+    }, []);
 
     useEffect(() => {
         if (topicIndex !== currentTopicIndex) {

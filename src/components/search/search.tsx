@@ -157,7 +157,7 @@ export const SearchComponentMobile = (props: SearchComponentProps) => {
                 }
                 switch(swipedir) {
                     case 'up':
-                        searchPageRef.current!.style.transform = `translate(0, -25vh)`;
+                        searchPageRef.current!.style.transform = `translate(0, -150px)`;
                         break;
                 };
                 // e.preventDefault()
@@ -178,7 +178,7 @@ export const SearchComponentMobile = (props: SearchComponentProps) => {
     const onClickSuggestion = (topicTitle: string) => () => {
         props.onSuggestionClick(topicTitle);
         setInputText("");
-        searchPageRef.current!.style.transform = `translate(0, -25vh)`;
+        searchPageRef.current!.style.transform = `translate(0, -150px)`;
     };
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
