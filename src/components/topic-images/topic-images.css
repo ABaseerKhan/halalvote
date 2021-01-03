@@ -56,18 +56,19 @@
   height: 22px;
   width: 22px;
   fill: gray;
-  animation: jumpdown 0.75s infinite ease-out alternate;
   background: rgba(0,0,0,0.4);
   border-radius: 10px;
   padding: 4px;
 }
 .more-images-below {
-  bottom: 2px;
+  bottom: 3px;
   line-height: 28px;
+  animation: jumpdown 0.75s infinite ease-out alternate;
 }
 .more-images-above {
-  top: 2px;
+  top: 0px;
   line-height: 20px;
+  animation: jumpup 0.75s infinite ease-out alternate;
 }
 
 @keyframes jumpdown {
