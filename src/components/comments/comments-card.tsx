@@ -209,7 +209,17 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             const highlightedComment = document.getElementById(`comment-${getCommentFromPath(comments, path)?.id}`);
             const viewPortOffsetCommentContentBottom = (highlightedComment?.childNodes[1].childNodes[0] as HTMLDivElement).getBoundingClientRect().bottom; ;
             const viewPortOffsetMakerBottom = commentMakerRef.current.getCommentMakerCardRef()!.getBoundingClientRect().bottom;
-            commentMakerRef.current.setHeight(vh - viewPortOffsetCommentContentBottom - (vh - viewPortOffsetMakerBottom));
+            const height = vh - viewPortOffsetCommentContentBottom - (vh - viewPortOffsetMakerBottom);
+            if (height < 100) {
+                commentsContainerRef.current!.scroll({
+                    top: commentsContainerRef.current!.scrollTop + (100 - height),
+                    left: 0,
+                    behavior: 'smooth'
+                });
+                commentMakerRef.current.setHeight(100);
+            } else {
+                commentMakerRef.current.setHeight(height);
+            }
             commentMakerRef.current.focus();
         } else if (commentMakerRef.current && path === undefined) {
             commentMakerRef.current.collapse();
