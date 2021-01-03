@@ -450,7 +450,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 </div> :
                 loginScreenType === LoginScreenType.REGISTER_COMPLETE ?
                 <div className="login-body">
-                    <div className="login-section-text">Thanks for registering with Halal Vote!</div>
+                    <div className="login-section-text">Successfully created account for Halal Vote!</div>
                     <div className="login-section-text">Check your email to activate your account.</div>
                     <div className="login-section-text">Click <span className="login-link" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>here</span> to login.</div>
                 </div> :
@@ -493,7 +493,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 </div> :
                 loginScreenType === LoginScreenType.REGISTER ?
                 <div className="login-body">
-                    <div className="login-section-text">Register</div>
+                    <div className="login-section-text">Create Account</div>
                     <input id="register-username-input" className="login-input" type="text" placeholder="Username" value={registerUsernameInput} onChange={e => setRegisterUsernameInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                     <div className="login-input-container">
                         <input id="register-email-input" className="login-input" type="text" placeholder="Email" value={registerEmailInput} onChange={e => setRegisterEmailInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
@@ -537,7 +537,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     {
                         registerErrorMessage && <div className="login-error-message">{registerErrorMessage}</div>
                     }
-                    <button id="register-submit-button" className={`button ${isRegisterButtonDisabled && "disabled-button"}`} onClick={ () => { registerUser() } } disabled={isRegisterButtonDisabled}>Register</button>
+                    <button id="register-submit-button" className={`button ${isRegisterButtonDisabled && "disabled-button"}`} onClick={ () => { registerUser() } } disabled={isRegisterButtonDisabled}>Submit</button>
                     <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Already have an account?<br/>Log in here.</div>
                 </div> :
                 loginScreenType === LoginScreenType.FORGOT_PASSWORD_PAGE ?
