@@ -27,6 +27,10 @@
     margin: auto;
 }
 
+.login-switch-buttons-container {
+    display: flex;
+}
+
 .login-switch-button {
     width: fit-content;
     text-align: center;
