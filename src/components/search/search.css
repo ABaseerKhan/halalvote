@@ -12,10 +12,10 @@
     display: table;
     position: fixed;
     background: var(--dark-mode-background);
-    height: 20vh;
+    height: 150px;
     width: 100%;
     text-align: center;
-    transform: translate(0, -25vh);
+    transform: translate(0, -150px);
     transition: all 0.3s ease;
     border-radius: 0 0 25px 25px;
 }
