@@ -493,7 +493,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 </div> :
                 loginScreenType === LoginScreenType.REGISTER ?
                 <div className="login-body">
-                    <div className="login-section-text">Register</div>
+                    <div className="login-section-text">Create Account</div>
                     <input id="register-username-input" className="login-input" type="text" placeholder="Username" value={registerUsernameInput} onChange={e => setRegisterUsernameInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                     <div className="login-input-container">
                         <input id="register-email-input" className="login-input" type="text" placeholder="Email" value={registerEmailInput} onChange={e => setRegisterEmailInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
