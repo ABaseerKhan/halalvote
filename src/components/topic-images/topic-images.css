@@ -60,6 +60,9 @@
   border-radius: 10px;
   padding: 4px;
 }
+.more-images-below:hover, .more-images-above:hover {
+  cursor: pointer;
+}
 .more-images-below {
   bottom: 3px;
   line-height: 28px;

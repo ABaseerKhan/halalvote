@@ -26,6 +26,7 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     const { topicsState } = useContext(topicsContext);
     const { topics, topicIndex } = topicsState;
 
+    const topicMediaScaleDivRef = useRef<HTMLDivElement>(null);
     const currentTopicMediaContainer = useRef<HTMLDivElement>(null);
     const nextTopicMediaContainer = useRef<HTMLDivElement>(null);
     const [currentTopicIndex, setCurrentTopicIndex] = useState<number>(topicIndex);
@@ -147,9 +148,11 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                     case 'up':
                         const translation = (FSContainerRef.current?.clientHeight || 0) * -0.8;
                         FSFooterRef.current!.style.transform = `translate(0, ${translation}px)`;
+                        topicMediaScaleDivRef.current!.style.transform = `scale(0.25)`;
                         break;
                     case 'down':
                         FSFooterRef.current!.style.transform = `translate(0, calc(-1 * var(--max-topic-carousel-height-px)))`;
+                        topicMediaScaleDivRef.current!.style.transform = `scale(1)`;
                         break;
                 };
                 // e.preventDefault()
@@ -169,19 +172,20 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     return (
         <div ref={FSContainerRef} className="topic-container-mobile">
             {TopicNavigator}
-            <div ref={currentTopicMediaContainer} className="topic-media-container" style={{transform: `perspective(${topicPerspectivePx}px) rotateY(0) translateX(0) translateZ(0)`, transformOrigin: topicIndex > currentTopicIndex ? 'right' : 'left' }}>
-                {React.cloneElement(MediaCard, {topicIndexOverride: currentTopicIndex})}
-            </div>
-            {
-                topicIndex !== currentTopicIndex &&
-                <div ref={nextTopicMediaContainer} className="topic-media-container" style={topicIndex > currentTopicIndex ? {transform: `perspective(${topicPerspectivePx}px) rotateY(89deg) translateZ(100vw)`, transformOrigin: "left"} :  {transform: `perspective(${topicPerspectivePx}px) rotateY(-89deg) translateZ(100vw)`, transformOrigin: "right"}}>
-                    {MediaCard}
+            <div ref={topicMediaScaleDivRef} className="topic-media-scale-div">
+                <div ref={currentTopicMediaContainer} className="topic-media-container" style={{transform: `perspective(${topicPerspectivePx}px) rotateY(0) translateX(0) translateZ(0)`, transformOrigin: topicIndex > currentTopicIndex ? 'right' : 'left' }}>
+                    {React.cloneElement(MediaCard, {topicIndexOverride: currentTopicIndex})}
                 </div>
-            }
-            <div>
-
+                {
+                    topicIndex !== currentTopicIndex &&
+                    <div ref={nextTopicMediaContainer} className="topic-media-container" style={topicIndex > currentTopicIndex ? {transform: `perspective(${topicPerspectivePx}px) rotateY(89deg) translateZ(100vw)`, transformOrigin: "left"} :  {transform: `perspective(${topicPerspectivePx}px) rotateY(-89deg) translateZ(100vw)`, transformOrigin: "right"}}>
+                        {MediaCard}
+                    </div>
+                }
             </div>
+            <div></div>
             <div id="topic-container-footer" ref={FSFooterRef} className={'topic-container-footer'}>
+                <div className="pull-up-container"><div className="pull-up-tab"></div></div>
                 <div className="topic-container-footer-content">
                     {TopicCarousel}
                     <TopicExposeComponent

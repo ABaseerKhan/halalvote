@@ -10,6 +10,12 @@ html, body {
   overflow: hidden;
 }
 
+@media only screen and (max-width: 600px) {
+  html, body {
+    background-color: black !important;
+  }
+}
+
 :root {
   --haram-color: #D0ADEB;
   --haram-color-transparent: rgb(208, 173, 235, 0.75);
@@ -44,7 +50,7 @@ html, body {
   --toolbar-height-vh: 11vh;
   --max-toolbar-height-px: 50px;
   --topic-carousel-height-vh: 13vh;
-  --max-topic-carousel-height-px: 130px;
+  --max-topic-carousel-height-px: 140px;
 
   --highlight-color: var(--light-neutral-color);
 
