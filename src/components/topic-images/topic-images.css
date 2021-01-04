@@ -66,12 +66,12 @@
 .more-images-below {
   bottom: 3px;
   line-height: 28px;
-  animation: jumpdown 0.75s infinite ease-out alternate;
+  animation: jumpdown 0.5s infinite ease-out alternate;
 }
 .more-images-above {
   top: 0px;
   line-height: 20px;
-  animation: jumpup 0.75s infinite ease-out alternate;
+  animation: jumpup 0.5s infinite ease-out alternate;
 }
 
 @keyframes jumpdown {
