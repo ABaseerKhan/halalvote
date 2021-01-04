@@ -43,6 +43,7 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
         // outside click 
         if (FSFooterRef.current) {
             FSFooterRef.current!.style.transform = `translate(0, calc(-1 * var(--max-topic-carousel-height-px)))`;
+            topicMediaScaleDivRef.current!.style.transform = `scale(1)`;
         }
     };
 
