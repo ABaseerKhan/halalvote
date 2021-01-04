@@ -257,12 +257,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     </div>
                 }
                 {imageIndex > 0 && 
-                    <div className={"more-images-above"} style={{ left: 'calc(35% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((imageIndex - 1) * imagesBodyRef.current.clientHeight))) }>
-                        <UpArrowSVG />
-                    </div>
-                }
-                {imageIndex > 0 && 
-                    <div className={"more-images-above"} style={{ left: 'calc(65% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((imageIndex - 1) * imagesBodyRef.current.clientHeight))) }>
+                    <div className={"more-images-above"} style={{ left: 'calc(50% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((imageIndex - 1) * imagesBodyRef.current.clientHeight))) }>
                         <UpArrowSVG />
                     </div>
                 }
