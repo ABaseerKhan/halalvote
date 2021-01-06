@@ -17,7 +17,7 @@ export const elementStyles = {
   toolbarHeightVh: 13,
   maxToolbarHeightPx: 70,
   topicCarouselHeightVh: 15,
-  maxTopicCarouselHeightPx: 150
+  maxTopicCarouselHeightPx: 140
 }
 
 export const modalHeightVh = 70;

@@ -4,6 +4,7 @@ import { TopicExposeComponent } from './topic-expose';
 
 // styles
 import './topic-container-mobile.css';
+import { elementStyles } from '../..';
 
 
 const TOPIC_SWITCHING_DURATION = 300;
@@ -50,7 +51,6 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     useLayoutEffect(() => {
         prevHeight = window.innerHeight;
         function updateSize(e?: UIEvent) {
-            console.log(e);
             if (e?.srcElement) {
                 if (FSContainerRef.current) {
                     if (window.innerHeight < prevHeight) {
@@ -113,6 +113,8 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
             swipedir: any,
             startX: any,
             startY: any,
+            prevX: any,
+            prevY: any,
             distX,
             distY,
             threshold = 45, //required min distance traveled to be considered swipe
@@ -126,11 +128,39 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                 swipedir = 'none';
                 distX = 0;
                 distY = 0;
+                prevX = touchobj.pageX;
+                prevY = touchobj.pageY;
                 startX = touchobj.pageX;
                 startY = touchobj.pageY;
                 startTime = new Date().getTime(); // record time when finger first makes contact with surface
             };
             const touchMoveCB = function(e: any){
+                var touchobj = e.changedTouches[0];
+                distX = touchobj.pageX - prevX; // get horizontal dist traveled by finger while in contact with surface
+                distY = touchobj.pageY - prevY; // get vertical dist traveled by finger while in contact with surface
+                prevX = touchobj.pageX;
+                prevY = touchobj.pageY;
+
+
+                const translation = getTranslateY(FSFooterRef.current) + distY;
+                const travelledRatio = (translation - (elementStyles.maxTopicCarouselHeightPx * -1)) / (((FSContainerRef.current?.clientHeight || 0) * -1) - (elementStyles.maxTopicCarouselHeightPx * -1));
+                if ((translation > (FSContainerRef.current?.clientHeight || 0) * -0.8) && (translation < (elementStyles.maxTopicCarouselHeightPx * -1))) {
+                    FSFooterRef.current!.animate([{
+                        transform: `translate(0, ${translation}px)`
+                    }
+                    ], {
+                        duration: 0,
+                        fill: "forwards",
+                    }).onfinish = () => { FSFooterRef.current!.style.transform = `translate(0, ${translation}px)`; };
+
+                    topicMediaScaleDivRef.current!.animate([{
+                        transform: `scale(${(1 - travelledRatio)})`
+                    }
+                    ], {
+                        duration: 0,
+                        fill: "forwards",
+                    }).onfinish = () => { topicMediaScaleDivRef.current!.style.transform = `scale(${(1 - travelledRatio)})`; };
+                }
             };
             const touchendCB = function(e: any){
                 var touchobj = e.changedTouches[0];
@@ -148,12 +178,43 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                 switch(swipedir) {
                     case 'up':
                         const translation = (FSContainerRef.current?.clientHeight || 0) * -0.8;
-                        FSFooterRef.current!.style.transform = `translate(0, ${translation}px)`;
-                        topicMediaScaleDivRef.current!.style.transform = `scale(0.25)`;
+                        const travelledRatio = (translation - (elementStyles.maxTopicCarouselHeightPx * -1)) / (((FSContainerRef.current?.clientHeight || 0) * -1) - (elementStyles.maxTopicCarouselHeightPx * -1));
+                        FSFooterRef.current!.animate([{
+                                transform: `translate(0, ${translation}px)`
+                            }
+                            ], {
+                                duration: 300,
+                                fill: "forwards",
+                                easing: "ease",
+                        }).onfinish = () => { FSFooterRef.current!.style.transform = `translate(0, ${translation}px)`; };
+
+                        topicMediaScaleDivRef.current!.animate([{
+                                transform: `scale(${(1 - travelledRatio)})`
+                            }
+                            ], {
+                                duration: 300,
+                                fill: "forwards",
+                                easing: "ease",
+                        }).onfinish = () => { topicMediaScaleDivRef.current!.style.transform = `scale(0.25)`; };
                         break;
                     case 'down':
-                        FSFooterRef.current!.style.transform = `translate(0, calc(-1 * var(--max-topic-carousel-height-px)))`;
-                        topicMediaScaleDivRef.current!.style.transform = `scale(1)`;
+                        FSFooterRef.current!.animate([{
+                                transform: `translate(0, calc(-1 * var(--max-topic-carousel-height-px)))`
+                            }
+                            ], {
+                                duration: 300,
+                                fill: "forwards",
+                                easing: "ease"
+                        }).onfinish = () => { FSFooterRef.current!.style.transform = `translate(0, calc(-1 * var(--max-topic-carousel-height-px)))`; };
+                        
+                        topicMediaScaleDivRef.current!.animate([{
+                                transform: `scale(1)`
+                            }
+                            ], {
+                                duration: 300,
+                                fill: "forwards",
+                                easing: "ease",
+                        }).onfinish = () => { topicMediaScaleDivRef.current!.style.transform = `scale(1)`; };
                         break;
                 };
                 // e.preventDefault()
@@ -198,4 +259,10 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
             </div>
         </div>
     );
+}
+
+function getTranslateY(myElement: any) {
+    var style = window.getComputedStyle(myElement);
+    var matrix = new WebKitCSSMatrix(style.transform);
+    return matrix.m42;
 }
