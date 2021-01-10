@@ -110,13 +110,14 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }
     });
 
-    const fetchImages = async (newIndex?: number) => {
+    const fetchImages = async (newIndex?: number, refresh?: boolean, singleImageId?: string) => {
         setState(prevState => ({ ...prevState, topicImages: [], currentIndex: 0, picture: null, loading: true }));
         let queryParams: any = { 
             "topicTitle": topicTitle,
-            "n": 3,
+            "n": refresh ? Math.max(newIndex! + 1, 2) : 3,
         };
-        if (topicImages && topicImages.length) queryParams["excludedIds"] = topicImages.reduce((acc, image) => acc + `${image.id} `, '');
+        if (topicImages && topicImages.length && !refresh) queryParams["excludedIds"] = topicImages.reduce((acc, image) => acc + `${image.id} `, '');
+        if (topicImages && topicImages.length && singleImageId) queryParams["singleImageId"] = singleImageId;
         let additionalHeaders: any = {};
         if (username && username !== "" && sessiontoken && sessiontoken !== "") {
             queryParams['username'] = username;
@@ -140,7 +141,11 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 img.height = imgDimensions.height;
                 img.width = imgDimensions.width;
                 if (idx === data.length - 1) {
-                    setTopicImagesContext(topicTitle, [...topicImages, ...data], newIndex || 0);
+                    if (!refresh) {
+                        setTopicImagesContext(topicTitle, [...topicImages, ...data], newIndex || 0);
+                    } else {
+                        setTopicImagesContext(topicTitle, data, newIndex || 0);
+                    }
                     setState({...state, addTopicDisplayed: false, loading: false});
                 }
             });
@@ -149,6 +154,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             setState({...state, addTopicDisplayed: false, loading: false});
         }
     }
+
+    const addMedia = (mediaId: string) => {
+        fetchImages(0, true, mediaId);
+    };
 
     const deleteImage = (idx: number) => async () => {
         if (isUserImage(idx)) {
@@ -166,7 +175,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             }, true);
 
             if (status === 200) {
-                fetchImages();
+                fetchImages(imageIndex > 0 ? imageIndex-1 : 0, true);
             }
         }
     }
@@ -271,7 +280,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const fileUploader = (
         <div style={{ height: '100%', width: '100%' }}>
             <div className={"images-body"} style={{ background: 'black'}}>
-                <MyUploader submitCallback={fetchImages}/>
+                <MyUploader submitCallback={addMedia}/>
             </div>
             <div className={"canvas-footer"}>
                 <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
@@ -330,9 +339,9 @@ export const MyUploader = (props: UploaderProps) => {
                 setCookie: setCookie,
             }, true);
 
-            if (status === 200 && topicTitle === data) {
+            if (status === 200 && data) {
                 allFiles.forEach(f => f.remove());
-                props.submitCallback && props.submitCallback(files[0].meta.fileUrl);
+                props.submitCallback && props.submitCallback(data);
             }
         } else {
             allFiles.forEach(f => f.remove());
