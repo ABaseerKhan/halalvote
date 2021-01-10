@@ -9,7 +9,6 @@ interface AccountComponentProps {
 export const AccountComponent = (props: AccountComponentProps) => {
 
     return (
-        <div>
-        </div>
+        <div>Hello World</div>
     );
 }

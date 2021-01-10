@@ -187,6 +187,14 @@ export const MenuComponent = (props: MenuComponentProps) => {
         });
     }
 
+    const setAccountDisplayed = (accountDisplayed: boolean) => {
+        closeMenu({
+            ...state,
+            menuLocation: MenuLocation.NONE,
+            modalItemSelected: accountDisplayed ? ModalType.ACCOUNT : undefined
+        }, () => {});
+    }
+
     const setMenuLocation = (menuLocation: MenuLocation) => {
         closeMenu({...state, menuLocation: menuLocation}, () => {});
     }
@@ -419,11 +427,13 @@ export const MenuComponent = (props: MenuComponentProps) => {
         <div id={menuId} className={menuId} style={{height: menuHeight + "px", width: menuWidth + "px", borderRadius: (menuHeight / 2) + "px"}}>
             {
                 state.modalItemSelected ===  ModalType.LOGIN ?
-                    <Portal><ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchTopics={null}/></Portal> :
+                    <Portal><ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN}/></Portal> :
                 state.modalItemSelected ===  ModalType.ADD_TOPIC ?
                     <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_TOPIC} fetchTopics={fetchTopics}/></Portal> :
-                state.modalItemSelected === ModalType.PROFILE &&
-                    <Portal><ModalComponent removeModal={() => setProfileDisplayed(false)} modalType={ModalType.PROFILE} fetchTopics={fetchTopics} showSpecificComment={props.showSpecificComment} accountUsername={userProfile}/></Portal>
+                state.modalItemSelected === ModalType.PROFILE ?
+                    <Portal><ModalComponent removeModal={() => setProfileDisplayed(false)} modalType={ModalType.PROFILE} fetchTopics={fetchTopics} showSpecificComment={props.showSpecificComment} accountUsername={userProfile}/></Portal> :
+                state.modalItemSelected ===  ModalType.ACCOUNT &&
+                    <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT}/></Portal>
             }
             {
                 state.menuLocation !== MenuLocation.NONE && 
@@ -431,6 +441,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                         <li className="menu-item" style={listItemStyles} onClick={setSearchDisplayed}>Search</li>
                         <li className="menu-item" style={listItemStyles} onClick={() => {setAddTopicDisplayed(true)}}>Add Topic</li>
                         {usernameExists() && <li className="menu-item" style={listItemStyles} onClick={() => setProfileDisplayed(true)}>Profile</li>}
+                        {usernameExists() && <li className="menu-item" style={listItemStyles} onClick={() => setAccountDisplayed(true)}>Account</li>}
                         <li className="menu-item" style={listItemStyles} onClick={login}>
                             { usernameExists() ? "Logout" : "Login" }
                         </li>

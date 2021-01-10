@@ -6,6 +6,7 @@ import { useMedia } from '../../hooks/useMedia';
 import { ProfileComponent } from '../profile/profile';
 import { vhToPixels, vwToPixelsWithMax } from "../../utils";
 import { modalHeightVh, modalMaxWidth, modalWidthVw } from '../..';
+import { AccountComponent } from '../account/account';
 
 // type imports
 
@@ -95,8 +96,10 @@ export const ModalComponent = (props: ModalComponentProps) => {
                         <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> :
                     modalType === ModalType.ADD_TOPIC ?
                         <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> :
-                    modalType === ModalType.PROFILE &&
-                        <ProfileComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
+                    modalType === ModalType.PROFILE ?
+                        <ProfileComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> :
+                    modalType === ModalType.ACCOUNT &&
+                        <AccountComponent/>
                 }
             </div>
         </div>
