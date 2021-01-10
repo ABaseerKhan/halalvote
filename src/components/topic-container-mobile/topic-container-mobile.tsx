@@ -141,6 +141,9 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                 prevX = touchobj.pageX;
                 prevY = touchobj.pageY;
 
+                if (Math.abs(distY) < Math.abs(distX) + 1) { // only work on true vertical swipes
+                    return;
+                }
 
                 const translation = getTranslateY(FSFooterRef.current) + distY;
                 const travelledRatio = (translation - (elementStyles.maxTopicCarouselHeightPx * -1)) / (((FSContainerRef.current?.clientHeight || 0) * -1) - (elementStyles.maxTopicCarouselHeightPx * -1));

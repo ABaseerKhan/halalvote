@@ -75,7 +75,7 @@ export const TopicNavigatorComponent = (props: TopicNavigatorComponentProps) => 
                     const deltaY = Math.abs(swipeDet.eY - swipeDet.sY);
 
                     if (correctDirection === undefined) {
-                        correctDirection = deltaX > (deltaY)/2;
+                        correctDirection = deltaX > (deltaY);
                     }
 
                     if (correctDirection) {

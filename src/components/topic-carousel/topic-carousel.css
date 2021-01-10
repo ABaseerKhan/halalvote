@@ -61,7 +61,7 @@
     scroll-behavior: smooth;
     overflow-y: hidden;
     transition: all 0.3s ease;
-    padding: 0 5px;
+    padding: 0 1vw;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
