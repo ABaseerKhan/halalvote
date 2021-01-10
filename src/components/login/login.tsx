@@ -26,10 +26,10 @@ export enum LoginScreenType {
     FORGOT_PASSWORD_PAGE,
     LOADING_FORGOT_PASSWORD,
     FORGOT_PASSWORD_COMPLETE,
-    CHANGE_PASSWORD_PAGE,
-    LOADING_CHANGE_PASSWORD,
-    CHANGE_PASSWORD_COMPLETE,
-    CHANGE_PASSWORD_FAILURE,
+    RESET_PASSWORD_PAGE,
+    LOADING_RESET_PASSWORD,
+    RESET_PASSWORD_COMPLETE,
+    RESET_PASSWORD_FAILURE,
     NONE
 }
 
@@ -46,7 +46,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState<boolean>();
     const [isRegisterButtonDisabled, setIsRegisterButtonDisabled] = useState<boolean>();
     const [isForgotPasswordPageButtonDisabled, setIsForgotPasswordPageButtonDisabled] = useState<boolean>();
-    const [isChangePasswordPageButtonDisabled, setIsChangePasswordPageButtonDisabled] = useState<boolean>();
+    const [isResetPasswordPageButtonDisabled, setIsResetPasswordPageButtonDisabled] = useState<boolean>();
 
     const [loginUsernameInput, setLoginUsernameInput] = useState<string>("");
     const [loginPasswordInput, setLoginPasswordInput] = useState<string>("");
@@ -61,9 +61,9 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const [forgotPasswordPageEmailInput, setForgotPasswordPageEmailInput] = useState<string>("");
     const [forgotPasswordPageErrorMessage, setForgotPasswordPageErrorMessage] = useState<string>("");
 
-    const [changePasswordInput, setChangePasswordInput] = useState<string>("");
-    const [changePasswordRepeatInput, setChangePasswordRepeatInput] = useState<string>("");
-    const [changePasswordErrorMessage, setChangePasswordErrorMessage] = useState<string>("");
+    const [resetPasswordInput, setResetPasswordInput] = useState<string>("");
+    const [resetPasswordRepeatInput, setResetPasswordRepeatInput] = useState<string>("");
+    const [resetPasswordErrorMessage, setResetPasswordErrorMessage] = useState<string>("");
 
     const history = useHistory();
     const query = useQuery();
@@ -108,17 +108,17 @@ export const LoginComponent = (props: LoginComponentProps) => {
         case "forgotPasswordComplete":
             loginScreenType = LoginScreenType.FORGOT_PASSWORD_COMPLETE;
             break;
-        case "changePasswordPage":
-            loginScreenType = LoginScreenType.CHANGE_PASSWORD_PAGE;
+        case "resetPasswordPage":
+            loginScreenType = LoginScreenType.RESET_PASSWORD_PAGE;
             break;
-        case "loadingChangePassword":
-            loginScreenType = LoginScreenType.LOADING_CHANGE_PASSWORD;
+        case "loadingResetPassword":
+            loginScreenType = LoginScreenType.LOADING_RESET_PASSWORD;
             break;
-        case "changePasswordComplete":
-            loginScreenType = LoginScreenType.CHANGE_PASSWORD_COMPLETE;
+        case "resetPasswordComplete":
+            loginScreenType = LoginScreenType.RESET_PASSWORD_COMPLETE;
             break;
-        case "changePasswordFailure":
-            loginScreenType = LoginScreenType.CHANGE_PASSWORD_FAILURE;
+        case "resetPasswordFailure":
+            loginScreenType = LoginScreenType.RESET_PASSWORD_FAILURE;
             break;
         default:
             loginScreenType = LoginScreenType.NONE;
@@ -133,8 +133,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
             makeActivationCall();
         } else if (loginScreenType === LoginScreenType.LOADING_FORGOT_PASSWORD) {
             makeForgotPasswordCall();
-        } else if (loginScreenType === LoginScreenType.LOADING_CHANGE_PASSWORD) {
-            makeChangePasswordCall();
+        } else if (loginScreenType === LoginScreenType.LOADING_RESET_PASSWORD) {
+            makeResetPasswordCall();
         } // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loginScreenType]);
 
@@ -151,8 +151,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
     }, [forgotPasswordPageEmailInput]);
 
     useEffect(() => {
-        setIsChangePasswordPageButtonDisabled(changePasswordInput === "" || !validChangePassword() || !changePasswordsMatch()); // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [changePasswordInput, changePasswordRepeatInput]);
+        setIsResetPasswordPageButtonDisabled(resetPasswordInput === "" || !validResetPassword() || !resetPasswordsMatch()); // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resetPasswordInput, resetPasswordRepeatInput]);
 
     const validEmail = (email: string) => {
         return /^.*@.*\.com$/.test(email);
@@ -178,12 +178,12 @@ export const LoginComponent = (props: LoginComponentProps) => {
         return validEmail(forgotPasswordPageEmailInput);
     }
 
-    const validChangePassword = () => {
-        return validPassword(changePasswordInput);
+    const validResetPassword = () => {
+        return validPassword(resetPasswordInput);
     }
 
-    const changePasswordsMatch = () => {
-        return changePasswordInput === changePasswordRepeatInput;
+    const resetPasswordsMatch = () => {
+        return resetPasswordInput === resetPasswordRepeatInput;
     }
 
     const updateURL = useCallback((loginScreen) => {
@@ -191,7 +191,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
             if (query.has('loginScreen')) {
                 query.set('loginScreen', loginScreen);
 
-                if (loginScreen !== 'loadingActivation' && loginScreen !== 'loadingChangePassword' && loginScreen !== 'changePasswordPage') {
+                if (loginScreen !== 'loadingActivation' && loginScreen !== 'loadingResetPassword' && loginScreen !== 'resetPasswordPage') {
                     if (query.has('username')) {
                         query.delete('username');
                     }
@@ -203,7 +203,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     }
                 }
 
-                if (loginScreen !== 'loadingChangePassword' && loginScreen !== 'changePasswordPage') {
+                if (loginScreen !== 'loadingResetPassword' && loginScreen !== 'resetPasswordPage') {
                     if (query.has('passwordResetToken')) {
                         query.delete('passwordResetToken');
                     }
@@ -221,7 +221,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
         setLoginErrorMessage("");
         setRegisterErrorMessage("");
         setForgotPasswordPageErrorMessage("");
-        setChangePasswordErrorMessage("");
+        setResetPasswordErrorMessage("");
 
         let loginScreen: string;
         switch(loginScreenType) {
@@ -258,17 +258,17 @@ export const LoginComponent = (props: LoginComponentProps) => {
             case LoginScreenType.FORGOT_PASSWORD_COMPLETE:
                 loginScreen = "forgotPasswordComplete";
                 break;
-            case LoginScreenType.CHANGE_PASSWORD_PAGE:
-                loginScreen = "changePasswordPage";
+            case LoginScreenType.RESET_PASSWORD_PAGE:
+                loginScreen = "resetPasswordPage";
                 break;
-            case LoginScreenType.LOADING_CHANGE_PASSWORD:
-                loginScreen = "loadingChangePassword";
+            case LoginScreenType.LOADING_RESET_PASSWORD:
+                loginScreen = "loadingResetPassword";
                 break;
-            case LoginScreenType.CHANGE_PASSWORD_COMPLETE:
-                loginScreen = "changePasswordComplete";
+            case LoginScreenType.RESET_PASSWORD_COMPLETE:
+                loginScreen = "resetPasswordComplete";
                 break;
-            case LoginScreenType.CHANGE_PASSWORD_FAILURE:
-                loginScreen = "changePasswordFailure";
+            case LoginScreenType.RESET_PASSWORD_FAILURE:
+                loginScreen = "resetPasswordFailure";
                 break;
             default:
                 loginScreen = "login";
@@ -384,27 +384,27 @@ export const LoginComponent = (props: LoginComponentProps) => {
         makeCall();
     }
 
-    const changePassword = () => {
-        setLoginScreenType(LoginScreenType.LOADING_CHANGE_PASSWORD);
+    const resetPassword = () => {
+        setLoginScreenType(LoginScreenType.LOADING_RESET_PASSWORD);
     }
 
-    const makeChangePasswordCall = () => {
+    const makeResetPasswordCall = () => {
         const fetchData = async () => {
             const { status } = await postData({
                 baseUrl: usersConfig.url,
-                path: 'change-password',
+                path: 'reset-password',
                 data: {
                     "username": usernameParameter,
-                    "newPassword": changePasswordInput,
+                    "newPassword": resetPasswordInput,
                     "resetToken": passwordResetTokenParameter
                 },
                 additionalHeaders: { }
             });
 
             if (status === 200) {
-                setLoginScreenType(LoginScreenType.CHANGE_PASSWORD_COMPLETE);
+                setLoginScreenType(LoginScreenType.RESET_PASSWORD_COMPLETE);
             } else {
-                setLoginScreenType(LoginScreenType.CHANGE_PASSWORD_FAILURE);
+                setLoginScreenType(LoginScreenType.RESET_PASSWORD_FAILURE);
             }
         }
 
@@ -429,9 +429,9 @@ export const LoginComponent = (props: LoginComponentProps) => {
         }
     }
 
-    const handleChangePasswordPageKeyPress = (event: any) => {
-        if (!isChangePasswordPageButtonDisabled && event.charCode === 13) {
-            changePassword();
+    const handleResetPasswordPageKeyPress = (event: any) => {
+        if (!isResetPasswordPageButtonDisabled && event.charCode === 13) {
+            resetPassword();
         }
     }
 
@@ -444,7 +444,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     return (
         <div>
             {
-                loginScreenType === LoginScreenType.LOADING_LOGIN || loginScreenType === LoginScreenType.LOADING_REGISTER || loginScreenType === LoginScreenType.LOADING_ACTIVATION || loginScreenType === LoginScreenType.LOADING_FORGOT_PASSWORD || loginScreenType === LoginScreenType.LOADING_CHANGE_PASSWORD ?
+                loginScreenType === LoginScreenType.LOADING_LOGIN || loginScreenType === LoginScreenType.LOADING_REGISTER || loginScreenType === LoginScreenType.LOADING_ACTIVATION || loginScreenType === LoginScreenType.LOADING_FORGOT_PASSWORD || loginScreenType === LoginScreenType.LOADING_RESET_PASSWORD ?
                 <div>
                     <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} />
                 </div> :
@@ -463,18 +463,18 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 <div className="login-body">
                     <div className="login-section-text">Failed to activate account.</div>
                 </div> :
-                loginScreenType === LoginScreenType.CHANGE_PASSWORD_COMPLETE ?
+                loginScreenType === LoginScreenType.RESET_PASSWORD_COMPLETE ?
                 <div className="login-body">
-                    <div className="login-section-text">Successfully changed password!</div>
+                    <div className="login-section-text">Successfully reset password!</div>
                     <div className="login-section-text">Click <span className="login-link" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>here</span> to login.</div>
                 </div> :
-                loginScreenType === LoginScreenType.CHANGE_PASSWORD_FAILURE ?
+                loginScreenType === LoginScreenType.RESET_PASSWORD_FAILURE ?
                 <div className="login-body">
-                    <div className="login-section-text">Failed to change password.</div>
+                    <div className="login-section-text">Failed to reset password.</div>
                 </div> :
                 loginScreenType === LoginScreenType.FORGOT_PASSWORD_COMPLETE ?
                 <div className="login-body">
-                    <div className="login-section-text">Check your email to change password.</div>
+                    <div className="login-section-text">Check your email to reset password.</div>
                     <div className="login-section-text">Click <span className="login-link" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>here</span> to login.</div>
                 </div> :
                 loginScreenType === LoginScreenType.LOGIN ?
@@ -542,7 +542,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 </div> :
                 loginScreenType === LoginScreenType.FORGOT_PASSWORD_PAGE ?
                 <div className="login-body">
-                    <div className="login-section-text">Enter email to change password</div>
+                    <div className="login-section-text">Enter email to reset password</div>
                     <div className="login-input-container">
                         <input id="forgot-page-email-input" className="login-input" type="text" placeholder="Email" value={forgotPasswordPageEmailInput} onChange={e => setForgotPasswordPageEmailInput(e.target.value)} onKeyPress={(event: any) => handleForgotPasswordPageKeyPress(event)}/>
                         {
@@ -563,14 +563,14 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Login</div>
                 </div> :
                 <div className="login-body">
-                    <div className="login-section-text">{`Change Password for ${usernameParameter}`}</div>
+                    <div className="login-section-text">{`Reset Password for ${usernameParameter}`}</div>
                     <div className="login-input-container">
-                        <input id="change-password-input" className="login-input" type="password" placeholder="New Password" value={changePasswordInput} onChange={e => setChangePasswordInput(e.target.value)} onKeyPress={(event: any) => handleChangePasswordPageKeyPress(event)}/>
+                        <input className="login-input" type="password" placeholder="New Password" value={resetPasswordInput} onChange={e => setResetPasswordInput(e.target.value)} onKeyPress={(event: any) => handleResetPasswordPageKeyPress(event)}/>
                         {
-                            changePasswordInput !== "" &&
+                            resetPasswordInput !== "" &&
                             <div className="login-input-error">
                                 {
-                                    validChangePassword() ?
+                                    validResetPassword() ?
                                     <CheckIcon style={{color: "green"}} /> :
                                     <CrossIcon style={{color: "red"}} />
                                 }
@@ -578,12 +578,12 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         }
                     </div>
                     <div className="login-input-container">
-                        <input id="change-password-repeat-input" className="login-input" type="password" placeholder="Retype New Password" value={changePasswordRepeatInput} onChange={e => setChangePasswordRepeatInput(e.target.value)} onKeyPress={(event: any) => handleChangePasswordPageKeyPress(event)}/>
+                        <input className="login-input" type="password" placeholder="Retype New Password" value={resetPasswordRepeatInput} onChange={e => setResetPasswordRepeatInput(e.target.value)} onKeyPress={(event: any) => handleResetPasswordPageKeyPress(event)}/>
                         {
-                            changePasswordRepeatInput !== "" &&
+                            resetPasswordRepeatInput !== "" &&
                             <div className="login-input-error">
                                 {
-                                    changePasswordsMatch() ?
+                                    resetPasswordsMatch() ?
                                     <CheckIcon style={{color: "green"}} /> :
                                     <CrossIcon style={{color: "red"}} />
                                 }
@@ -591,9 +591,9 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         }
                     </div>
                     {
-                        changePasswordErrorMessage && <div className="login-error-message">{changePasswordErrorMessage}</div>
+                        resetPasswordErrorMessage && <div className="login-error-message">{resetPasswordErrorMessage}</div>
                     }
-                    <button id="register-submit-button" className={`button ${isChangePasswordPageButtonDisabled && "disabled-button"}`} onClick={ () => { changePassword() } } disabled={isChangePasswordPageButtonDisabled}>Submit</button>
+                    <button id="register-submit-button" className={`button ${isResetPasswordPageButtonDisabled && "disabled-button"}`} onClick={ () => { resetPassword() } } disabled={isResetPasswordPageButtonDisabled}>Submit</button>
                     <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Login</div>
                 </div>
             }
