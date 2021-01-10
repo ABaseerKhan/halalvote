@@ -22,23 +22,26 @@ interface MenuComponentProps {
     fetchTopics: any,
     showSpecificComment?: any,
 };
+
 interface MenuComponentState {
-    menuLocation: MenuLocation, 
-    addTopicDisplayed: boolean,
-}
+    menuLocation: MenuLocation,
+    modalItemSelected: ModalType | undefined
+};
+
 export const MenuComponent = (props: MenuComponentProps) => {
     const { fetchTopics } = props;
+
     const history = useHistory();
     const query = useQuery();
     const userProfile = query.get("userProfile") || undefined;
-    const loginScreen = query.get("loginScreen") || undefined;
+
     // eslint-disable-next-line
     const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken']);
     const { username } = cookies;
 
     const [state, setState] = useState<MenuComponentState>({
         menuLocation: MenuLocation.NONE,
-        addTopicDisplayed: false,
+        modalItemSelected: undefined
     });
 
     const isMobile = useMedia(
@@ -90,35 +93,52 @@ export const MenuComponent = (props: MenuComponentProps) => {
         } // eslint-disable-next-line
     }, [state.menuLocation]);
 
-    const updateUrl = useCallback((userProfile, loginScreen) => {
-        if (userProfile) {
-            if (query.has('userProfile')) {
-                query.set('userProfile', userProfile);
-            } else {
-                query.append('userProfile', userProfile);
-            };
-        } else {
-            if (query.has('userProfile')) {
-                query.delete('userProfile');
-            }
-        }
-        
-        if (loginScreen) {
-            if (query.has('loginScreen')) {
-                query.set('loginScreen', 'login');
-            } else {
-                query.append('loginScreen', 'login');
-            };
-        } else {
-            if (query.has('loginScreen')) {
-                query.delete('loginScreen');
-            }
-            if (query.has('username')) {
-                query.delete('username');
-            }
-            if (query.has('activationValue')) {
-                query.delete('activationValue');
-            }
+    useEffect(() => {
+        if (query.has('loginScreen')) {
+            state.modalItemSelected !== ModalType.LOGIN && setState({...state, modalItemSelected: ModalType.LOGIN});
+        } else if (query.has('userProfile')) {
+            state.modalItemSelected !== ModalType.PROFILE && setState({...state, modalItemSelected: ModalType.PROFILE});
+        } else if (state.modalItemSelected === ModalType.LOGIN || state.modalItemSelected === ModalType.PROFILE) {
+            setState({...state, modalItemSelected: undefined});
+        } // eslint-disable-next-line
+    }, [history, query]);
+
+    const updateUrl = useCallback((menuItem: ModalType, additionalQuery: string | undefined) => {
+        switch (menuItem) {
+            case ModalType.LOGIN:
+                if (additionalQuery) {
+                    if (query.has('loginScreen')) {
+                        query.set('loginScreen', additionalQuery);
+                    } else {
+                        query.append('loginScreen', additionalQuery);
+                    };
+                } else {
+                    if (query.has('loginScreen')) {
+                        query.delete('loginScreen');
+                    }
+                    if (query.has('username')) {
+                        query.delete('username');
+                    }
+                    if (query.has('activationValue')) {
+                        query.delete('activationValue');
+                    }
+                }
+                break;
+            case ModalType.PROFILE:
+                if (additionalQuery) {
+                    if (query.has('userProfile')) {
+                        query.set('userProfile', additionalQuery);
+                    } else {
+                        query.append('userProfile', additionalQuery);
+                    };
+                } else {
+                    if (query.has('userProfile')) {
+                        query.delete('userProfile');
+                    }
+                }
+                break;
+            default:
+                return;
         }
 
         history.replace({
@@ -142,23 +162,27 @@ export const MenuComponent = (props: MenuComponentProps) => {
     const setLoginDisplayed = (loginDisplayed: boolean) => {
         closeMenu({...state, menuLocation: MenuLocation.NONE}, () => {
             if (loginDisplayed) {
-                updateUrl(undefined, 'login');
+                updateUrl(ModalType.LOGIN, 'login');
             } else {
-                updateUrl(undefined, undefined);
+                updateUrl(ModalType.LOGIN, undefined);
             }
         });
     }
 
     const setAddTopicDisplayed = (addTopicDisplayed: boolean) => {
-        closeMenu({...state, menuLocation: MenuLocation.NONE, addTopicDisplayed: addTopicDisplayed}, () => {});
+        closeMenu({
+            ...state,
+            menuLocation: MenuLocation.NONE,
+            modalItemSelected: addTopicDisplayed ? ModalType.ADD_TOPIC : undefined
+        }, () => {});
     }
 
     const setProfileDisplayed = (profileDisplayed: boolean) => {
         closeMenu({...state, menuLocation: MenuLocation.NONE}, () => { 
             if (profileDisplayed) {
-                updateUrl(username, undefined);
+                updateUrl(ModalType.PROFILE, username);
             } else {
-                updateUrl(undefined, undefined);
+                updateUrl(ModalType.PROFILE, undefined);
             };
         });
     }
@@ -393,14 +417,13 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
     return (
         <div id={menuId} className={menuId} style={{height: menuHeight + "px", width: menuWidth + "px", borderRadius: (menuHeight / 2) + "px"}}>
-            { loginScreen &&
-                <Portal><ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchTopics={null}/></Portal>
-            }
-            { state.addTopicDisplayed &&
-                <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_TOPIC} fetchTopics={fetchTopics}/></Portal>
-            }
-            { userProfile &&
-                <Portal><ModalComponent removeModal={() => setProfileDisplayed(false)} modalType={ModalType.PROFILE} fetchTopics={fetchTopics} showSpecificComment={props.showSpecificComment} accountUsername={userProfile}/></Portal>
+            {
+                state.modalItemSelected ===  ModalType.LOGIN ?
+                    <Portal><ModalComponent removeModal={() => setLoginDisplayed(false)} modalType={ModalType.LOGIN} fetchTopics={null}/></Portal> :
+                state.modalItemSelected ===  ModalType.ADD_TOPIC ?
+                    <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_TOPIC} fetchTopics={fetchTopics}/></Portal> :
+                state.modalItemSelected === ModalType.PROFILE &&
+                    <Portal><ModalComponent removeModal={() => setProfileDisplayed(false)} modalType={ModalType.PROFILE} fetchTopics={fetchTopics} showSpecificComment={props.showSpecificComment} accountUsername={userProfile}/></Portal>
             }
             {
                 state.menuLocation !== MenuLocation.NONE && 

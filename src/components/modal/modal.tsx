@@ -5,12 +5,12 @@ import { LoginComponent } from '../login/login';
 import { useMedia } from '../../hooks/useMedia';
 import { ProfileComponent } from '../profile/profile';
 import { vhToPixels, vwToPixelsWithMax } from "../../utils";
+import { modalHeightVh, modalMaxWidth, modalWidthVw } from '../..';
 
 // type imports
 
 // styles
 import './modal.css';
-import { modalHeightVh, modalMaxWidth, modalWidthVw } from '../..';
 
 interface ModalComponentProps {
     removeModal: any,
@@ -90,9 +90,14 @@ export const ModalComponent = (props: ModalComponentProps) => {
             <div id={modalId} className={modalId} onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                         onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                         onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}>
-                { modalType === ModalType.LOGIN && <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> }
-                { modalType === ModalType.ADD_TOPIC && <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> }
-                { modalType === ModalType.PROFILE && <ProfileComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> }
+                {
+                    modalType === ModalType.LOGIN ?
+                        <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> :
+                    modalType === ModalType.ADD_TOPIC ?
+                        <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> :
+                    modalType === ModalType.PROFILE &&
+                        <ProfileComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} />
+                }
             </div>
         </div>
     );
