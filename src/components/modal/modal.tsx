@@ -99,7 +99,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
                     modalType === ModalType.PROFILE ?
                         <ProfileComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> :
                     modalType === ModalType.ACCOUNT &&
-                        <AccountComponent/>
+                        <AccountComponent closeModal={closeModal}/>
                 }
             </div>
         </div>
