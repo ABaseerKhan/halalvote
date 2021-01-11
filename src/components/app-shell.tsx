@@ -13,8 +13,6 @@ import { TopicContainerComponent } from './topic-container/topic-container';
 import { CommentsCardComponent } from './comments/comments-card';
 import {
   useHistory,
-  useParams,
-  generatePath
 } from "react-router-dom";
 import { useQuery } from '../hooks/useQuery';
 import { TopicImagesComponent } from './topic-images/topic-images';
@@ -67,16 +65,15 @@ export const AppShellComponent = (props: any) => {
     muted: true,
     analytics: { }
   });
-  
-
-  let { topicTitle } = useParams<any>();
-  topicTitle = topicTitle?.replace(/_/g, ' ').replace(/%2F/g, '/');
 
   const [cookies] = useCookies(['username', 'sessiontoken']);
   const { username, sessiontoken } = cookies;
 
   const query = useQuery();
   const history = useHistory();
+
+  let topicTitle = query.get("topic") || undefined;
+  topicTitle = topicTitle?.replace(/_/g, ' ').replace(/%2F/g, '/');
 
   // context-setters (they also serve as application cache)
   const setMutedContext = (mute: boolean) => { setState(prevState => ({ ...prevState, muted: mute })); };
@@ -148,14 +145,14 @@ export const AppShellComponent = (props: any) => {
   useEffect(() => {
     const { topics, topicIndex } = state.topicsState;
     if (topics[topicIndex] && topics[topicIndex].topicTitle) {
-      if (props.match.path === "/") {
-        props.history.replace(`${topics[topicIndex].topicTitle.replace(/ /g,"_")}`);
+      if (query.has('topic')) {
+        query.set('topic', `${topics[topicIndex].topicTitle.replace(/ /g,"_")}`);
       } else {
-        props.history.replace({
-          pathname: generatePath(props.match.path, { topicTitle: topics[topicIndex].topicTitle.replace(/ /g,"_") }),
-          search: window.location.search
-        });
-      }
+          query.append('topic', `${topics[topicIndex].topicTitle.replace(/ /g,"_")}`);
+      };
+      history.replace({
+        search: "?" + query.toString()
+      });
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.topicsState]);
 

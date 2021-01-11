@@ -31,7 +31,7 @@ ReactDOM.render(
   <CookiesProvider >
     <Router >
       <Switch>
-        <Route exact path={["/", "/:topicTitle"]} component={AppShellComponent} />
+        <Route component={AppShellComponent} />
       </Switch>
     </Router>
     <div id="login-portal"></div>
