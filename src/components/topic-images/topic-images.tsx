@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext, useLayoutEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { topicsConfig } from '../../https-client/config';
+import { topicsConfig, usersConfig } from '../../https-client/config';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
@@ -17,16 +17,17 @@ import { authenticatedPostDataContext } from '../app-shell';
 import { authenticatedGetDataContext } from '../app-shell';
 import { useQuery } from '../../hooks/useQuery';
 import { topicImagesContext, topicsContext } from '../app-shell';
-import Dropzone, { IFileWithMeta, IUploadParams, StatusValue } from 'react-dropzone-uploader'
+import Dropzone, { IFileWithMeta, IUploadParams, StatusValue } from 'react-dropzone-uploader';
 import { v4 as uuidv4 } from 'uuid';
 import { VideoPlayer } from './video-player';
+import { postData } from '../../https-client/client';
 
 // type imports
 import { TopicImages } from '../../types';
 
 // styles
 import './topic-images.css';
-import 'react-dropzone-uploader/dist/styles.css'
+import 'react-dropzone-uploader/dist/styles.css';
 
 
 const videoFormats = new Set();
@@ -109,6 +110,24 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             }
         }
     });
+
+    useEffect(() => {
+        if (topicImages && topicImages.length && topicImages[imageIndex] && username) {
+            const body: any = {
+                "username": username,
+                "mediaId": topicImages[imageIndex].id
+            };
+            postData({
+                baseUrl: usersConfig.url,
+                path: 'user-see-media',
+                data: body,
+                additionalHeaders: {
+                    "sessiontoken": sessiontoken
+                },
+                setCookie: setCookie
+            });
+        } // eslint-disable-next-line
+    }, [imageIndex, topicImages])
 
     const fetchImages = async (newIndex?: number, refresh?: boolean, singleImageId?: string) => {
         setState(prevState => ({ ...prevState, topicImages: [], currentIndex: 0, picture: null, loading: true }));
