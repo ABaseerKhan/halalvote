@@ -18,7 +18,8 @@ enum AccountPage {
     LOADING_CHANGE_PASSWORD,
     CHANGE_PASSWORD,
     LOADING_DELETE_ACCOUNT,
-    DELETE_ACCOUNT
+    DELETE_ACCOUNT,
+    DELETE_ACCOUNT_FAILURE
 }
 
 interface AccountPageProps {
@@ -26,7 +27,7 @@ interface AccountPageProps {
 }
 
 interface ChangePasswordState {
-    currentPassword: string,
+    changePasswordCurrent: string,
     newPassword: string,
     repeatNewPassword: string,
     isChangePasswordSubmitButtonDisabled: boolean,
@@ -40,13 +41,16 @@ export const AccountComponent = (props: AccountPageProps) => {
     const [accountPage, setAccountPage] = useState<AccountPage>(AccountPage.OPTIONS);
 
     const [changePasswordState, setChangePasswordState] = useState<ChangePasswordState>({
-        currentPassword: "",
+        changePasswordCurrent: "",
         newPassword: "",
         repeatNewPassword: "",
         isChangePasswordSubmitButtonDisabled: true,
         changePasswordErrorMessage: ""
     });
-    const {currentPassword, newPassword, repeatNewPassword, isChangePasswordSubmitButtonDisabled, changePasswordErrorMessage} = changePasswordState;
+    const {changePasswordCurrent, newPassword, repeatNewPassword, isChangePasswordSubmitButtonDisabled, changePasswordErrorMessage} = changePasswordState;
+
+    const [deleteAccountCurrentPasswordInput, setDeleteAccountCurrentPasswordInput] = useState<string>("");
+    
 
     // eslint-disable-next-line
     const [cookies, setCookie, removeCookie] = useCookies(['username', 'sessiontoken']);
@@ -63,11 +67,13 @@ export const AccountComponent = (props: AccountPageProps) => {
     useEffect(() => {
         if (accountPage === AccountPage.LOADING_CHANGE_PASSWORD) {
             makeChangePasswordCall();
+        } else if (accountPage === AccountPage.LOADING_DELETE_ACCOUNT) {
+            makeDeleteAccountCall();
         } // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [accountPage]);
 
-    const setCurrentPasswordInput = (currentPassword: string) => {
-        setChangePasswordState({...changePasswordState, currentPassword: currentPassword});
+    const setChangePasswordCurrentInput = (changePasswordCurrent: string) => {
+        setChangePasswordState({...changePasswordState, changePasswordCurrent: changePasswordCurrent});
     }
 
     const setNewPasswordInput = (newPassword: string) => {
@@ -97,7 +103,7 @@ export const AccountComponent = (props: AccountPageProps) => {
                 path: 'change-password',
                 data: {
                     "username": username,
-                    "currentPassword": currentPassword,
+                    "currentPassword": changePasswordCurrent,
                     "newPassword": newPassword
                 },
                 additionalHeaders: { 
@@ -121,6 +127,37 @@ export const AccountComponent = (props: AccountPageProps) => {
         fetchData();
     }
 
+    const deleteAccount = () => {
+        setAccountPage(AccountPage.LOADING_DELETE_ACCOUNT);
+    }
+
+    const makeDeleteAccountCall = () => {
+        const fetchData = async () => {
+            const { status } = await postData({
+                baseUrl: usersConfig.url,
+                path: 'delete-account',
+                data: {
+                    "username": username,
+                    "password": deleteAccountCurrentPasswordInput
+                },
+                additionalHeaders: { 
+                    sessionToken: sessiontoken
+                }
+            });
+
+            if (status === 200) {
+                removeCookie("username"); 
+                removeCookie("sessiontoken");
+                closeModal();
+            } else {
+                setDeleteAccountCurrentPasswordInput("");
+                setAccountPage(AccountPage.DELETE_ACCOUNT_FAILURE);
+            }
+        }
+
+        fetchData();
+    }
+
     const handleChangePasswordPageKeyPress = (event: any) => {
         if (!isChangePasswordSubmitButtonDisabled && event.charCode === 13) {
             changePassword();
@@ -129,7 +166,7 @@ export const AccountComponent = (props: AccountPageProps) => {
 
     const cancelAccountAction = () => {
         setChangePasswordState({
-            currentPassword: "",
+            changePasswordCurrent: "",
             newPassword: "",
             repeatNewPassword: "",
             isChangePasswordSubmitButtonDisabled: true,
@@ -165,7 +202,7 @@ export const AccountComponent = (props: AccountPageProps) => {
                             </div> :
                         accountPage === AccountPage.CHANGE_PASSWORD ?
                             <div className="change-password-container">
-                                <input className="change-password-input" type="password" placeholder="Current Password" value={currentPassword} onChange={e => setCurrentPasswordInput(e.target.value)} onKeyPress={e => handleChangePasswordPageKeyPress(e)}/>
+                                <input className="change-password-input" type="password" placeholder="Current Password" value={changePasswordCurrent} onChange={e => setChangePasswordCurrentInput(e.target.value)} onKeyPress={e => handleChangePasswordPageKeyPress(e)}/>
                                 <div className="change-password-input-container">
                                     <input className="change-password-input" type="password" placeholder="New Password" value={newPassword} onChange={e => setNewPasswordInput(e.target.value)} onKeyPress={e => handleChangePasswordPageKeyPress(e)}/>
                                     {
@@ -197,8 +234,17 @@ export const AccountComponent = (props: AccountPageProps) => {
                                 }
                                 <button className={`button ${isChangePasswordSubmitButtonDisabled && "disabled-button"}`} onClick={ () => { changePassword() } } disabled={isChangePasswordSubmitButtonDisabled}>Change Password</button>
                             </div> :
-                        accountPage === AccountPage.DELETE_ACCOUNT &&
-                        <div>Are you sure you want to delete Account? Your username will no longer be available.</div>
+                        accountPage === AccountPage.DELETE_ACCOUNT ?
+                        <div>
+                            <div className="delete-account-message">Are you sure you want to delete your account? Your email and username will no longer be available.</div>
+                            <div className="delete-account-message">Type in your password to delete account.</div>
+                            <input className="change-password-input" type="password" placeholder="Password" value={deleteAccountCurrentPasswordInput} onChange={e => setDeleteAccountCurrentPasswordInput(e.target.value)}/>
+                            <button className={`button ${deleteAccountCurrentPasswordInput === "" ? "disabled-button" : "caution-button"}`} onClick={ () => { deleteAccount() } } disabled={deleteAccountCurrentPasswordInput === ""}>Delete Account</button>
+                        </div> :
+                        accountPage === AccountPage.DELETE_ACCOUNT_FAILURE &&
+                        <div>
+                            <div className="delete-account-message">There was an error deleting your account.</div>
+                        </div>                        
                     }
                 </div>
             }
