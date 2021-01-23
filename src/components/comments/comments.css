@@ -74,10 +74,6 @@
         font-size: 12px !important;
     }
 
-    .delete-button {
-        font-size: 8px !important;
-    }
-
     .comment-maker-input {
         font-size: 14px !important;
     }
@@ -297,17 +293,6 @@
 .reply-button:hover {
     text-decoration: underline;
     cursor: pointer;
-}
-
-.delete-button {
-    padding-left: 1em;
-    font-size: 12px;
-}
-
-.delete-button:hover {
-    cursor: pointer;
-    color: transparent;  
-    text-shadow: 0 0 0 red;
 }
 
 .replies {

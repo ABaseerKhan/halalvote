@@ -2,7 +2,7 @@ import { config, EnvConfig } from './config';
 
 const envConfig = config();
 
-interface Request { 
+export interface Request { 
     baseUrl: string, 
     path: string, 
     data?: any, 
@@ -11,7 +11,12 @@ interface Request {
     setCookie?: any,
 };
 
-export const postData = async (request: Request): Promise<any> => {
+export interface Response {
+    status: number,
+    data: any,
+}
+
+export const postData = async (request: Request): Promise<Response> => {
     const { baseUrl, path, data, additionalHeaders } = request;
 
     const response = await fetch(baseUrl + path, {
@@ -28,7 +33,7 @@ export const postData = async (request: Request): Promise<any> => {
     return { status: response.status, data: await response.json() };
 }
 
-export const getData = async (request: Request): Promise<any> => {
+export const getData = async (request: Request): Promise<Response> => {
     const { baseUrl, path, queryParams={}, additionalHeaders={} } = request;
 
     const query = Object.keys(queryParams)

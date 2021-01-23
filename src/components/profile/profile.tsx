@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
-import { usersConfig } from '../../https-client/config';
+import { topicsConfig, usersConfig } from '../../https-client/config';
 import { Topic, Comment } from '../../types';
 import { timeSince, vhToPixels, setCardQueryParam } from '../../utils';
 import { modalHeightVh } from '../..';
@@ -10,7 +10,7 @@ import { useQuery } from '../../hooks/useQuery';
 import { 
     useHistory,
 } from "react-router-dom";
-import { authenticatedGetDataContext } from '../app-shell';
+import { authenticatedGetDataContext, authenticatedPostDataContext } from '../app-shell';
 
 // styles
 import './profile.css';
@@ -38,6 +38,8 @@ interface State {
 export const ProfileComponent = (props: ProfileComponentProps) => {
     // eslint-disable-next-line
     const [cookies] = useCookies(['username', 'sessiontoken']);
+    const { username, sessiontoken } = cookies;
+
     const [state, setState] = useState<State>({ 
         userCreatedTopics: undefined, 
         userVotedTopics: undefined, 
@@ -46,6 +48,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
     });
 
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
+    const { authenticatedPostData } = useContext(authenticatedPostDataContext);
 
     useEffect(() => {
         onCreatedTopicsTab(); // eslint-disable-next-line
@@ -87,6 +90,27 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
         setState(prevState => ({ ...prevState, userComments: data }));
     }
 
+    const deleteTopic = async (topicTitle: string) => {
+        const { status } = await authenticatedPostData({
+            baseUrl: topicsConfig.url,
+            path: 'delete-topic', 
+            data: { 
+                "topicTitle": topicTitle,
+                "username": username,
+            },
+            additionalHeaders: {
+                "sessiontoken": sessiontoken
+            }
+        }, true);
+
+        if (status === 200) {
+            console.log('deleted');
+            setState(prevState => ({ ...prevState, userCreatedTopics: prevState.userCreatedTopics?.filter((topic) => topic.topicTitle !== topicTitle), userVotedTopics: prevState.userVotedTopics?.filter((topic) => topic.topicTitle !== topicTitle) }))
+        } else {
+            alert('error deleting topic');
+        }
+    }
+
     const onCreatedTopicsTab = () => {
         setState({ ...state, selectedTab: Tab.CREATEDTOPICS });
         fetchUserCreatedTopics();
@@ -115,10 +139,10 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
             <div className="profile-body">
                 <ul style={{ listStyleType: 'none', paddingInlineStart: '1em' }}>
                     {state.selectedTab===Tab.CREATEDTOPICS && state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => (
-                        <UserTopic topic={topic} fetchTopics={props.fetchTopics} closeModal={props.closeModal}/>
+                        <UserTopic key={topic.topicTitle} topic={topic} fetchTopics={props.fetchTopics} deleteTopic={deleteTopic} closeModal={props.closeModal}/>
                     ))}
                     {state.selectedTab===Tab.VOTEDTOPICS && state.userVotedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => (
-                        <UserTopic topic={topic} fetchTopics={props.fetchTopics} closeModal={props.closeModal}/>
+                        <UserTopic key={topic.topicTitle} topic={topic} fetchTopics={props.fetchTopics} deleteTopic={deleteTopic} closeModal={props.closeModal}/>
                     ))}
                     {state.selectedTab===Tab.ARGUMENTS && state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
                         <UserComment comment={comment} fetchTopics={props.fetchTopics} showSpecificComment={props.showSpecificComment} closeModal={props.closeModal} />
@@ -132,18 +156,36 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
 interface UserTopicProps {
     topic: Topic,
     fetchTopics: (topicTofetch?: string) => Promise<void>,
+    deleteTopic: (topicTitle: string) => void,
     closeModal: any,
 };
 const UserTopic = (props: UserTopicProps) => {
-    const { topic, fetchTopics, closeModal } = props;
+    const { topic, fetchTopics, deleteTopic, closeModal } = props;
+
+    const [cookies] = useCookies(['username', 'sessiontoken']);
+    const { username } = cookies;
+
     return (
             <li>
-                <div className="user-topic-container" onClick={() => { fetchTopics(topic.topicTitle); closeModal(); }}>
-                    <span>{topic.topicTitle}</span>
-                    <div className="topic-meta-info-container">
-                        <span className="topic-meta-info-item">({topic.numVotes} votes)</span>
-                        <span className="topic-meta-info-item">{timeSince(topic.timeStamp)} ago</span>
+                <div className="user-topic-li">
+                    <div className="user-topic-container" onClick={() => { fetchTopics(topic.topicTitle); closeModal(); }}>
+                        <span>{topic.topicTitle}</span>
+                        <div className="topic-meta-info-container">
+                            <span className="topic-meta-info-item">({topic.numVotes} votes)</span>
+                            <span className="topic-meta-info-item">{timeSince(topic.timeStamp)} ago</span>
+                        </div>
                     </div>
+                    {
+                        topic.username === username &&
+                        <span
+                            className={"delete-button"}
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteTopic(topic.topicTitle); }}
+                            role={"img"}
+                            aria-label="trash"
+                        >
+                            🗑️
+                        </span>
+                    }
                 </div>
             </li>
     )

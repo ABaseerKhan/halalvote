@@ -20,6 +20,7 @@ import { TopicContainerMobileComponent } from './topic-container-mobile/topic-co
 
 
 // type imports
+import { Response } from '../https-client/client';
 
 // style imports
 import './app-shell.css';
@@ -327,18 +328,18 @@ export const AppShellComponent = (props: any) => {
   )
 }
 
-const authenticatedPostData = async (request: any, willRetry: boolean): Promise<any> => {
+const authenticatedPostData = async (request: any, willRetry: boolean): Promise<Response> => {
   return await postData(request)
 };
-export const authenticatedPostDataContext = React.createContext<{authenticatedPostData: (request: any, willRetry: boolean) => Promise<any>; setAuthenticatedPostData: (postData: (request: any, willRetry: boolean) => Promise<any>) => void}>({
+export const authenticatedPostDataContext = React.createContext<{authenticatedPostData: (request: any, willRetry: boolean) => Promise<Response>; setAuthenticatedPostData: (postData: (request: any, willRetry: boolean) => Promise<any>) => void}>({
   authenticatedPostData: authenticatedPostData,
   setAuthenticatedPostData: (postData) => undefined
 });
 
-const authenticatedGetData = async (request: any, willRetry: boolean): Promise<any> => {
+const authenticatedGetData = async (request: any, willRetry: boolean): Promise<Response> => {
   return await getData(request)
 };
-export const authenticatedGetDataContext = React.createContext<{authenticatedGetData: (request: any, willRetry: boolean) => Promise<any>; setAuthenticatedGetData: (getData: (request: any, willRetry: boolean) => Promise<any>) => void}>({
+export const authenticatedGetDataContext = React.createContext<{authenticatedGetData: (request: any, willRetry: boolean) => Promise<Response>; setAuthenticatedGetData: (getData: (request: any, willRetry: boolean) => Promise<any>) => void}>({
   authenticatedGetData: authenticatedGetData,
   setAuthenticatedGetData: (getData) => undefined
 });
