@@ -148,8 +148,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
     }, [loginUsernameInput, loginPasswordInput]);
 
     useEffect(() => {
-        setIsRegisterButtonDisabled(!validRegisterEmail() || registerUsernameInput === "" || !validRegisterPassword() || !registerPasswordsMatch()); // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [registerEmailInput, registerUsernameInput, registerPasswordInput, registerPasswordRepeatInput]);
+        setIsRegisterButtonDisabled(!validRegisterEmail() || !registerEmailInputAvailable || registerUsernameInput === "" || !registerUsernameInputAvailable || !validRegisterPassword() || !registerPasswordsMatch()); // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [registerUsernameInputAvailable, registerEmailInputAvailable, registerPasswordInput, registerPasswordRepeatInput]);
 
     useEffect(() => {
         if (checkUsernameAvailableTimeout.current !== undefined) {
