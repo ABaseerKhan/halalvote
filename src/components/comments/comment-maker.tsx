@@ -224,7 +224,6 @@ class CustomMentionBlot extends Embed {
     }
 
     clickHandler(event: any) {
-        console.log("ClickableSpan was clicked. Blot: ", this);
     }
 }
 

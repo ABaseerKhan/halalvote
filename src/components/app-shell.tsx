@@ -172,7 +172,6 @@ export const AppShellComponent = (props: any) => {
 
     const { status, data }: { status: number, data: Topic[] } = await authenticatedPostData({ baseUrl: topicsConfig.url, path: 'get-topics', data: body, additionalHeaders: additionalHeaders, }, true);
     if (status !== 200) {
-      console.log("failed to fetch topics");
       return;
     }
 

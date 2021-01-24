@@ -19,6 +19,13 @@ export interface Response {
 export const postData = async (request: Request): Promise<Response> => {
     const { baseUrl, path, data, additionalHeaders } = request;
 
+    if (path.includes('delete')) {
+        const confirmed = window.confirm("Confirm delete");
+        if (!confirmed) {
+            return { status: 499, data: undefined };
+        }
+    }
+
     const response = await fetch(baseUrl + path, {
         method: 'POST',
         mode: 'cors',

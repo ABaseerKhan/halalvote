@@ -175,7 +175,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     const deleteComment = async (pathToComment: number[]) => {
         const commentToDelete = getCommentFromPath(comments, pathToComment);
-        const response = await authenticatedPostData({
+        const { status, data } = await authenticatedPostData({
             baseUrl: commentsConfig.url,
             path: 'delete-comment', 
             data: { 
@@ -189,14 +189,16 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             }
         }, true);
         
-        if (pathToComment.length === 1) {
-            await refreshTopic(topic?.topicTitle);
-        }
+        if (status === 200) {
+            if (pathToComment.length === 1) {
+                await refreshTopic(topic?.topicTitle);
+            }
 
-        const commentsCopy = comments.map(c => ({...c}));
-        const updatedComments = deleteCommentLocally(commentsCopy, pathToComment, !!response.data?.psuedoDelete);
-        setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
-        setState(prevState => ({ ...prevState, pathToHighlightedComment: undefined }));
+            const commentsCopy = comments.map(c => ({...c}));
+            const updatedComments = deleteCommentLocally(commentsCopy, pathToComment, !!data?.psuedoDelete);
+            setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
+            setState(prevState => ({ ...prevState, pathToHighlightedComment: undefined }));
+        }
     }
 
     const highlightComment = (path: number[] | undefined) => {

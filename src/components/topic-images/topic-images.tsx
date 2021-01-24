@@ -339,7 +339,7 @@ export const MyUploader = (props: UploaderProps) => {
     }
     
     // called every time a file's `status` changes
-    const handleChangeStatus = ({ meta, file }: IFileWithMeta, status: StatusValue) => { console.log(status) }
+    const handleChangeStatus = ({ meta, file }: IFileWithMeta, status: StatusValue) => { }
     
     // receives array of files that are done uploading when submit button is clicked
     const handleSubmit = async (files: (IFileWithMeta & { meta: { fileUrl: string } })[], allFiles: IFileWithMeta[]) => {
