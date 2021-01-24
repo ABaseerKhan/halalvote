@@ -51,7 +51,6 @@ export const _VideoPlayer = ({ src, inView, stylesOverride }: VideoPlayerProps, 
                 await videoRef.current.play();
             } catch(e) {
                 setState(prevState => ({ ...prevState, isPlaying: false, loading: false }));
-                console.log(e);
                 return;
             }
             setState(prevState => ({ ...prevState, isPlaying: true }));

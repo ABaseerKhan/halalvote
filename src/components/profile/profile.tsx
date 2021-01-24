@@ -104,10 +104,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
         }, true);
 
         if (status === 200) {
-            console.log('deleted');
             setState(prevState => ({ ...prevState, userCreatedTopics: prevState.userCreatedTopics?.filter((topic) => topic.topicTitle !== topicTitle), userVotedTopics: prevState.userVotedTopics?.filter((topic) => topic.topicTitle !== topicTitle) }))
-        } else {
-            alert('error deleting topic');
         }
     }
 
