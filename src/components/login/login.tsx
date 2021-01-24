@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { postData, getData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
@@ -54,6 +54,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
 
     const [registerEmailInput, setRegisterEmailInput] = useState<string>("");
     const [registerUsernameInput, setRegisterUsernameInput] = useState<string>("");
+    const [registerUsernameInputAvailable, setRegisterUsernameInputAvailable] = useState<boolean | undefined>(undefined);
     const [registerPasswordInput, setRegisterPasswordInput] = useState<string>("");
     const [registerPasswordRepeatInput, setRegisterPasswordRepeatInput] = useState<string>("");
     const [registerErrorMessage, setRegisterErrorMessage] = useState<string>("");
@@ -72,6 +73,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const usernameParameter = query.get("username") || undefined;
     const activationValueParameter = query.get("activationValue") || undefined;
     const passwordResetTokenParameter = query.get("passwordResetToken") || undefined;
+
+    const checkUsernameAvailableTimeout = useRef<any>(undefined);
 
     let loginScreenType: LoginScreenType;
     switch(loginScreen) {
@@ -145,6 +148,19 @@ export const LoginComponent = (props: LoginComponentProps) => {
     useEffect(() => {
         setIsRegisterButtonDisabled(!validRegisterEmail() || registerUsernameInput === "" || !validRegisterPassword() || !registerPasswordsMatch()); // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [registerEmailInput, registerUsernameInput, registerPasswordInput, registerPasswordRepeatInput]);
+
+    useEffect(() => {
+        if (checkUsernameAvailableTimeout.current !== undefined) {
+            clearTimeout(checkUsernameAvailableTimeout.current);
+        }
+        if (registerUsernameInput !== "") {
+            checkUsernameAvailableTimeout.current = setTimeout(() => {
+                makeUsernameAvailableCall();
+            }, 500);
+        } else {
+            setRegisterUsernameInputAvailable(undefined);
+        }
+    }, [registerUsernameInput]);
 
     useEffect(() => {
         setIsForgotPasswordPageButtonDisabled(!validForgotPageEmail()); // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -411,6 +427,27 @@ export const LoginComponent = (props: LoginComponentProps) => {
         fetchData();
     }
 
+    const makeUsernameAvailableCall = () => {
+        const makeCall = async () => {
+            const { status, data } = await getData({ 
+                baseUrl: usersConfig.url,
+                path: 'username-available',
+                queryParams: {
+                    "username": registerUsernameInput
+                },
+                additionalHeaders: {},
+            });
+
+            if (status === 200) {
+                setRegisterUsernameInputAvailable(data["available"]);
+            } else {
+                setRegisterUsernameInputAvailable(undefined);
+            }
+        }
+
+        makeCall();
+    }    
+
     const handleLoginKeyPress = (event: any) => {
         if (!isLoginButtonDisabled && event.charCode === 13) {
             login();
@@ -494,7 +531,19 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 loginScreenType === LoginScreenType.REGISTER ?
                 <div className="login-body">
                     <div className="login-section-text">Create Account</div>
-                    <input id="register-username-input" className="login-input" type="text" placeholder="Username" value={registerUsernameInput} onChange={e => setRegisterUsernameInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                    <div className="login-input-container">
+                        <input id="register-username-input" className="login-input" type="text" placeholder="Username" value={registerUsernameInput} onChange={e => setRegisterUsernameInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                        {
+                            registerUsernameInputAvailable !== undefined &&
+                            <div className="login-input-error">
+                                {
+                                    registerUsernameInputAvailable ?
+                                    <CheckIcon style={{color: "green"}} /> :
+                                    <CrossIcon style={{color: "red"}} />
+                                }
+                            </div>
+                        }
+                    </div>
                     <div className="login-input-container">
                         <input id="register-email-input" className="login-input" type="text" placeholder="Email" value={registerEmailInput} onChange={e => setRegisterEmailInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                         {
