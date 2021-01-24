@@ -53,6 +53,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const [loginErrorMessage, setLoginErrorMessage] = useState<string>("");
 
     const [registerEmailInput, setRegisterEmailInput] = useState<string>("");
+    const [registerEmailInputAvailable, setRegisterEmailInputAvailable] = useState<boolean | undefined>(undefined);
     const [registerUsernameInput, setRegisterUsernameInput] = useState<string>("");
     const [registerUsernameInputAvailable, setRegisterUsernameInputAvailable] = useState<boolean | undefined>(undefined);
     const [registerPasswordInput, setRegisterPasswordInput] = useState<string>("");
@@ -74,6 +75,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const activationValueParameter = query.get("activationValue") || undefined;
     const passwordResetTokenParameter = query.get("passwordResetToken") || undefined;
 
+    const checkEmailAvailableTimeout = useRef<any>(undefined);
     const checkUsernameAvailableTimeout = useRef<any>(undefined);
 
     let loginScreenType: LoginScreenType;
@@ -163,6 +165,19 @@ export const LoginComponent = (props: LoginComponentProps) => {
     }, [registerUsernameInput]);
 
     useEffect(() => {
+        if (checkEmailAvailableTimeout.current !== undefined) {
+            clearTimeout(checkEmailAvailableTimeout.current);
+        }
+        if (registerEmailInput !== "") {
+            checkEmailAvailableTimeout.current = setTimeout(() => {
+                makeEmailAvailableCall();
+            }, 500);
+        } else {
+            setRegisterEmailInputAvailable(undefined);
+        }
+    }, [registerEmailInput]);
+
+    useEffect(() => {
         setIsForgotPasswordPageButtonDisabled(!validForgotPageEmail()); // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [forgotPasswordPageEmailInput]);
 
@@ -171,7 +186,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     }, [resetPasswordInput, resetPasswordRepeatInput]);
 
     const validEmail = (email: string) => {
-        return /^.*@.*\.com$/.test(email);
+        return /^.+@.*\.com$/.test(email);
     }
 
     const validPassword = (password: string) => {
@@ -446,7 +461,28 @@ export const LoginComponent = (props: LoginComponentProps) => {
         }
 
         makeCall();
-    }    
+    }
+
+    const makeEmailAvailableCall = () => {
+        const makeCall = async () => {
+            const { status, data } = await getData({ 
+                baseUrl: usersConfig.url,
+                path: 'email-available',
+                queryParams: {
+                    "email": registerEmailInput
+                },
+                additionalHeaders: {},
+            });
+
+            if (status === 200) {
+                setRegisterEmailInputAvailable(data["available"]);
+            } else {
+                setRegisterEmailInputAvailable(undefined);
+            }
+        }
+
+        makeCall();
+    }
 
     const handleLoginKeyPress = (event: any) => {
         if (!isLoginButtonDisabled && event.charCode === 13) {
@@ -547,10 +583,10 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     <div className="login-input-container">
                         <input id="register-email-input" className="login-input" type="text" placeholder="Email" value={registerEmailInput} onChange={e => setRegisterEmailInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                         {
-                            registerEmailInput !== "" &&
+                            registerEmailInput !== "" && registerEmailInputAvailable !== undefined &&
                             <div className="login-input-error">
                                 {
-                                    validRegisterEmail() ?
+                                    validRegisterEmail() && registerEmailInputAvailable ?
                                     <CheckIcon style={{color: "green"}} /> :
                                     <CrossIcon style={{color: "red"}} />
                                 }
