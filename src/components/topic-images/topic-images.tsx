@@ -323,6 +323,7 @@ export const MyUploader = (props: UploaderProps) => {
     const { username, sessiontoken } = cookies;
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     const topicTitle = topics?.length ? topics[topicIndex]?.topicTitle || '' : '';
+    const fileUrl = useRef<string>("");
 
     // specify upload params and url for your files
     const getUploadParams = async ({ meta: { name } }: IFileWithMeta): Promise<IUploadParams> => {
@@ -335,6 +336,7 @@ export const MyUploader = (props: UploaderProps) => {
             },
             additionalHeaders: { },
         }, true);
+        fileUrl.current = url+fileName;
         return { fields, meta: { fileUrl: url+fileName }, url: url };
     }
     
@@ -376,14 +378,21 @@ export const MyUploader = (props: UploaderProps) => {
             onSubmit={handleSubmit}
             accept="image/*,audio/*,video/*"
             PreviewComponent={props => {
+                const isImage = props.fileWithMeta.file.type.includes("image");
                 return (
                     <div className="image-container" style={{ flexDirection: (props.meta.width || 0) > (props.meta.height || 0) ? 'unset' : 'column' }}>
-                        <div className="image-preview-title">Image Preview</div>
-                        <img className='image' style={{margin: "auto"}} alt="Topic" src={props.meta.previewUrl}/>
+                        <div className="image-preview-title">{isImage ? "Image" : "Video"} Preview</div>
+                        {
+                            props.meta.status === "done" ?
+                            (isImage ?
+                                <img className='image' style={{margin: "auto"}} alt="Topic" src={fileUrl.current}/> :
+                                <VideoPlayer src={fileUrl.current} inView={true}/>) :
+                            <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"}/>
+                        }
                         <LeftArrowSVG className='cancel-preview' onClick={() => props.files.forEach((f) => f.remove())}/>
                     </div>
-                )}
-            }
+                )
+            }}
             canCancel
         />
     )
