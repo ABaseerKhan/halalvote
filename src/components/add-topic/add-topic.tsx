@@ -1,11 +1,12 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { topicsConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
 import { authenticatedPostDataContext } from '../app-shell';
+import { useTopicsSearch } from '../search/search';
+import { MyUploader } from '../topic-images/topic-images';
 
 // styles
 import './add-topic.css';
-import { MyUploader } from '../topic-images/topic-images';
 
 interface AddTopicComponentProps {
     closeModal: any,
@@ -18,6 +19,17 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
     const [state, setState] = useState<{ picture: string | null }>({
         picture: null
     });
+
+    const { inputText, setInputText, searchResults } = useTopicsSearch();
+    const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
+
+    useEffect(() => {
+        if (searchResults?.result?.data && searchResults?.result?.data.length && inputText.length > 2) {
+            setAutoCompleteOpen(true);
+        } else {
+            setAutoCompleteOpen(false);
+        }
+    }, [searchResults, inputText]);
 
     const addTopicTitleInputId = "add-topic-title-input";
     const addTopicSubmitButtonId = "add-topic-submit-button";
@@ -66,9 +78,32 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
             {
                 !state.picture && <div className="add-topic-section-text">Add Topic</div>
             }
-
-            <input id={addTopicTitleInputId} className="add-topic-input" type="text" placeholder="Title" onKeyPress={(event: any) => handleKeyPress(event)}/>
-            
+            <div className="add-topic-input-section">
+                <input 
+                    id={addTopicTitleInputId}
+                    className={autoCompleteOpen ? "add-topic-input-similar-topic-open" : "add-topic-input"}
+                    type="text" value={inputText} 
+                    onChange={e => setInputText(e.target.value)} 
+                    placeholder="Title" 
+                    onKeyPress={(event: any) => handleKeyPress(event)}
+                />
+                <div className={"similar-topic-autocomplete"} >
+                    {searchResults.result && searchResults.result.data && !!searchResults.result.data.length && inputText.length > 2 && (
+                        <>
+                            <div className="similar-topic-label">Similar, existing topic: </div>
+                            <ul className={"similar-topic-list"}>
+                                {
+                                    <li className={"similar-topic-list-item"} key={searchResults.result.data[0]} >
+                                        <div onClick={() => { fetchTopics(searchResults.result.data[0]); closeModal(); }} className={"similar-topic-inner-container"}>
+                                            <div className={"similar-topic-title"}>{searchResults.result.data[0]}</div>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </>
+                    )}
+                </div>
+            </div>
             {
                 state.picture && <img className="add-topic-image" alt="Topic" src={state.picture}/>
             }

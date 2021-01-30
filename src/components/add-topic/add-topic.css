@@ -2,7 +2,7 @@
     position: absolute;
     width: 100%;
     display: block;
-    top: 50%;
+    top: 30vh;
     transform: translateY(-50%);
     text-align: center;
 }
@@ -13,10 +13,6 @@
     margin-bottom: 20px;
     font-size: 24px;
     color: var(--dark-mode-text-color);
-}
-
-.add-topic-input {
-    width: 80% !important;
 }
 
 .add-topic-image-choose-button:hover {
@@ -31,4 +27,84 @@
 
 .add-topic-submit-button {
     margin: 20px 0 0 0 !important;
+}
+
+.add-topic-input-section {
+    margin: auto;
+    width: 80%;
+    margin-bottom: 5em;
+}
+
+.add-topic-input,
+.add-topic-input-similar-topic-open {
+    margin: 0 0 0 0 !important;
+    border: none !important;
+
+    /* darkmode styles */
+    background: var(--dark-mode-foreground);
+    color: var(--dark-mode-text-color);
+}
+
+.add-topic-input:hover {
+    box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+}
+
+.add-topic-input-similar-topic-open {
+    box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+    border-radius: 24px 24px 0 0 !important;
+    border: none;
+}
+
+.similar-topic-autocomplete {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 80%;
+    box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+    background: var(--dark-mode-foreground);
+    color: var(--dark-mode-text-color);
+    border-radius: 0 0 24px 24px;
+    list-style-type: none;
+    text-align: left;
+}
+
+.similar-topic-list {
+    flex: auto;
+    padding-left: 0;
+    margin: 0 20px;
+    list-style-type: none;
+}
+
+.similar-topic-list-item {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    padding: 5px 0;
+    transition: all .2s ease-in-out;
+}
+
+.similar-topic-list-item:hover {
+    cursor: pointer;
+}
+
+.similar-topic-inner-container {
+    flex: auto;
+    display: flex;
+    margin: 0;
+    align-items: center;
+}
+
+.similar-topic-label {
+    margin: 0 20px;
+    font-size: 0.75rem;
+    color: var(--dark-mode-secondary-text-color);
+}
+
+.similar-topic-text {
+    display: flex;
+    flex: auto;
+    flex-direction: column;
+    min-width: 0;
+    padding: 6px 0;
+    cursor: default;
 }
