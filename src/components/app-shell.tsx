@@ -67,6 +67,8 @@ export const AppShellComponent = (props: any) => {
     analytics: { }
   });
 
+  console.log("Test");
+
   const [cookies] = useCookies(['username', 'sessiontoken']);
   const { username, sessiontoken } = cookies;
 
