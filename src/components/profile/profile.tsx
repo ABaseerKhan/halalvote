@@ -209,7 +209,7 @@ const UserComment = (props: UserCommentProps) => {
                     className={"comment-content"}
                     onClick={async (e) => { setCardQueryParam(history, query, commentsCardId.toLowerCase()); await fetchTopics(comment.topicTitle); showSpecificComment(comment); closeModal(); }}
                 >
-                    <div className="user-username">{comment.username}</div>
+                    <div className="topic-header">{comment.topicTitle}</div>
                     <div className="user-comment">
                         <div style={{ maxWidth: 'calc(100% - 50px)' }} dangerouslySetInnerHTML={{__html: comment.comment}}/>
                     </div>
