@@ -324,6 +324,7 @@ export const MyUploader = (props: UploaderProps) => {
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     const topicTitle = topics?.length ? topics[topicIndex]?.topicTitle || '' : '';
     const fileUrl = useRef<string>("");
+    const previewImagesBodyRef = useRef<HTMLDivElement>(null);
 
     // specify upload params and url for your files
     const getUploadParams = async ({ meta: { name } }: IFileWithMeta): Promise<IUploadParams> => {
@@ -380,13 +381,13 @@ export const MyUploader = (props: UploaderProps) => {
             PreviewComponent={props => {
                 const isImage = props.fileWithMeta.file.type.includes("image");
                 return (
-                    <div className="image-container" style={{ flexDirection: (props.meta.width || 0) > (props.meta.height || 0) ? 'unset' : 'column' }}>
+                    <div ref={previewImagesBodyRef} className="image-container" style={{ flexDirection: (props.meta.width || 0) > (props.meta.height || 0) ? 'unset' : 'column' }}>
                         <div className="image-preview-title">{isImage ? "Image" : "Video"} Preview</div>
                         {
                             props.meta.status === "done" ?
                             (isImage ?
                                 <img className='image' style={{margin: "auto"}} alt="Topic" src={fileUrl.current}/> :
-                                <VideoPlayer src={fileUrl.current} inView={true}/>) :
+                                <VideoPlayer src={fileUrl.current} inView={true} stylesOverride={{height: previewImagesBodyRef.current?.clientHeight, width: previewImagesBodyRef.current?.clientWidth}}/>) :
                             <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"}/>
                         }
                         <LeftArrowSVG className='cancel-preview' onClick={() => props.files.forEach((f) => f.remove())}/>
