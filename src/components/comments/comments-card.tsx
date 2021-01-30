@@ -206,6 +206,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             ...prevState,
             pathToHighlightedComment: path,
         }));
+        console.log("Test");
         if (commentMakerRef.current && path !== undefined) {
             const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
             const highlightedComment = document.getElementById(`comment-${getCommentFromPath(comments, path)?.id}`);
