@@ -81,6 +81,11 @@
     margin-right: 1em;
 }
 
+.topic-header {
+    font-size: .75em;
+    color: var(--dark-mode-secondary-text-color);
+}
+
 .user-comment-container {
     display: flex;
     padding: 1em 1em 0 0;
