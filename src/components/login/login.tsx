@@ -161,8 +161,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
             }, 500);
         } else {
             setRegisterUsernameInputAvailable(undefined);
-        }
-    }, [registerUsernameInput]);
+        } // eslint-disable-next-line
+    }, [registerUsernameInput]); 
 
     useEffect(() => {
         if (checkEmailAvailableTimeout.current !== undefined) {
@@ -174,7 +174,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
             }, 500);
         } else {
             setRegisterEmailInputAvailable(undefined);
-        }
+        } // eslint-disable-next-line
     }, [registerEmailInput]);
 
     useEffect(() => {
