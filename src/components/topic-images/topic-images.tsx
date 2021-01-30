@@ -47,6 +47,7 @@ interface TopicImagesComponentState {
     addTopicDisplayed: boolean,
     picture: BasicPicture | null,
     loading: boolean,
+    previewDisplayed: boolean
 };
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     let { topicIndexOverride } = props;
@@ -66,6 +67,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         addTopicDisplayed: false,
         picture: null,
         loading: false,
+        previewDisplayed: false
     });
 
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
@@ -296,16 +298,23 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         </div>
     );
 
+    const previewDisplayedCallback = (displayed: boolean) => {
+        setState({...state, previewDisplayed: displayed});
+    }
+
     const fileUploader = (
         <div style={{ height: '100%', width: '100%' }}>
             <div className={"images-body"} style={{ background: 'black'}}>
-                <MyUploader submitCallback={addMedia}/>
+                <MyUploader submitCallback={addMedia} previewDisplayedCallback={previewDisplayedCallback}/>
             </div>
-            <div className={"canvas-footer"}>
-                <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
-                    Cancel
-                </button>
-            </div>
+            {
+                !state.previewDisplayed &&
+                <div className={"canvas-footer"}>
+                    <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
+                        Cancel
+                    </button>
+                </div>                
+            }
         </div>
     );
     return !state.addTopicDisplayed ? ImageNavigator : fileUploader;
@@ -314,6 +323,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
 interface UploaderProps {
     submitCallback?: any;
     skipDBUpdate?: boolean;
+    previewDisplayedCallback?: (displayed: boolean) => void;
 };
 
 export const MyUploader = (props: UploaderProps) => {
@@ -342,7 +352,9 @@ export const MyUploader = (props: UploaderProps) => {
     }
     
     // called every time a file's `status` changes
-    const handleChangeStatus = ({ meta, file }: IFileWithMeta, status: StatusValue) => { }
+    const handleChangeStatus = ({ meta, file }: IFileWithMeta, status: StatusValue) => {
+        props.previewDisplayedCallback && props.previewDisplayedCallback(status !== "removed");
+    }
     
     // receives array of files that are done uploading when submit button is clicked
     const handleSubmit = async (files: (IFileWithMeta & { meta: { fileUrl: string } })[], allFiles: IFileWithMeta[]) => {
