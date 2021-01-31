@@ -386,6 +386,7 @@ export const MyUploader = (props: UploaderProps) => {
     return (
         <Dropzone
             multiple={false}
+            inputContent={'Upload Media'}
             getUploadParams={getUploadParams}
             onChangeStatus={handleChangeStatus}
             onSubmit={handleSubmit}

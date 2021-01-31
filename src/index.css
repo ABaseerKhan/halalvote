@@ -88,7 +88,7 @@ input[type=text], input[type=password] {
   color: var(--dark-mode-text-color);
 }
 
-.button {
+.button, .disabled-button {
   width: 80%;
   padding: 6px;
   margin: 10% 0 0 10%;
@@ -100,6 +100,10 @@ input[type=text], input[type=password] {
   font-size: 16px;
 }
 
+.disabled-button {
+  opacity: 0.5;
+}
+
 .button:hover {
   border: none !important;
   background-color: var(--light-neutral-color) !important;
@@ -107,8 +111,7 @@ input[type=text], input[type=password] {
 }
 
 .disabled-button:hover {
-  cursor: unset !important;
-  border: 1px solid #dfe1e5;
+  cursor: not-allowed !important;
   background-color: var(--dark-mode-foreground) !important;
 }
 
@@ -131,4 +134,19 @@ input[type=text], input[type=password] {
   cursor: pointer;
   color: transparent;  
   text-shadow: 0 0 0 red;
+}
+
+.back-action {
+  height: 25px;
+  width: 25px;
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.back-action:hover {
+  cursor: pointer;
+  background-color: #ffffff25;
 }
