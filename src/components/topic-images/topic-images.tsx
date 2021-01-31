@@ -44,7 +44,7 @@ interface TopicImagesComponentProps {
 
 interface BasicPicture { src: string; width: number; height: number; };
 interface TopicImagesComponentState {
-    addTopicDisplayed: boolean,
+    addMediaDisplayed: boolean,
     picture: BasicPicture | null,
     loading: boolean,
     previewDisplayed: boolean
@@ -64,7 +64,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
 
     const [state, setState] = useState<TopicImagesComponentState>({
-        addTopicDisplayed: false,
+        addMediaDisplayed: false,
         picture: null,
         loading: false,
         previewDisplayed: false
@@ -128,6 +128,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 },
                 setCookie: setCookie
             });
+        }
+        if (topicImages && topicImages.length === 0) {
+            setState(prevState => ({ ...prevState, addMediaDisplayed: true }));
         } // eslint-disable-next-line
     }, [imageIndex, topicImages])
 
@@ -167,12 +170,12 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     } else {
                         setTopicImagesContext(topicTitle, data, newIndex || 0);
                     }
-                    setState({...state, addTopicDisplayed: false, loading: false});
+                    setState({...state, addMediaDisplayed: false, loading: false});
                 }
             });
         } else {
             setTopicImagesContext(topicTitle, topicImages, newIndex || topicIndex);
-            setState({...state, addTopicDisplayed: false, loading: false});
+            setState({...state, addMediaDisplayed: false, loading: false});
         }
     }
 
@@ -224,8 +227,8 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }
     }
 
-    const showAddTopic = (addTopicDisplayed: boolean) => {
-        setState({...state, addTopicDisplayed: addTopicDisplayed})
+    const showAddTopic = (addMediaDisplayed: boolean) => {
+        setState({...state, addMediaDisplayed: addMediaDisplayed})
     }
 
     const isUserImage = (idx: number) => {
@@ -274,7 +277,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     :
                     state.loading ?
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
-                        <div className='no-image-text'>No images to show</div>
+                        <div className='no-image-text'>No media to show</div>
                 }
                 {topicImages.length > (imageIndex + 1) && 
                     <div className={"more-images-below"} style={{ left: 'calc(35% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((imageIndex + 1) * imagesBodyRef.current.clientHeight))) }>
@@ -292,7 +295,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     </div>
                 }
             </div>
-            <div className={!state.addTopicDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
+            <div className={!state.addMediaDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
                 <AddButtonSVG />
             </div>
         </div>
@@ -317,7 +320,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             }
         </div>
     );
-    return !state.addTopicDisplayed ? ImageNavigator : fileUploader;
+    return !state.addMediaDisplayed ? ImageNavigator : fileUploader;
 }
 
 interface UploaderProps {
