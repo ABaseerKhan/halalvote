@@ -144,14 +144,21 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
     return (
         <div className="profile-container" style={{ height: `${vhToPixels(modalHeightVh)}px`}}>
             <div className="profile-header-section">
-                <div className="profile-title">{`${props.username}`}</div>
-                <div className="profile-tabs">
-                    <div className={state.selectedTab===Tab.CREATEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedTopicsTab} >Created Topics</div>
-                    {/* <li className={state.selectedTab===Tab.CREATEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedTopicsTab}></li> */}
+                <div className="profile-title">{`${props.username}`}</div> 
+                <div className="nav">
+                    <label htmlFor="toggle">&#9776;</label>
+                </div>
+                {/* <div className="profile-tabs"> */}
+                    {/* <li className={state.selectedTab===Tab.CREATEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedTopicsTab}>Created Topics</li>
+                    <li className={state.selectedTab===Tab.VOTEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onVotedTopicsTab}>Voted Topics</li>
+                    <li className={state.selectedTab===Tab.ARGUMENTS ? "profile-tab-selected" : "profile-tab"} onClick={onArgumentsTab}>Arguments</li>
+                    <li className={state.selectedTab===Tab.CREATEDMEDIA ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedMediaTab}>Created Media</li> */}
+                    {/* <div className={state.selectedTab===Tab.CREATEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedTopicsTab} >Created Topics</div>
                     <div className={state.selectedTab===Tab.VOTEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onVotedTopicsTab} >Voted Topics</div>
                     <div className={state.selectedTab===Tab.ARGUMENTS ? "profile-tab-selected" : "profile-tab"} onClick={onArgumentsTab} >Arguments</div>
-                    <div className={state.selectedTab===Tab.CREATEDMEDIA ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedMediaTab} >Created Media</div>
-                </div>
+                    <div className={state.selectedTab===Tab.CREATEDMEDIA ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedMediaTab} >Created Media</div>  */}
+                {/* </div> */}
+            
             </div>
             <div className="profile-body">
                 <ul style={{ listStyleType: 'none', paddingInlineStart: '1em' }}>
