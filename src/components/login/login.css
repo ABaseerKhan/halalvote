@@ -1,3 +1,19 @@
+/* halalvote logo */
+.logo {
+    text-align: center;
+    margin-top: 0;
+    padding-top: 0;
+}
+#h {
+   font-size: 64px;
+   color: var(--haram-compliment-color);
+}
+
+#v {
+    font-size: 64px;
+    color: var(--halal-compliment-color);
+}
+
 .login-body {
     position: absolute;
     width: 100%;
