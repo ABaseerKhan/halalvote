@@ -45,6 +45,9 @@
 
 .login-switch-buttons-container {
     display: flex;
+    padding: 0 10px;
+    margin: 0 10px;
+    font-size: .85em;
 }
 
 .login-switch-button {
@@ -69,4 +72,26 @@
 .login-link {
     cursor: pointer;
     text-decoration: underline;
+}
+
+#username-input, #password-input {
+    width: 80% !important;
+    margin: 10px 0 10px 10%;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+    padding: 12px 20px;
+    display: inline-block;
+    box-sizing: border-box;
+    background-color: transparent;
+    color: #dfe1e5;
+    border-bottom: 1px solid var(--dark-mode-background);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    transition: .5s;
+}
+
+#username-input:focus, #password-input:focus {
+    border-bottom: 1px solid #dfe1e5;
 }
