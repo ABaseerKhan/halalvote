@@ -88,7 +88,7 @@
     text-decoration: underline;
 }
 
-#username-input, #password-input, #register-username-input, #register-email-input, #register-password-input, #register-password-repeat-input {
+#username-input, #password-input, #register-username-input, #register-email-input, #register-password-input, #register-password-repeat-input, #forgot-page-email-input {
     width: 80% !important;
     margin: 10px 0 10px 10%;
     outline: none;
@@ -106,6 +106,6 @@
     transition: .5s;
 }
 
-#username-input:focus, #password-input:focus, #register-username-input:focus, #register-email-input:focus, #register-password-input:focus, #register-password-repeat-input:focus {
+#username-input:focus, #password-input:focus, #register-username-input:focus, #register-email-input:focus, #register-password-input:focus, #register-password-repeat-input:focus, #forgot-page-email-input:focus {
     border-bottom: 1px solid #dfe1e5;
 }

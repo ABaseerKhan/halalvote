@@ -632,7 +632,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 <div className="login-body">
                     <div className="login-section-text">Enter email to reset password</div>
                     <div className="login-input-container">
-                        <input id="forgot-page-email-input" className="login-input" type="text" placeholder="Email" value={forgotPasswordPageEmailInput} onChange={e => setForgotPasswordPageEmailInput(e.target.value)} onKeyPress={(event: any) => handleForgotPasswordPageKeyPress(event)}/>
+                        <input id="forgot-page-email-input" className="login-input" placeholder="Email" value={forgotPasswordPageEmailInput} onChange={e => setForgotPasswordPageEmailInput(e.target.value)} onKeyPress={(event: any) => handleForgotPasswordPageKeyPress(event)}/>
                         {
                             forgotPasswordPageEmailInput !== "" &&
                             <div className="login-input-error">
