@@ -43,6 +43,14 @@
     margin: auto;
 }
 
+#login-submit-button {
+    background-color: var(--dark-mode-background);
+    border: 1px solid var(--site-background-color);
+    padding: 15px 0px;
+    margin-top: 20px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
+}
+
 .login-switch-buttons-container {
     display: flex;
     padding: 0 10px;
