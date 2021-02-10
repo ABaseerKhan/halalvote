@@ -564,7 +564,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     <button id="login-submit-button" className={`button ${isLoginButtonDisabled && "disabled-button"}`} onClick={ () => { login() } } disabled={isLoginButtonDisabled}>Log In</button>
                     <div className="login-switch-buttons-container">
                         <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.REGISTER)}>Create account</div>
-                        <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.FORGOT_PASSWORD_PAGE)}>Forgot username<br/>or password?</div>
+                        <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.FORGOT_PASSWORD_PAGE)}>Forgot username or password?</div>
                     </div>
                 </div> :
                 loginScreenType === LoginScreenType.REGISTER ?
