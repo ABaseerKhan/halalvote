@@ -14,6 +14,11 @@
     color: var(--halal-compliment-color);
 }
 
+.here {
+    display: inline-block;
+    text-decoration: underline;
+}
+
 .login-body {
     position: absolute;
     width: 100%;
@@ -43,7 +48,7 @@
     margin: auto;
 }
 
-#login-submit-button {
+#login-submit-button, #register-submit-button {
     background-color: var(--dark-mode-background);
     border: 1px solid var(--site-background-color);
     padding: 15px 0px;
@@ -66,6 +71,7 @@
     margin-top: 20px;
     cursor: pointer;
     color: var(--dark-mode-text-color);
+    line-height: 25px;
 }
 
 .login-switch-button:hover {
@@ -82,7 +88,7 @@
     text-decoration: underline;
 }
 
-#username-input, #password-input {
+#username-input, #password-input, #register-username-input, #register-email-input, #register-password-input, #register-password-repeat-input {
     width: 80% !important;
     margin: 10px 0 10px 10%;
     outline: none;
@@ -100,6 +106,6 @@
     transition: .5s;
 }
 
-#username-input:focus, #password-input:focus {
+#username-input:focus, #password-input:focus, #register-username-input:focus, #register-email-input:focus, #register-password-input:focus, #register-password-repeat-input:focus {
     border-bottom: 1px solid #dfe1e5;
 }
