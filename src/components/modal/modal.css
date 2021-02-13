@@ -1,15 +1,13 @@
 .modal {
     height: 0;
     width: 0;
-    position: fixed;
-    bottom: 10vh;
-    left: 50%;
-    margin-top: 0;
-    margin-left: 0;
+    position: relative;
+    margin: auto;
     border-radius: 25px 25px 25px 25px;
     background-color: var(--dark-mode-middleground);
     z-index: 4;
     overflow: hidden;
+    margin-top: 25%;
 }
 
 .modal-cover {
