@@ -43,7 +43,7 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
             if (searchResults?.result?.data && searchResults?.result?.data.length && inputText.toLowerCase() === searchResults?.result?.data[0][0].toLowerCase()) {
                 setIsTitleValid(false);
             } else {
-                if (searchResults?.result?.data && searchResults?.result?.data.length) {
+                if (searchResults?.result?.data && searchResults?.result?.data.length === 0) {
                     setIsTitleValid(true);
                 }
             }
