@@ -15,19 +15,6 @@
   display: none;
 }
 
-.images-body-fullscreen {
-  z-index: 3;
-  position: absolute;
-  display: block;
-  height: calc(100% - 50px);
-  width: 100%;
-  overflow: auto;
-  text-align: center;
-  scroll-behavior: auto;
-  scroll-snap-type: y mandatory;
-  background: black;
-}
-
 .show-add-image-button, .hide-add-image-button {
   position: absolute;
   height: 34px;
@@ -98,6 +85,7 @@
   height: 100%;
   width: 100%;
   scroll-snap-align: start;
+  scroll-snap-stop: always;
   overflow: hidden;
 }
 

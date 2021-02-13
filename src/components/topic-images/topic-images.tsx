@@ -131,6 +131,8 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }
         if (topicImages && topicImages.length === 0) {
             setState(prevState => ({ ...prevState, addMediaDisplayed: true }));
+        } else {
+            setState(prevState => ({ ...prevState, addMediaDisplayed: false }));
         } // eslint-disable-next-line
     }, [imageIndex, topicImages])
 
@@ -320,7 +322,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             }
         </div>
     );
-    return !state.addMediaDisplayed ? ImageNavigator : fileUploader;
+    return !state.addMediaDisplayed || state.loading ? ImageNavigator : fileUploader;
 }
 
 interface UploaderProps {
