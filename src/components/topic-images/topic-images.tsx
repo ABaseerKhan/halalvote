@@ -66,7 +66,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const [state, setState] = useState<TopicImagesComponentState>({
         addMediaDisplayed: false,
         picture: null,
-        loading: false,
+        loading: true,
         previewDisplayed: false
     });
 
@@ -85,6 +85,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     }, [topicTitle, sessiontoken]);
 
     useLayoutEffect(() => {
+        setState(prevState => ({ ...prevState, addMediaDisplayed: false }))
         if (imagesBodyRef.current) {
             imagesBodyRef.current?.scroll(0, (imageIndex * imagesBodyRef.current.clientHeight));
         } // eslint-disable-next-line
@@ -129,12 +130,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 setCookie: setCookie
             });
         }
-        if (topicImages && topicImages.length === 0) {
-            setState(prevState => ({ ...prevState, addMediaDisplayed: true }));
-        } else {
-            setState(prevState => ({ ...prevState, addMediaDisplayed: false }));
-        } // eslint-disable-next-line
-    }, [imageIndex, topicImages])
+    }, [imageIndex, topicImages, sessiontoken, username, setCookie])
 
     const fetchImages = async (newIndex?: number, refresh?: boolean, singleImageId?: string) => {
         setState(prevState => ({ ...prevState, topicImages: [], currentIndex: 0, picture: null, loading: true }));
@@ -172,13 +168,12 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     } else {
                         setTopicImagesContext(topicTitle, data, newIndex || 0);
                     }
-                    setState({...state, addMediaDisplayed: false, loading: false});
                 }
             });
         } else {
-            setTopicImagesContext(topicTitle, topicImages, newIndex || topicIndex);
-            setState({...state, addMediaDisplayed: false, loading: false});
+            setTopicImagesContext(topicTitle, topicImages, newIndex || 0);
         }
+        setState(prevState => ({...prevState, loading: false}));
     }
 
     const addMedia = (mediaId: string) => {
@@ -229,8 +224,8 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         }
     }
 
-    const showAddTopic = (addMediaDisplayed: boolean) => {
-        setState({...state, addMediaDisplayed: addMediaDisplayed})
+    const showAddMedia = (addMediaDisplayed: boolean) => {
+        setState(prevState => ({ ...prevState, addMediaDisplayed: addMediaDisplayed }))
     }
 
     const isUserImage = (idx: number) => {
@@ -246,6 +241,26 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             search: "?" + query.toString()
         });
     };
+
+    const previewDisplayedCallback = (displayed: boolean) => {
+        setState(prevState => ({ ...prevState, previewDisplayed: displayed }));
+    }
+
+    const fileUploader = (
+        <div style={{ height: '100%', width: '100%' }}>
+            <div className={"images-body"} style={{ background: 'black'}}>
+                <MyUploader submitCallback={addMedia} previewDisplayedCallback={previewDisplayedCallback}/>
+            </div>
+            {
+                !state.previewDisplayed && topicImages.length > 0 &&
+                <div className={"canvas-footer"}>
+                    <button className="add-image-back-button" onClick={() => {showAddMedia(false)}}>
+                        Cancel
+                    </button>
+                </div>                
+            }
+        </div>
+    );
 
     const ImageNavigator = (
         <div style={{ height: '100%', width: '100%' }}>
@@ -279,7 +294,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     :
                     state.loading ?
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
-                        <div className='no-image-text'>No media to show</div>
+                        fileUploader
                 }
                 {topicImages.length > (imageIndex + 1) && 
                     <div className={"more-images-below"} style={{ left: 'calc(35% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((imageIndex + 1) * imagesBodyRef.current.clientHeight))) }>
@@ -297,32 +312,13 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     </div>
                 }
             </div>
-            <div className={!state.addMediaDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
+            {topicImages.length > 0 && <div className={!state.addMediaDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddMedia(true)}}>
                 <AddButtonSVG />
-            </div>
+            </div>}
         </div>
     );
 
-    const previewDisplayedCallback = (displayed: boolean) => {
-        setState({...state, previewDisplayed: displayed});
-    }
-
-    const fileUploader = (
-        <div style={{ height: '100%', width: '100%' }}>
-            <div className={"images-body"} style={{ background: 'black'}}>
-                <MyUploader submitCallback={addMedia} previewDisplayedCallback={previewDisplayedCallback}/>
-            </div>
-            {
-                !state.previewDisplayed &&
-                <div className={"canvas-footer"}>
-                    <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
-                        Cancel
-                    </button>
-                </div>                
-            }
-        </div>
-    );
-    return !state.addMediaDisplayed || state.loading ? ImageNavigator : fileUploader;
+    return state.addMediaDisplayed ? fileUploader : ImageNavigator;
 }
 
 interface UploaderProps {

@@ -193,15 +193,6 @@
   color: var(--light-neutral-color);
 }
 
-.no-image-text {
-  top: calc(50% - 0.5em);
-  position: absolute;
-  height: auto;
-  width: 100%;
-  margin: auto;
-  color: var(--dark-mode-secondary-text-color);
-}
-
 @keyframes appear {
   to {
       transform: scale(1);

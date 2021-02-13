@@ -85,6 +85,7 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
             <div className="add-topic-input-section">
                 <input 
                     id={"add-topic-title-input"}
+                    autoComplete="off"
                     className={autoCompleteOpen ? "add-topic-input-similar-topic-open" : "add-topic-input"}
                     type="text" value={inputText} 
                     onChange={e => setInputText(e.target.value)} 
