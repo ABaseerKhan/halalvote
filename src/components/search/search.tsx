@@ -239,4 +239,4 @@ export const SearchComponentMobile = (props: SearchComponentProps) => {
     );
 }
 
-const useTopicsSearch = () => useDebouncedSearch((text: string) => getData({ baseUrl: topicsConfig.url, path: 'search-topics', queryParams: { 'searchTerm': text }, additionalHeaders: {}}));
+export const useTopicsSearch = () => useDebouncedSearch((text: string) => getData({ baseUrl: topicsConfig.url, path: 'search-topics', queryParams: { 'searchTerm': text }, additionalHeaders: {}}));

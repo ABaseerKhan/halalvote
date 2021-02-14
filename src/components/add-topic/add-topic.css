@@ -1,22 +1,20 @@
 .add-topic-body {
-    position: absolute;
     width: 100%;
+    height: 90%;
     display: block;
-    top: 50%;
-    transform: translateY(-50%);
     text-align: center;
+}
+
+.enter-title-screen {
+
 }
 
 .add-topic-section-text {
     width: 100%;
     text-align: center;
-    margin-bottom: 20px;
+    margin: 1em 0 0.5em 0;
     font-size: 24px;
     color: var(--dark-mode-text-color);
-}
-
-.add-topic-input {
-    width: 80% !important;
 }
 
 .add-topic-image-choose-button:hover {
@@ -39,4 +37,98 @@
     padding: 15px 0px;
     margin-top: 20px;
     box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
+    margin: 20px 0 0 0 !important;
+}
+
+.add-topic-input-section {
+    position: relative;
+    width: 80%;
+    margin: 4em auto;
+}
+
+.add-topic-input,
+.add-topic-input-similar-topic-open {
+    margin: 0 0 0 0 !important;
+    border: none !important;
+
+    /* darkmode styles */
+    background: var(--dark-mode-foreground);
+    color: var(--dark-mode-text-color);
+}
+
+.add-topic-input:hover {
+    box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+}
+
+.add-topic-input-similar-topic-open {
+    box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+    border-radius: 24px 24px 0 0 !important;
+    border: none;
+}
+
+.validation-check-container {
+    position: absolute;
+    top: 0;
+    right: -30px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.similar-topic-autocomplete {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 100%;
+    box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+    background: var(--dark-mode-foreground);
+    color: var(--dark-mode-text-color);
+    border-radius: 0 0 24px 24px;
+    list-style-type: none;
+    text-align: left;
+}
+
+.similar-topic-list {
+    flex: auto;
+    padding-left: 0;
+    margin: 0 20px;
+    list-style-type: none;
+}
+
+.similar-topic-list-item {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    padding: 5px 0;
+    transition: all .2s ease-in-out;
+}
+
+.similar-topic-inner-container {
+    flex: auto;
+    display: flex;
+    margin: 0;
+    align-items: center;
+}
+
+.similar-topic-label {
+    margin: 0 20px;
+    font-size: 0.75rem;
+    color: var(--dark-mode-secondary-text-color);
+}
+
+.similar-topic-text {
+    display: flex;
+    flex: auto;
+    flex-direction: column;
+    min-width: 0;
+    padding: 6px 0;
+    cursor: default;
+}
+
+.next-button {
+    position: relative;
+    display: flex;
+    margin: auto;
+    width: 25%;
 }

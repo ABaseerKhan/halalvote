@@ -81,8 +81,9 @@ export const _VideoPlayer = ({ src, inView, stylesOverride }: VideoPlayerProps, 
     return (
         <div className="video-container" onClick={togglePlayback} >
             <video 
+                key={src}
                 loop 
-                ref={videoRef} 
+                ref={videoRef}
                 className="video-player" 
                 style={stylesOverride ? stylesOverride : undefined} 
                 onCanPlay={() => setState(prevState => ({ ...prevState, loading: false }))} 

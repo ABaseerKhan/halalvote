@@ -81,8 +81,8 @@ export const AppShellComponent = (props: any) => {
   const setTopicsContext = (topics: Topic[], index: number) => {
     setState(prevState => ({ ...prevState, topicsState: { topics: topics, topicIndex: index }}));
   };
-  const setTopicImagesContext = (topicTitle: string, topicImages: TopicImages[], index: number) => setState(prevState => { 
-    prevState.topicImages[topicTitle] = { images: topicImages, index: index, creationTime: Date.now() };
+  const setTopicImagesContext = (topicTitle: string, topicImages: TopicImages[], index: number, doneLoading?: boolean) => setState(prevState => { 
+    prevState.topicImages[topicTitle] = { images: topicImages, index: index, doneLoading: doneLoading || false, creationTime: Date.now() };
     limitCacheSize(prevState.topicImages);
     return { ...prevState };
   });
@@ -359,10 +359,10 @@ export const topicsContext = React.createContext<{topicsState: TopicsState; setT
   setTopicsContext: (topics, topicIndex) => undefined
 });
 
-export type TopicImagesState = { [topicTitle: string]: { images: TopicImages[], index: number, creationTime: number } };
-export const topicImagesContext = React.createContext<{topicImagesState: TopicImagesState; setTopicImagesContext: (topicTitle: string, topicImages: TopicImages[], index: number) => void}>({
+export type TopicImagesState = { [topicTitle: string]: { images: TopicImages[], index: number, doneLoading: boolean, creationTime: number } };
+export const topicImagesContext = React.createContext<{topicImagesState: TopicImagesState; setTopicImagesContext: (topicTitle: string, topicImages: TopicImages[], index: number, doneLoading?: boolean) => void}>({
   topicImagesState: { },
-  setTopicImagesContext: (topicTitle, topicImages, index) => undefined
+  setTopicImagesContext: (topicTitle, topicImages, index, doneLoading) => undefined
 });
 
 export type CommentsState = { [topicTitle: string]: { comments: Comment[], specificComment: Comment | undefined, creationTime: number } };

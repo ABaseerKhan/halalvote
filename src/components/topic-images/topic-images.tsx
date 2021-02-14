@@ -44,9 +44,9 @@ interface TopicImagesComponentProps {
 
 interface BasicPicture { src: string; width: number; height: number; };
 interface TopicImagesComponentState {
-    addTopicDisplayed: boolean,
+    addMediaDisplayed: boolean,
     picture: BasicPicture | null,
-    loading: boolean,
+    previewDisplayed: boolean
 };
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     let { topicIndexOverride } = props;
@@ -58,14 +58,15 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const { topicImagesState, setTopicImagesContext } = useContext(topicImagesContext);
     const topicImages = topicImagesState[topicTitle]?.images || [];
     const imageIndex = topicImagesState[topicTitle]?.index || 0;
+    const doneLoading = !!topicImagesState[topicTitle]?.doneLoading;
 
     const { authenticatedPostData } = useContext(authenticatedPostDataContext);
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
 
     const [state, setState] = useState<TopicImagesComponentState>({
-        addTopicDisplayed: false,
+        addMediaDisplayed: false,
         picture: null,
-        loading: false,
+        previewDisplayed: false
     });
 
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
@@ -83,6 +84,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     }, [topicTitle, sessiontoken]);
 
     useLayoutEffect(() => {
+        setState(prevState => ({ ...prevState, addMediaDisplayed: false }))
         if (imagesBodyRef.current) {
             imagesBodyRef.current?.scroll(0, (imageIndex * imagesBodyRef.current.clientHeight));
         } // eslint-disable-next-line
@@ -126,11 +128,10 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 },
                 setCookie: setCookie
             });
-        } // eslint-disable-next-line
-    }, [imageIndex, topicImages])
+        }
+    }, [imageIndex, topicImages, sessiontoken, username, setCookie])
 
     const fetchImages = async (newIndex?: number, refresh?: boolean, singleImageId?: string) => {
-        setState(prevState => ({ ...prevState, topicImages: [], currentIndex: 0, picture: null, loading: true }));
         let queryParams: any = { 
             "topicTitle": topicTitle,
             "n": refresh ? Math.max(newIndex! + 1, 2) : 3,
@@ -161,16 +162,14 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 img.width = imgDimensions.width;
                 if (idx === data.length - 1) {
                     if (!refresh) {
-                        setTopicImagesContext(topicTitle, [...topicImages, ...data], newIndex || 0);
+                        setTopicImagesContext(topicTitle, [...topicImages, ...data], newIndex || 0, true);
                     } else {
-                        setTopicImagesContext(topicTitle, data, newIndex || 0);
+                        setTopicImagesContext(topicTitle, data, newIndex || 0, true);
                     }
-                    setState({...state, addTopicDisplayed: false, loading: false});
                 }
             });
         } else {
-            setTopicImagesContext(topicTitle, topicImages, newIndex || topicIndex);
-            setState({...state, addTopicDisplayed: false, loading: false});
+            setTopicImagesContext(topicTitle, topicImages, newIndex || 0, true);
         }
     }
 
@@ -218,12 +217,12 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         if (status === 200) {
             topicImage.likes = data.likes;
             topicImage.userLike = topicImage.userLike === 0 ? 1 : 0;
-            setTopicImagesContext(topicTitle, topicImages, imageIndex);
+            setTopicImagesContext(topicTitle, topicImages, imageIndex, true);
         }
     }
 
-    const showAddTopic = (addTopicDisplayed: boolean) => {
-        setState({...state, addTopicDisplayed: addTopicDisplayed})
+    const showAddMedia = (addMediaDisplayed: boolean) => {
+        setState(prevState => ({ ...prevState, addMediaDisplayed: addMediaDisplayed }))
     }
 
     const isUserImage = (idx: number) => {
@@ -239,6 +238,26 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
             search: "?" + query.toString()
         });
     };
+
+    const previewDisplayedCallback = (displayed: boolean) => {
+        setState(prevState => ({ ...prevState, previewDisplayed: displayed }));
+    }
+
+    const fileUploader = (
+        <div style={{ height: '100%', width: '100%' }}>
+            <div className={"images-body"} style={{ background: 'black'}}>
+                <MyUploader submitCallback={addMedia} previewDisplayedCallback={previewDisplayedCallback}/>
+            </div>
+            {
+                !state.previewDisplayed && topicImages.length > 0 &&
+                <div className={"canvas-footer"}>
+                    <button className="add-image-back-button" onClick={() => {showAddMedia(false)}}>
+                        Cancel
+                    </button>
+                </div>                
+            }
+        </div>
+    );
 
     const ImageNavigator = (
         <div style={{ height: '100%', width: '100%' }}>
@@ -270,9 +289,9 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                             return Img;
                         })
                     :
-                    state.loading ?
-                        <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
-                        <div className='no-image-text'>No images to show</div>
+                    !doneLoading ?
+                        <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"}/> :
+                        fileUploader
                 }
                 {topicImages.length > (imageIndex + 1) && 
                     <div className={"more-images-below"} style={{ left: 'calc(35% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((imageIndex + 1) * imagesBodyRef.current.clientHeight))) }>
@@ -290,30 +309,19 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                     </div>
                 }
             </div>
-            <div className={!state.addTopicDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddTopic(true)}}>
+            {topicImages.length > 0 && <div className={!state.addMediaDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddMedia(true)}}>
                 <AddButtonSVG />
-            </div>
+            </div>}
         </div>
     );
 
-    const fileUploader = (
-        <div style={{ height: '100%', width: '100%' }}>
-            <div className={"images-body"} style={{ background: 'black'}}>
-                <MyUploader submitCallback={addMedia}/>
-            </div>
-            <div className={"canvas-footer"}>
-                <button className="add-image-back-button" onClick={() => {showAddTopic(false)}}>
-                    Cancel
-                </button>
-            </div>
-        </div>
-    );
-    return !state.addTopicDisplayed ? ImageNavigator : fileUploader;
+    return state.addMediaDisplayed ? fileUploader : ImageNavigator;
 }
 
 interface UploaderProps {
     submitCallback?: any;
     skipDBUpdate?: boolean;
+    previewDisplayedCallback?: (displayed: boolean) => void;
 };
 
 export const MyUploader = (props: UploaderProps) => {
@@ -323,6 +331,8 @@ export const MyUploader = (props: UploaderProps) => {
     const { username, sessiontoken } = cookies;
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     const topicTitle = topics?.length ? topics[topicIndex]?.topicTitle || '' : '';
+    const fileUrl = useRef<string>("");
+    const previewImagesBodyRef = useRef<HTMLDivElement>(null);
 
     // specify upload params and url for your files
     const getUploadParams = async ({ meta: { name } }: IFileWithMeta): Promise<IUploadParams> => {
@@ -335,11 +345,14 @@ export const MyUploader = (props: UploaderProps) => {
             },
             additionalHeaders: { },
         }, true);
+        fileUrl.current = url+fileName;
         return { fields, meta: { fileUrl: url+fileName }, url: url };
     }
     
     // called every time a file's `status` changes
-    const handleChangeStatus = ({ meta, file }: IFileWithMeta, status: StatusValue) => { }
+    const handleChangeStatus = ({ meta, file }: IFileWithMeta, status: StatusValue) => {
+        props.previewDisplayedCallback && props.previewDisplayedCallback(status !== "removed");
+    }
     
     // receives array of files that are done uploading when submit button is clicked
     const handleSubmit = async (files: (IFileWithMeta & { meta: { fileUrl: string } })[], allFiles: IFileWithMeta[]) => {
@@ -371,19 +384,27 @@ export const MyUploader = (props: UploaderProps) => {
     return (
         <Dropzone
             multiple={false}
+            inputContent={'Upload Media'}
             getUploadParams={getUploadParams}
             onChangeStatus={handleChangeStatus}
             onSubmit={handleSubmit}
             accept="image/*,audio/*,video/*"
             PreviewComponent={props => {
+                const isImage = props.fileWithMeta.file.type.includes("image");
                 return (
-                    <div className="image-container" style={{ flexDirection: (props.meta.width || 0) > (props.meta.height || 0) ? 'unset' : 'column' }}>
-                        <div className="image-preview-title">Image Preview</div>
-                        <img className='image' style={{margin: "auto"}} alt="Topic" src={props.meta.previewUrl}/>
+                    <div ref={previewImagesBodyRef} className="image-container" style={{ flexDirection: (props.meta.width || 0) > (props.meta.height || 0) ? 'unset' : 'column' }}>
+                        <div className="image-preview-title">{isImage ? "Image" : "Video"} Preview</div>
+                        {
+                            props.meta.status === "done" ?
+                            (isImage ?
+                                <img className='image' style={{margin: "auto"}} alt="Topic" src={fileUrl.current}/> :
+                                <VideoPlayer src={fileUrl.current} inView={true} stylesOverride={{height: previewImagesBodyRef.current?.clientHeight, width: previewImagesBodyRef.current?.clientWidth}}/>) :
+                            <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"}/>
+                        }
                         <LeftArrowSVG className='cancel-preview' onClick={() => props.files.forEach((f) => f.remove())}/>
                     </div>
-                )}
-            }
+                )
+            }}
             canCancel
         />
     )
