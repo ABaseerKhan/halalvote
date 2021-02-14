@@ -80,8 +80,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             let queryParams: any = { 
                 "topicTitle": topic.topicTitle,
                 "interval": intervalOverride,
-                "numIntervals": numIntervals,
-                "userTimestamp": getCurrentTimestamp()
+                "numIntervals": numIntervals
             };
             let additionalHeaders: any = {};
     
@@ -246,22 +245,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 }
             }
         });
-    }
-
-    const padNumber = (value: number) => {
-        return value < 10 ? '0' + value : value;
-    }
-
-    const getCurrentTimestamp = () => {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = padNumber(date.getMonth() + 1);
-        const day = padNumber(date.getDate());
-        const hours = padNumber(date.getHours());
-        const minutes = padNumber(date.getMinutes());
-        const seconds = padNumber(date.getSeconds());
-
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
 
     return (
