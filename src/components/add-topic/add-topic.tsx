@@ -3,59 +3,59 @@ import { topicsConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
 import { authenticatedPostDataContext } from '../app-shell';
 import { useTopicsSearch } from '../search/search';
-import { MyUploader } from '../topic-images/topic-images';
 import { ReactComponent as CheckIcon} from '../../icons/check-icon.svg';
 import { ReactComponent as CrossIcon} from '../../icons/cross-icon.svg';
-import { ReactComponent as LeftArrowSVG } from "../../icons/left-arrow.svg";
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 // styles
 import './add-topic.css';
 
-export enum AddTopicScreenType {
-    ENTER_TITLE,
-    MEDIA_UPLOAD,
-    REVIEW_AND_CONFIRM,
-}
 interface AddTopicComponentProps {
     closeModal: any,
     fetchTopics: any;
 };
 export const AddTopicComponent = (props: AddTopicComponentProps) => {
     const { closeModal, fetchTopics } = props;
+
+    const { authenticatedPostData } = useContext(authenticatedPostDataContext);
+
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
+
     const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
     const [isTitleValid, setIsTitleValid] = useState(false);
-    const [screenType, setScreenType] = useState(AddTopicScreenType.ENTER_TITLE);
-    const [title, setTitle] = useState<string|undefined>(undefined);
-    const [media, setMedia] = useState<string|null>(null);
 
     const { inputText, setInputText, searchResults } = useTopicsSearch();
 
     useEffect(() => {
         if (searchResults?.result?.data && searchResults?.result?.data.length && inputText.length > 2) {
             setAutoCompleteOpen(true);
-            if (inputText.toLowerCase() === searchResults?.result?.data[0][0].toLowerCase()) {
+        } else {
+            setAutoCompleteOpen(false);
+        } // eslint-disable-next-line
+    }, [searchResults]);
+
+    useEffect(() => {
+        if (inputText.length <= 2) {
+            setIsTitleValid(false);
+        } else {
+            if (searchResults?.result?.data && searchResults?.result?.data.length && inputText.toLowerCase() === searchResults?.result?.data[0][0].toLowerCase()) {
                 setIsTitleValid(false);
             } else {
-                setIsTitleValid(true);
+                if (searchResults?.result?.data && searchResults?.result?.data.length === 0) {
+                    setIsTitleValid(true);
+                }
             }
-        } else {
-            if (inputText.length <= 2) setIsTitleValid(false);
-            setAutoCompleteOpen(false);
         }
     }, [searchResults, inputText]);
 
-    const { authenticatedPostData } = useContext(authenticatedPostDataContext);
-
     const addTopic = async () => {
-        if (title) {
+        if (inputText) {
             const body: any = {
                 "username": username,
-                "topicTitle": title
+                "topicTitle": inputText
             };
-            if (media) body["image"] = media;
             const { status, data } = await authenticatedPostData({
                 baseUrl: topicsConfig.url,
                 path: 'add-topic',
@@ -66,8 +66,8 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
                 setCookie: setCookie
             }, true);
 
-            if (status === 200 && title === data) {
-                fetchTopics(title);
+            if (status === 200 && inputText === data) {
+                fetchTopics(inputText);
                 closeModal();
                 document.getElementById('app-shell')?.scrollTo(0, window.innerHeight);
             }
@@ -80,30 +80,12 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
         }
     }
 
-    const goToPreviousScreen = () => {
-        if(screenType < 2) {
-            setTitle(undefined);
-        }
-        if (screenType === 1) {
-            setMedia(null);
-        }
-        setScreenType(screenType - 1);
-    }
-
-    const enterTitleSubmit = () => {
-        setTitle(inputText);
-        setScreenType(AddTopicScreenType.MEDIA_UPLOAD);
-    }
-
-    const mediaSubmit = () => {
-        setScreenType(AddTopicScreenType.REVIEW_AND_CONFIRM);
-    }
-
     const EnterTitleScreen = (
         <div className="enter-title-screen">
             <div className="add-topic-input-section">
                 <input 
                     id={"add-topic-title-input"}
+                    autoComplete="off"
                     className={autoCompleteOpen ? "add-topic-input-similar-topic-open" : "add-topic-input"}
                     type="text" value={inputText} 
                     onChange={e => setInputText(e.target.value)} 
@@ -127,53 +109,23 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
                     )}
                 </div>
                 <div className="validation-check-container">
-                    {isTitleValid ?
-                        <CheckIcon style={{color: "green"}} /> :
-                        <CrossIcon style={{color: "red"}} />
+                    {searchResults?.result?.data === undefined && inputText.length > 0 ? <ClipLoader size={25} color={"var(--light-neutral-color)"} loading={searchResults?.result?.data === undefined}/> :
+                    isTitleValid ?
+                            <CheckIcon style={{color: "green"}} /> :
+                            <CrossIcon style={{color: "red"}} />
                     }
                 </div>
             </div>
             <div className="next-button">
-                <button disabled={!isTitleValid} className={isTitleValid ? `button` : `disabled-button`} onClick={enterTitleSubmit}>Next</button>
+                <button disabled={!isTitleValid || (searchResults?.result?.data === undefined)} className={!isTitleValid  || (searchResults?.result?.data === undefined) ? `disabled-button` : `button`} onClick={addTopic}>Submit</button>
             </div>
         </div>
     );
 
-    const MediaUploadScreen = (
-        <div className="media-upload-screen">
-            {media && <img className="add-topic-image" alt="Topic" src={media!}/>}
-            {!media && <div className="uploader-container">
-                <MyUploader skipDBUpdate submitCallback={(incomingMedia: string) => setMedia(incomingMedia)}/>
-            </div>}
-            <div className="next-button">
-                <button className={`button`} onClick={mediaSubmit}>{media ? 'Next' : 'Skip'}</button>
-            </div>
-        </div>
-    )
-
-    const ReviewAndConfirmScreen = (
-        <div className="review-and-confirm-screen">
-            {media && <img className="add-topic-image" alt="Topic" src={media!}/>}
-            <div className="next-button">
-                <button disabled={isTitleValid} className={`button`} onClick={addTopic}>Submit Topic</button>
-            </div>
-        </div>
-    )
-
     return (
         <div className="add-topic-body">
-            {screenType > 0 && <LeftArrowSVG className='back-action' onClick={goToPreviousScreen}/>}
-            <div className="add-topic-section-text">Add Topic:</div>
-            {title && <span style={{ color: 'var(--dark-mode-text-color)'}}>{title}</span>}
-            {screenType===AddTopicScreenType.ENTER_TITLE && 
-                EnterTitleScreen
-            }
-            {screenType===AddTopicScreenType.MEDIA_UPLOAD && 
-                MediaUploadScreen
-            }
-            {screenType===AddTopicScreenType.REVIEW_AND_CONFIRM && 
-                ReviewAndConfirmScreen
-            }
+            <div className="add-topic-section-text">Add Topic</div>
+            {EnterTitleScreen}
         </div>
     );
 }

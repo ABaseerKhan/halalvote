@@ -9,17 +9,6 @@
 
 }
 
-.media-upload-screen {
-}
-
-.uploader-container {
-    /* height: calc(100% - 3em); */
-}
-
-.review-and-confirm-screen {
-
-}
-
 .add-topic-section-text {
     width: 100%;
     text-align: center;
@@ -71,7 +60,7 @@
 .validation-check-container {
     position: absolute;
     top: 0;
-    right: -24px;
+    right: -30px;
     height: 100%;
     display: flex;
     justify-content: center;

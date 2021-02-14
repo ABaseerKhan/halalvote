@@ -152,7 +152,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
 
     const setSearchDisplayed = () => { 
         closeMenu({...state, menuLocation: MenuLocation.NONE}, () => { 
-            const searchRef = document.getElementById('search-page-mobile');
+            const searchRef = document.getElementById('search-page');
             if (searchRef) {
                 searchRef.style.transform = 'translate(0, 0)';
             }

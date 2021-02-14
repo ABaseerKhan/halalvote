@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { PageScrollerComponent } from './page-scroller/page-scroller';
 import {TopicCarouselComponent } from './topic-carousel/topic-carousel';
-import { SearchComponent, SearchComponentMobile } from './search/search';
+import { SearchComponent } from './search/search';
 import { AnalyticsCardComponent } from './analytics-card/analytics-card';
 import { MenuComponent } from './menu/menu';
 import { Topic, Comment, TopicImages } from '../types';
@@ -36,13 +35,8 @@ const maxTopicsDataCacheSize = 20;
 
 const appShellId = "app-shell";
 const topicCarouselId = "topicCarousel";
-const pageZeroId = "Search";
-const pageOneId = "Topics";
 
 const getAppShell = () => { return document.getElementById(appShellId); }
-const getTopicCarousel = () => { return document.getElementById(topicCarouselId); }
-const getPageZero = () => { return document.getElementById(pageZeroId); }
-const getPageOne = () => { return document.getElementById(pageOneId); }
 
 type AppShellState = { 
   topicsState: TopicsState; 
@@ -81,8 +75,8 @@ export const AppShellComponent = (props: any) => {
   const setTopicsContext = (topics: Topic[], index: number) => {
     setState(prevState => ({ ...prevState, topicsState: { topics: topics, topicIndex: index }}));
   };
-  const setTopicImagesContext = (topicTitle: string, topicImages: TopicImages[], index: number) => setState(prevState => { 
-    prevState.topicImages[topicTitle] = { images: topicImages, index: index, creationTime: Date.now() };
+  const setTopicImagesContext = (topicTitle: string, topicImages: TopicImages[], index: number, doneLoading?: boolean) => setState(prevState => { 
+    prevState.topicImages[topicTitle] = { images: topicImages, index: index, doneLoading: doneLoading || false, creationTime: Date.now() };
     limitCacheSize(prevState.topicImages);
     return { ...prevState };
   });
@@ -100,16 +94,6 @@ export const AppShellComponent = (props: any) => {
   const setAuthenticatedGetData = (getData: (request: Request, willRetry: boolean) => void) => {}
 
   useEffect(() => {
-    setTimeout(() => {
-      const appShell = getAppShell();
-
-      if (appShell) {
-        appShell.scrollTo(0, window.innerHeight);
-      }
-    }, 500) // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     const indexOfTopicToFetch = state.topicsState.topics.findIndex(i => i.topicTitle === cookies.topicTitle);
     if (indexOfTopicToFetch >= 0) {
       state.topicsState.topics = [state.topicsState.topics[indexOfTopicToFetch]];
@@ -123,25 +107,6 @@ export const AppShellComponent = (props: any) => {
       fetchTopics();
     }; // eslint-disable-next-line
   }, [state.topicsState]);
-
-  useEffect(() => {
-    const appShell = getAppShell();
-    const topicCarousel = getTopicCarousel();
-
-    if (appShell && topicCarousel) {
-      appShell.onscroll = () => {
-        const scrollRatio = parseFloat((appShell.scrollTop / window.innerHeight).toFixed(1));
-  
-        if (scrollRatio === 0 || scrollRatio === 0.4) {
-          selectPageScrollerButton(0);
-        } else if (scrollRatio === 0.6 || scrollRatio === 1 || scrollRatio === 1.4) {
-          selectPageScrollerButton(1);
-        } else if (scrollRatio === 1.6 || scrollRatio === 2 || scrollRatio === 2.4) {
-          selectPageScrollerButton(2);
-        }
-      }
-    } // eslint-disable-next-line
-  }, []);
 
   useEffect(() => {
     const { topics, topicIndex } = state.topicsState;
@@ -217,24 +182,6 @@ export const AppShellComponent = (props: any) => {
 
   const topic = state.topicsState.topics.length > 0 ? state.topicsState.topics[state.topicsState.topicIndex] : undefined;
 
-  const scrollToPage = (page: number) => {
-    const appShell = getAppShell();
-
-    if (appShell) {
-      appShell.scrollTo({left: 0, top: page * window.innerHeight, behavior:'smooth'});
-    }
-  }
-
-  const selectPageScrollerButton = (page: number) => {
-    const pageZero = getPageZero();
-    const pageOne = getPageOne();
-
-    if (pageZero && pageOne) {
-      pageZero.className = page === 0 ? 'page-scroller-button-selected' : 'page-scroller-button'
-      pageOne.className = page === 1 ? 'page-scroller-button-selected' : 'page-scroller-button'
-    }
-  }
-
   const handle401 = async ({ data, additionalHeaders }: any) => {
     document.cookie = "username= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
     document.cookie = "sessiontoken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
@@ -291,7 +238,7 @@ export const AppShellComponent = (props: any) => {
                 <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
                   <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
                     <div id={appShellId} className={appShellId} style={{ overflowY: isMobile ? 'hidden' : 'scroll' }} >
-                      {isMobile ? <SearchComponentMobile onSuggestionClick={searchTopic} /> : <SearchComponent onSuggestionClick={searchTopic} />}
+                      <SearchComponent onSuggestionClick={searchTopic} />
                       <div className="topic-content">
                       {
                         isMobile ?
@@ -313,7 +260,6 @@ export const AppShellComponent = (props: any) => {
                       }
                       </div>
                       <div className="fixed-content">
-                        {!isMobile && <PageScrollerComponent pageZeroId={pageZeroId} pageOneId={pageOneId} scrollToPage={scrollToPage} />}
                         <MenuComponent fetchTopics={searchTopic} showSpecificComment={showSpecificComment} />
                       </div>
                     </div>
@@ -359,10 +305,10 @@ export const topicsContext = React.createContext<{topicsState: TopicsState; setT
   setTopicsContext: (topics, topicIndex) => undefined
 });
 
-export type TopicImagesState = { [topicTitle: string]: { images: TopicImages[], index: number, creationTime: number } };
-export const topicImagesContext = React.createContext<{topicImagesState: TopicImagesState; setTopicImagesContext: (topicTitle: string, topicImages: TopicImages[], index: number) => void}>({
+export type TopicImagesState = { [topicTitle: string]: { images: TopicImages[], index: number, doneLoading: boolean, creationTime: number } };
+export const topicImagesContext = React.createContext<{topicImagesState: TopicImagesState; setTopicImagesContext: (topicTitle: string, topicImages: TopicImages[], index: number, doneLoading?: boolean) => void}>({
   topicImagesState: { },
-  setTopicImagesContext: (topicTitle, topicImages, index) => undefined
+  setTopicImagesContext: (topicTitle, topicImages, index, doneLoading) => undefined
 });
 
 export type CommentsState = { [topicTitle: string]: { comments: Comment[], specificComment: Comment | undefined, creationTime: number } };
