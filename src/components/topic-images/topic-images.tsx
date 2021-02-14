@@ -46,7 +46,6 @@ interface BasicPicture { src: string; width: number; height: number; };
 interface TopicImagesComponentState {
     addMediaDisplayed: boolean,
     picture: BasicPicture | null,
-    loading: boolean,
     previewDisplayed: boolean
 };
 export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
@@ -59,6 +58,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const { topicImagesState, setTopicImagesContext } = useContext(topicImagesContext);
     const topicImages = topicImagesState[topicTitle]?.images || [];
     const imageIndex = topicImagesState[topicTitle]?.index || 0;
+    const doneLoading = !!topicImagesState[topicTitle]?.doneLoading;
 
     const { authenticatedPostData } = useContext(authenticatedPostDataContext);
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
@@ -66,7 +66,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     const [state, setState] = useState<TopicImagesComponentState>({
         addMediaDisplayed: false,
         picture: null,
-        loading: true,
         previewDisplayed: false
     });
 
@@ -133,7 +132,6 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     }, [imageIndex, topicImages, sessiontoken, username, setCookie])
 
     const fetchImages = async (newIndex?: number, refresh?: boolean, singleImageId?: string) => {
-        setState(prevState => ({ ...prevState, topicImages: [], currentIndex: 0, picture: null, loading: true }));
         let queryParams: any = { 
             "topicTitle": topicTitle,
             "n": refresh ? Math.max(newIndex! + 1, 2) : 3,
@@ -164,16 +162,15 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                 img.width = imgDimensions.width;
                 if (idx === data.length - 1) {
                     if (!refresh) {
-                        setTopicImagesContext(topicTitle, [...topicImages, ...data], newIndex || 0);
+                        setTopicImagesContext(topicTitle, [...topicImages, ...data], newIndex || 0, true);
                     } else {
-                        setTopicImagesContext(topicTitle, data, newIndex || 0);
+                        setTopicImagesContext(topicTitle, data, newIndex || 0, true);
                     }
                 }
             });
         } else {
-            setTopicImagesContext(topicTitle, topicImages, newIndex || 0);
+            setTopicImagesContext(topicTitle, topicImages, newIndex || 0, true);
         }
-        setState(prevState => ({...prevState, loading: false}));
     }
 
     const addMedia = (mediaId: string) => {
@@ -220,7 +217,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
         if (status === 200) {
             topicImage.likes = data.likes;
             topicImage.userLike = topicImage.userLike === 0 ? 1 : 0;
-            setTopicImagesContext(topicTitle, topicImages, imageIndex);
+            setTopicImagesContext(topicTitle, topicImages, imageIndex, true);
         }
     }
 
@@ -292,8 +289,8 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
                             return Img;
                         })
                     :
-                    state.loading ?
-                        <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
+                    !doneLoading ?
+                        <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"}/> :
                         fileUploader
                 }
                 {topicImages.length > (imageIndex + 1) && 
