@@ -18,6 +18,7 @@
   height: 100%;
   width: 100%;
   scroll-snap-align: start;
+  z-index: 1;
 }
 
 .cards-shell-container {

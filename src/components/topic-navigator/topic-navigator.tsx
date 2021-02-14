@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ReactComponent as ChevronLeftSVG } from '../../icons/chevron-left.svg';
 import { ReactComponent as ChevronRightSVG } from '../../icons/chevron-right.svg';
 import { useMedia } from '../../hooks/useMedia';
@@ -7,6 +7,7 @@ import { useMedia } from '../../hooks/useMedia';
 
 // styles
 import './topic-navigator.css';
+import { topicsContext } from '../app-shell';
 
 enum SwipeDirection {
     UP,
@@ -30,6 +31,9 @@ export const TopicNavigatorComponent = (props: TopicNavigatorComponentProps) => 
         false
     );
 
+    const { topicsState: { topics, topicIndex }, } = useContext(topicsContext);
+    const topicTitles = topics.map((topic) => topic.topicTitle);
+
     const leftCarouselButtonId = "left-carousel-button";
     const rightCarouselButtonId = "right-carousel-button";
 
@@ -37,14 +41,7 @@ export const TopicNavigatorComponent = (props: TopicNavigatorComponentProps) => 
     const rightTopicNavigatorDisplayId = "right-topic-navigator-display";
 
     useEffect(() => {
-        if (!isMobile) {
-            const leftCarouselButton = document.getElementById(leftCarouselButtonId);
-            const rightCarouselButton = document.getElementById(rightCarouselButtonId);
-            if (leftCarouselButton && rightCarouselButton) {
-                leftCarouselButton.classList.add("carousel-button-computer");
-                rightCarouselButton.classList.add("carousel-button-computer");
-            }
-        } else {
+        if (isMobile) {
             const navigatorDeltaMin = 100;
             const leftTopicNavigatorDisplay = document.getElementById(leftTopicNavigatorDisplayId);
             const rightTopicNavigatorDisplay = document.getElementById(rightTopicNavigatorDisplayId);
@@ -138,7 +135,7 @@ export const TopicNavigatorComponent = (props: TopicNavigatorComponentProps) => 
         <div className="topic-navigator">
             {
                 !isMobile ?
-                <button id={leftCarouselButtonId} onClick={iterateTopic(-1)} className='carousel-button-left'>
+                topicIndex > 0 && <button id={leftCarouselButtonId} onClick={iterateTopic(-1)} className='carousel-button-left carousel-button-computer'>
                     <ChevronLeftSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>
                 </button> :
                 <div id={leftTopicNavigatorDisplayId} className={leftTopicNavigatorDisplayId}>
@@ -147,7 +144,7 @@ export const TopicNavigatorComponent = (props: TopicNavigatorComponentProps) => 
             }
             {
                 !isMobile ?
-                <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button-right'>
+                topicIndex + 1 < topicTitles.length && <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button-right carousel-button-computer'>
                     <ChevronRightSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>
                 </button> :
                 <div id={rightTopicNavigatorDisplayId} className={rightTopicNavigatorDisplayId}>

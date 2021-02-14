@@ -16,24 +16,25 @@
 
 .carousel-button-left, .carousel-button-right {
     position: absolute;
-    top: 0;
+    top: calc(50% - 100px);
     padding: 0;
     cursor: pointer;
-    width: 12vw;
-    height: 100%;
+    width: 23vw;
+    height: 200px;
     background: transparent;
     border: none;
-    border-radius: 0;
-    color: var(--site-background-color);
+    color: var(--dark-mode-secondary-text-color);
     outline: none;
-    z-index: 4;
+    text-align: center;
 }
 
 .carousel-button-left {
+    border-radius: 50% 0 0 50%;
     left: 0;
 }
 
 .carousel-button-right {
+    border-radius: 0 50% 50% 0;
     right: 0;
 }
 

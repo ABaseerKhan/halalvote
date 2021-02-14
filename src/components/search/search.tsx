@@ -10,83 +10,8 @@ import './search.css';
 interface SearchComponentProps {
     onSuggestionClick: (topicTofetch?: string) => void;
 };
+
 export const SearchComponent = (props: SearchComponentProps) => {
-    const { inputText, setInputText, searchResults } = useTopicsSearch();
-    const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
-    const [autoCompleteIndex, setAutoCompleteIndex] = useState<number>(0);
-
-    useEffect(() => {
-        if (searchResults?.result?.data && searchResults?.result?.data.length) {
-            setAutoCompleteOpen(true);
-        } else {
-            setAutoCompleteOpen(false);
-        }
-    }, [searchResults]);
-
-    const onClickSuggestion = (topicTitle: string) => () => {
-        props.onSuggestionClick(topicTitle);
-        setInputText("");
-    };
-
-    const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (!(searchResults?.result?.data || searchResults?.result?.data?.length)) return;
-        
-        // arrow up/down button should select next/previous list element
-        if (e.keyCode === 38) {
-            e.preventDefault();
-            if (autoCompleteIndex > 0) setAutoCompleteIndex(prevIndex => (prevIndex - 1));
-        } else if (e.keyCode === 40) {
-            e.preventDefault();
-            if (autoCompleteIndex === -1) setAutoCompleteIndex(0);
-            else if (autoCompleteIndex < searchResults?.result?.data?.length - 1) {
-                setAutoCompleteIndex( prevIndex => (prevIndex + 1));
-            }
-        } 
-        // enter key should execute topicClick
-        else if (e.keyCode === 13) {
-            if (searchResults.result.data && searchResults.result.data.length) {
-                onClickSuggestion(searchResults.result.data[autoCompleteIndex][0])();
-            }
-        }
-    }
-
-    return (
-        <div className='search-page'>
-            <div className={"search-bar"}>
-                <span className="search-header">
-                    <span className="search-header-haram">H</span>
-                    <span className="search-header-halal">V</span>
-                </span>
-                <div className="search-icon-container">
-                    <SearchSVG width='18px'/>
-                </div>
-                <input 
-                    className={autoCompleteOpen ? "search-bar-input-autocomplete-open" : "search-bar-input"} 
-                    type="text" value={inputText} 
-                    onChange={e => setInputText(e.target.value)} 
-                    onKeyDown={onKeyDown}
-                />
-                <div className={"autocomplete"}>
-                    {searchResults.result && searchResults.result.data && !!searchResults.result.data.length && (
-                        <ul className={"autocomplete-list"}>
-                            {
-                                searchResults.result.data.map((topicTitle: [string], index: number) => (
-                                    <li className={index===autoCompleteIndex ? "autocomplete-list-item-highlighted" : "autocomplete-list-item"} key={topicTitle[0]} onMouseOver={() => {setAutoCompleteIndex(index)}}>
-                                        <div onClick={onClickSuggestion(topicTitle[0])} className={"suggestions-inner-container"}>
-                                            <div className={"option"}>{topicTitle[0]}</div>
-                                        </div>
-                                    </li>
-                                ))
-                            }
-                        </ul>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-export const SearchComponentMobile = (props: SearchComponentProps) => {
     const { inputText, setInputText, searchResults } = useTopicsSearch();
     const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
     const [autoCompleteIndex, setAutoCompleteIndex] = useState<number>(0);
@@ -157,7 +82,7 @@ export const SearchComponentMobile = (props: SearchComponentProps) => {
                 }
                 switch(swipedir) {
                     case 'up':
-                        searchPageRef.current!.style.transform = `translate(0, -150px)`;
+                        searchPageRef.current!.style.transform = `translate(0, -10.5em)`;
                         break;
                 };
                 // e.preventDefault()
@@ -178,7 +103,7 @@ export const SearchComponentMobile = (props: SearchComponentProps) => {
     const onClickSuggestion = (topicTitle: string) => () => {
         props.onSuggestionClick(topicTitle);
         setInputText("");
-        searchPageRef.current!.style.transform = `translate(0, -150px)`;
+        searchPageRef.current!.style.transform = `translate(0, -10.5em)`;
     };
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -204,7 +129,7 @@ export const SearchComponentMobile = (props: SearchComponentProps) => {
     }
 
     return (
-        <div id="search-page-mobile" ref={searchPageRef} className='search-page-mobile'>
+        <div id="search-page" ref={searchPageRef} className='search-page'>
             <div className={"search-bar"}>
                 <span className="search-header">
                     <span className="search-header-haram">H</span>
