@@ -6,6 +6,7 @@ import { topicsContext } from '../app-shell';
 
 // styles
 import './topic-carousel.css';
+import { useMedia } from '../../hooks/useMedia';
 
 interface TopicCarouselComponentProps {
     id: string,
@@ -14,6 +15,14 @@ interface TopicCarouselComponentProps {
 };
 export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
     const { id, fetchTopics } = props;
+
+    const isMobile = useMedia(
+        // Media queries
+        ['(max-width: 600px)'],
+        [true],
+        // default value
+        false
+    );
 
     const topicTitleRefs = useRef<any>([]);
 
@@ -64,6 +73,12 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                                     className = "topic-title-mobile";
                                 }
 
+                                if (!isMobile) {
+                                    translationVW = 15;
+                                    className = "topic-title-mobile";
+                                    onClick = undefined;
+                                };
+
                                 return <div 
                                     key={`title-${idx}`} 
                                     ref={(el) => topicTitleRefs.current.push(el)}
@@ -73,7 +88,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                                     onTouchEnd={(e) => {e.stopPropagation()}}
                                     onClick={onClick} 
                                     >
-                                        <span>{topicTitles[idx]}</span>
+                                        {isMobile ? <span>{topicTitles[idx]}</span> : distance===0 && <span>{topicTitles[idx]}</span>}
                                 </div>
                             })}
                 </div>
