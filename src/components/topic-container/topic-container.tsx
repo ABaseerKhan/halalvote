@@ -45,7 +45,6 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
     const history = useHistory();
     const query = useQuery();
     const topCard = query.get("card") || undefined;
-    console.log(topCard);
 
     // eslint-disable-next-line
     const [state, setState] = useState({});
@@ -98,14 +97,11 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
     }, [currentTopicIndex]);
 
     useEffect(() => {
-      console.log("Use effect");
       if (topicIndex !== currentTopicIndex) {
         const currentTopicContainerElement = currentTopicContainer.current;
         const nextTopicContainerElement = nextTopicContainer.current;
         const leftCard = document.getElementById(positions.current[1]);
         const rightCard = document.getElementById(positions.current[2]);
-        console.log(`left: ${leftCard?.id}`);
-        console.log(`right: ${rightCard?.id}`);
 
         if (currentTopicContainerElement && nextTopicContainerElement && leftCard && rightCard) {
           currentTopicContainerElement.animate(

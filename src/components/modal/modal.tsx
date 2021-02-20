@@ -53,9 +53,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
             }
 
             const height = getModalHeight() + "px";
-            const marginTop = `-${modalHeightVh/2}vh`;
             const width = getModalWidth() + "px";
-            const marginLeft = `max(-${modalWidthVw(isMobile)/2}vw, -${modalMaxWidth/2}px)`;
 
             // modal.style.marginTop = marginTop;
 
