@@ -114,7 +114,7 @@ export const TopicImagesComponent = (props: TopicImagesComponentProps) => {
     });
 
     useEffect(() => {
-        if (topicImages && topicImages.length && topicImages[imageIndex] && username) {
+        if (username && topicImages && topicImages.length && topicImages[imageIndex] && topicImages[imageIndex].userSeen === 0) {
             const body: any = {
                 "username": username,
                 "mediaId": topicImages[imageIndex].id
