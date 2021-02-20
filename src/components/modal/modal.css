@@ -2,12 +2,15 @@
     height: 0;
     width: 0;
     position: relative;
+    display: flow-root;
     margin: auto;
     border-radius: 25px 25px 25px 25px;
     background-color: var(--dark-mode-middleground);
     z-index: 4;
     overflow: hidden;
-    margin-top: 25%;
+    left: -50%;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .modal-cover {
@@ -18,4 +21,5 @@
     background-color: #808080;
     opacity: 0.8;
     z-index: 4;
+    left: 0;
 }

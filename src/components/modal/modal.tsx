@@ -86,7 +86,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
     }
 
     return (
-        <div>
+        <div style={{ position: 'absolute', left: '50%', height: '100vh' }}>
             <div id={modalCoverId} className={modalCoverId} onClick={closeModal} onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                         onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                         onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}></div>
