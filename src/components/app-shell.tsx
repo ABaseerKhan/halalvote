@@ -31,7 +31,7 @@ enum IncomingDirection {
   NONE
 }
 
-const maxTopicsDataCacheSize = 20;
+const maxTopicsDataCacheSize = 4;
 
 const appShellId = "app-shell";
 const topicCarouselId = "topicCarousel";
