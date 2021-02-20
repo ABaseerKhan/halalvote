@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useCookies } from 'react-cookie';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { topicsConfig, usersConfig } from '../../https-client/config';
-import { Topic, Comment, TopicImages } from '../../types';
+import { Topic, Comment, TopicMedia } from '../../types';
 import { timeSince, vhToPixels, setCardQueryParam } from '../../utils';
 import { modalHeightVh } from '../..';
 import { commentsCardId } from '../topic-container/topic-container';
@@ -12,12 +12,12 @@ import {
 } from "react-router-dom";
 import { authenticatedGetDataContext, authenticatedPostDataContext } from '../app-shell';
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
-import { VideoPlayer } from '../topic-images/video-player';
+import { VideoPlayer } from '../topic-media/video-player';
 import ClipLoader from "react-spinners/ClipLoader";
 import { css } from "@emotion/core";
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
 import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
-import { isVideo } from '../topic-images/topic-images';
+import { isVideo } from '../topic-media/topic-media';
 
 // styles
 import './profile.css';
@@ -40,7 +40,7 @@ interface State {
     userCreatedTopics: Topic[] | undefined; 
     userVotedTopics: Topic[] | undefined; 
     userComments: Comment[] | undefined;
-    userCreatedMedia: TopicImages[];
+    userCreatedMedia: TopicMedia[];
     selectedTab: Tab | undefined;
 }
 
@@ -101,7 +101,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
     }
 
     const fetchCreatedMedia = async () => {
-        const { data }: { data: TopicImages[]} = await authenticatedGetData({ 
+        const { data }: { data: TopicMedia[]} = await authenticatedGetData({ 
             baseUrl: usersConfig.url,
             path: 'user-created-media', 
             queryParams: {
@@ -272,7 +272,7 @@ const UserComment = (props: UserCommentProps) => {
 }
 
 interface UserCreatedMediaProps {
-    userMedia: TopicImages[];
+    userMedia: TopicMedia[];
     
 }
 const UserCreatedMedia = (props: UserCreatedMediaProps) => {  
