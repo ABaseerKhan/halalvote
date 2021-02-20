@@ -55,6 +55,7 @@ label {
 .profile-container {
     color: var(--dark-mode-text-color);
     overflow: auto;
+    border-radius: 25px;
 }
 
 .profile-container::-webkit-scrollbar {
