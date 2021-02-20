@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useCookies } from 'react-cookie';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { topicsConfig, usersConfig } from '../../https-client/config';
-import { Topic, Comment } from '../../types';
+import { Topic, Comment, TopicMedia } from '../../types';
 import { timeSince, vhToPixels, setCardQueryParam } from '../../utils';
 import { modalHeightVh } from '../..';
 import { commentsCardId } from '../topic-container/topic-container';
@@ -11,6 +11,13 @@ import {
     useHistory,
 } from "react-router-dom";
 import { authenticatedGetDataContext, authenticatedPostDataContext } from '../app-shell';
+import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
+import { VideoPlayer } from '../topic-media/video-player';
+import ClipLoader from "react-spinners/ClipLoader";
+import { css } from "@emotion/core";
+import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
+import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
+import { isVideo } from '../topic-media/topic-media';
 
 // styles
 import './profile.css';
@@ -33,6 +40,7 @@ interface State {
     userCreatedTopics: Topic[] | undefined; 
     userVotedTopics: Topic[] | undefined; 
     userComments: Comment[] | undefined;
+    userCreatedMedia: TopicMedia[];
     selectedTab: Tab | undefined;
 }
 
@@ -45,6 +53,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
         userCreatedTopics: undefined, 
         userVotedTopics: undefined, 
         userComments: undefined,
+        userCreatedMedia: [],
         selectedTab: Tab.CREATEDTOPICS,
     });
 
@@ -92,15 +101,15 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
     }
 
     const fetchCreatedMedia = async () => {
-        const { data }: { data: Comment[]} = await authenticatedGetData({ 
+        const { data }: { data: TopicMedia[]} = await authenticatedGetData({ 
             baseUrl: usersConfig.url,
-            path: 'user-comments', 
+            path: 'user-created-media', 
             queryParams: {
                 "username": props.username,
             },
             additionalHeaders: { },
         }, true);
-        setState(prevState => ({ ...prevState, userComments: data }));
+        setState(prevState => ({ ...prevState, userCreatedMedia: data }));
     }
 
     const deleteTopic = async (topicTitle: string) => {
@@ -138,7 +147,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
 
     const onCreatedMediaTab = () => {
         setState({ ...state, selectedTab: Tab.CREATEDMEDIA });
-        fetchCreatedMedia();
+        fetchCreatedMedia();    
     }
 
     return (
@@ -169,7 +178,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
             </div>
 
             <div className="profile-body">
-                <ul style={{ listStyleType: 'none', paddingInlineStart: '1em' }}>
+                <ul style={{ listStyleType: 'none', paddingInlineStart: '1em', paddingInlineEnd: "1em", maxHeight: "100%", height: "79%" }}>
                     {state.selectedTab===Tab.CREATEDTOPICS && state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => (
                         <UserTopic key={topic.topicTitle} topic={topic} fetchTopics={props.fetchTopics} deleteTopic={deleteTopic} closeModal={props.closeModal}/>
                     ))}
@@ -179,9 +188,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
                     {state.selectedTab===Tab.ARGUMENTS && state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
                         <UserComment comment={comment} fetchTopics={props.fetchTopics} showSpecificComment={props.showSpecificComment} closeModal={props.closeModal} />
                     ))}
-                    {state.selectedTab===Tab.CREATEDMEDIA && state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
-                        <UserComment comment={comment} fetchTopics={props.fetchTopics} showSpecificComment={props.showSpecificComment} closeModal={props.closeModal} />
-                    ))}
+                    {state.selectedTab===Tab.CREATEDMEDIA && <UserCreatedMedia userMedia={state.userCreatedMedia} />}
                 </ul>
             </div>
         </div>
@@ -259,6 +266,101 @@ const UserComment = (props: UserCommentProps) => {
             <div className="user-likes-container">
                 <HeartButtonSVG className={"user-heart"} />
                 <div className={"likes"} >{comment.upVotes}</div>
+            </div>
+        </div>
+    )
+}
+
+interface UserCreatedMediaProps {
+    userMedia: TopicMedia[];
+    
+}
+const UserCreatedMedia = (props: UserCreatedMediaProps) => {  
+    const { userMedia } = props;
+    const [state,] = useState<any>({
+        addMediaDisplayed: false,
+        picture: null,
+        loading: false,
+        previewDisplayed: false
+    });
+
+    const [mediaIndex, setMediaIndex] = useState<number>(0);
+
+    const imagesBodyRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        var isScrolling: any;
+        if (imagesBodyRef.current) {
+            imagesBodyRef.current.onscroll = () => {
+                clearTimeout( isScrolling );
+                isScrolling = setTimeout(async function() {
+                    if (imagesBodyRef.current) {
+                        const imgIndex = Math.floor((imagesBodyRef.current!.scrollTop+10) / imagesBodyRef.current!.clientHeight);
+                        if ((imgIndex >= userMedia.length - 2) && (imgIndex > mediaIndex)) {
+                            // fetchmore
+                        } else {
+                            setMediaIndex(Math.min(Math.max(imgIndex, 0), userMedia.length - 1));
+                        }
+                    }
+                }, 66);
+            }
+        }
+    });
+
+    const loaderCssOverride = css`
+        position: absolute;
+        top: calc(50% - 25px);
+        left: calc(50% - 25px);
+    `;
+    
+    return (
+        <div style={{ height: '100%', width: '100%' }}>
+            <div id="images-body" ref={imagesBodyRef} className={"images-body"}>
+                {
+                    userMedia.length > 0 ?
+                        userMedia.map((mediaItem, idx) => {
+                            const ImgStats = 
+                            <>
+                                <div className="image-actions-container">
+                                    {
+                                        <TrashButtonSVG className="image-delete-button" />
+                                    }
+                                    <div className="image-likes-container">
+                                        <HeartButtonSVG className={!!mediaItem.userLike ? "liked" : "like"} />
+                                        <div className="image-likes">{mediaItem.likes}</div>
+                                    </div>
+                                </div>
+                            </>
+                            const Img = (
+                                <div key={idx} className="image-container" style={{ flexDirection: (mediaItem?.width || 0) > (mediaItem?.height || 0) ? 'unset' : 'column' }}>
+                                    {isVideo(mediaItem.image) ? <VideoPlayer src={mediaItem.image} inView={typeof idx === "number" && isNaN(idx)} stylesOverride={{ height: imagesBodyRef.current?.clientHeight, width: imagesBodyRef.current?.clientWidth }}/> : 
+                                    <img id="image" className='image' style={{ margin: "auto"}} alt={mediaItem.username} src={mediaItem.image}/>
+                                    }
+                                    {ImgStats}
+                                </div>
+                            )
+                            return Img;
+                        })
+                    :
+                    state.loading ?
+                        <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
+                        <div className='no-image-text'>No media to show</div>
+                }
+                {userMedia.length > (mediaIndex + 1) && 
+                    <div className={"more-images-below"} style={{ left: 'calc(35% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((mediaIndex + 1) * imagesBodyRef.current.clientHeight))) }>
+                        <DownArrowSVG />
+                    </div>
+                }
+                {userMedia.length > (mediaIndex + 1) && 
+                    <div className={"more-images-below"} style={{ left: 'calc(65% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((mediaIndex + 1) * imagesBodyRef.current.clientHeight))) }>
+                        <DownArrowSVG />
+                    </div>
+                }
+                {mediaIndex > 0 && 
+                    <div className={"more-images-above"} style={{ left: 'calc(50% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((mediaIndex - 1) * imagesBodyRef.current.clientHeight))) }>
+                        <UpArrowSVG />
+                    </div>
+                }
             </div>
         </div>
     )
