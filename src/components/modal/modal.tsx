@@ -55,8 +55,6 @@ export const ModalComponent = (props: ModalComponentProps) => {
             const height = getModalHeight() + "px";
             const width = getModalWidth() + "px";
 
-            // modal.style.marginTop = marginTop;
-
             modal.animate([
                 {height: height, width: width}
             ], {
@@ -86,7 +84,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
     }
 
     return (
-        <div style={{ position: 'absolute', left: '50%', height: '100vh' }}>
+        <div style={{ position: 'absolute', left: '50%', height: '100%' }}>
             <div id={modalCoverId} className={modalCoverId} onClick={closeModal} onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                         onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                         onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}></div>
