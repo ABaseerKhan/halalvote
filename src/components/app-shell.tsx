@@ -3,7 +3,7 @@ import {TopicCarouselComponent } from './topic-carousel/topic-carousel';
 import { SearchComponent } from './search/search';
 import { AnalyticsCardComponent } from './analytics-card/analytics-card';
 import { MenuComponent } from './menu/menu';
-import { Topic, Comment, TopicImages } from '../types';
+import { Topic, Comment, TopicMedia } from '../types';
 import { postData, getData } from '../https-client/client';
 import { topicsConfig } from '../https-client/config';
 import { arrayMove, isMobile } from "../utils";
@@ -14,7 +14,7 @@ import {
   useHistory,
 } from "react-router-dom";
 import { useQuery } from '../hooks/useQuery';
-import { TopicImagesComponent } from './topic-images/topic-images';
+import { TopicMediaComponent } from './topic-media/topic-media';
 import { TopicContainerMobileComponent } from './topic-container-mobile/topic-container-mobile';
 
 
@@ -40,7 +40,7 @@ const getAppShell = () => { return document.getElementById(appShellId); }
 
 type AppShellState = { 
   topicsState: TopicsState; 
-  topicImages: TopicImagesState,
+  topicMedia: TopicImagesState,
   comments: CommentsState,
   specificComment?: Comment, 
   incomingDirection: IncomingDirection,
@@ -53,7 +53,7 @@ export const AppShellComponent = (props: any) => {
       topics: [],
       topicIndex: 0
     },
-    topicImages: { },
+    topicMedia: { },
     comments: { },
     specificComment: undefined,
     incomingDirection: IncomingDirection.NONE,
@@ -75,9 +75,9 @@ export const AppShellComponent = (props: any) => {
   const setTopicsContext = (topics: Topic[], index: number) => {
     setState(prevState => ({ ...prevState, topicsState: { topics: topics, topicIndex: index }}));
   };
-  const setTopicImagesContext = (topicTitle: string, topicImages: TopicImages[], index: number, doneLoading?: boolean) => setState(prevState => { 
-    prevState.topicImages[topicTitle] = { images: topicImages, index: index, doneLoading: doneLoading || false, creationTime: Date.now() };
-    limitCacheSize(prevState.topicImages);
+  const setTopicMediaContext = (topicTitle: string, topicMedia: TopicMedia[], index: number, doneLoading?: boolean) => setState(prevState => { 
+    prevState.topicMedia[topicTitle] = { images: topicMedia, index: index, doneLoading: doneLoading || false, creationTime: Date.now() };
+    limitCacheSize(prevState.topicMedia);
     return { ...prevState };
   });
   const setCommentsContext = (topicTitle: string, comments: Comment[], specificComment: Comment) => setState(prevState => { 
@@ -234,7 +234,7 @@ export const AppShellComponent = (props: any) => {
         <authenticatedGetDataContext.Provider value={{authenticatedGetData: authenticatedGetData, setAuthenticatedGetData: setAuthenticatedGetData}}>
           <muteContext.Provider value={{ muted: state.muted, setMuted: setMutedContext }}>
             <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
-              <topicImagesContext.Provider value={{ topicImagesState: state.topicImages, setTopicImagesContext: setTopicImagesContext }}>
+              <topicMediaContext.Provider value={{ topicMediaState: state.topicMedia, setTopicMediaContext: setTopicMediaContext }}>
                 <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
                   <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
                     <div id={appShellId} className={appShellId} style={{ overflowY: isMobile ? 'hidden' : 'scroll' }} >
@@ -244,14 +244,14 @@ export const AppShellComponent = (props: any) => {
                         isMobile ?
                         <TopicContainerMobileComponent
                           fetchTopics={fetchTopics}
-                          MediaCard={<TopicImagesComponent /> }
+                          MediaCard={<TopicMediaComponent /> }
                           CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                           AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
                           TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
                           TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
                         /> :
                         <TopicContainerComponent
-                          mediaCard={<TopicImagesComponent /> }
+                          mediaCard={<TopicMediaComponent /> }
                           commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                           analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
                           TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
@@ -265,7 +265,7 @@ export const AppShellComponent = (props: any) => {
                     </div>
                   </analyticsContext.Provider>
                 </commentsContext.Provider>
-              </topicImagesContext.Provider>
+              </topicMediaContext.Provider>
             </topicsContext.Provider>
           </muteContext.Provider>
         </authenticatedGetDataContext.Provider>
@@ -305,10 +305,10 @@ export const topicsContext = React.createContext<{topicsState: TopicsState; setT
   setTopicsContext: (topics, topicIndex) => undefined
 });
 
-export type TopicImagesState = { [topicTitle: string]: { images: TopicImages[], index: number, doneLoading: boolean, creationTime: number } };
-export const topicImagesContext = React.createContext<{topicImagesState: TopicImagesState; setTopicImagesContext: (topicTitle: string, topicImages: TopicImages[], index: number, doneLoading?: boolean) => void}>({
-  topicImagesState: { },
-  setTopicImagesContext: (topicTitle, topicImages, index, doneLoading) => undefined
+export type TopicImagesState = { [topicTitle: string]: { images: TopicMedia[], index: number, doneLoading: boolean, creationTime: number } };
+export const topicMediaContext = React.createContext<{topicMediaState: TopicImagesState; setTopicMediaContext: (topicTitle: string, topicMedia: TopicMedia[], index: number, doneLoading?: boolean) => void}>({
+  topicMediaState: { },
+  setTopicMediaContext: (topicTitle, topicMedia, index, doneLoading) => undefined
 });
 
 export type CommentsState = { [topicTitle: string]: { comments: Comment[], specificComment: Comment | undefined, creationTime: number } };

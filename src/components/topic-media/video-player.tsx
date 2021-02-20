@@ -3,9 +3,9 @@ import { ClipLoader } from 'react-spinners';
 import { ReactComponent as PlayButtonSVG } from "../../icons/play-button.svg";
 import { ReactComponent as MuteButtonSVG } from "../../icons/mute-button.svg";
 import { ReactComponent as UnMuteButtonSVG } from "../../icons/unmute-button.svg";
-import { loaderCssOverride } from './topic-images';
+import { loaderCssOverride } from './topic-media';
 
-import './topic-images.css';
+import './topic-media.css';
 import { muteContext } from '../app-shell';
 
 interface VideoPlayerProps { 
