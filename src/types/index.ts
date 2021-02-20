@@ -26,7 +26,7 @@ export interface Topic {
     vote: number | undefined;
 }
 
-export interface TopicImages {
+export interface TopicMedia {
     id: number;
     username: string;
     image: string;
