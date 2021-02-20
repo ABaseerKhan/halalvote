@@ -95,6 +95,9 @@ label {
     text-align: center;
     overflow-x: auto;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .profile-tab:hover, .profile-tab-selected:hover {
