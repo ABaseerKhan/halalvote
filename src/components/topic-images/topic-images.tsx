@@ -30,7 +30,7 @@ import './topic-images.css';
 import 'react-dropzone-uploader/dist/styles.css';
 
 
-const videoFormats = new Set();
+export const videoFormats = new Set();
 videoFormats.add('MOV');
 videoFormats.add('MP4');
 videoFormats.add('AVI');
@@ -410,7 +410,7 @@ export const MyUploader = (props: UploaderProps) => {
     )
 }
 
-const isVideo = (url: string) => {
+export const isVideo = (url: string) => {
     return videoFormats.has(url.split('.').pop()?.toUpperCase());
 };
 

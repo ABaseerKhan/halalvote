@@ -515,7 +515,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     `;
 
     return (
-        <div>
+        <div style={{height: "100%"}}>
             {
                 loginScreenType === LoginScreenType.LOADING_LOGIN || loginScreenType === LoginScreenType.LOADING_REGISTER || loginScreenType === LoginScreenType.LOADING_ACTIVATION || loginScreenType === LoginScreenType.LOADING_FORGOT_PASSWORD || loginScreenType === LoginScreenType.LOADING_RESET_PASSWORD ?
                 <div>

@@ -42,6 +42,15 @@ label {
 #toggle:checked + .menu{
     display: block;
 } */
+.images-body {
+    scroll-behavior: auto;
+    scroll-snap-type: y mandatory;
+}
+
+.image-container {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
 
 .profile-container {
     color: var(--dark-mode-text-color);
@@ -98,6 +107,7 @@ label {
 
 .profile-body {
     padding-top: 6em;
+    height: 100%;
 }
 
 .user-topic-li {
