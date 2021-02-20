@@ -178,7 +178,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
             </div>
 
             <div className="profile-body">
-                <ul style={{ listStyleType: 'none', paddingInlineStart: '1em', paddingInlineEnd: "1em", maxHeight: "100%", height: "79%" }}>
+                <div style={{ listStyleType: 'none', height: "100%" }}>
                     {state.selectedTab===Tab.CREATEDTOPICS && state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => (
                         <UserTopic key={topic.topicTitle} topic={topic} fetchTopics={props.fetchTopics} deleteTopic={deleteTopic} closeModal={props.closeModal}/>
                     ))}
@@ -189,7 +189,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
                         <UserComment comment={comment} fetchTopics={props.fetchTopics} showSpecificComment={props.showSpecificComment} closeModal={props.closeModal} />
                     ))}
                     {state.selectedTab===Tab.CREATEDMEDIA && <UserCreatedMedia userMedia={state.userCreatedMedia} />}
-                </ul>
+                </div>
             </div>
         </div>
     );
