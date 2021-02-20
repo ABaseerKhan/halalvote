@@ -18,6 +18,12 @@ import { css } from "@emotion/core";
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
 import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
 import { isVideo } from '../topic-media/topic-media';
+import CommentIcon from '@material-ui/icons/Comment';
+import ImageIcon from '@material-ui/icons/Image';
+import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import ScreenShareIcon from '@material-ui/icons/ScreenShare';
+
 
 // styles
 import './profile.css';
@@ -154,26 +160,11 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
         <div className="profile-container" style={{ height: `${vhToPixels(modalHeightVh)}px`}}>
             <div className="profile-header-section">
                 <div className="profile-title">{`${props.username}`}</div> 
-                {/* // PROFILE NAV TESTING */}
-                {/* <div className="nav">
-                    <label htmlFor="toggle">&#9776;</label>
-                    <input type="checkbox" id="toggle"/>
-                    <div className="menu">
-                        <a href="#">Created Media</a>
-                        <a href="#">Voted Topics</a>
-                        <a href="#">Arguments</a>
-                        <a href="#">Created Media</a>
-                    </div>
-                </div> */}
                 <div className="profile-tabs">
-                    {/* <li className={state.selectedTab===Tab.CREATEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedTopicsTab}>Created Topics</li>
-                    <li className={state.selectedTab===Tab.VOTEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onVotedTopicsTab}>Voted Topics</li>
-                    <li className={state.selectedTab===Tab.ARGUMENTS ? "profile-tab-selected" : "profile-tab"} onClick={onArgumentsTab}>Arguments</li>
-                    <li className={state.selectedTab===Tab.CREATEDMEDIA ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedMediaTab}>Created Media</li> */}
-                    <div className={state.selectedTab===Tab.CREATEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedTopicsTab} >Created Topics</div>
-                    <div className={state.selectedTab===Tab.VOTEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onVotedTopicsTab} >Voted Topics</div>
-                    <div className={state.selectedTab===Tab.ARGUMENTS ? "profile-tab-selected" : "profile-tab"} onClick={onArgumentsTab} >Arguments</div>
-                    <div className={state.selectedTab===Tab.CREATEDMEDIA ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedMediaTab} >Created Media</div> 
+                    <div className={state.selectedTab===Tab.CREATEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedTopicsTab} ><AssignmentIcon/></div>
+                    <div className={state.selectedTab===Tab.VOTEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onVotedTopicsTab} ><ThumbsUpDownIcon/></div>
+                    <div className={state.selectedTab===Tab.ARGUMENTS ? "profile-tab-selected" : "profile-tab"} onClick={onArgumentsTab} ><CommentIcon/></div>
+                    <div className={state.selectedTab===Tab.CREATEDMEDIA ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedMediaTab} ><ImageIcon/></div> 
                 </div>
             </div>
 
