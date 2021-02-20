@@ -73,7 +73,7 @@ html, body {
   --dark-mode-haram-color: #7f5f98;
 }
 
-input[type=text], input[type=password] {
+input[type=text]/*, input[type=password]*/ {
   border-radius: 24px;
   border: 1px solid #dfe1e5;
   outline: none;

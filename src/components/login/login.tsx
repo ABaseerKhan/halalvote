@@ -552,8 +552,11 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 </div> :
                 loginScreenType === LoginScreenType.LOGIN ?
                 <div className="login-body">
-                    <div className="login-section-text">Log In</div>
-                    <input id="username-input" className="login-input" type="text" placeholder="Username" value={loginUsernameInput} onChange={e => setLoginUsernameInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
+                    <div className="logo">
+                        <p><span id="h">H</span><span id="v">V</span></p>
+                    </div>
+                    {/* <div className="login-section-text">Log In</div> */}
+                    <input id="username-input" className="login-input" placeholder="Username" value={loginUsernameInput} onChange={e => setLoginUsernameInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                     <input id="password-input" className="login-input" type="password" placeholder="Password" value={loginPasswordInput} onChange={e => setLoginPasswordInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                     {
                         loginErrorMessage && <div className="login-error-message">{loginErrorMessage}</div>
@@ -561,14 +564,14 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     <button id="login-submit-button" className={`button ${isLoginButtonDisabled && "disabled-button"}`} onClick={ () => { login() } } disabled={isLoginButtonDisabled}>Log In</button>
                     <div className="login-switch-buttons-container">
                         <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.REGISTER)}>Create account</div>
-                        <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.FORGOT_PASSWORD_PAGE)}>Forgot username<br/>or password?</div>
+                        <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.FORGOT_PASSWORD_PAGE)}>Forgot username or password?</div>
                     </div>
                 </div> :
                 loginScreenType === LoginScreenType.REGISTER ?
                 <div className="login-body">
                     <div className="login-section-text">Create Account</div>
                     <div className="login-input-container">
-                        <input id="register-username-input" className="login-input" type="text" placeholder="Username" value={registerUsernameInput} onChange={e => setRegisterUsernameInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                        <input id="register-username-input" className="login-input" placeholder="Username" value={registerUsernameInput} onChange={e => setRegisterUsernameInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                         {
                             registerUsernameInputAvailable !== undefined &&
                             <div className="login-input-error">
@@ -581,7 +584,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         }
                     </div>
                     <div className="login-input-container">
-                        <input id="register-email-input" className="login-input" type="text" placeholder="Email" value={registerEmailInput} onChange={e => setRegisterEmailInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                        <input id="register-email-input" className="login-input" placeholder="Email" value={registerEmailInput} onChange={e => setRegisterEmailInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                         {
                             registerEmailInput !== "" && registerEmailInputAvailable !== undefined &&
                             <div className="login-input-error">
@@ -623,13 +626,13 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         registerErrorMessage && <div className="login-error-message">{registerErrorMessage}</div>
                     }
                     <button id="register-submit-button" className={`button ${isRegisterButtonDisabled && "disabled-button"}`} onClick={ () => { registerUser() } } disabled={isRegisterButtonDisabled}>Submit</button>
-                    <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Already have an account?<br/>Log in here.</div>
+                    <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Already have an account?<br/>Log in <div className="here">here</div>.</div>
                 </div> :
                 loginScreenType === LoginScreenType.FORGOT_PASSWORD_PAGE ?
                 <div className="login-body">
                     <div className="login-section-text">Enter email to reset password</div>
                     <div className="login-input-container">
-                        <input id="forgot-page-email-input" className="login-input" type="text" placeholder="Email" value={forgotPasswordPageEmailInput} onChange={e => setForgotPasswordPageEmailInput(e.target.value)} onKeyPress={(event: any) => handleForgotPasswordPageKeyPress(event)}/>
+                        <input id="forgot-page-email-input" className="login-input" placeholder="Email" value={forgotPasswordPageEmailInput} onChange={e => setForgotPasswordPageEmailInput(e.target.value)} onKeyPress={(event: any) => handleForgotPasswordPageKeyPress(event)}/>
                         {
                             forgotPasswordPageEmailInput !== "" &&
                             <div className="login-input-error">

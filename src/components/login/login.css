@@ -1,15 +1,33 @@
+/* halalvote logo */
+.logo {
+    text-align: center;
+    margin-top: 0;
+    padding-top: 0;
+}
+#h {
+   font-size: 64px;
+   color: var(--haram-compliment-color);
+}
+
+#v {
+    font-size: 64px;
+    color: var(--halal-compliment-color);
+}
+
+.here {
+    display: inline-block;
+    text-decoration: underline;
+}
+
 .login-body {
-    position: absolute;
     width: 100%;
     display: block;
-    top: 50%;
-    transform: translateY(-50%);
 }
 
 .login-section-text {
     width: 100%;
     text-align: center;
-    margin-bottom: 20px;
+    padding: 10px 0px;
     font-size: 24px;
     color: var(--dark-mode-text-color);
 }
@@ -27,8 +45,19 @@
     margin: auto;
 }
 
+#login-submit-button, #register-submit-button {
+    background-color: var(--dark-mode-background);
+    border: 1px solid var(--site-background-color);
+    padding: 15px 0px;
+    margin-top: 20px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
+}
+
 .login-switch-buttons-container {
-    display: flex;
+    display: block;
+    padding: 0 10px;
+    margin: 0 10px;
+    font-size: .85em;
 }
 
 .login-switch-button {
@@ -36,9 +65,10 @@
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 20px;
+    margin-top: 15px;
     cursor: pointer;
     color: var(--dark-mode-text-color);
+    line-height: 25px;
 }
 
 .login-switch-button:hover {
@@ -53,4 +83,26 @@
 .login-link {
     cursor: pointer;
     text-decoration: underline;
+}
+
+#username-input, #password-input, #register-username-input, #register-email-input, #register-password-input, #register-password-repeat-input, #forgot-page-email-input {
+    width: 80% !important;
+    margin: 10px 0 10px 10%;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+    padding: 6px 20px;
+    display: inline-block;
+    box-sizing: border-box;
+    background-color: transparent;
+    color: #dfe1e5;
+    border-bottom: 1px solid var(--dark-mode-background);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    transition: .5s;
+}
+
+#username-input:focus, #password-input:focus, #register-username-input:focus, #register-email-input:focus, #register-password-input:focus, #register-password-repeat-input:focus, #forgot-page-email-input:focus {
+    border-bottom: 1px solid #dfe1e5;
 }

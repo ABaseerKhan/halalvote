@@ -19,6 +19,7 @@ enum Tab {
     CREATEDTOPICS,
     VOTEDTOPICS,
     ARGUMENTS,
+    CREATEDMEDIA
 };
 
 interface ProfileComponentProps {
@@ -90,6 +91,18 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
         setState(prevState => ({ ...prevState, userComments: data }));
     }
 
+    const fetchCreatedMedia = async () => {
+        const { data }: { data: Comment[]} = await authenticatedGetData({ 
+            baseUrl: usersConfig.url,
+            path: 'user-comments', 
+            queryParams: {
+                "username": props.username,
+            },
+            additionalHeaders: { },
+        }, true);
+        setState(prevState => ({ ...prevState, userComments: data }));
+    }
+
     const deleteTopic = async (topicTitle: string) => {
         const { status } = await authenticatedPostData({
             baseUrl: topicsConfig.url,
@@ -123,16 +136,38 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
         fetchUserComments();
     }
 
+    const onCreatedMediaTab = () => {
+        setState({ ...state, selectedTab: Tab.CREATEDMEDIA });
+        fetchCreatedMedia();
+    }
+
     return (
         <div className="profile-container" style={{ height: `${vhToPixels(modalHeightVh)}px`}}>
             <div className="profile-header-section">
-                <div className="profile-title">{`${props.username}`}</div>
+                <div className="profile-title">{`${props.username}`}</div> 
+                {/* // PROFILE NAV TESTING */}
+                {/* <div className="nav">
+                    <label htmlFor="toggle">&#9776;</label>
+                    <input type="checkbox" id="toggle"/>
+                    <div className="menu">
+                        <a href="#">Created Media</a>
+                        <a href="#">Voted Topics</a>
+                        <a href="#">Arguments</a>
+                        <a href="#">Created Media</a>
+                    </div>
+                </div> */}
                 <div className="profile-tabs">
+                    {/* <li className={state.selectedTab===Tab.CREATEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedTopicsTab}>Created Topics</li>
+                    <li className={state.selectedTab===Tab.VOTEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onVotedTopicsTab}>Voted Topics</li>
+                    <li className={state.selectedTab===Tab.ARGUMENTS ? "profile-tab-selected" : "profile-tab"} onClick={onArgumentsTab}>Arguments</li>
+                    <li className={state.selectedTab===Tab.CREATEDMEDIA ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedMediaTab}>Created Media</li> */}
                     <div className={state.selectedTab===Tab.CREATEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedTopicsTab} >Created Topics</div>
                     <div className={state.selectedTab===Tab.VOTEDTOPICS ? "profile-tab-selected" : "profile-tab"} onClick={onVotedTopicsTab} >Voted Topics</div>
                     <div className={state.selectedTab===Tab.ARGUMENTS ? "profile-tab-selected" : "profile-tab"} onClick={onArgumentsTab} >Arguments</div>
+                    <div className={state.selectedTab===Tab.CREATEDMEDIA ? "profile-tab-selected" : "profile-tab"} onClick={onCreatedMediaTab} >Created Media</div> 
                 </div>
             </div>
+
             <div className="profile-body">
                 <ul style={{ listStyleType: 'none', paddingInlineStart: '1em' }}>
                     {state.selectedTab===Tab.CREATEDTOPICS && state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => (
@@ -142,6 +177,9 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
                         <UserTopic key={topic.topicTitle} topic={topic} fetchTopics={props.fetchTopics} deleteTopic={deleteTopic} closeModal={props.closeModal}/>
                     ))}
                     {state.selectedTab===Tab.ARGUMENTS && state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
+                        <UserComment comment={comment} fetchTopics={props.fetchTopics} showSpecificComment={props.showSpecificComment} closeModal={props.closeModal} />
+                    ))}
+                    {state.selectedTab===Tab.CREATEDMEDIA && state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
                         <UserComment comment={comment} fetchTopics={props.fetchTopics} showSpecificComment={props.showSpecificComment} closeModal={props.closeModal} />
                     ))}
                 </ul>

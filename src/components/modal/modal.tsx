@@ -57,13 +57,17 @@ export const ModalComponent = (props: ModalComponentProps) => {
             const width = getModalWidth() + "px";
             const marginLeft = `max(-${modalWidthVw(isMobile)/2}vw, -${modalMaxWidth/2}px)`;
 
+            // modal.style.marginTop = marginTop;
+
             modal.animate([
-                {height: height, marginTop: marginTop, width: width, marginLeft: marginLeft}
+                {height: height, width: width}
             ], {
                 duration: 100,
                 fill: "forwards"
             }).onfinish = () => {
                 modal.style.overflow = "visible";
+                modal.style.height = height;
+                modal.style.width = width;
             };
         } // eslint-disable-next-line
     }, []);
