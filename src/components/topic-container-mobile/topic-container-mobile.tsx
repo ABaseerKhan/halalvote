@@ -1,10 +1,9 @@
 import React, { ReactElement, useRef, useEffect, useContext, useState, useLayoutEffect } from 'react';
 import { topicsContext } from '../app-shell';
-import { TopicExposeComponent } from './topic-expose';
-
 // styles
 import './topic-container-mobile.css';
 import { elementStyles } from '../..';
+import { TabScroll } from '../tab-scroll/tab-scroll';
 
 
 const TOPIC_SWITCHING_DURATION = 300;
@@ -253,10 +252,12 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                 <div className="pull-up-container"><div className="pull-up-tab"></div></div>
                 <div className="topic-container-footer-content">
                     {React.cloneElement(TopicCarousel, {voteFeedbackElement: FSFooterRef.current})}
-                    <TopicExposeComponent
-                        CommentsCard={CommentsCard}
-                        AnalyticsCard={AnalyticsCard}
-                        FSTopicIndex={topicIndex}
+                    <TabScroll 
+                        tabNames={["Arguments", "Analytics"]}
+                        Sections={[
+                            CommentsCard,
+                            AnalyticsCard
+                        ]}
                     />
                 </div>
             </div>

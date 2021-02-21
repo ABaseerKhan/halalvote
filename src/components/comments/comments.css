@@ -1,7 +1,4 @@
 @media only screen and (max-width: 600px) {
-    .comments-card {
-        height: calc(100% - 2em) !important;
-    }
     .comments-container {
         width: 100%;
     }

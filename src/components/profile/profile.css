@@ -69,6 +69,30 @@
 .profile-body {
     margin-top: 7em;
     height: calc(100% - 7em);
+    overflow: hidden;
+}
+
+.comments-section-container {
+    height: 100%;
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.comments-section-container::-webkit-scrollbar {
+    display: none;
+}
+
+.topics-section-container {
+    list-style: none;
+    height: 100%;
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.topics-section-container::-webkit-scrollbar {
+    display: none;
 }
 
 .user-topic-li {

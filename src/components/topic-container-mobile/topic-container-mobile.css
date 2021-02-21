@@ -66,6 +66,8 @@
 
 .topic-container-footer-content {
     position: relative;
+    display: flex;
+    flex-direction: column;
     height: calc(100% - 13.5px);
     width: 100%;
 }

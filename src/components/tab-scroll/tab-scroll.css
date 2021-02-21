@@ -1,0 +1,69 @@
+.tabs-scroll-container {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: start;
+    scroll-behavior: auto;
+    scroll-snap-type: x mandatory;
+    scroll-snap-stop: always !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.tabs-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.tabs-container {
+    position: fixed;
+    width: 100%;
+    height: 28px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 4;
+    display: flex;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+.tabs-container:hover {
+    cursor: pointer;
+}
+
+.tabs-underline {
+    position: fixed;
+    width: 1.5em;
+    z-index: 4;
+    height: 3px;
+    background: white;
+    border-radius: 5px;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    left: calc(25% - .75em);
+}
+
+.tabs-scroll-section {
+    position: absolute;
+    scroll-snap-align: start;
+    scroll-snap-stop: always !important;
+    margin-top: 35px;
+    height: calc(100% - 35px);
+    width: 100%;
+}
+
+.tab-selected, .tab-unselected {
+    margin: auto;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.tab-selected {
+    color: white;
+}
+
+.tab-unselected {
+    color: gray;
+}

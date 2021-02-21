@@ -32,7 +32,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
         }
         // outside click 
         if (searchPageRef.current) {
-            searchPageRef.current.style.transform = `translate(0, -25vh)`;
+            searchPageRef.current.style.transform = `translate(0, -10.5em)`;
         }
     };
     useEffect(() => {
