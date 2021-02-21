@@ -30,20 +30,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
 
     const [displayNumbers, setDisplayNumbers] = useState({ halalNumber: 0, haramNumber: 0});
     const [interval, setInterval] = useState<Interval>(Interval.ALL);
-    let numIntervals: number;
-    switch(interval) {
-        case Interval.WEEK:
-            numIntervals = 7;
-            break;
-        case Interval.MONTH:
-            numIntervals = 30;
-            break;
-        case Interval.YEAR:
-            numIntervals = 365;
-            break;
-        case Interval.ALL:
-            numIntervals = -1;
-    }
 
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
     topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
@@ -63,24 +49,20 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }, [topic?.topicTitle]);
 
     useEffect(() => {
-        fetchAnalytics(); // eslint-disable-next-line
-    }, [interval])
-
-    useEffect(() => {
         if (graph) {
             setDisplayNumbers({ halalNumber: graph && graph.halalCounts ? graph.halalCounts[graph.halalCounts.length-1] : 0, haramNumber: graph && graph.haramCounts ? graph.haramCounts[graph.haramCounts.length-1] : 0 });
             createGraph();
         } // eslint-disable-next-line
     }, [graph]);
 
-    const fetchAnalytics = async () => {
-        let intervalOverride = interval === Interval.ALL ? "a" : "D";
+    const fetchAnalytics = async (newInterval: Interval = Interval.ALL) => {
+        let intervalOverride = newInterval === Interval.ALL ? "a" : "D";
 
         if (topic?.topicTitle !== undefined) {
             let queryParams: any = { 
                 "topicTitle": topic.topicTitle,
                 "interval": intervalOverride,
-                "numIntervals": numIntervals
+                "numIntervals": getNumIntervals(newInterval)
             };
             let additionalHeaders: any = {};
     
@@ -247,6 +229,11 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
         });
     }
 
+    const changeInterval = (newInterval: Interval) => {
+        setInterval(newInterval);
+        fetchAnalytics(newInterval);
+    };
+
     return (
     <div id={id} className={"analytics"}>
         <div className={"numeric-display"}>
@@ -264,12 +251,25 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
                 id="myChart"
             />
             <div className={'interval-selector-container'}>
-                <div onClick={() => setInterval(Interval.WEEK)} className={interval === Interval.WEEK ? 'interval-selector-selected' : 'interval-selector'}>1W</div>
-                <div onClick={() => setInterval(Interval.MONTH)} className={interval === Interval.MONTH ? 'interval-selector-selected' : 'interval-selector'}>1M</div>
-                <div onClick={() => setInterval(Interval.YEAR)} className={interval === Interval.YEAR ? 'interval-selector-selected' : 'interval-selector'}>1Y</div>
-                <div onClick={() => setInterval(Interval.ALL)} className={interval === Interval.ALL ? 'interval-selector-selected' : 'interval-selector'}>All</div>
+                <div onClick={() => changeInterval(Interval.ALL)} className={interval === Interval.ALL ? 'interval-selector-selected' : 'interval-selector'}>All</div>
+                <div onClick={() => changeInterval(Interval.WEEK)} className={interval === Interval.WEEK ? 'interval-selector-selected' : 'interval-selector'}>1W</div>
+                <div onClick={() => changeInterval(Interval.MONTH)} className={interval === Interval.MONTH ? 'interval-selector-selected' : 'interval-selector'}>1M</div>
+                <div onClick={() => changeInterval(Interval.YEAR)} className={interval === Interval.YEAR ? 'interval-selector-selected' : 'interval-selector'}>1Y</div>
             </div>
         </div>
     </div>
     );
+}
+
+const getNumIntervals = (interval: Interval) => {
+    switch(interval) {
+        case Interval.WEEK:
+            return 7;
+        case Interval.MONTH:
+            return 30;
+        case Interval.YEAR:
+            return 365;
+        case Interval.ALL:
+            return -1;
+    }
 }
