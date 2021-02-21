@@ -74,13 +74,13 @@
 .number-haram {
     margin-left: auto;
     background: var(--dark-mode-haram-color);
-    color: #602d86;
+    color: white;
 }
 
 .number-halal {
     margin-right: auto;
     background: var(--dark-mode-halal-color);
-    color: #1c4d44;
+    color: white;
 }
 
 @media only screen and (max-width: 600px) {
@@ -103,7 +103,7 @@
         width: 3.5em;
         height: 3.5em;
         line-height: 3.5em;
-        font-size: 8px;
+        font-size: 10px;
         font-weight: 600;
     }
 }

@@ -22,8 +22,6 @@ import CommentIcon from '@material-ui/icons/Comment';
 import ImageIcon from '@material-ui/icons/Image';
 import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import ScreenShareIcon from '@material-ui/icons/ScreenShare';
-
 
 // styles
 import './profile.css';
