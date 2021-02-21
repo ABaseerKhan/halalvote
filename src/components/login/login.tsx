@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { postData, getData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
-import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 import { 
     useHistory,
@@ -13,6 +12,7 @@ import { ReactComponent as CrossIcon} from '../../icons/cross-icon.svg'
 
 // styles
 import './login.css';
+import { loaderCssOverride } from '../topic-media/topic-media';
 
 export enum LoginScreenType {
     LOGIN,
@@ -507,12 +507,6 @@ export const LoginComponent = (props: LoginComponentProps) => {
             resetPassword();
         }
     }
-
-    const loaderCssOverride = css`
-        position: absolute;
-        top: calc(50% - 25px);
-        left: calc(50% - 25px);
-    `;
 
     return (
         <div style={{height: "100%"}}>

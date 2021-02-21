@@ -14,10 +14,9 @@ import { authenticatedGetDataContext, authenticatedPostDataContext } from '../ap
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { VideoPlayer } from '../topic-media/video-player';
 import ClipLoader from "react-spinners/ClipLoader";
-import { css } from "@emotion/core";
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
 import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
-import { isVideo } from '../topic-media/topic-media';
+import { isVideo, loaderCssOverride } from '../topic-media/topic-media';
 import CommentIcon from '@material-ui/icons/Comment';
 import ImageIcon from '@material-ui/icons/Image';
 import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
@@ -177,7 +176,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
                     {state.selectedTab===Tab.ARGUMENTS && state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
                         <UserComment comment={comment} fetchTopics={props.fetchTopics} showSpecificComment={props.showSpecificComment} closeModal={props.closeModal} />
                     ))}
-                    {state.selectedTab===Tab.CREATEDMEDIA && <UserCreatedMedia userMedia={state.userCreatedMedia} />}
+                    {state.selectedTab===Tab.CREATEDMEDIA && <UserCreatedMedia userMedia={state.userCreatedMedia} fetchTopics={props.fetchTopics} closeModal={props.closeModal} />}
                 </div>
             </div>
         </div>
@@ -262,17 +261,24 @@ const UserComment = (props: UserCommentProps) => {
 
 interface UserCreatedMediaProps {
     userMedia: TopicMedia[];
+    fetchTopics: (topicTofetch?: string) => Promise<void>,
+    closeModal: any,
     
 }
 const UserCreatedMedia = (props: UserCreatedMediaProps) => {  
-    const { userMedia } = props;
+    const { userMedia, fetchTopics, closeModal } = props;
+
+    const query = useQuery();
+    const history = useHistory();
+    const [cookies,] = useCookies(['username', 'sessiontoken']);
+    const { username, } = cookies;
+
     const [state,] = useState<any>({
         addMediaDisplayed: false,
         picture: null,
         loading: false,
         previewDisplayed: false
     });
-
     const [mediaIndex, setMediaIndex] = useState<number>(0);
 
     const imagesBodyRef = useRef<HTMLDivElement>(null);
@@ -296,11 +302,9 @@ const UserCreatedMedia = (props: UserCreatedMediaProps) => {
         }
     });
 
-    const loaderCssOverride = css`
-        position: absolute;
-        top: calc(50% - 25px);
-        left: calc(50% - 25px);
-    `;
+    const isUserImage = (idx: number) => {
+        return userMedia.length > mediaIndex && userMedia[idx].username === username;
+    }
     
     return (
         <div style={{ height: '100%', width: '100%' }}>
@@ -310,9 +314,10 @@ const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                         userMedia.map((mediaItem, idx) => {
                             const ImgStats = 
                             <>
+                                <div className="media-topic-title" onClick={async () => { setCardQueryParam(history, query, commentsCardId.toLowerCase()); await fetchTopics(mediaItem.topicTitle); closeModal(); }}><span className="topic-label">Topic:</span>{mediaItem.topicTitle}</div>
                                 <div className="image-actions-container">
                                     {
-                                        <TrashButtonSVG className="image-delete-button" />
+                                        isUserImage(idx) && <TrashButtonSVG className="image-delete-button" />
                                     }
                                     <div className="image-likes-container">
                                         <HeartButtonSVG className={!!mediaItem.userLike ? "liked" : "like"} />

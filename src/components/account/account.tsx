@@ -5,13 +5,13 @@ import { useCookies } from 'react-cookie';
 import { ReactComponent as LeftArrowSVG } from "../../icons/left-arrow.svg";
 import { ReactComponent as CheckIcon} from '../../icons/check-icon.svg'
 import { ReactComponent as CrossIcon} from '../../icons/cross-icon.svg'
-import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 import { postData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
 
 // styles
 import './account.css';
+import { loaderCssOverride } from '../topic-media/topic-media';
 
 enum AccountPage {
     OPTIONS,
@@ -175,11 +175,6 @@ export const AccountComponent = (props: AccountPageProps) => {
         setAccountPage(AccountPage.OPTIONS);
     }
 
-    const loaderCssOverride = css`
-        position: absolute;
-        top: calc(50% - 25px);
-        left: calc(50% - 25px);
-    `;
 
     return (
         <div className="account-container" style={{ height: `${vhToPixels(modalHeightVh)}px`}}>

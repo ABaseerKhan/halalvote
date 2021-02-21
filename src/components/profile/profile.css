@@ -1,47 +1,3 @@
-/* NAV MENU TESTING*/
-/* html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-}
-
-.nav {
-    border-bottom: 1px black solid;
-    text-align: right;
-    line-height: 30px;
-}
-
-.menu {
-    display: none;
-    position: static;
-    width: 100%;
-}
-
-.menu a {
-    text-decoration: none;
-    color: white;
-    line-height: 30px;
-    text-align: center;
-    width: 100%;
-    display: block;
-    border-bottom: 1px black solid;
-    margin: 0;
-}
-
-label {
-    margin-right: 5px;
-    font-size: 26px;
-    line-height: 30px;
-    cursor: pointer;
-}
-
-#toggle {
-    display: none;
-}
-
-#toggle:checked + .menu{
-    display: block;
-} */
 .images-body {
     scroll-behavior: auto;
     scroll-snap-type: y mandatory;
@@ -203,6 +159,17 @@ label {
     stroke-width: 50px;
     color: transparent;
     stroke: gray;
+}
+
+.media-topic-title {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+}
+
+.media-topic-title:hover {
+    cursor: pointer;
+    color: white;
 }
 
 @media only screen and (max-width: 600px) {

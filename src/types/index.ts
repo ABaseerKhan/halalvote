@@ -27,6 +27,7 @@ export interface Topic {
 }
 
 export interface TopicMedia {
+    topicTitle: string;
     id: number;
     username: string;
     image: string;
