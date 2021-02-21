@@ -162,6 +162,9 @@
 }
 
 .media-topic-title {
+    padding: 5px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 10px;
     position: absolute;
     top: 1em;
     left: 1em;
