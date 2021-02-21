@@ -17,6 +17,7 @@ interface TopicVotesComponentProps {
     halalPoints: number,
     haramPoints: number,
     numVotes: number,
+    voteFeedbackElement?: HTMLDivElement,
 };
 
 const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
@@ -45,17 +46,8 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
             }, true);
             
             if (status === 200 && !("noUpdates" in data) && !("message" in data)) {
-                if (value > 0) {
-                    document.body.style.backgroundColor = 'var(--dark-mode-halal-color)';
-                    setTimeout(() => {
-                        document.body.style.backgroundColor = 'var(--site-background-color)'
-                    }, 500);
-                } else if (value < 0) {
-                    document.body.style.backgroundColor = 'var(--dark-mode-haram-color)';
-                    setTimeout(() => {
-                        document.body.style.backgroundColor = 'var(--site-background-color)'
-                    }, 500);
-                }
+                triggerVoteFeedback(value, props.voteFeedbackElement);
+
                 const newTopics: Topic[] = topics.map((t: Topic) => { 
                     if (t.topicTitle === topic.topicTitle) { 
                         return {...t, vote: value, halalPoints: data.halalPoints, haramPoints: data.haramPoints, numVotes: data.numVotes}; 
@@ -85,3 +77,31 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
 };
 
 export const TopicVotesComponent = memo(TopicVotesImplementation);
+
+const triggerVoteFeedback = (value: number, voteFeedbackElement?: HTMLDivElement) => {
+    if (voteFeedbackElement) {
+        if (value > 0) {
+            voteFeedbackElement.style.backgroundColor = 'var(--dark-mode-halal-color)';
+            setTimeout(() => {
+                voteFeedbackElement.style.backgroundColor = 'var(--site-background-color)'
+            }, 500);
+        } else if (value < 0) {
+            voteFeedbackElement.style.backgroundColor = 'var(--dark-mode-haram-color)';
+            setTimeout(() => {
+                voteFeedbackElement.style.backgroundColor = 'var(--site-background-color)'
+            }, 500);
+        }
+    } else {
+        if (value > 0) {
+            document.body.style.backgroundColor = 'var(--dark-mode-halal-color)';
+            setTimeout(() => {
+                document.body.style.backgroundColor = 'var(--site-background-color)'
+            }, 500);
+        } else if (value < 0) {
+            document.body.style.backgroundColor = 'var(--dark-mode-haram-color)';
+            setTimeout(() => {
+                document.body.style.backgroundColor = 'var(--site-background-color)'
+            }, 500);
+        }
+    }
+}

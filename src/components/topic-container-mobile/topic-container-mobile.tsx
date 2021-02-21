@@ -252,7 +252,7 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
             <div id="topic-container-footer" ref={FSFooterRef} className={'topic-container-footer'}>
                 <div className="pull-up-container"><div className="pull-up-tab"></div></div>
                 <div className="topic-container-footer-content">
-                    {TopicCarousel}
+                    {React.cloneElement(TopicCarousel, {voteFeedbackElement: FSFooterRef.current})}
                     <TopicExposeComponent
                         CommentsCard={CommentsCard}
                         AnalyticsCard={AnalyticsCard}

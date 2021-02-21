@@ -12,9 +12,10 @@ interface TopicCarouselComponentProps {
     id: string,
     fetchTopics: any,
     style?: any,
+    voteFeedbackElement?: HTMLDivElement,
 };
 export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
-    const { id, fetchTopics } = props;
+    const { id, fetchTopics, voteFeedbackElement } = props;
 
     const isMobile = useMedia(
         // Media queries
@@ -92,7 +93,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
                                 </div>
                             })}
                 </div>
-                <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} />
+                <TopicVotesComponent topicTitle={topicTitle} userVote={userVote} halalPoints={halalPoints} haramPoints={haramPoints} numVotes={numVotes} voteFeedbackElement={voteFeedbackElement} />
             </div>
         </div>
     );
