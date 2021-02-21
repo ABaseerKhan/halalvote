@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
 import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { topicsConfig, usersConfig } from '../../https-client/config';
@@ -11,12 +11,6 @@ import {
     useHistory,
 } from "react-router-dom";
 import { authenticatedGetDataContext, authenticatedPostDataContext } from '../app-shell';
-import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
-import { VideoPlayer } from '../topic-media/video-player';
-import ClipLoader from "react-spinners/ClipLoader";
-import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
-import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
-import { isVideo, loaderCssOverride } from '../topic-media/topic-media';
 import CommentIcon from '@material-ui/icons/Comment';
 import ImageIcon from '@material-ui/icons/Image';
 import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
@@ -24,6 +18,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 
 // styles
 import './profile.css';
+import { UserCreatedMedia } from './user-media';
 
 enum Tab {
     CREATEDTOPICS,
@@ -103,18 +98,6 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
         setState(prevState => ({ ...prevState, userComments: data }));
     }
 
-    const fetchCreatedMedia = async () => {
-        const { data }: { data: TopicMedia[]} = await authenticatedGetData({ 
-            baseUrl: usersConfig.url,
-            path: 'user-created-media', 
-            queryParams: {
-                "username": props.username,
-            },
-            additionalHeaders: { },
-        }, true);
-        setState(prevState => ({ ...prevState, userCreatedMedia: data }));
-    }
-
     const deleteTopic = async (topicTitle: string) => {
         const { status } = await authenticatedPostData({
             baseUrl: topicsConfig.url,
@@ -150,7 +133,6 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
 
     const onCreatedMediaTab = () => {
         setState({ ...state, selectedTab: Tab.CREATEDMEDIA });
-        fetchCreatedMedia();    
     }
 
     return (
@@ -176,7 +158,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
                     {state.selectedTab===Tab.ARGUMENTS && state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
                         <UserComment comment={comment} fetchTopics={props.fetchTopics} showSpecificComment={props.showSpecificComment} closeModal={props.closeModal} />
                     ))}
-                    {state.selectedTab===Tab.CREATEDMEDIA && <UserCreatedMedia userMedia={state.userCreatedMedia} fetchTopics={props.fetchTopics} closeModal={props.closeModal} />}
+                    {state.selectedTab===Tab.CREATEDMEDIA && <UserCreatedMedia profileUsername={props.username} fetchTopics={props.fetchTopics} closeModal={props.closeModal} />}
                 </div>
             </div>
         </div>
@@ -254,107 +236,6 @@ const UserComment = (props: UserCommentProps) => {
             <div className="user-likes-container">
                 <HeartButtonSVG className={"user-heart"} />
                 <div className={"likes"} >{comment.upVotes}</div>
-            </div>
-        </div>
-    )
-}
-
-interface UserCreatedMediaProps {
-    userMedia: TopicMedia[];
-    fetchTopics: (topicTofetch?: string) => Promise<void>,
-    closeModal: any,
-    
-}
-const UserCreatedMedia = (props: UserCreatedMediaProps) => {  
-    const { userMedia, fetchTopics, closeModal } = props;
-
-    const query = useQuery();
-    const history = useHistory();
-    const [cookies,] = useCookies(['username', 'sessiontoken']);
-    const { username, } = cookies;
-
-    const [state,] = useState<any>({
-        addMediaDisplayed: false,
-        picture: null,
-        loading: false,
-        previewDisplayed: false
-    });
-    const [mediaIndex, setMediaIndex] = useState<number>(0);
-
-    const imagesBodyRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        var isScrolling: any;
-        if (imagesBodyRef.current) {
-            imagesBodyRef.current.onscroll = () => {
-                clearTimeout( isScrolling );
-                isScrolling = setTimeout(async function() {
-                    if (imagesBodyRef.current) {
-                        const imgIndex = Math.floor((imagesBodyRef.current!.scrollTop+10) / imagesBodyRef.current!.clientHeight);
-                        if ((imgIndex >= userMedia.length - 2) && (imgIndex > mediaIndex)) {
-                            // fetchmore
-                        } else {
-                            setMediaIndex(Math.min(Math.max(imgIndex, 0), userMedia.length - 1));
-                        }
-                    }
-                }, 66);
-            }
-        }
-    });
-
-    const isUserImage = (idx: number) => {
-        return userMedia.length > mediaIndex && userMedia[idx].username === username;
-    }
-    
-    return (
-        <div style={{ height: '100%', width: '100%' }}>
-            <div id="images-body" ref={imagesBodyRef} className={"images-body"}>
-                {
-                    userMedia.length > 0 ?
-                        userMedia.map((mediaItem, idx) => {
-                            const ImgStats = 
-                            <>
-                                <div className="media-topic-title" onClick={async () => { setCardQueryParam(history, query, commentsCardId.toLowerCase()); await fetchTopics(mediaItem.topicTitle); closeModal(); }}><span className="topic-label">Topic:</span>{mediaItem.topicTitle}</div>
-                                <div className="image-actions-container">
-                                    {
-                                        isUserImage(idx) && <TrashButtonSVG className="image-delete-button" />
-                                    }
-                                    <div className="image-likes-container">
-                                        <HeartButtonSVG className={!!mediaItem.userLike ? "liked" : "like"} />
-                                        <div className="image-likes">{mediaItem.likes}</div>
-                                    </div>
-                                </div>
-                            </>
-                            const Img = (
-                                <div key={idx} className="image-container" style={{ flexDirection: (mediaItem?.width || 0) > (mediaItem?.height || 0) ? 'unset' : 'column' }}>
-                                    {isVideo(mediaItem.image) ? <VideoPlayer src={mediaItem.image} inView={typeof idx === "number" && isNaN(idx)} stylesOverride={{ height: imagesBodyRef.current?.clientHeight, width: imagesBodyRef.current?.clientWidth }}/> : 
-                                    <img id="image" className='image' style={{ margin: "auto"}} alt={mediaItem.username} src={mediaItem.image}/>
-                                    }
-                                    {ImgStats}
-                                </div>
-                            )
-                            return Img;
-                        })
-                    :
-                    state.loading ?
-                        <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
-                        <div className='no-image-text'>No media to show</div>
-                }
-                {userMedia.length > (mediaIndex + 1) && 
-                    <div className={"more-images-below"} style={{ left: 'calc(35% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((mediaIndex + 1) * imagesBodyRef.current.clientHeight))) }>
-                        <DownArrowSVG />
-                    </div>
-                }
-                {userMedia.length > (mediaIndex + 1) && 
-                    <div className={"more-images-below"} style={{ left: 'calc(65% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((mediaIndex + 1) * imagesBodyRef.current.clientHeight))) }>
-                        <DownArrowSVG />
-                    </div>
-                }
-                {mediaIndex > 0 && 
-                    <div className={"more-images-above"} style={{ left: 'calc(50% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((mediaIndex - 1) * imagesBodyRef.current.clientHeight))) }>
-                        <UpArrowSVG />
-                    </div>
-                }
             </div>
         </div>
     )
