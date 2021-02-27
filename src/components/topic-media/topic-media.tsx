@@ -274,7 +274,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                                     isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
                                 }
                                 <div className="image-likes-container">
-                                    <HeartLike liked={!!topicImg.userLike} numLikes={topicImg.likes} onClickCallback={updateImageLike} />
+                                    <HeartLike liked={!!topicImg.userLike} numLikes={topicImg.likes} onClickCallback={updateImageLike} strokeColor={'white'} />
                                 </div>
                             </>
                             const Img = (

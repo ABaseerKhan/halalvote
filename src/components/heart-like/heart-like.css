@@ -11,7 +11,7 @@
 }
 
 .likes {
-    color: gray;
+
 }
 
 .likes-liked {
@@ -22,12 +22,11 @@
     height: 1.5em;
     width: 1.8em;
     cursor: pointer;
-    stroke-width: 4em;
+    stroke-width: 3em;
 }
 
 .heart {
     color: transparent;
-    stroke: gray;
 }
 
 .heart:hover {

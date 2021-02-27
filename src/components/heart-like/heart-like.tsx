@@ -6,15 +6,16 @@ import './heart-like.css';
 
 interface HeartLikeProps {
     liked: boolean,
-    onClickCallback: any,
     numLikes: number,
+    onClickCallback?: any,
+    strokeColor?: string,
 };
 export const HeartLike = (props: HeartLikeProps) => {
-    const { liked, onClickCallback, numLikes } = props;
+    const { liked, onClickCallback, numLikes, strokeColor } = props;
     return (
         <div onClick={onClickCallback} className="likes-container">
-            <HeartButtonSVG className={liked ? "heart-liked" : "heart"} />
-            <div className={liked ? "likes-liked" : "likes"}>{numLikes}</div>
+            <HeartButtonSVG className={liked ? "heart-liked" : "heart"} stroke={liked ? undefined : strokeColor || 'gray'} />
+            <div className={liked ? "likes-liked" : "likes"} style={{ color: liked ? undefined : strokeColor || 'gray' }}>{numLikes}</div>
         </div>
     )
 }

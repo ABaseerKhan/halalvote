@@ -95,7 +95,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                                     isUserImage(idx) && <TrashButtonSVG className="image-delete-button" />
                                 }
                                 <div className="image-likes-container">
-                                    <HeartLike liked={!!mediaItem.userLike} numLikes={mediaItem.likes} onClickCallback={() => {}}/>
+                                    <HeartLike liked={!!mediaItem.userLike} numLikes={mediaItem.likes} onClickCallback={() => {}} strokeColor={'white'}/>
                                 </div>
                             </>
                             const Img = (
