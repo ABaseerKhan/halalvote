@@ -3,7 +3,6 @@ import { useCookies } from 'react-cookie';
 import { topicsConfig, usersConfig } from '../../https-client/config';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
-import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
 import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
 import { ReactComponent as LeftArrowSVG } from "../../icons/left-arrow.svg";
@@ -28,6 +27,7 @@ import { TopicMedia } from '../../types';
 // styles
 import './topic-media.css';
 import 'react-dropzone-uploader/dist/styles.css';
+import { HeartLike } from '../heart-like/heart-like';
 
 
 export const videoFormats = new Set();
@@ -114,7 +114,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
     });
 
     useEffect(() => {
-        if (username && topicMedia && topicMedia.length && topicMedia[imageIndex] && topicMedia[imageIndex].userSeen === 0) {
+        if (username && topicMedia && topicMedia.length && topicMedia[imageIndex] && !topicMedia[imageIndex].userSeen) {
             const body: any = {
                 "username": username,
                 "mediaId": topicMedia[imageIndex].id
@@ -175,6 +175,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
     }
 
     const addMedia = (mediaId: string) => {
+        showAddMedia(false);
         fetchMedia(0, true, mediaId);
     };
 
@@ -207,7 +208,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
             data: {
                 "username": username,
                 "imageId": topicMediaItem.id,
-                "like": topicMediaItem.userLike === 0
+                "like": !topicMediaItem.userLike
             },
             additionalHeaders: {
                 "sessiontoken": sessiontoken
@@ -217,7 +218,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
 
         if (status === 200) {
             topicMediaItem.likes = data.likes;
-            topicMediaItem.userLike = topicMediaItem.userLike === 0 ? 1 : 0;
+            topicMediaItem.userLike = !topicMediaItem.userLike ? 1 : 0;
             setTopicMediaContext(topicTitle, topicMedia, imageIndex, true);
         }
     }
@@ -268,15 +269,12 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                         topicMedia.map((topicImg, idx) => {
                             const ImgStats = 
                             <>
-                                <div className="image-actions-container">
-                                    <div className="image-username" onClick={onUserClick(topicImg.username)}>{"@" + topicImg.username}</div>
-                                    {
-                                        isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
-                                    }
-                                    <div className="image-likes-container">
-                                        <HeartButtonSVG className={!!topicImg.userLike ? "liked" : "like"} onClick={updateImageLike} />
-                                        <div className="image-likes">{topicImg.likes}</div>
-                                    </div>
+                                <div className="image-username" onClick={onUserClick(topicImg.username)}>{"@" + topicImg.username}</div>
+                                {
+                                    isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
+                                }
+                                <div className="image-likes-container">
+                                    <HeartLike liked={!!topicImg.userLike} numLikes={topicImg.likes} onClickCallback={updateImageLike} />
                                 </div>
                             </>
                             const Img = (

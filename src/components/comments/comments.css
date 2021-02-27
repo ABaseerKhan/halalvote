@@ -43,24 +43,12 @@
         line-height: 16px !important;
     }
 
+    .comment-like-container {
+        font-size: 10.5px;
+    }
+
     .comment p {
         margin: 0em 0 0em 0 !important;
-    }
-    
-    .likes-container {
-        margin: 0.5em 0.5em 0 0 !important;
-    }
-    
-    .likes, .likes-liked {
-        line-height: 0.75em;
-        height: 10px !important;
-        font-size: 12px !important;
-    }
-    
-    .heart, .heart-liked {
-        height: 15px !important;
-        width: 17px !important;
-        stroke-width: 45px !important;
     }
     .replies {
         margin-top: 0.5em !important;
@@ -191,7 +179,6 @@
     width: fit-content;
     font-family: proxima-semibold, PingFangSC, sans-serif;
     font-weight: 800;
-    font-size: 18px;
     /* color: black; */
     color: var(--dark-mode-secondary-text-color);
 }
@@ -215,65 +202,6 @@
     line-height: 22px;
 }
 
-.likes-container {
-    position: absolute;
-    display: table-cell;
-    right: 0;
-    width: fit-content;
-    margin: 0em 0em 0 0;
-}
-
-.likes, .likes-liked {
-    height: 20px;
-    text-align: center;
-}
-
-.likes {
-    color: gray;
-}
-
-.likes-liked {
-    /* color: #cf003b; */
-    color: var(--dark-mode-red);
-}
-
-.heart, .heart-liked {
-    height: 22px;
-    width: 25px;
-    cursor: pointer;
-    stroke-width: 50px;
-}
-
-.heart {
-    color: transparent;
-    stroke: gray;
-}
-
-.heart:hover {
-    color: gray !important;
-}
-
-.heart-liked {
-    /* color: #cf003b;
-    stroke: #cf003b; */
-    color: var(--dark-mode-red);
-    animation: like 0.5s ease-in-out forwards;
-}
-
-@keyframes like {
-    0% {
-        color: gray;
-        stroke: gray;
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(0);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
 .comment p {
     margin: 0.5em 0 0.5em 0;
 }
@@ -285,6 +213,13 @@
     color: var(--dark-mode-secondary-text-color);
     font-size: 12px;
     font-weight: 550;
+}
+
+.comment-like-container {
+    position: absolute;
+    display: table-cell;
+    right: 0;
+    margin: 1em 0em 0 0;
 }
 
 .reply-button:hover {

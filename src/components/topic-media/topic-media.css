@@ -138,7 +138,7 @@
   padding: 5px;
   position: absolute;
   bottom: 0;
-  margin: 0 0 1em 1em;
+  margin: 0 0 0.75em 0.75em;
   height: fit-content;
   width: fit-content;
   color: white;
@@ -155,12 +155,16 @@
   background: rgba(0,0,0,0.4);
   border-radius: 10px;
   position: absolute;
-  bottom: 60px;
-  margin-bottom: 1.5em;
-  height: 40px;
-  right: calc(13px);
+  bottom: 0;
+  margin-bottom: 6em;
+  right: 0.75em;
   cursor: pointer;
   text-align: center;
+  color: white;
+}
+
+.image-delete-button:hover {
+  color: red;
 }
 
 .image-likes-container {
@@ -168,11 +172,12 @@
   background: rgba(0,0,0,0.4);
   border-radius: 10px;
   position: absolute;
-  display: table-cell;
-  right: 0;
   bottom: 0;
-  width: fit-content;
-  margin: 0 1em 1em 0;
+  margin-bottom: 1em;
+  right: 0.75em;
+  cursor: pointer;
+  display: table;
+  text-align: center;
 }
 
 .image-likes {
@@ -186,10 +191,6 @@
 }
 
 .image-heart:hover {
-  color: var(--light-neutral-color);
-}
-
-.image-delete-button:hover {
   color: var(--light-neutral-color);
 }
 
@@ -362,4 +363,14 @@
   border-radius: 50%;
   padding: 7px;
   z-index: 2;
+}
+
+@media only screen and (max-width: 600px) {
+  .image-delete-button {
+    font-size: 14px;
+    width: 1.8em;
+  }
+  .image-likes-container {
+    font-size: 14px;
+  }
 }

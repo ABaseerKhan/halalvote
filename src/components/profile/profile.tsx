@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { Comment } from '../../types';
 import { timeSince, vhToPixels, setCardQueryParam } from '../../utils';
 import { modalHeightVh } from '../..';
@@ -14,10 +13,11 @@ import ImageIcon from '@material-ui/icons/Image';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { UserCreatedMedia } from './user-media';
 import { usersConfig } from '../../https-client/config';
+import { UserTopics } from './user-topics';
+import { HeartLike } from '../heart-like/heart-like';
 
 // styles
 import './profile.css';
-import { UserTopics } from './user-topics';
 
 enum Tab {
     CREATEDTOPICS,
@@ -134,8 +134,7 @@ const UserComments = (props: UserCommentProps) => {
                 </div>
             </div>
             <div className="user-likes-container">
-                <HeartButtonSVG className={"user-heart"} />
-                <div className={"likes"} >{comment.upVotes}</div>
+                <HeartLike liked={!!comment.userVote} numLikes={comment.upVotes} onClickCallback={() => {}} />
             </div>
         </div>
     );

@@ -1,0 +1,54 @@
+.likes-container {
+    display: table-cell;
+    right: 0;
+    width: 100%;
+    margin: 0em 0em 0 0;
+}
+
+.likes, .likes-liked {
+    height: 1.5em;
+    text-align: center;
+}
+
+.likes {
+    color: gray;
+}
+
+.likes-liked {
+    color: var(--dark-mode-red);
+}
+
+.heart, .heart-liked {
+    height: 1.5em;
+    width: 1.8em;
+    cursor: pointer;
+    stroke-width: 4em;
+}
+
+.heart {
+    color: transparent;
+    stroke: gray;
+}
+
+.heart:hover {
+    color: gray !important;
+}
+
+.heart-liked {
+    color: var(--dark-mode-red);
+    animation: like 0.5s ease-in-out forwards;
+}
+
+@keyframes like {
+    0% {
+        color: gray;
+        stroke: gray;
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

@@ -1,6 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
-import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { Comment } from '../../types';
 import { convertUTCDateToLocalDate, timeSince } from '../../utils';
 import { commentsConfig } from '../../https-client/config';
@@ -14,6 +13,7 @@ import { authenticatedPostDataContext } from '../app-shell';
 import { useCookies } from 'react-cookie';
 import { useQuery } from '../../hooks/useQuery';
 import { topicsContext, commentsContext } from '../app-shell';
+import { HeartLike } from '../heart-like/heart-like';
 
 
 // type imports
@@ -220,9 +220,8 @@ export const CommentComponent = (props: CommentComponentProps) => {
                         </div>
                 }
             </div>
-            <div onClick={upVote} className="likes-container">
-                <HeartButtonSVG className={!!comment.userVote ? "heart-liked" : "heart"} />
-                <div className={!!comment.userVote ? "likes-liked" : "likes"}>{comment.upVotes}</div>
+            <div className="comment-like-container">
+                <HeartLike liked={!!comment.userVote} numLikes={comment.upVotes} onClickCallback={upVote} />
             </div>
         </div>
     )

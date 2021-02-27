@@ -171,18 +171,10 @@
 .user-likes-container {
     position: relative;
     display: table-cell;
+    margin: 1em 0 0 0;
     right: 0;
     width: fit-content;
-    margin: 0em 0em 0 0;
-}
-
-.user-heart {
-    height: 22px;
-    width: 25px;
-    cursor: pointer;
-    stroke-width: 50px;
-    color: transparent;
-    stroke: gray;
+    font-size: 12px;
 }
 
 .media-topic-title {
@@ -216,12 +208,7 @@
     }
     
     .user-likes-container {
-        margin: 0.5em 0.5em 0 0 !important;
+        font-size: 10.5px;
     }
-    
-    .user-heart, .heart-liked {
-        height: 15px !important;
-        width: 17px !important;
-        stroke-width: 45px !important;
-    }
+
 }
