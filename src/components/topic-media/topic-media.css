@@ -121,17 +121,6 @@
   max-width: 100%;
 }
 
-.image-actions-container {
-  position: absolute;
-  display: block;
-  height: fit-content;
-  width: 100%;
-  bottom: 0;
-  color: white;
-  text-align: center;
-  z-index: 1;
-}
-
 .image-username {
   background: rgba(0,0,0,0.4);
   border-radius: 10px;
@@ -144,6 +133,7 @@
   color: white;
   cursor: pointer;
   text-align: center;
+  z-index: 1;
 }
 
 .image-username:hover {
@@ -161,6 +151,7 @@
   cursor: pointer;
   text-align: center;
   color: white;
+  z-index: 1;
 }
 
 .image-delete-button:hover {
@@ -178,6 +169,7 @@
   cursor: pointer;
   display: table;
   text-align: center;
+  z-index: 1;
 }
 
 .image-likes {
