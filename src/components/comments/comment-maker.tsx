@@ -162,7 +162,7 @@ const fetchMentions = async (searchTerm: any, renderList: any) => {
 
 const modules: any = {
     toolbar: [
-        [{'header': 1}, 'bold', 'italic', 'underline','strike', 'blockquote', 'code-block', 'link', 'image'],
+        ['bold', 'italic', 'underline','strike', 'blockquote', 'code-block', 'link'],
     ],
     mention: {
         allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
@@ -172,7 +172,7 @@ const modules: any = {
 };
 
 const formats = [
-    'header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block', 'link', 'image', 'mention',
+    'header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block', 'link', 'mention',
 ];
 
 let Link = Quill.import('formats/link');

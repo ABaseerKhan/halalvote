@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useCookies } from 'react-cookie';
 import { authenticatedGetDataContext } from '../app-shell';
-import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { TopicMedia } from '../../types';
 import { setCardQueryParam } from '../../utils';
 import { commentsCardId } from '../topic-container/topic-container';
@@ -16,6 +15,7 @@ import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
 import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
 import { isVideo, loaderCssOverride } from '../topic-media/topic-media';
 import { usersConfig } from '../../https-client/config';
+import { HeartLike } from '../heart-like/heart-like';
 
 interface UserCreatedMediaProps {
     profileUsername: string,
@@ -91,14 +91,11 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                             const ImgStats = 
                             <>
                                 <div className="media-topic-title" onClick={async () => { setCardQueryParam(history, query, commentsCardId.toLowerCase()); await fetchTopics(mediaItem.topicTitle); closeModal(); }}><span className="topic-label">Topic:</span>{mediaItem.topicTitle}</div>
-                                <div className="image-actions-container">
-                                    {
-                                        isUserImage(idx) && <TrashButtonSVG className="image-delete-button" />
-                                    }
-                                    <div className="image-likes-container">
-                                        <HeartButtonSVG className={!!mediaItem.userLike ? "liked" : "like"} />
-                                        <div className="image-likes">{mediaItem.likes}</div>
-                                    </div>
+                                {
+                                    isUserImage(idx) && <TrashButtonSVG className="image-delete-button" />
+                                }
+                                <div className="image-likes-container">
+                                    <HeartLike liked={!!mediaItem.userLike} numLikes={mediaItem.likes} onClickCallback={() => {}}/>
                                 </div>
                             </>
                             const Img = (
