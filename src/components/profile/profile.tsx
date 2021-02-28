@@ -87,7 +87,7 @@ interface UserCommentState {
     userComments: Comment[];
 }
 const UserComments = (props: UserCommentProps) => {
-    const { profileUsername, showSpecificComment, fetchTopics, closeModal } = props;
+    const { profileUsername, showSpecificComment, fetchTopics } = props;
 
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
 
@@ -122,7 +122,7 @@ const UserComments = (props: UserCommentProps) => {
             <div className="comment-body">
                 <div 
                     className={"comment-content"}
-                    onClick={async (e) => { setCardQueryParam(history, query, commentsCardId.toLowerCase()); await fetchTopics(comment.topicTitle); showSpecificComment(comment); closeModal(); }}
+                    onClick={async (e) => { query.delete('userProfile'); setCardQueryParam(history, query, commentsCardId.toLowerCase()); await fetchTopics(comment.topicTitle); showSpecificComment(comment); }}
                 >
                     <div className="topic-header">{comment.topicTitle}</div>
                     <div className="user-comment">
