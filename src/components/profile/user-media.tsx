@@ -99,7 +99,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                 }, 66);
             }
         }
-    }, []);
+    });
 
     useEffect(() => {
         var isScrolling: any;
@@ -118,7 +118,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                 }, 66);
             }
         }
-    }, []);
+    });
 
     const fetchCreatedMedia = async (offset?: number, newIndex?: number) => {
         const { data }: { data: TopicMedia[]} = await authenticatedGetData({ 
