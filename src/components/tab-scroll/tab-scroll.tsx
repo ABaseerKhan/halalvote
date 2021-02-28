@@ -6,9 +6,10 @@ var isScrolling: any;
 interface TabScrollProps {
     tabNames: string[],
     Sections: any[],
+    tabChangedCallback?: any,
 };
 export const TabScroll = (props: TabScrollProps) => {
-    const { tabNames, Sections } = props;
+    const { tabNames, Sections, tabChangedCallback } = props;
 
     const [tabIndex, setTabIndex] = useState<number>(0);
     const [underlineTranslationPx, setUnderlineTranslationPx] = useState<number>(0);
@@ -42,6 +43,7 @@ export const TabScroll = (props: TabScrollProps) => {
     }, []);
 
     useLayoutEffect(() => {
+        tabChangedCallback && tabChangedCallback(tabIndex);
         if (containerRef.current) {
             let scrollPosition: number;
             switch(tabIndex) {
@@ -57,7 +59,7 @@ export const TabScroll = (props: TabScrollProps) => {
             containerRef.current.scrollLeft = scrollPosition;
             setUnderlineTranslationPx(((containerRef.current.clientWidth / 2) * ((containerRef.current!.scrollLeft) / containerRef.current!.clientWidth)));
         };
-    }, [tabIndex]);
+    }, [tabIndex, tabChangedCallback]);
 
     return (
         <div className="tabs-scroll-container" ref={containerRef} onTouchStart={(e) => { e.stopPropagation(); }} onTouchMove={(e) => { e.stopPropagation(); }} >

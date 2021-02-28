@@ -34,6 +34,7 @@ export interface TopicMedia {
     likes: number;
     width?: number;
     height?: number;
+    timeStamp: string;
     userLike: number;
     userSeen: number;
 }
