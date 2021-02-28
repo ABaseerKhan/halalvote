@@ -59,7 +59,7 @@ export const TabScroll = (props: TabScrollProps) => {
             containerRef.current.scrollLeft = scrollPosition;
             setUnderlineTranslationPx(((containerRef.current.clientWidth / 2) * ((containerRef.current!.scrollLeft) / containerRef.current!.clientWidth)));
         };
-    }, [tabIndex]);
+    }, [tabIndex, tabChangedCallback]);
 
     return (
         <div className="tabs-scroll-container" ref={containerRef} onTouchStart={(e) => { e.stopPropagation(); }} onTouchMove={(e) => { e.stopPropagation(); }} >

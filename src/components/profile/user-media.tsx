@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { useCookies } from 'react-cookie';
 import { authenticatedGetDataContext } from '../app-shell';
-import { ReactComponent as HeartButtonSVG } from '../../icons/heart-icon.svg';
 import { TopicMedia } from '../../types';
 import { setCardQueryParam } from '../../utils';
 import { commentsCardId } from '../topic-container/topic-container';
@@ -9,7 +7,6 @@ import { useQuery } from '../../hooks/useQuery';
 import { 
     useHistory,
 } from "react-router-dom";
-import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { VideoPlayer } from '../topic-media/video-player';
 import ClipLoader from "react-spinners/ClipLoader";
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
@@ -32,11 +29,6 @@ interface UserMediaState {
     loading: boolean;
 }
 
-enum Tab {
-    CREATED,
-    LIKED
-}
-
 export const UserCreatedMedia = (props: UserCreatedMediaProps) => {  
     const { profileUsername, fetchTopics, closeModal } = props;
 
@@ -44,16 +36,12 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
 
     const query = useQuery();
     const history = useHistory();
-    const [cookies,] = useCookies(['username', 'sessiontoken']);
-    const { username, } = cookies;
 
     const [state, setState] = useState<UserMediaState>({
         userLikedMedia: { media: [], index: 0 },
         userCreatedMedia: { media: [], index: 0 },
         loading: true,
     });
-
-    const [tab, setTab] = useState<Tab>(Tab.LIKED);
 
     const imagesBodyRef = useRef<HTMLDivElement>(null);
     const likedImagesBodyRef = useRef<HTMLDivElement>(null);
@@ -62,25 +50,6 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
         fetchLikedMedia();
         fetchCreatedMedia(); // eslint-disable-next-line
     }, [])
-
-    useEffect(() => {
-        var isScrolling: any;
-        if (imagesBodyRef.current) {
-            imagesBodyRef.current.onscroll = () => {
-                clearTimeout( isScrolling );
-                isScrolling = setTimeout(async function() {
-                    if (imagesBodyRef.current) {
-                        const mediaIndex = Math.floor((imagesBodyRef.current!.scrollTop+10) / imagesBodyRef.current!.clientHeight);
-                        if ((mediaIndex >= state.userCreatedMedia.media.length - 2) && (mediaIndex > state.userCreatedMedia.index)) {
-                            await fetchCreatedMedia(state.userCreatedMedia.media.length, mediaIndex);
-                        } else {
-                            setState(prevState => ({ ...prevState, mediaIndex: Math.min(Math.max(mediaIndex, 0), state.userCreatedMedia.media.length - 1) }));
-                        }
-                    }
-                }, 66);
-            }
-        }
-    }, []);
 
     useEffect(() => {
         var isScrolling: any;
@@ -151,10 +120,6 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
     // const isUserImage = (idx: number) => {
     //     return state.userMedia.length > state.mediaIndex && state.userMedia[idx].username === username;
     // }
-    
-    const onTabChanged = (tabIndex:number) => {
-        setTab(tabIndex);
-    };
 
     const userMedia = (mediaState: { media: TopicMedia[], index: number }, liked: number) => (
         <div style={{ height: '100%', width: '100%' }}>
@@ -210,7 +175,6 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
 
     return (
         <TabScroll 
-                tabChangedCallback={onTabChanged}
                 tabNames={["Liked Media", "Created Media"]}
                 Sections={[
                     <div className="topics-section-container">{userMedia(state.userLikedMedia, 1)}</div>,
