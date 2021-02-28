@@ -24,9 +24,8 @@ interface UserCreatedMediaProps {
 }
 
 interface UserMediaState {
-    userCreatedMedia: { media: TopicMedia[], index: number }; 
-    userLikedMedia: { media: TopicMedia[], index: number };
-    loading: boolean;
+    userCreatedMedia: { media: TopicMedia[], index: number, loading: boolean }; 
+    userLikedMedia: { media: TopicMedia[], index: number, loading: boolean };   
 }
 
 export const UserCreatedMedia = (props: UserCreatedMediaProps) => {  
@@ -38,9 +37,8 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
     const history = useHistory();
 
     const [state, setState] = useState<UserMediaState>({
-        userLikedMedia: { media: [], index: 0 },
-        userCreatedMedia: { media: [], index: 0 },
-        loading: true,
+        userLikedMedia: { media: [], index: 0, loading: true },
+        userCreatedMedia: { media: [], index: 0, loading: true },
     });
 
     const imagesBodyRef = useRef<HTMLDivElement>(null);
@@ -62,7 +60,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                         if ((mediaIndex >= state.userLikedMedia.media.length - 2) && (mediaIndex > state.userLikedMedia.index)) {
                             await fetchLikedMedia(state.userLikedMedia.media.length, mediaIndex);
                         } else {
-                            setState(prevState => ({ ...prevState, userLikedMedia: { index: Math.min(Math.max(mediaIndex, 0), state.userLikedMedia.media.length - 1), media: prevState.userLikedMedia.media }}));
+                            setState(prevState => ({ ...prevState, userLikedMedia: { index: Math.min(Math.max(mediaIndex, 0), state.userLikedMedia.media.length - 1), media: prevState.userLikedMedia.media, loading: prevState.userLikedMedia.loading }}));
                         }
                     }
                 }, 66);
@@ -81,7 +79,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                         if ((mediaIndex >= state.userCreatedMedia.media.length - 2) && (mediaIndex > state.userCreatedMedia.index)) {
                             await fetchCreatedMedia(state.userCreatedMedia.media.length, mediaIndex);
                         } else {
-                            setState(prevState => ({ ...prevState, userCreatedMedia: { index: Math.min(Math.max(mediaIndex, 0), state.userCreatedMedia.media.length - 1), media: prevState.userCreatedMedia.media } }));
+                            setState(prevState => ({ ...prevState, userCreatedMedia: { index: Math.min(Math.max(mediaIndex, 0), state.userCreatedMedia.media.length - 1), media: prevState.userCreatedMedia.media, loading: prevState.userCreatedMedia.loading } }));
                         }
                     }
                 }, 66);
@@ -100,7 +98,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
             },
             additionalHeaders: { },
         }, true);
-        setState(prevState => ({ ...prevState, userCreatedMedia: { media: [...prevState.userCreatedMedia.media, ...data], index: newIndex || 0 }}));
+        setState(prevState => ({ ...prevState, userCreatedMedia: { media: [...prevState.userCreatedMedia.media, ...data], index: newIndex || 0 , loading: false}}));
     }
 
     const fetchLikedMedia = async (offset?: number, newIndex?: number) => {
@@ -114,14 +112,14 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
             },
             additionalHeaders: { },
         }, true);
-        setState(prevState => ({ ...prevState, userLikedMedia: { media: [...prevState.userLikedMedia.media, ...data], index: newIndex || 0 }}));
+        setState(prevState => ({ ...prevState, userLikedMedia: { media: [...prevState.userLikedMedia.media, ...data], index: newIndex || 0, loading: false }}));
     }
 
     // const isUserImage = (idx: number) => {
     //     return state.userMedia.length > state.mediaIndex && state.userMedia[idx].username === username;
     // }
 
-    const userMedia = (mediaState: { media: TopicMedia[], index: number }, liked: number) => (
+    const userMedia = (mediaState: { media: TopicMedia[], index: number, loading : boolean }, liked: number) => (
         <div style={{ height: '100%', width: '100%' }}>
             <div id="images-body" ref={liked === 1 ? likedImagesBodyRef : imagesBodyRef} className={"images-body"}>
                 {
@@ -150,8 +148,8 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                             return Img;
                         })
                     :
-                    state.loading ?
-                        <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/> :
+                    mediaState.loading ?
+                        <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={mediaState.loading}/> :
                         <div className='no-image-text'>No media to show</div>
                 }
                 {mediaState.media.length > (mediaState.index + 1) && 
