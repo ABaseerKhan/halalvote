@@ -60,7 +60,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                         if ((mediaIndex >= state.userLikedMedia.media.length - 2) && (mediaIndex > state.userLikedMedia.index)) {
                             await fetchLikedMedia(state.userLikedMedia.media.length, mediaIndex);
                         } else {
-                            setState(prevState => ({ ...prevState, userLikedMedia: { index: Math.min(Math.max(mediaIndex, 0), state.userLikedMedia.media.length - 1), media: prevState.userLikedMedia.media }}));
+                            setState(prevState => ({ ...prevState, userLikedMedia: { index: Math.min(Math.max(mediaIndex, 0), state.userLikedMedia.media.length - 1), media: prevState.userLikedMedia.media, loading: prevState.userLikedMedia.loading }}));
                         }
                     }
                 }, 66);
@@ -79,7 +79,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                         if ((mediaIndex >= state.userCreatedMedia.media.length - 2) && (mediaIndex > state.userCreatedMedia.index)) {
                             await fetchCreatedMedia(state.userCreatedMedia.media.length, mediaIndex);
                         } else {
-                            setState(prevState => ({ ...prevState, userCreatedMedia: { index: Math.min(Math.max(mediaIndex, 0), state.userCreatedMedia.media.length - 1), media: prevState.userCreatedMedia.media } }));
+                            setState(prevState => ({ ...prevState, userCreatedMedia: { index: Math.min(Math.max(mediaIndex, 0), state.userCreatedMedia.media.length - 1), media: prevState.userCreatedMedia.media, loading: prevState.userCreatedMedia.loading } }));
                         }
                     }
                 }, 66);
