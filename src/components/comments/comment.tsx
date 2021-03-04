@@ -148,7 +148,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
     return (
         <div ref={commentContainerRef} id={`comment-${comment.id}`} className={"comment-container"} style={{ display: (hide ? 'none' : 'flex')}}>
             <div className="comment-bubble-container">
-                <div className={`comment-bubble-${comment.commentType.toLowerCase()}`}></div>
+                <div className={`comment-bubble-${comment.commentType.toLowerCase()}`} onClick={onUserClick}></div>
             </div>
             <div className="comment-body">
                 <div

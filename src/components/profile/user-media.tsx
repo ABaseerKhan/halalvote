@@ -15,6 +15,9 @@ import { isVideo, loaderCssOverride } from '../topic-media/topic-media';
 import { usersConfig } from '../../https-client/config';
 import { HeartLike } from '../heart-like/heart-like';
 import { TabScroll } from '../tab-scroll/tab-scroll';
+import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
+import { useCookies } from 'react-cookie';
+
 
 interface UserCreatedMediaProps {
     profileUsername: string,
@@ -35,6 +38,10 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
 
     const query = useQuery();
     const history = useHistory();
+
+    // eslint-disable-next-line
+    const [cookies, , ] = useCookies(['username', 'sessiontoken']);
+    const { username } = cookies;
 
     const [state, setState] = useState<UserMediaState>({
         userLikedMedia: { media: [], index: 0, loading: true },
@@ -115,10 +122,6 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
         setState(prevState => ({ ...prevState, userLikedMedia: { media: [...prevState.userLikedMedia.media, ...data], index: newIndex || 0, loading: false }}));
     }
 
-    // const isUserImage = (idx: number) => {
-    //     return state.userMedia.length > state.mediaIndex && state.userMedia[idx].username === username;
-    // }
-
     const userMedia = (mediaState: { media: TopicMedia[], index: number, loading : boolean }, liked: number) => (
         <div style={{ height: '100%', width: '100%' }}>
             <div id="images-body" ref={liked === 1 ? likedImagesBodyRef : imagesBodyRef} className={"images-body"} style={{ borderRadius: '0 0 25px 25px' }}>
@@ -128,13 +131,12 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                             const ImgStats = 
                             <>
                                 <div className="media-topic-title" onClick={async () => { setCardQueryParam(history, query, commentsCardId.toLowerCase()); await fetchTopics(mediaItem.topicTitle); closeModal(); }}><span className="topic-label">Topic:</span>{mediaItem.topicTitle}</div>
-                                <div className="image-actions-container">
-                                    {/* {
-                                        isUserImage(idx) && <TrashButtonSVG className="image-delete-button" />
-                                    } */}
-                                    <div className="image-likes-container">
+                                <div className="image-username" >{"@" + mediaItem.username}</div>
+                                {
+                                    mediaItem.username === username && <TrashButtonSVG className="image-delete-button" />
+                                }
+                                <div className="image-likes-container">
                                     <HeartLike liked={!!mediaItem.userLike} numLikes={mediaItem.likes} onClickCallback={() => {}} strokeColor={'white'}/>
-                                    </div>
                                 </div>
                             </>
                             const Img = (
