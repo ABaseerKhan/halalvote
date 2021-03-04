@@ -389,7 +389,6 @@ export const MyUploader = (props: UploaderProps) => {
             onSubmit={handleSubmit}
             accept="image/*,video/*"
             PreviewComponent={props => {
-                console.log(props.fileWithMeta.file.type);
                 const isImage = props.fileWithMeta.file.type.includes("image");
                 return (
                     <div ref={previewImagesBodyRef} className="image-container" style={{ flexDirection: (props.meta.width || 0) > (props.meta.height || 0) ? 'unset' : 'column' }}>
