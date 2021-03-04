@@ -7,9 +7,10 @@ interface TabScrollProps {
     tabNames: string[],
     Sections: any[],
     tabChangedCallback?: any,
+    sectionFillsContainer?: boolean,
 };
 export const TabScroll = (props: TabScrollProps) => {
-    const { tabNames, Sections, tabChangedCallback } = props;
+    const { tabNames, Sections, tabChangedCallback, sectionFillsContainer } = props;
 
     const [tabIndex, setTabIndex] = useState<number>(0);
     const [underlineTranslationPx, setUnderlineTranslationPx] = useState<number>(0);
@@ -70,10 +71,10 @@ export const TabScroll = (props: TabScrollProps) => {
                 </div>
                 <div className={"tabs-underline"} style={{ transform: `translate(${underlineTranslationPx}px, 28px)` }}></div>
             </>
-            <div className={"tabs-scroll-section"} style={{ transform: 'translate(0, 0)' }}>
+            <div className={"tabs-scroll-section"} style={{ transform: 'translate(0, 0)', ...(sectionFillsContainer ? { height: '100%', marginTop: 0 } : { }) }}>
                 {Sections[0]}
             </div>
-            <div className={"tabs-scroll-section"} style={{ transform: 'translate(100%, 0)' }}>
+            <div className={"tabs-scroll-section"} style={{ transform: 'translate(100%, 0)', ...(sectionFillsContainer ? { height: '100%', marginTop: 0 } : { }) }}>
                 {Sections[1]}
             </div>
         </div>

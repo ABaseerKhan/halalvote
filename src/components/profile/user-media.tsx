@@ -121,7 +121,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
 
     const userMedia = (mediaState: { media: TopicMedia[], index: number, loading : boolean }, liked: number) => (
         <div style={{ height: '100%', width: '100%' }}>
-            <div id="images-body" ref={liked === 1 ? likedImagesBodyRef : imagesBodyRef} className={"images-body"}>
+            <div id="images-body" ref={liked === 1 ? likedImagesBodyRef : imagesBodyRef} className={"images-body"} style={{ borderRadius: '0 0 25px 25px' }}>
                 {
                     mediaState.media.length > 0 ?
                         mediaState.media.map((mediaItem, idx) => {
@@ -178,6 +178,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                     <div className="topics-section-container">{userMedia(state.userLikedMedia, 1)}</div>,
                     <div className="topics-section-container">{userMedia(state.userCreatedMedia, 0)}</div>,
                 ]}
+                sectionFillsContainer
             />
     )
 }
