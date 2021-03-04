@@ -182,8 +182,9 @@
     background: rgba(0,0,0,0.4);
     border-radius: 10px;
     position: absolute;
-    top: 1em;
-    left: 1em;
+    bottom: 0.75em;
+    left: 50%;
+    transform: translate(-50%, 0);
 }
 
 .media-topic-title:hover {

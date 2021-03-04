@@ -4,6 +4,10 @@ import { topicsContext } from '../app-shell';
 import './topic-container-mobile.css';
 import { elementStyles } from '../..';
 import { TabScroll } from '../tab-scroll/tab-scroll';
+import { useQuery } from '../../hooks/useQuery';
+import { setCardQueryParam } from '../../utils';
+import { useHistory } from 'react-router-dom';
+import { commentsCardId, mediaCardId } from '../topic-container/topic-container';
 
 
 const TOPIC_SWITCHING_DURATION = 300;
@@ -19,6 +23,9 @@ interface TopicContainerMobileComponentProps {
 };
 export const TopicContainerMobileComponent = (props: TopicContainerMobileComponentProps) => {
     const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, TopicNavigator, fetchTopics } = props;
+
+    const query = useQuery();
+    const history = useHistory();
 
     const FSContainerRef = useRef<HTMLDivElement>(null);
     const FSFooterRef = useRef<HTMLDivElement>(null);
@@ -188,7 +195,7 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                                 duration: 300,
                                 fill: "forwards",
                                 easing: "ease",
-                        }).onfinish = () => { FSFooterRef.current!.style.transform = `translate(0, ${translation}px)`; };
+                        }).onfinish = () => { FSFooterRef.current!.style.transform = `translate(0, ${translation}px)`; setCardQueryParam(history, query, commentsCardId.toLowerCase()); };
 
                         topicMediaScaleDivRef.current!.animate([{
                                 transform: `scale(${(1 - travelledRatio)})`
@@ -207,7 +214,7 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                                 duration: 300,
                                 fill: "forwards",
                                 easing: "ease"
-                        }).onfinish = () => { FSFooterRef.current!.style.transform = `translate(0, calc(-1 * var(--max-topic-carousel-height-px)))`; };
+                        }).onfinish = () => { FSFooterRef.current!.style.transform = `translate(0, calc(-1 * var(--max-topic-carousel-height-px)))`; setCardQueryParam(history, query, mediaCardId.toLowerCase()); };
                         
                         topicMediaScaleDivRef.current!.animate([{
                                 transform: `scale(1)`
@@ -232,6 +239,32 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
             };
         }; // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+        console.log('updated query param');
+        if (query.get('card') === 'arguments') {
+            const translation = (FSContainerRef.current?.clientHeight || 0) * -0.8;
+            const travelledRatio = (translation - (elementStyles.maxTopicCarouselHeightPx * -1)) / (((FSContainerRef.current?.clientHeight || 0) * -1) - (elementStyles.maxTopicCarouselHeightPx * -1));
+            FSFooterRef.current!.animate([{
+                    transform: `translate(0, ${translation}px)`
+                }
+                ], {
+                    duration: 300,
+                    fill: "forwards",
+                    easing: "ease",
+            }).onfinish = () => { FSFooterRef.current!.style.transform = `translate(0, ${translation}px)`; };
+
+            topicMediaScaleDivRef.current!.animate([{
+                    transform: `scale(${(1 - travelledRatio)})`
+                }
+                ], {
+                    duration: 300,
+                    fill: "forwards",
+                    easing: "ease",
+            }).onfinish = () => { topicMediaScaleDivRef.current!.style.transform = `scale(0.25)`; };
+        }
+
+    }, [query])
 
     return (
         <div ref={FSContainerRef} className="topic-container-mobile">
