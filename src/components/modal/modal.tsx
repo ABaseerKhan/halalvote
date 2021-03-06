@@ -79,7 +79,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
             ], {
                 duration: 100,
                 fill: "forwards"
-            }).onfinish = callback && callback;
+            }).onfinish = callback ? callback : removeModal;
         }
     }
 
