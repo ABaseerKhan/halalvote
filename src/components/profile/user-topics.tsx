@@ -23,6 +23,12 @@ interface UserTopicsState {
     userCreatedTopics: Topic[]; 
     userVotedTopics: Topic[];
 }
+
+enum Tab {
+    USER_CREATED_TOPICS,
+    USER_VOTED_TOPICS
+} 
+
 export const UserTopics = (props: UserTopicsProps) => {
     const { profileUsername, fetchTopics } = props;
 
@@ -39,11 +45,6 @@ export const UserTopics = (props: UserTopicsProps) => {
         userCreatedTopics: [], 
         userVotedTopics: [],
     });
-
-    enum Tab {
-        USER_CREATED_TOPICS,
-        USER_VOTED_TOPICS
-    } 
 
     useEffect(() => {
         fetchUserCreatedTopics();
@@ -98,7 +99,6 @@ export const UserTopics = (props: UserTopicsProps) => {
                     <div className="user-topic-container" onClick={() => { closeModal(async () => { query.delete('userProfile'); await setCardQueryParam(history, query, mediaCardId.toLowerCase()); fetchTopics(topic.topicTitle); }); }}>
                         <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end"}}>
                             <span className="profile-topic-title">{topic.topicTitle}</span>
-                            {/* {tab === Tab.USER_VOTED_TOPICS && <span className="vote" style={{color: (topic.vote === 1) ? "var(--halal-color)" : "var(--haram-color)", fontSize: ".8em"}}>{(topic.vote === 1) ? "Voted Halal" : "Voted Haram"}</span>} */}
                             {tab === Tab.USER_VOTED_TOPICS && (topic.vote === 1 ? <ThumbUpIcon style={{color: "var(--halal-color)"}}/> : <ThumbDownIcon style={{color: "var(--haram-color)"}}/>)}
                             
                         </div>
