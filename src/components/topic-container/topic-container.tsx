@@ -134,7 +134,19 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
           };
         }
       } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [topicIndex]);
+    }, [topicIndex]);
+
+    useEffect(() => {
+      const cardId = query.get('card')?.toUpperCase();
+      if (cardId && cardId !== positions.current[0]) {
+        canFlip.current = false;
+        makeRoom(cardId, () => {
+          rotate(cardId, () => {
+            canFlip.current = true;
+          })
+        });
+      }// eslint-disable-next-line
+    }, [query])
 
     const leftCardMarginLeft =  -5;
     const rightCardMarginLeft = 5;
@@ -204,13 +216,6 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
     const selectCard = (cardId: string) => {
       if (canFlip.current) {
         setCardQueryParam(history, query, cardId.toLowerCase());
-        canFlip.current = false;
-        makeRoom(cardId, () => {
-          rotate(cardId, () => {
-            canFlip.current = true;
-            setState(prevState => ({ ...prevState }));
-          })
-        });
       }
     };
 
@@ -371,9 +376,9 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
               frontLabel.style.transform = 'unset';
               frontLabel.style.display = 'unset';
 
-              const first = positions.current[0];
-              positions.current.shift();
-              positions.current.push(first);
+              const positionsCopy = [...positions.current];
+              positionsCopy.push(positionsCopy.shift()!);
+              positions.current = positionsCopy;
 
               onfinish();
             };
@@ -408,9 +413,10 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
               frontLabel.style.transform = 'rotate(-180deg)';
               frontLabel.style.display = 'unset';
 
-              const last = positions.current[positions.current.length - 1];
-              positions.current.pop();
-              positions.current.unshift(last);
+
+              const positionsCopy = [...positions.current];
+              positionsCopy.unshift(positionsCopy.pop()!);
+              positions.current = positionsCopy;
 
               onfinish();
             };

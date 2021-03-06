@@ -238,7 +238,7 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                 touchsurface.removeEventListener('touchend', touchendCB);
             };
         }; // eslint-disable-next-line
-    }, []);
+    }, [query]);
 
     useEffect(() => {
         if (query.get('card') === 'arguments') {
