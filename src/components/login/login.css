@@ -38,11 +38,6 @@
     display: flex;
 }
 
-.login-input {
-    width: 80% !important;
-    margin: 10px 0 10px 10%;
-}
-
 .login-input-error {
     margin: auto;
 }
@@ -85,26 +80,4 @@
 .login-link {
     cursor: pointer;
     text-decoration: underline;
-}
-
-#username-input, #password-input, #register-username-input, #register-email-input, #register-password-input, #register-password-repeat-input, #forgot-page-email-input {
-    width: 80% !important;
-    margin: 10px 0 10px 10%;
-    outline: none;
-    font-size: 16px;
-    width: 100%;
-    padding: 6px 20px;
-    display: inline-block;
-    box-sizing: border-box;
-    background-color: transparent;
-    color: #dfe1e5;
-    border-bottom: 1px solid var(--dark-mode-background);
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    transition: .5s;
-}
-
-#username-input:focus, #password-input:focus, #register-username-input:focus, #register-email-input:focus, #register-password-input:focus, #register-password-repeat-input:focus, #forgot-page-email-input:focus {
-    border-bottom: 1px solid #dfe1e5;
 }

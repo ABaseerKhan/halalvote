@@ -550,9 +550,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     <div className="logo">
                         <p><span id="h">H</span><span id="v">V</span></p>
                     </div>
-                    {/* <div className="login-section-text">Log In</div> */}
-                    <input id="username-input" className="login-input" placeholder="Username" value={loginUsernameInput} onChange={e => setLoginUsernameInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
-                    <input id="password-input" className="login-input" type="password" placeholder="Password" value={loginPasswordInput} onChange={e => setLoginPasswordInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
+                    <input id="username-input" className="form-input" placeholder="Username" value={loginUsernameInput} onChange={e => setLoginUsernameInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
+                    <input id="password-input" className="form-input" type="password" placeholder="Password" value={loginPasswordInput} onChange={e => setLoginPasswordInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                     {
                         loginErrorMessage && <div className="login-error-message">{loginErrorMessage}</div>
                     }
@@ -567,7 +566,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     <LeftArrowSVG className='cancel-account-action' onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}/>
                     <div className="login-section-text">Create Account</div>
                     <div className="login-input-container">
-                        <input id="register-username-input" className="login-input" placeholder="Username" value={registerUsernameInput} onChange={e => setRegisterUsernameInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                        <input id="register-username-input" className="form-input" placeholder="Username" value={registerUsernameInput} onChange={e => setRegisterUsernameInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                         {
                             registerUsernameInputAvailable !== undefined &&
                             <div className="login-input-error">
@@ -580,7 +579,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         }
                     </div>
                     <div className="login-input-container">
-                        <input id="register-email-input" className="login-input" placeholder="Email" value={registerEmailInput} onChange={e => setRegisterEmailInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                        <input id="register-email-input" className="form-input" placeholder="Email" value={registerEmailInput} onChange={e => setRegisterEmailInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                         {
                             registerEmailInput !== "" && registerEmailInputAvailable !== undefined &&
                             <div className="login-input-error">
@@ -593,7 +592,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         }
                     </div>
                     <div className="login-input-container">
-                        <input id="register-password-input" className="login-input" type="password" placeholder="Password" value={registerPasswordInput} onChange={e => setRegisterPasswordInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                        <input id="register-password-input" className="form-input" type="password" placeholder="Password" value={registerPasswordInput} onChange={e => setRegisterPasswordInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                         {
                             registerPasswordInput !== "" &&
                             <div className="login-input-error">
@@ -606,7 +605,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         }
                     </div>
                     <div className="login-input-container">
-                        <input id="register-password-repeat-input" className="login-input" type="password" placeholder="Retype Password" value={registerPasswordRepeatInput} onChange={e => setRegisterPasswordRepeatInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
+                        <input id="register-password-repeat-input" className="form-input" type="password" placeholder="Retype Password" value={registerPasswordRepeatInput} onChange={e => setRegisterPasswordRepeatInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
                         {
                             registerPasswordRepeatInput !== "" &&
                             <div className="login-input-error">
@@ -622,14 +621,13 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         registerErrorMessage && <div className="login-error-message">{registerErrorMessage}</div>
                     }
                     <button id="register-submit-button" className={`button ${isRegisterButtonDisabled && "disabled-button"}`} onClick={ () => { registerUser() } } disabled={isRegisterButtonDisabled}>Submit</button>
-                    {/* <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Already have an account?<br/>Log in <div className="here">here</div>.</div> */}
                 </div> :
                 loginScreenType === LoginScreenType.FORGOT_PASSWORD_PAGE ?
                 <div className="login-body">
                     <LeftArrowSVG className='cancel-account-action' onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}/>
                     <div className="login-section-text">Enter email to reset password</div>
                     <div className="login-input-container">
-                        <input id="forgot-page-email-input" className="login-input" placeholder="Email" value={forgotPasswordPageEmailInput} onChange={e => setForgotPasswordPageEmailInput(e.target.value)} onKeyPress={(event: any) => handleForgotPasswordPageKeyPress(event)}/>
+                        <input id="forgot-page-email-input" className="form-input" placeholder="Email" value={forgotPasswordPageEmailInput} onChange={e => setForgotPasswordPageEmailInput(e.target.value)} onKeyPress={(event: any) => handleForgotPasswordPageKeyPress(event)}/>
                         {
                             forgotPasswordPageEmailInput !== "" &&
                             <div className="login-input-error">
@@ -645,12 +643,11 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         forgotPasswordPageErrorMessage && <div className="login-error-message">{forgotPasswordPageErrorMessage}</div>
                     }
                     <button id="login-submit-button" className={`button ${isForgotPasswordPageButtonDisabled && "disabled-button"}`} onClick={ () => { forgotPassword() } } disabled={isForgotPasswordPageButtonDisabled}>Submit</button>
-                    {/* <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Login</div> */}
                 </div> :
                 <div className="login-body">
                     <div className="login-section-text">{`Reset Password for ${usernameParameter}`}</div>
                     <div className="login-input-container">
-                        <input className="login-input" type="password" placeholder="New Password" value={resetPasswordInput} onChange={e => setResetPasswordInput(e.target.value)} onKeyPress={(event: any) => handleResetPasswordPageKeyPress(event)}/>
+                        <input className="form-input" type="password" placeholder="New Password" value={resetPasswordInput} onChange={e => setResetPasswordInput(e.target.value)} onKeyPress={(event: any) => handleResetPasswordPageKeyPress(event)}/>
                         {
                             resetPasswordInput !== "" &&
                             <div className="login-input-error">
@@ -663,7 +660,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         }
                     </div>
                     <div className="login-input-container">
-                        <input className="login-input" type="password" placeholder="Retype New Password" value={resetPasswordRepeatInput} onChange={e => setResetPasswordRepeatInput(e.target.value)} onKeyPress={(event: any) => handleResetPasswordPageKeyPress(event)}/>
+                        <input className="form-input" type="password" placeholder="Retype New Password" value={resetPasswordRepeatInput} onChange={e => setResetPasswordRepeatInput(e.target.value)} onKeyPress={(event: any) => handleResetPasswordPageKeyPress(event)}/>
                         {
                             resetPasswordRepeatInput !== "" &&
                             <div className="login-input-error">
