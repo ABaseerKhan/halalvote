@@ -51,6 +51,8 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
     const imagesBodyRef = useRef<HTMLDivElement>(null);
     const likedImagesBodyRef = useRef<HTMLDivElement>(null);
 
+    const ownProfile = profileUsername === username;
+
     useEffect(() => {
         fetchLikedMedia();
         fetchCreatedMedia(); // eslint-disable-next-line
@@ -171,16 +173,19 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                 }
             </div>
         </div>
-    )
+    );
+
+    const tabNames = ownProfile ? ["Liked Media", "Created Media"] : ["Created Media"];
+    const sections = ownProfile ? [
+        <div className="topics-section-container">{userMedia(state.userLikedMedia, 1)}</div>,
+        <div className="topics-section-container">{userMedia(state.userCreatedMedia, 0)}</div>,
+    ] : [<div className="topics-section-container">{userMedia(state.userCreatedMedia, 0)}</div>,];
 
     return (
         <TabScroll 
-                tabNames={["Liked Media", "Created Media"]}
-                Sections={[
-                    <div className="topics-section-container">{userMedia(state.userLikedMedia, 1)}</div>,
-                    <div className="topics-section-container">{userMedia(state.userCreatedMedia, 0)}</div>,
-                ]}
-                sectionFillsContainer
-            />
+            tabNames={tabNames}
+            Sections={sections}
+            sectionFillsContainer
+        /> 
     )
 }
