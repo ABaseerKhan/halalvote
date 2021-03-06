@@ -21,7 +21,7 @@ export const TabScroll = (props: TabScrollProps) => {
         if (containerRef.current) {
             containerRef.current.onscroll = (e: Event) => {
                 if (containerRef.current) {
-                    setUnderlineTranslationPx(((containerRef.current.clientWidth / 2) * ((containerRef.current!.scrollLeft) / containerRef.current!.clientWidth)));
+                    setUnderlineTranslationPx(((containerRef.current.clientWidth / tabNames.length) * ((containerRef.current!.scrollLeft) / containerRef.current!.clientWidth)));
                     clearTimeout(isScrolling);
                     isScrolling = setTimeout(function() {
                         if (containerRef.current) {
@@ -41,7 +41,7 @@ export const TabScroll = (props: TabScrollProps) => {
                 }
             }
       } // eslint-disable-next-line
-    }, []);
+    }, [tabNames]);
 
     useLayoutEffect(() => {
         tabChangedCallback && tabChangedCallback(tabIndex);
@@ -66,17 +66,21 @@ export const TabScroll = (props: TabScrollProps) => {
         <div className="tabs-scroll-container" ref={containerRef} onTouchStart={(e) => { e.stopPropagation(); }} onTouchMove={(e) => { e.stopPropagation(); }} >
             <>
                 <div className={"tabs-container"}>
-                    <span onClick={() => setTabIndex(0)} className={(underlineTranslationPx <= 42) ? "tab-selected" : "tab-unselected"}>{tabNames[0]}</span>
-                    <span onClick={() => setTabIndex(1)} className={(underlineTranslationPx > 42) ? "tab-selected" : "tab-unselected"}>{tabNames[1]}</span>
+                    {tabNames.map((tab, idx) => {
+                        return (
+                            <span onClick={() => setTabIndex(idx)} className={((idx === 0) ? underlineTranslationPx <= 42 : underlineTranslationPx > 42) ? "tab-selected" : "tab-unselected"}>{tab}</span>
+                        )
+                    })}
                 </div>
-                <div className={"tabs-underline"} style={{ transform: `translate(${underlineTranslationPx}px, 28px)` }}></div>
+                <div className={"tabs-underline"} style={{ left: `calc(${50 / tabNames.length}% - .75em)`, transform: `translate(${underlineTranslationPx}px, 28px)` }}></div>
             </>
-            <div className={"tabs-scroll-section"} style={{ transform: 'translate(0, 0)', ...(sectionFillsContainer ? { height: '100%', marginTop: 0 } : { }) }}>
-                {Sections[0]}
-            </div>
-            <div className={"tabs-scroll-section"} style={{ transform: 'translate(100%, 0)', ...(sectionFillsContainer ? { height: '100%', marginTop: 0 } : { }) }}>
-                {Sections[1]}
-            </div>
+            {Sections.map((section, idx) => {
+                return (
+                    <div className={"tabs-scroll-section"} style={{ transform: `translate(${idx * 100}%, 0)`, ...(sectionFillsContainer ? { height: '100%', marginTop: 0 } : { }) }}>
+                        {section}
+                    </div>
+                )
+            })}
         </div>
     )
 }
