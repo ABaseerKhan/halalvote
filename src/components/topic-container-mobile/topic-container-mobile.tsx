@@ -241,7 +241,6 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     }, []);
 
     useEffect(() => {
-        console.log('updated query param');
         if (query.get('card') === 'arguments') {
             const translation = (FSContainerRef.current?.clientHeight || 0) * -0.8;
             const travelledRatio = (translation - (elementStyles.maxTopicCarouselHeightPx * -1)) / (((FSContainerRef.current?.clientHeight || 0) * -1) - (elementStyles.maxTopicCarouselHeightPx * -1));
