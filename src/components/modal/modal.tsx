@@ -79,14 +79,14 @@ export const ModalComponent = (props: ModalComponentProps) => {
             ], {
                 duration: 100,
                 fill: "forwards"
-            }).onfinish = callback ? callback : removeModal;
+            }).onfinish = callback && callback;
         }
     }
 
     return (
         <div style={{ position: 'absolute', left: '50%', height: '100%' }}>
             <closeModalContext.Provider value={{ closeModal: closeModal }}>
-                <div id={modalCoverId} className={modalCoverId} onClick={closeModal} onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                <div id={modalCoverId} className={modalCoverId} onClick={() => closeModal(removeModal)} onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                             onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
                             onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}></div>
                 <div id={modalId} className={modalId} onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
