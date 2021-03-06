@@ -9,6 +9,7 @@ import {
 import { useQuery } from '../../hooks/useQuery';
 import { ReactComponent as CheckIcon} from '../../icons/check-icon.svg'
 import { ReactComponent as CrossIcon} from '../../icons/cross-icon.svg'
+import { ReactComponent as LeftArrowSVG } from "../../icons/left-arrow.svg";
 
 // styles
 import './login.css';
@@ -563,6 +564,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 </div> :
                 loginScreenType === LoginScreenType.REGISTER ?
                 <div className="login-body">
+                    <LeftArrowSVG className='cancel-account-action' onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}/>
                     <div className="login-section-text">Create Account</div>
                     <div className="login-input-container">
                         <input id="register-username-input" className="login-input" placeholder="Username" value={registerUsernameInput} onChange={e => setRegisterUsernameInput(e.target.value)} onKeyPress={(event: any) => handleRegisterKeyPress(event)}/>
@@ -620,10 +622,11 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         registerErrorMessage && <div className="login-error-message">{registerErrorMessage}</div>
                     }
                     <button id="register-submit-button" className={`button ${isRegisterButtonDisabled && "disabled-button"}`} onClick={ () => { registerUser() } } disabled={isRegisterButtonDisabled}>Submit</button>
-                    <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Already have an account?<br/>Log in <div className="here">here</div>.</div>
+                    {/* <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Already have an account?<br/>Log in <div className="here">here</div>.</div> */}
                 </div> :
                 loginScreenType === LoginScreenType.FORGOT_PASSWORD_PAGE ?
                 <div className="login-body">
+                    <LeftArrowSVG className='cancel-account-action' onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}/>
                     <div className="login-section-text">Enter email to reset password</div>
                     <div className="login-input-container">
                         <input id="forgot-page-email-input" className="login-input" placeholder="Email" value={forgotPasswordPageEmailInput} onChange={e => setForgotPasswordPageEmailInput(e.target.value)} onKeyPress={(event: any) => handleForgotPasswordPageKeyPress(event)}/>
@@ -642,7 +645,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                         forgotPasswordPageErrorMessage && <div className="login-error-message">{forgotPasswordPageErrorMessage}</div>
                     }
                     <button id="login-submit-button" className={`button ${isForgotPasswordPageButtonDisabled && "disabled-button"}`} onClick={ () => { forgotPassword() } } disabled={isForgotPasswordPageButtonDisabled}>Submit</button>
-                    <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Login</div>
+                    {/* <div className="login-switch-button" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>Login</div> */}
                 </div> :
                 <div className="login-body">
                     <div className="login-section-text">{`Reset Password for ${usernameParameter}`}</div>
