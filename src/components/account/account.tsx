@@ -197,9 +197,9 @@ export const AccountComponent = (props: AccountPageProps) => {
                             </div> :
                         accountPage === AccountPage.CHANGE_PASSWORD ?
                             <div className="change-password-container">
-                                <input className="change-password-input" type="password" placeholder="Current Password" value={changePasswordCurrent} onChange={e => setChangePasswordCurrentInput(e.target.value)} onKeyPress={e => handleChangePasswordPageKeyPress(e)}/>
+                                <input className="form-input" type="password" placeholder="Current Password" value={changePasswordCurrent} onChange={e => setChangePasswordCurrentInput(e.target.value)} onKeyPress={e => handleChangePasswordPageKeyPress(e)}/>
                                 <div className="change-password-input-container">
-                                    <input className="change-password-input" type="password" placeholder="New Password" value={newPassword} onChange={e => setNewPasswordInput(e.target.value)} onKeyPress={e => handleChangePasswordPageKeyPress(e)}/>
+                                    <input className="form-input" type="password" placeholder="New Password" value={newPassword} onChange={e => setNewPasswordInput(e.target.value)} onKeyPress={e => handleChangePasswordPageKeyPress(e)}/>
                                     {
                                         newPassword !== "" &&
                                         <div className="change-password-input-error">
@@ -212,7 +212,7 @@ export const AccountComponent = (props: AccountPageProps) => {
                                     }
                                 </div>
                                 <div className="change-password-input-container">
-                                    <input className="change-password-input" type="password" placeholder="Repeat Password" value={repeatNewPassword} onChange={e => setRepeatNewPasswordInput(e.target.value)} onKeyPress={e => handleChangePasswordPageKeyPress(e)}/>
+                                    <input className="form-input" type="password" placeholder="Repeat Password" value={repeatNewPassword} onChange={e => setRepeatNewPasswordInput(e.target.value)} onKeyPress={e => handleChangePasswordPageKeyPress(e)}/>
                                     {
                                         repeatNewPassword !== "" &&
                                         <div className="change-password-input-error">
