@@ -42,7 +42,18 @@
     border-radius: 5px;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
-    left: calc(25% - .75em);
+}
+
+.tabs-underline-long {
+    position: fixed;
+    width: 50%;
+    z-index: 4;
+    height: 3px;
+    background: white;
+    border-radius: 5px;
+    margin-right: auto;
+    margin-left: auto;
+    left: 25%;
 }
 
 .tabs-scroll-section {
