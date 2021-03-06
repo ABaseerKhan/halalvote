@@ -177,16 +177,6 @@ export const MenuComponent = (props: MenuComponentProps) => {
         }, () => {});
     }
 
-    const setProfileDisplayed = (profileDisplayed: boolean) => {
-        closeMenu({...state, menuLocation: MenuLocation.NONE}, () => { 
-            if (profileDisplayed) {
-                updateUrl(ModalType.PROFILE, username);
-            } else {
-                updateUrl(ModalType.PROFILE, undefined);
-            };
-        });
-    }
-
     const setAccountDisplayed = (accountDisplayed: boolean) => {
         closeMenu({
             ...state,
@@ -431,7 +421,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 state.modalItemSelected ===  ModalType.ADD_TOPIC ?
                     <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_TOPIC} fetchTopics={fetchTopics}/></Portal> :
                 state.modalItemSelected === ModalType.PROFILE ?
-                    <Portal><ModalComponent removeModal={() => setProfileDisplayed(false)} modalType={ModalType.PROFILE} fetchTopics={fetchTopics} showSpecificComment={props.showSpecificComment} accountUsername={userProfile}/></Portal> :
+                    <Portal><ModalComponent removeModal={() => updateUrl(ModalType.PROFILE, undefined)} modalType={ModalType.PROFILE} fetchTopics={fetchTopics} showSpecificComment={props.showSpecificComment} accountUsername={userProfile}/></Portal> :
                 state.modalItemSelected ===  ModalType.ACCOUNT &&
                     <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT}/></Portal>
             }
@@ -440,7 +430,14 @@ export const MenuComponent = (props: MenuComponentProps) => {
                     <ul className="menu-items-list" style={{padding: state.menuLocation === MenuLocation.UPPER_LEFT || state.menuLocation === MenuLocation.UPPER_RIGHT ? `${menuHeight / 3}px 0 ${menuHeight}px 0` : `${menuHeight}px 0 ${menuHeight / 3}px 0`}}>
                         <li className="menu-item" style={listItemStyles} onClick={setSearchDisplayed}>Search</li>
                         <li className="menu-item" style={listItemStyles} onClick={() => {setAddTopicDisplayed(true)}}>Add Topic</li>
-                        {usernameExists() && <li className="menu-item" style={listItemStyles} onClick={() => setProfileDisplayed(true)}>Profile</li>}
+                        {usernameExists() && 
+                        <li 
+                            className="menu-item" 
+                            style={listItemStyles} 
+                            onClick={() => closeMenu({...state, menuLocation: MenuLocation.NONE}, () => { updateUrl(ModalType.PROFILE, username); })}
+                        >
+                                Profile
+                        </li>}
                         {usernameExists() && <li className="menu-item" style={listItemStyles} onClick={() => setAccountDisplayed(true)}>Account</li>}
                         <li className="menu-item" style={listItemStyles} onClick={login}>
                             { usernameExists() ? "Logout" : "Login" }

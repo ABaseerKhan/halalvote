@@ -10,15 +10,16 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 // styles
 import './add-topic.css';
+import { closeModalContext } from '../modal/modal';
 
 interface AddTopicComponentProps {
-    closeModal: any,
     fetchTopics: any;
 };
 export const AddTopicComponent = (props: AddTopicComponentProps) => {
-    const { closeModal, fetchTopics } = props;
+    const { fetchTopics } = props;
 
     const { authenticatedPostData } = useContext(authenticatedPostDataContext);
+    const { closeModal } = useContext(closeModalContext);
 
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;

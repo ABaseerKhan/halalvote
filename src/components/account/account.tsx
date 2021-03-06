@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { vhToPixels } from '../../utils';
 import { modalHeightVh } from '../..';
 import { useCookies } from 'react-cookie';
@@ -12,6 +12,7 @@ import { usersConfig } from '../../https-client/config';
 // styles
 import './account.css';
 import { loaderCssOverride } from '../topic-media/topic-media';
+import { closeModalContext } from '../modal/modal';
 
 enum AccountPage {
     OPTIONS,
@@ -23,7 +24,6 @@ enum AccountPage {
 }
 
 interface AccountPageProps {
-    closeModal: any,
 }
 
 interface ChangePasswordState {
@@ -35,8 +35,7 @@ interface ChangePasswordState {
 }
 
 export const AccountComponent = (props: AccountPageProps) => {
-
-    const {closeModal} = props;
+    const { closeModal } = useContext(closeModalContext);
 
     const [accountPage, setAccountPage] = useState<AccountPage>(AccountPage.OPTIONS);
 

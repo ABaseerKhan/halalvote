@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
+import { useHistory } from 'react-router-dom';
+import { useQuery } from '../../hooks/useQuery';
 import { topicsConfig, usersConfig } from '../../https-client/config';
 import { Topic } from '../../types';
-import { timeSince } from '../../utils';
+import { setCardQueryParam, timeSince } from '../../utils';
 import { authenticatedGetDataContext, authenticatedPostDataContext } from '../app-shell';
+import { closeModalContext } from '../modal/modal';
 import { TabScroll } from '../tab-scroll/tab-scroll';
+import { mediaCardId } from '../topic-container/topic-container';
 
 // styles
 import './profile.css';
@@ -12,20 +16,22 @@ import './profile.css';
 interface UserTopicsProps {
     profileUsername: string,
     fetchTopics: (topicTofetch?: string) => Promise<void>,
-    closeModal: any,
 };
 interface UserTopicsState {
     userCreatedTopics: Topic[]; 
     userVotedTopics: Topic[];
 }
 export const UserTopics = (props: UserTopicsProps) => {
-    const { profileUsername, fetchTopics, closeModal } = props;
+    const { profileUsername, fetchTopics } = props;
 
+    const query = useQuery();
+    const history = useHistory();
     const [cookies] = useCookies(['username', 'sessiontoken']);
     const { username, sessiontoken } = cookies;
 
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
     const { authenticatedPostData } = useContext(authenticatedPostDataContext);
+    const { closeModal } = useContext(closeModalContext);
 
     const [state, setState] = useState<UserTopicsState>({ 
         userCreatedTopics: [], 
@@ -82,7 +88,7 @@ export const UserTopics = (props: UserTopicsProps) => {
     const userTopic = (topic: Topic) => (
             <li>
                 <div className="user-topic-li">
-                    <div className="user-topic-container" onClick={() => { fetchTopics(topic.topicTitle); closeModal(); }}>
+                    <div className="user-topic-container" onClick={() => { closeModal(async () => { query.delete('userProfile'); await setCardQueryParam(history, query, mediaCardId.toLowerCase()); fetchTopics(topic.topicTitle); }); }}>
                         <span>{topic.topicTitle}</span>
                         <div className="topic-meta-info-container">
                             <span className="topic-meta-info-item">({topic.numVotes} votes)</span>

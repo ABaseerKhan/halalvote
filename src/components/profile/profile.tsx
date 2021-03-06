@@ -18,6 +18,7 @@ import { HeartLike } from '../heart-like/heart-like';
 
 // styles
 import './profile.css';
+import { closeModalContext } from '../modal/modal';
 
 enum Tab {
     CREATEDTOPICS,
@@ -30,7 +31,6 @@ interface ProfileComponentProps {
     username: string,
     fetchTopics: (topicTofetch?: string) => Promise<void>;
     showSpecificComment: any;
-    closeModal: any;
 };
 interface State {
     selectedTab: Tab | undefined;
@@ -69,9 +69,9 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
             </div>
 
             <div className="profile-body">
-                {state.selectedTab===Tab.CREATEDTOPICS && <UserTopics profileUsername={props.username} fetchTopics={props.fetchTopics} closeModal={props.closeModal} />}
-                {state.selectedTab===Tab.ARGUMENTS && <UserComments profileUsername={props.username} showSpecificComment={props.showSpecificComment} fetchTopics={props.fetchTopics} closeModal={props.closeModal} />}
-                {state.selectedTab===Tab.CREATEDMEDIA && <UserCreatedMedia profileUsername={props.username} fetchTopics={props.fetchTopics} closeModal={props.closeModal} />}
+                {state.selectedTab===Tab.CREATEDTOPICS && <UserTopics profileUsername={props.username} fetchTopics={props.fetchTopics} />}
+                {state.selectedTab===Tab.ARGUMENTS && <UserComments profileUsername={props.username} showSpecificComment={props.showSpecificComment} fetchTopics={props.fetchTopics} />}
+                {state.selectedTab===Tab.CREATEDMEDIA && <UserCreatedMedia profileUsername={props.username} fetchTopics={props.fetchTopics} />}
             </div>
         </div>
     );
@@ -80,7 +80,6 @@ interface UserCommentProps {
     profileUsername: string,
     showSpecificComment: any,
     fetchTopics: (topicTofetch?: string) => Promise<void>,
-    closeModal: any,
 }
 
 interface UserCommentState {
@@ -90,6 +89,7 @@ const UserComments = (props: UserCommentProps) => {
     const { profileUsername, showSpecificComment, fetchTopics } = props;
 
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
+    const { closeModal } = useContext(closeModalContext);
 
     const query = useQuery();
     const history = useHistory();
@@ -122,7 +122,7 @@ const UserComments = (props: UserCommentProps) => {
             <div className="comment-body">
                 <div 
                     className={"comment-content"}
-                    onClick={async (e) => { query.delete('userProfile'); setCardQueryParam(history, query, commentsCardId.toLowerCase()); await fetchTopics(comment.topicTitle); showSpecificComment(comment); }}
+                    onClick={() => { closeModal(async () => { query.delete('userProfile'); await setCardQueryParam(history, query, commentsCardId.toLowerCase()); fetchTopics(comment.topicTitle); showSpecificComment(comment); }); }}
                 >
                     <div className="topic-header">{comment.topicTitle}</div>
                     <div className="user-comment">
