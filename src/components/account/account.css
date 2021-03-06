@@ -33,6 +33,23 @@
 .change-password-input {
     width: 80% !important;
     margin: 10px 0 10px 10%;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+    padding: 6px 20px;
+    display: inline-block;
+    box-sizing: border-box;
+    background-color: transparent;
+    color: #dfe1e5;
+    border-bottom: 1px solid var(--dark-mode-background);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    transition: .5s;
+}
+
+.change-password-input:hover {
+    border-bottom: 1px solid #dfe1e5;
 }
 
 .change-password-input-container {
