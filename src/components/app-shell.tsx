@@ -16,6 +16,8 @@ import {
 import { useQuery } from '../hooks/useQuery';
 import { TopicMediaComponent } from './topic-media/topic-media';
 import { TopicContainerMobileComponent } from './topic-container-mobile/topic-container-mobile';
+import { TopicNavigatorComponent } from './topic-navigator/topic-navigator';
+// import ReactGA from 'react-ga';
 
 
 // type imports
@@ -23,7 +25,8 @@ import { Response } from '../https-client/client';
 
 // style imports
 import './app-shell.css';
-import { TopicNavigatorComponent } from './topic-navigator/topic-navigator';
+
+// ReactGA.initialize('UA-191426582-1');
 
 enum IncomingDirection {
   LEFT,
@@ -119,6 +122,7 @@ export const AppShellComponent = (props: any) => {
       history.replace({
         search: "?" + query.toString()
       });
+      // ReactGA.pageview(query.toString());
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.topicsState]);
 
