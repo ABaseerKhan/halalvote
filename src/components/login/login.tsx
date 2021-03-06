@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useContext } from 'react';
 import { postData, getData } from '../../https-client/client';
 import { usersConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
@@ -14,6 +14,7 @@ import { ReactComponent as LeftArrowSVG } from "../../icons/left-arrow.svg";
 // styles
 import './login.css';
 import { loaderCssOverride } from '../topic-media/topic-media';
+import { closeModalContext } from '../modal/modal';
 
 export enum LoginScreenType {
     LOGIN,
@@ -35,14 +36,14 @@ export enum LoginScreenType {
 }
 
 interface LoginComponentProps {
-    closeModal: any,
     onLogin?: any,
 };
 
 export const LoginComponent = (props: LoginComponentProps) => {
-    const { closeModal } = props;
     // eslint-disable-next-line
     const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
+
+    const { closeModal } = useContext(closeModalContext);
 
     const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState<boolean>();
     const [isRegisterButtonDisabled, setIsRegisterButtonDisabled] = useState<boolean>();

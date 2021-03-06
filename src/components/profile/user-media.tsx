@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { authenticatedGetDataContext } from '../app-shell';
 import { TopicMedia } from '../../types';
 import { setCardQueryParam } from '../../utils';
-import { commentsCardId } from '../topic-container/topic-container';
+import { mediaCardId } from '../topic-container/topic-container';
 import { useQuery } from '../../hooks/useQuery';
 import { 
     useHistory,
@@ -17,13 +17,12 @@ import { HeartLike } from '../heart-like/heart-like';
 import { TabScroll } from '../tab-scroll/tab-scroll';
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { useCookies } from 'react-cookie';
+import { closeModalContext } from '../modal/modal';
 
 
 interface UserCreatedMediaProps {
     profileUsername: string,
     fetchTopics: (topicTofetch?: string) => Promise<void>,
-    closeModal: any,
-    
 }
 
 interface UserMediaState {
@@ -32,9 +31,10 @@ interface UserMediaState {
 }
 
 export const UserCreatedMedia = (props: UserCreatedMediaProps) => {  
-    const { profileUsername, fetchTopics, closeModal } = props;
+    const { profileUsername, fetchTopics } = props;
 
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
+    const { closeModal } = useContext(closeModalContext);
 
     const query = useQuery();
     const history = useHistory();
@@ -130,7 +130,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                         mediaState.media.map((mediaItem, idx) => {
                             const ImgStats = 
                             <>
-                                <div className="media-topic-title" onClick={async () => { setCardQueryParam(history, query, commentsCardId.toLowerCase()); await fetchTopics(mediaItem.topicTitle); closeModal(); }}><span className="topic-label">Topic:</span>{mediaItem.topicTitle}</div>
+                                <div className="media-topic-title" onClick={() => { closeModal(async () => { query.delete('userProfile'); await setCardQueryParam(history, query, mediaCardId.toLowerCase()); fetchTopics(mediaItem.topicTitle); }); }}><span className="topic-label">Topic:</span>{mediaItem.topicTitle}</div>
                                 <div className="image-username" >{"@" + mediaItem.username}</div>
                                 {
                                     mediaItem.username === username && <TrashButtonSVG className="image-delete-button" />

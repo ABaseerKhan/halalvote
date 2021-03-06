@@ -138,13 +138,13 @@ export async function resizeImage(file: File) {
     return imageCompression.getDataUrlFromFile(compressedImage);
 }
 
-export const setCardQueryParam = (history: any, query: any, cardId: string) => {
+export const setCardQueryParam = async (history: any, query: any, cardId: string) => {
     if (query.has('card')) {
         query.set('card', cardId);
     } else {
         query.append('card', cardId);
     };
-    history.replace({
+    await history.replace({
         search: "?" + query.toString()
     });
 };

@@ -68,7 +68,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
         } // eslint-disable-next-line
     }, []);
 
-    const closeModal = () => {
+    const closeModal = (callback?: any) => {
         const modal = document.getElementById(modalId);
 
         if (modal) {
@@ -79,29 +79,35 @@ export const ModalComponent = (props: ModalComponentProps) => {
             ], {
                 duration: 100,
                 fill: "forwards"
-            }).onfinish = removeModal;
+            }).onfinish = callback ? callback : removeModal;
         }
     }
 
     return (
         <div style={{ position: 'absolute', left: '50%', height: '100%' }}>
-            <div id={modalCoverId} className={modalCoverId} onClick={closeModal} onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
-                        onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
-                        onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}></div>
-            <div id={modalId} className={modalId} onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
-                        onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
-                        onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}>
-                {
-                    modalType === ModalType.LOGIN ?
-                        <LoginComponent closeModal={closeModal} onLogin={props.onLogin}/> :
-                    modalType === ModalType.ADD_TOPIC ?
-                        <AddTopicComponent closeModal={closeModal} fetchTopics={fetchTopics} /> :
-                    modalType === ModalType.PROFILE ?
-                        <ProfileComponent closeModal={closeModal} username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> :
-                    modalType === ModalType.ACCOUNT &&
-                        <AccountComponent closeModal={closeModal}/>
-                }
-            </div>
+            <closeModalContext.Provider value={{ closeModal: closeModal }}>
+                <div id={modalCoverId} className={modalCoverId} onClick={closeModal} onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                            onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                            onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}></div>
+                <div id={modalId} className={modalId} onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                            onTouchMove={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}} 
+                            onTouchEnd={(event: React.TouchEvent<HTMLDivElement>) => {event.stopPropagation()}}>
+                    {
+                        modalType === ModalType.LOGIN ?
+                            <LoginComponent onLogin={props.onLogin}/> :
+                        modalType === ModalType.ADD_TOPIC ?
+                            <AddTopicComponent fetchTopics={fetchTopics} /> :
+                        modalType === ModalType.PROFILE ?
+                            <ProfileComponent username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> :
+                        modalType === ModalType.ACCOUNT &&
+                            <AccountComponent />
+                    }
+                </div>
+            </closeModalContext.Provider>
         </div>
     );
 };
+
+export const closeModalContext = React.createContext<{closeModal: (callback?: any) => void}>({
+    closeModal: () => undefined
+});
