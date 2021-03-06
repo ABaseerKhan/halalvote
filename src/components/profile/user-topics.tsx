@@ -9,6 +9,8 @@ import { authenticatedGetDataContext, authenticatedPostDataContext } from '../ap
 import { closeModalContext } from '../modal/modal';
 import { TabScroll } from '../tab-scroll/tab-scroll';
 import { mediaCardId } from '../topic-container/topic-container';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 
 // styles
 import './profile.css';
@@ -37,6 +39,11 @@ export const UserTopics = (props: UserTopicsProps) => {
         userCreatedTopics: [], 
         userVotedTopics: [],
     });
+
+    enum Tab {
+        USER_CREATED_TOPICS,
+        USER_VOTED_TOPICS
+    } 
 
     useEffect(() => {
         fetchUserCreatedTopics();
@@ -85,11 +92,16 @@ export const UserTopics = (props: UserTopicsProps) => {
         }
     }
 
-    const userTopic = (topic: Topic) => (
+    const userTopic = (topic: Topic, tab: any) => (
             <li>
                 <div className="user-topic-li">
                     <div className="user-topic-container" onClick={() => { closeModal(async () => { query.delete('userProfile'); await setCardQueryParam(history, query, mediaCardId.toLowerCase()); fetchTopics(topic.topicTitle); }); }}>
-                        <span>{topic.topicTitle}</span>
+                        <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end"}}>
+                            <span className="profile-topic-title">{topic.topicTitle}</span>
+                            {/* {tab === Tab.USER_VOTED_TOPICS && <span className="vote" style={{color: (topic.vote === 1) ? "var(--halal-color)" : "var(--haram-color)", fontSize: ".8em"}}>{(topic.vote === 1) ? "Voted Halal" : "Voted Haram"}</span>} */}
+                            {tab === Tab.USER_VOTED_TOPICS && (topic.vote === 1 ? <ThumbUpIcon style={{color: "var(--halal-color)"}}/> : <ThumbDownIcon style={{color: "var(--haram-color)"}}/>)}
+                            
+                        </div>
                         <div className="topic-meta-info-container">
                             <span className="topic-meta-info-item">({topic.numVotes} votes)</span>
                             <span className="topic-meta-info-item">{timeSince(topic.timeStamp)} ago</span>
@@ -114,8 +126,8 @@ export const UserTopics = (props: UserTopicsProps) => {
         <TabScroll
             tabNames={["Created Topics", "Voted Topics"]}
             Sections={[
-                <div className="topics-section-container">{state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic))}</div>,
-                <div className="topics-section-container">{state.userVotedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic))}</div>
+                <div className="topics-section-container">{state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_CREATED_TOPICS))}</div>,
+                <div className="topics-section-container">{state.userVotedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_VOTED_TOPICS))}</div>
             ]}
         />
     )

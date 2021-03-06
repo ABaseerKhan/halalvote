@@ -101,7 +101,7 @@
 }
 
 .user-topic-container {
-    width: 90%;
+    width: 100%;
     padding: 1em 0 1em 0;
     transition: all .2s ease-in-out;
 }
@@ -122,6 +122,12 @@
 .topic-header {
     font-size: .75em;
     color: var(--dark-mode-secondary-text-color);
+}
+
+.profile-topic-title {
+    font-size: 1.1em;
+    line-height: 2em;
+    color: white;
 }
 
 .user-comment-container {
