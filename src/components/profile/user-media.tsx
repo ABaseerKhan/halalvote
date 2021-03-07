@@ -41,7 +41,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
 
     // eslint-disable-next-line
     const [cookies, , ] = useCookies(['username', 'sessiontoken']);
-    const { username } = cookies;
+    const { username, sessiontoken } = cookies;
 
     const [state, setState] = useState<UserMediaState>({
         userLikedMedia: { media: [], index: 0, loading: true },
@@ -56,7 +56,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
     useEffect(() => {
         ownProfile && fetchLikedMedia();
         fetchCreatedMedia(); // eslint-disable-next-line
-    }, [ownProfile]);
+    }, [])
 
     useEffect(() => {
         var isScrolling: any;
@@ -97,7 +97,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
     });
 
     const fetchCreatedMedia = async (offset?: number, newIndex?: number) => {
-        const { data }: { data: TopicMedia[]} = await authenticatedGetData({ 
+        const { data, status }: { data: TopicMedia[], status: number } = await authenticatedGetData({ 
             baseUrl: usersConfig.url,
             path: 'user-created-media', 
             queryParams: {
@@ -107,11 +107,13 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
             },
             additionalHeaders: { },
         }, true);
-        setState(prevState => ({ ...prevState, userCreatedMedia: { media: [...prevState.userCreatedMedia.media, ...data], index: newIndex || 0 , loading: false}}));
+        if (status === 200) {
+            setState(prevState => ({ ...prevState, userCreatedMedia: { media: [...prevState.userCreatedMedia.media, ...data], index: newIndex || 0 , loading: false}}));
+        }
     }
 
     const fetchLikedMedia = async (offset?: number, newIndex?: number) => {
-        const { data }: { data: TopicMedia[]} = await authenticatedGetData({ 
+        const { data, status }: { data: TopicMedia[], status: number } = await authenticatedGetData({ 
             baseUrl: usersConfig.url,
             path: 'user-liked-media', 
             queryParams: {
@@ -119,9 +121,11 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                 "n": 3,
                 "offset": offset || 0,
             },
-            additionalHeaders: { },
+            additionalHeaders: { "sessiontoken": sessiontoken },
         }, true);
-        setState(prevState => ({ ...prevState, userLikedMedia: { media: [...prevState.userLikedMedia.media, ...data], index: newIndex || 0, loading: false }}));
+        if (status === 200) { 
+            setState(prevState => ({ ...prevState, userLikedMedia: { media: [...prevState.userLikedMedia.media, ...data], index: newIndex || 0, loading: false }}));
+        }
     }
 
     const userMedia = (mediaState: { media: TopicMedia[], index: number, loading : boolean }, liked: number) => (
