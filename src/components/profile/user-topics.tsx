@@ -108,7 +108,7 @@ export const UserTopics = (props: UserTopicsProps) => {
                         </div>
                     </div>
                     {
-                        topic.username === username &&
+                        topic.username === username && tab !== Tab.USER_VOTED_TOPICS && (
                         <span
                             className={"delete-button"}
                             onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteTopic(topic.topicTitle); }}
@@ -116,7 +116,7 @@ export const UserTopics = (props: UserTopicsProps) => {
                             aria-label="trash"
                         >
                             🗑️
-                        </span>
+                        </span>)
                     }
                 </div>
             </li>
