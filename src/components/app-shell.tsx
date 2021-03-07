@@ -6,7 +6,7 @@ import { MenuComponent } from './menu/menu';
 import { Topic, Comment, TopicMedia } from '../types';
 import { postData, getData } from '../https-client/client';
 import { topicsConfig } from '../https-client/config';
-import { arrayMove, isMobile } from "../utils";
+import { arrayMove, isMobile, replaceHistory } from "../utils";
 import { useCookies } from 'react-cookie';
 import { TopicContainerComponent } from './topic-container/topic-container';
 import { CommentsCardComponent } from './comments/comments-card';
@@ -17,7 +17,7 @@ import { useQuery } from '../hooks/useQuery';
 import { TopicMediaComponent } from './topic-media/topic-media';
 import { TopicContainerMobileComponent } from './topic-container-mobile/topic-container-mobile';
 import { TopicNavigatorComponent } from './topic-navigator/topic-navigator';
-// import ReactGA from 'react-ga';
+import ReactGA from 'react-ga';
 
 
 // type imports
@@ -26,7 +26,7 @@ import { Response } from '../https-client/client';
 // style imports
 import './app-shell.css';
 
-// ReactGA.initialize('UA-191426582-1');
+ReactGA.initialize('UA-191426582-1');
 
 enum IncomingDirection {
   LEFT,
@@ -119,10 +119,7 @@ export const AppShellComponent = (props: any) => {
       } else {
           query.append('topic', `${topics[topicIndex].topicTitle.replace(/ /g,"_")}`);
       };
-      history.replace({
-        search: "?" + query.toString()
-      });
-      // ReactGA.pageview(query.toString());
+      replaceHistory(history, query);
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.topicsState]);
 
@@ -200,9 +197,7 @@ export const AppShellComponent = (props: any) => {
     } else {
         query.append('loginScreen', 'login');
     };
-    history.replace({
-      search: "?" + query.toString()
-    });
+    replaceHistory(history, query);
   }
 
   const authenticatedPostData = async (request: any, willRetry: boolean): Promise<any> => {

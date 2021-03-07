@@ -15,6 +15,7 @@ import { ReactComponent as LeftArrowSVG } from "../../icons/left-arrow.svg";
 import './login.css';
 import { loaderCssOverride } from '../topic-media/topic-media';
 import { closeModalContext } from '../modal/modal';
+import { replaceHistory } from '../../utils';
 
 export enum LoginScreenType {
     LOGIN,
@@ -244,9 +245,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
             } else {
                 query.append('loginScreen', loginScreen);
             };
-            history.replace({
-                search: "?" + query.toString()
-            });
+            replaceHistory(history, query);
         }
     }, [history, query]);
 

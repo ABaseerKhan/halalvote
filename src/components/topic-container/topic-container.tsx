@@ -143,6 +143,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
         makeRoom(cardId, () => {
           rotate(cardId, () => {
             canFlip.current = true;
+            setState((prevState) => ({ ...prevState }));
           })
         });
       }// eslint-disable-next-line

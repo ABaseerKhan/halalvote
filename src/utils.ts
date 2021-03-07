@@ -1,5 +1,6 @@
 import { Judgment } from "./types";
 import imageCompression from 'browser-image-compression';
+import ReactGA from 'react-ga';
 
 const dateTimeOptions = { year: 'numeric', month: 'numeric', day: '2-digit', hour: 'numeric', minute:'2-digit'};
 
@@ -102,9 +103,9 @@ export function getImageDimensionsFromSource(src: string) {
 }
 
 /**
- Returns the dimensions of a video asynchrounsly.
- @param {String} url Url of the video to get dimensions from.
- @return {Promise} Promise which returns the dimensions of the video in 'width' and 'height' properties.
+    Returns the dimensions of a video asynchrounsly.
+    @param {String} url Url of the video to get dimensions from.
+    @return {Promise} Promise which returns the dimensions of the video in 'width' and 'height' properties.
  */
 export function getVideoDimensionsOf(url: string){
 	return new Promise<{ height: number, width: number }>(function(resolve){
@@ -138,15 +139,20 @@ export async function resizeImage(file: File) {
     return imageCompression.getDataUrlFromFile(compressedImage);
 }
 
-export const setCardQueryParam = async (history: any, query: any, cardId: string) => {
+export const replaceHistory = async (history: any, query: URLSearchParams) => {
+    await history.replace({
+        search: "?" + query.toString()
+    });
+    ReactGA.pageview(query.toString());
+};
+
+export const setCardQueryParam = async (history: any, query: URLSearchParams, cardId: string) => {
     if (query.has('card')) {
         query.set('card', cardId);
     } else {
         query.append('card', cardId);
     };
-    await history.replace({
-        search: "?" + query.toString()
-    });
+    await replaceHistory(history, query);
 };
 
 export const nFormatter = (num: number, digits: number) => {

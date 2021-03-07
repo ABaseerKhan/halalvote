@@ -8,7 +8,7 @@ import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
 import { ReactComponent as LeftArrowSVG } from "../../icons/left-arrow.svg";
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
-import { getImageDimensionsFromSource, getVideoDimensionsOf } from '../../utils';
+import { getImageDimensionsFromSource, getVideoDimensionsOf, replaceHistory } from '../../utils';
 import { 
     useHistory,
 } from "react-router-dom";
@@ -236,9 +236,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
         event.stopPropagation();
         
         query.set('userProfile', user);
-        history.replace({
-            search: "?" + query.toString()
-        });
+        replaceHistory(history, query);
     };
 
     const previewDisplayedCallback = (displayed: boolean) => {

@@ -13,6 +13,7 @@ import { ModalType, MenuLocation } from '../../types';
 
 // styles
 import './menu.css';
+import { replaceHistory } from '../../utils';
 
 const menuId = "menu";
 const menuButtonId = "menu-button";
@@ -141,9 +142,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 return;
         }
 
-        history.replace({
-            search: "?" + query.toString()
-        });
+        replaceHistory(history, query);
     }, [history, query]);
 
     const usernameExists = () => {
