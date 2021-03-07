@@ -54,9 +54,9 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
     const ownProfile = profileUsername === username;
 
     useEffect(() => {
-        fetchLikedMedia();
+        ownProfile && fetchLikedMedia();
         fetchCreatedMedia(); // eslint-disable-next-line
-    }, [])
+    }, [ownProfile]);
 
     useEffect(() => {
         var isScrolling: any;
