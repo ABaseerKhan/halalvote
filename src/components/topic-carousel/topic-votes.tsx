@@ -1,5 +1,5 @@
 import React, {memo, useContext} from 'react';
-import { topicsConfig } from '../../https-client/config';
+import { topicsAPIConfig } from '../../https-client/config';
 import { VotingSwitch } from './voting-switch';
 import { authenticatedPostDataContext } from '../app-shell';
 
@@ -32,7 +32,7 @@ const TopicVotesImplementation = (props: TopicVotesComponentProps) => {
     const submitVote = async (value: number) => {
         if (topic?.topicTitle) {
             const { status, data } = await authenticatedPostData({
-                baseUrl: topicsConfig.url,
+                baseUrl: topicsAPIConfig.url,
                 path: 'vote-topic',
                 data: {
                     "topicTitle": topic.topicTitle,

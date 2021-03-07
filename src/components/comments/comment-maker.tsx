@@ -6,7 +6,7 @@ import { ReactComponent as PencilSVG } from '../../icons/pencil.svg';
 import { useMedia } from '../../hooks/useMedia';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import { getData } from '../../https-client/client';
-import { usersConfig } from '../../https-client/config';
+import { usersAPIConfig } from '../../https-client/config';
 
 //type imports
 
@@ -149,7 +149,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
 export const CommentMakerComponent = forwardRef(_CommentMakerComponent);
 
 const suggestUsers = async (searchTerm: string) => {
-    const { data } = await getData({ baseUrl: usersConfig.url, path: 'get-users', queryParams: { 'searchTerm': searchTerm }, additionalHeaders: {}});
+    const { data } = await getData({ baseUrl: usersAPIConfig.url, path: 'get-users', queryParams: { 'searchTerm': searchTerm }, additionalHeaders: {}});
     const allUsers = data.map((user: any, idx: number) => ({ id: idx++, value: user.username }));
 
     return allUsers;

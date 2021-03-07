@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { Comment } from '../../types';
 import { convertUTCDateToLocalDate, timeSince } from '../../utils';
-import { commentsConfig } from '../../https-client/config';
+import { commentsAPIConfig } from '../../https-client/config';
 import { ReactComponent as UpSVG } from '../../icons/up-arrow.svg';
 import { ReactComponent as DownSVG } from '../../icons/down-arrow.svg';
 import ClipLoader from "react-spinners/ClipLoader";
@@ -104,7 +104,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         const upVotes = (comment.userVote === Vote.UPVOTE) ? comment.upVotes - 1 : comment.upVotes + 1;
         const userVote = (comment.userVote === Vote.UPVOTE) ? undefined : Vote.UPVOTE;
         const { status } = await authenticatedPostData({
-            baseUrl: commentsConfig.url,
+            baseUrl: commentsAPIConfig.url,
             path: 'vote-comment', 
             data: {
                 "username": username,

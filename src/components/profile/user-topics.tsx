@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 import { useQuery } from '../../hooks/useQuery';
-import { topicsConfig, usersConfig } from '../../https-client/config';
+import { topicsAPIConfig, usersAPIConfig } from '../../https-client/config';
 import { Topic } from '../../types';
 import { setCardQueryParam, timeSince } from '../../utils';
 import { authenticatedGetDataContext, authenticatedPostDataContext } from '../app-shell';
@@ -53,7 +53,7 @@ export const UserTopics = (props: UserTopicsProps) => {
 
     const fetchUserCreatedTopics = async () => {
         const { data }: { data: Topic[]} = await authenticatedGetData({ 
-            baseUrl: usersConfig.url,
+            baseUrl: usersAPIConfig.url,
             path: 'user-created-topics', 
             queryParams: {
                 "username": profileUsername,
@@ -65,7 +65,7 @@ export const UserTopics = (props: UserTopicsProps) => {
 
     const fetchUserVotedTopics = async () => {
         const { data }: { data: Topic[]} = await authenticatedGetData({ 
-            baseUrl: usersConfig.url,
+            baseUrl: usersAPIConfig.url,
             path: 'user-voted-topics', 
             queryParams: {
                 "username": profileUsername,
@@ -77,7 +77,7 @@ export const UserTopics = (props: UserTopicsProps) => {
 
     const deleteTopic = async (topicTitle: string) => {
         const { status } = await authenticatedPostData({
-            baseUrl: topicsConfig.url,
+            baseUrl: topicsAPIConfig.url,
             path: 'delete-topic', 
             data: { 
                 "topicTitle": topicTitle,

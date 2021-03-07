@@ -12,7 +12,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 import ImageIcon from '@material-ui/icons/Image';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { UserCreatedMedia } from './user-media';
-import { usersConfig } from '../../https-client/config';
+import { usersAPIConfig } from '../../https-client/config';
 import { UserTopics } from './user-topics';
 import { HeartLike } from '../heart-like/heart-like';
 
@@ -104,7 +104,7 @@ const UserComments = (props: UserCommentProps) => {
 
     const fetchUserComments = async () => {
         const { data }: { data: Comment[]} = await authenticatedGetData({ 
-            baseUrl: usersConfig.url,
+            baseUrl: usersAPIConfig.url,
             path: 'user-comments', 
             queryParams: {
                 "username": profileUsername,

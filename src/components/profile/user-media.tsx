@@ -12,7 +12,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
 import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
 import { isVideo, loaderCssOverride } from '../topic-media/topic-media';
-import { usersConfig } from '../../https-client/config';
+import { usersAPIConfig } from '../../https-client/config';
 import { HeartLike } from '../heart-like/heart-like';
 import { TabScroll } from '../tab-scroll/tab-scroll';
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
@@ -98,7 +98,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
 
     const fetchCreatedMedia = async (offset?: number, newIndex?: number) => {
         const { data, status }: { data: TopicMedia[], status: number } = await authenticatedGetData({ 
-            baseUrl: usersConfig.url,
+            baseUrl: usersAPIConfig.url,
             path: 'user-created-media', 
             queryParams: {
                 "username": profileUsername,
@@ -114,7 +114,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
 
     const fetchLikedMedia = async (offset?: number, newIndex?: number) => {
         const { data, status }: { data: TopicMedia[], status: number } = await authenticatedGetData({ 
-            baseUrl: usersConfig.url,
+            baseUrl: usersAPIConfig.url,
             path: 'user-liked-media', 
             queryParams: {
                 "username": profileUsername,

@@ -3,7 +3,7 @@ import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
-import { commentsConfig } from '../../https-client/config';
+import { commentsAPIConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
 import { SkeletonComponent } from "./comments-skeleton";
 import { topicsContext, fullScreenContext, commentsContext, authenticatedPostDataContext } from '../app-shell';
@@ -101,7 +101,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const fetchComments = async (pathToParentComment: number[], n?: number, specificCommentId?: number, depth=1) => {
         const parentComment = getCommentFromPath(comments, pathToParentComment);
         const { data: newComments, status }: { data: Comment[]; status: number } = await authenticatedPostData({
-            baseUrl: commentsConfig.url,
+            baseUrl: commentsAPIConfig.url,
             path: 'get-comments', 
             data: {
                 "topicTitle": topic?.topicTitle,
@@ -135,7 +135,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         const parentOfhighlightedComment = isReply ? getCommentFromPath(commentsCopy, state.pathToHighlightedComment?.slice(0,-1)) : undefined;
 
         const { status, data: comment }: { status: number, data: Comment } = await authenticatedPostData({
-            baseUrl: commentsConfig.url,
+            baseUrl: commentsAPIConfig.url,
             path: 'add-comment', 
             data: {
                 "parentId": !isReply ? highlightedComment?.id : parentOfhighlightedComment?.id,
@@ -176,7 +176,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const deleteComment = async (pathToComment: number[]) => {
         const commentToDelete = getCommentFromPath(comments, pathToComment);
         const { status, data } = await authenticatedPostData({
-            baseUrl: commentsConfig.url,
+            baseUrl: commentsAPIConfig.url,
             path: 'delete-comment', 
             data: { 
                 "topicTitle": topic?.topicTitle,

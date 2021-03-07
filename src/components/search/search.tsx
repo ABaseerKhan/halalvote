@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getData } from '../../https-client/client';
-import { topicsConfig } from '../../https-client/config';
+import { topicsAPIConfig } from '../../https-client/config';
 import { useDebouncedSearch } from '../../hooks/useDebouncedSearch';
 import { ReactComponent as SearchSVG } from '../../icons/search.svg';
 
@@ -164,4 +164,4 @@ export const SearchComponent = (props: SearchComponentProps) => {
     );
 }
 
-export const useTopicsSearch = () => useDebouncedSearch((text: string) => getData({ baseUrl: topicsConfig.url, path: 'search-topics', queryParams: { 'searchTerm': text }, additionalHeaders: {}}));
+export const useTopicsSearch = () => useDebouncedSearch((text: string) => getData({ baseUrl: topicsAPIConfig.url, path: 'search-topics', queryParams: { 'searchTerm': text }, additionalHeaders: {}}));

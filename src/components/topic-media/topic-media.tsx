@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext, useLayoutEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { topicsConfig, usersConfig } from '../../https-client/config';
+import { topicsAPIConfig, usersAPIConfig } from '../../https-client/config';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
@@ -120,7 +120,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                 "mediaId": topicMedia[imageIndex].id
             };
             postData({
-                baseUrl: usersConfig.url,
+                baseUrl: usersAPIConfig.url,
                 path: 'user-see-media',
                 data: body,
                 additionalHeaders: {
@@ -146,7 +146,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
         }
 
         const { data }: { data: TopicMedia[] } = await authenticatedGetData({ 
-            baseUrl: topicsConfig.url,
+            baseUrl: topicsAPIConfig.url,
             path: 'get-topic-images',
             queryParams: queryParams,
             additionalHeaders: additionalHeaders,
@@ -186,7 +186,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
     const deleteImage = (idx: number) => async () => {
         if (isUserImage(idx)) {
             const { status } = await authenticatedPostData({
-                baseUrl: topicsConfig.url,
+                baseUrl: topicsAPIConfig.url,
                 path: 'delete-topic-image',
                 data: {
                     "id": topicMedia[imageIndex].id,
@@ -207,7 +207,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
     const updateImageLike = async () => {
         const topicMediaItem = topicMedia[imageIndex];
         const { status, data } = await authenticatedPostData({
-            baseUrl: topicsConfig.url,
+            baseUrl: topicsAPIConfig.url,
             path: 'update-topic-image-like',
             data: {
                 "username": username,
@@ -339,7 +339,7 @@ export const MyUploader = (props: UploaderProps) => {
     const getUploadParams = async ({ meta: { name } }: IFileWithMeta): Promise<IUploadParams> => {
         const fileName = `${uuidv4()}_${name}`;
         const { data: { fields, url } }: { data: any} = await authenticatedGetData({ 
-            baseUrl: topicsConfig.url,
+            baseUrl: topicsAPIConfig.url,
             path: 'get-presigned-media-upload-url',
             queryParams: {
                 "objectKey": fileName
@@ -359,7 +359,7 @@ export const MyUploader = (props: UploaderProps) => {
     const handleSubmit = async (files: (IFileWithMeta & { meta: { fileUrl: string } })[], allFiles: IFileWithMeta[]) => {
         if (!props.skipDBUpdate) {
             const { status, data } = await authenticatedPostData({
-                baseUrl: topicsConfig.url,
+                baseUrl: topicsAPIConfig.url,
                 path: 'add-topic-image',
                 data: {
                     "username": username,

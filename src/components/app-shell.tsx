@@ -5,7 +5,7 @@ import { AnalyticsCardComponent } from './analytics-card/analytics-card';
 import { MenuComponent } from './menu/menu';
 import { Topic, Comment, TopicMedia } from '../types';
 import { postData, getData } from '../https-client/client';
-import { topicsConfig } from '../https-client/config';
+import { topicsAPIConfig } from '../https-client/config';
 import { arrayMove, isMobile, replaceHistory } from "../utils";
 import { useCookies } from 'react-cookie';
 import { TopicContainerComponent } from './topic-container/topic-container';
@@ -136,7 +136,7 @@ export const AppShellComponent = (props: any) => {
       additionalHeaders = { ...additionalHeaders, "sessiontoken": sessiontoken };
     }
 
-    const { status, data }: { status: number, data: Topic[] } = await authenticatedPostData({ baseUrl: topicsConfig.url, path: 'get-topics', data: body, additionalHeaders: additionalHeaders, }, true);
+    const { status, data }: { status: number, data: Topic[] } = await authenticatedPostData({ baseUrl: topicsAPIConfig.url, path: 'get-topics', data: body, additionalHeaders: additionalHeaders, }, true);
     if (status !== 200) {
       return;
     }

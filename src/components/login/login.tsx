@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useContext } from 'react';
 import { postData, getData } from '../../https-client/client';
-import { usersConfig } from '../../https-client/config';
+import { usersAPIConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
 import ClipLoader from "react-spinners/ClipLoader";
 import { 
@@ -316,7 +316,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const makeLoginCall = () => {
         const fetchData = async () => {
             const { status, data } = await postData({
-                baseUrl: usersConfig.url,
+                baseUrl: usersAPIConfig.url,
                 path: 'login',
                 data: {
                     "username": loginUsernameInput,
@@ -347,7 +347,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const makeRegisterCall = () => {
         const fetchData = async () => {
             const { status, data } = await postData({
-                baseUrl: usersConfig.url,
+                baseUrl: usersAPIConfig.url,
                 path: 'register-user',
                 data: {
                     "email": registerEmailInput,
@@ -371,7 +371,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const makeActivationCall = () => {
         const makeCall = async () => {
             const { status } = await getData({ 
-                baseUrl: usersConfig.url,
+                baseUrl: usersAPIConfig.url,
                 path: 'activate-user',
                 queryParams: {
                     "username": usernameParameter,
@@ -397,7 +397,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const makeForgotPasswordCall = () => {
         const makeCall = async () => {
             const { status, data } = await getData({ 
-                baseUrl: usersConfig.url,
+                baseUrl: usersAPIConfig.url,
                 path: 'send-forgot-password-email',
                 queryParams: {
                     "email": forgotPasswordPageEmailInput
@@ -423,7 +423,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const makeResetPasswordCall = () => {
         const fetchData = async () => {
             const { status } = await postData({
-                baseUrl: usersConfig.url,
+                baseUrl: usersAPIConfig.url,
                 path: 'reset-password',
                 data: {
                     "username": usernameParameter,
@@ -446,7 +446,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const makeUsernameAvailableCall = () => {
         const makeCall = async () => {
             const { status, data } = await getData({ 
-                baseUrl: usersConfig.url,
+                baseUrl: usersAPIConfig.url,
                 path: 'username-available',
                 queryParams: {
                     "username": registerUsernameInput
@@ -467,7 +467,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const makeEmailAvailableCall = () => {
         const makeCall = async () => {
             const { status, data } = await getData({ 
-                baseUrl: usersConfig.url,
+                baseUrl: usersAPIConfig.url,
                 path: 'email-available',
                 queryParams: {
                     "email": registerEmailInput

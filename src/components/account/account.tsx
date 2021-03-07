@@ -7,7 +7,7 @@ import { ReactComponent as CheckIcon} from '../../icons/check-icon.svg'
 import { ReactComponent as CrossIcon} from '../../icons/cross-icon.svg'
 import ClipLoader from "react-spinners/ClipLoader";
 import { postData } from '../../https-client/client';
-import { usersConfig } from '../../https-client/config';
+import { usersAPIConfig } from '../../https-client/config';
 
 // styles
 import './account.css';
@@ -98,7 +98,7 @@ export const AccountComponent = (props: AccountPageProps) => {
     const makeChangePasswordCall = () => {
         const fetchData = async () => {
             const { status, data } = await postData({
-                baseUrl: usersConfig.url,
+                baseUrl: usersAPIConfig.url,
                 path: 'change-password',
                 data: {
                     "username": username,
@@ -133,7 +133,7 @@ export const AccountComponent = (props: AccountPageProps) => {
     const makeDeleteAccountCall = () => {
         const fetchData = async () => {
             const { status } = await postData({
-                baseUrl: usersConfig.url,
+                baseUrl: usersAPIConfig.url,
                 path: 'delete-account',
                 data: {
                     "username": username,

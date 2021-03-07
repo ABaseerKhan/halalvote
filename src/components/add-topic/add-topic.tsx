@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { topicsConfig } from '../../https-client/config';
+import { topicsAPIConfig } from '../../https-client/config';
 import { useCookies } from 'react-cookie';
 import { authenticatedPostDataContext } from '../app-shell';
 import { useTopicsSearch } from '../search/search';
@@ -58,7 +58,7 @@ export const AddTopicComponent = (props: AddTopicComponentProps) => {
                 "topicTitle": inputText
             };
             const { status, data } = await authenticatedPostData({
-                baseUrl: topicsConfig.url,
+                baseUrl: topicsAPIConfig.url,
                 path: 'add-topic',
                 data: body,
                 additionalHeaders: {

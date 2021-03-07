@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useContext, useState, useMemo } from 'react';
 import { Chart } from "chart.js";
 import { topicsContext, analyticsContext, AnalyticsGraph } from '../app-shell';
-import { topicsConfig } from '../../https-client/config';
+import { topicsAPIConfig } from '../../https-client/config';
 import { AnalyticCounts } from '../../types';
 import { authenticatedGetDataContext } from '../app-shell';
 
@@ -67,7 +67,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             let additionalHeaders: any = {};
     
             const { data }: { data: AnalyticCounts } = await authenticatedGetData({ 
-                baseUrl: topicsConfig.url,
+                baseUrl: topicsAPIConfig.url,
                 path: 'get-topic-analytics',
                 queryParams: queryParams,
                 additionalHeaders: additionalHeaders,

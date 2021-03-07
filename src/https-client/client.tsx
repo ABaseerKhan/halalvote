@@ -1,7 +1,4 @@
-import { config, EnvConfig } from './config';
-
-const envConfig = config();
-
+import { usersAPIConfig, topicsAPIConfig, commentsAPIConfig } from './config';
 export interface Request { 
     baseUrl: string, 
     path: string, 
@@ -33,7 +30,7 @@ export const postData = async (request: Request): Promise<Response> => {
         headers: {
             ...additionalHeaders,
             'Content-Type': 'application/json',
-            'x-api-key': getApiKey(baseUrl, envConfig),
+            'x-api-key': getApiKey(baseUrl),
         },
         body: JSON.stringify(data),
     });
@@ -55,21 +52,21 @@ export const getData = async (request: Request): Promise<Response> => {
         headers: {
             ...additionalHeaders,
             'Content-Type': 'application/json',
-            'x-api-key': getApiKey(baseUrl, envConfig),
+            'x-api-key': getApiKey(baseUrl),
         },
     });
     return { status: response.status, data: await response.json() };
 }
 
-const getApiKey = (baseUrl: string, envConfig: EnvConfig) => { 
+const getApiKey = (baseUrl: string) => { 
     switch(baseUrl) {
-        case envConfig.topics.url:
-            return envConfig.topics.apiKey;
-        case envConfig.comments.url:
-            return envConfig.comments.apiKey;
-        case envConfig.users.url:
-            return envConfig.users.apiKey;
+        case usersAPIConfig.url:
+            return usersAPIConfig.apiKey;
+        case topicsAPIConfig.url:
+            return topicsAPIConfig.apiKey;
+        case commentsAPIConfig.url:
+            return commentsAPIConfig.apiKey;
         default:
-            return envConfig.topics.apiKey;
+            return topicsAPIConfig.apiKey;
     }
 }
