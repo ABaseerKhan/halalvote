@@ -170,7 +170,11 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                 }
             });
         } else {
-            setTopicMediaContext(topicTitle, topicMedia, newIndex || 0, true);
+            if (!refresh) {
+                setTopicMediaContext(topicTitle, topicMedia, newIndex || 0, true);
+            } else {
+                setTopicMediaContext(topicTitle, [], newIndex || 0, true);
+            }
         }
     }
 
@@ -244,7 +248,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
     }
 
     const fileUploader = (
-        <div style={{ height: '100%', width: '100%' }}>
+        <div style={{ height: '100%', width: '100%', position: 'absolute', zIndex: 1 }}>
             <div className={"images-body"} style={{ background: 'black'}}>
                 <MyUploader submitCallback={addMedia} previewDisplayedCallback={previewDisplayedCallback}/>
             </div>
@@ -312,7 +316,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
         </div>
     );
 
-    return state.addMediaDisplayed ? fileUploader : ImageNavigator;
+    return <>{state.addMediaDisplayed && fileUploader}{ImageNavigator}</>;
 }
 
 interface UploaderProps {
