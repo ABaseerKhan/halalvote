@@ -143,7 +143,9 @@ export const replaceHistory = async (history: any, query: URLSearchParams) => {
     await history.replace({
         search: "?" + query.toString()
     });
-    ReactGA.pageview(query.toString());
+    if (process.env.REACT_APP_GA_TRACKING_ID_HALAL || process.env.REACT_APP_GA_TRACKING_ID_HARAM) {
+        ReactGA.pageview(query.toString());
+    };
 };
 
 export const setCardQueryParam = async (history: any, query: URLSearchParams, cardId: string) => {

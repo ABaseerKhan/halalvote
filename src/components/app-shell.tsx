@@ -26,7 +26,12 @@ import { Response } from '../https-client/client';
 // style imports
 import './app-shell.css';
 
-ReactGA.initialize('UA-191426582-1');
+// initialize google analytics in prod
+if (window.location.hostname.includes('halalvote.com')) {
+  process.env.REACT_APP_GA_TRACKING_ID_HALAL && ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID_HALAL!);
+} else if (window.location.hostname.includes('haramvote.com')) {
+  process.env.REACT_APP_GA_TRACKING_ID_HARAM && ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID_HARAM!);
+};
 
 enum IncomingDirection {
   LEFT,
