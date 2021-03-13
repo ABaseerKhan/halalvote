@@ -326,9 +326,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
             });
 
             if (status === 200) {
-                const sessionToken = data;
-                setCookie('username', loginUsernameInput, { path: '/' });
-                setCookie('sessiontoken', sessionToken, { path: '/ '});
+                setCookie('username', data.username, { path: '/' });
+                setCookie('sessiontoken', data.sessiontoken, { path: '/ '});
                 if(props.onLogin) props.onLogin('username', 'sessiontoken');
                 closeModal();
             } else {
