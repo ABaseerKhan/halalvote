@@ -174,10 +174,12 @@ export const AppShellComponent = (props: any) => {
 
     setState((prevState: AppShellState) => ({ ...prevState, incomingDirection: incomingDirection, muted: true }));
 
-    if ((state.topicsState.topicIndex + iteration) >= (state.topicsState.topics.length - 2)) {
-      fetchTopics(undefined, state.topicsState.topicIndex + iteration);
-    } else if ((state.topicsState.topicIndex + iteration) >= 0) {
-      setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex+iteration);
+    if (((state.topicsState.topicIndex + iteration) < state.topicsState.topics.length) && ((state.topicsState.topicIndex + iteration) >= 0)) {
+      if ((state.topicsState.topicIndex + iteration) >= (state.topicsState.topics.length - 2)) {
+        fetchTopics(undefined, state.topicsState.topicIndex + iteration);
+      } else {
+        setTopicsContext(state.topicsState.topics, state.topicsState.topicIndex+iteration);
+      }
     }
 
   };
