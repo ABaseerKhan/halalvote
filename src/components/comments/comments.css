@@ -343,7 +343,7 @@
 
 .ql-mention-list-container {
     width: 270px;
-    border: 1px solid #f0f0f0;
+    /* border: 1px solid #f0f0f0; */
     border-radius: 4px;
     background-color: #ffffff;
     box-shadow: 0 2px 12px 0 rgba(30, 30, 30, 0.08);
@@ -362,7 +362,7 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    overflow: scroll;
     max-height: 40vh;
 }
 
@@ -372,6 +372,7 @@
     font-size: 16px;
     padding: 0 20px;
     vertical-align: middle;
+    background-color: var(--dark-mode-foreground);
 }
 
 .ql-mention-list-item.disabled {
@@ -379,8 +380,9 @@
 }
 
 .ql-mention-list-item.selected {
-    background-color: #d3e1eb;
+    background-color: var(--dark-mode-highlight-color);
     text-decoration: none;
+    color: white;
 }
 
 .ql-editor.ql-blank::before {
