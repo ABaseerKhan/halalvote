@@ -66,7 +66,8 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
     };
 
     let positions = useRef<string[]>(orderedCards);
-    let canFlip = useRef<boolean>(false);
+    let canFlip = useRef<boolean>(true);
+    let cardsSet = useRef<boolean>(false);
 
     const createCardElement = (id: string, body: ReactElement, index: number) => {
       return (
@@ -138,7 +139,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
 
     useEffect(() => {
       const cardId = query.get('card')?.toUpperCase();
-      if (cardId && cardId !== positions.current[0]) {
+      if (cardId && cardId !== positions.current[0] && canFlip.current && cardsSet.current) {
         canFlip.current = false;
         makeRoom(cardId, () => {
           rotate(cardId, () => {
@@ -162,7 +163,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
       const leftCardLabel = document.getElementById(`${positions.current[1]}-label`);
       const rightCardLabel = document.getElementById(`${positions.current[2]}-label`);
 
-      if (leftCard && rightCard && leftCardCover && rightCardCover && leftCardLabel && rightCardLabel) {
+      if (leftCard && rightCard && leftCardCover && rightCardCover && leftCardLabel && rightCardLabel && canFlip.current) {
         leftCardLabel.style.right = 'unset';
         leftCardLabel.style.left = '1vw';
         leftCardLabel.style.transform = 'rotate(-180deg)';
@@ -181,7 +182,7 @@ export const TopicContainerComponent = (props: TopicContainerComponentProps) => 
             easing: EASEAPART,
             fill: "forwards"
         }).onfinish = () => {
-          canFlip.current = true;
+          cardsSet.current = true;
         };
         rightCard.animate([
           {

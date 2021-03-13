@@ -6,7 +6,7 @@ import { MenuComponent } from './menu/menu';
 import { Topic, Comment, TopicMedia } from '../types';
 import { postData, getData } from '../https-client/client';
 import { topicsAPIConfig } from '../https-client/config';
-import { arrayMove, isMobile, replaceHistory } from "../utils";
+import { arrayMove, isMobile, modifyTopicQueryParam, replaceHistory } from "../utils";
 import { useCookies } from 'react-cookie';
 import { TopicContainerComponent } from './topic-container/topic-container';
 import { CommentsCardComponent } from './comments/comments-card';
@@ -119,11 +119,7 @@ export const AppShellComponent = (props: any) => {
   useEffect(() => {
     const { topics, topicIndex } = state.topicsState;
     if (topics[topicIndex] && topics[topicIndex].topicTitle) {
-      if (query.has('topic')) {
-        query.set('topic', `${topics[topicIndex].topicTitle.replace(/ /g,"_")}`);
-      } else {
-          query.append('topic', `${topics[topicIndex].topicTitle.replace(/ /g,"_")}`);
-      };
+      modifyTopicQueryParam(query, topics[topicIndex].topicTitle);
       replaceHistory(history, query);
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.topicsState]);

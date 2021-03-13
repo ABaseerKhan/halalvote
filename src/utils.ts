@@ -157,6 +157,25 @@ export const setCardQueryParam = async (history: any, query: URLSearchParams, ca
     await replaceHistory(history, query);
 };
 
+export const deleteUserProfileQueryParam = async (history: any, query: URLSearchParams) => {
+    if (query.has('userProfile')) {
+        query.delete('userProfile');
+        
+        history.replace({
+            search: "?" + query.toString()
+        });
+    }
+}
+
+export const modifyTopicQueryParam = async (query: URLSearchParams, topicTitle: string) => {
+    const formattedTopicTitle = topicTitle.replace(/ /g,"_");
+    if (query.has('topic')) {
+        query.set('topic', formattedTopicTitle);
+      } else {
+          query.append('topic', formattedTopicTitle);
+      };
+}
+
 export const nFormatter = (num: number, digits: number) => {
     var si = [
         { value: 1, symbol: "" },

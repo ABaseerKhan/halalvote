@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { useQuery } from '../../hooks/useQuery';
 import { topicsAPIConfig, usersAPIConfig } from '../../https-client/config';
 import { Topic } from '../../types';
-import { setCardQueryParam, timeSince } from '../../utils';
+import { setCardQueryParam, timeSince, deleteUserProfileQueryParam, modifyTopicQueryParam } from '../../utils';
 import { authenticatedGetDataContext, authenticatedPostDataContext } from '../app-shell';
 import { closeModalContext } from '../modal/modal';
 import { TabScroll } from '../tab-scroll/tab-scroll';
@@ -93,10 +93,17 @@ export const UserTopics = (props: UserTopicsProps) => {
         }
     }
 
+    const selectTopicHandler = async (topic: Topic) => {
+        deleteUserProfileQueryParam(history, query);
+        await fetchTopics(topic.topicTitle);
+        modifyTopicQueryParam(query, topic.topicTitle!);
+        setCardQueryParam(history, query, mediaCardId.toLowerCase());
+    }
+
     const userTopic = (topic: Topic, tab: any) => (
             <li>
                 <div className="user-topic-li">
-                    <div className="user-topic-container" onClick={() => { closeModal(async () => { query.delete('userProfile'); await setCardQueryParam(history, query, mediaCardId.toLowerCase()); fetchTopics(topic.topicTitle); }); }}>
+                    <div className="user-topic-container" onClick={() => { closeModal(async () => { selectTopicHandler(topic); }); }}>
                         <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end"}}>
                             <span className="profile-topic-title">{topic.topicTitle}</span>
                             {tab === Tab.USER_VOTED_TOPICS && (topic.vote === 1 ? <ThumbUpIcon style={{color: "var(--halal-color)"}}/> : <ThumbDownIcon style={{color: "var(--haram-color)"}}/>)}

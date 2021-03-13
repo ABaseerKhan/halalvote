@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { authenticatedGetDataContext } from '../app-shell';
 import { TopicMedia } from '../../types';
-import { setCardQueryParam } from '../../utils';
+import { setCardQueryParam, deleteUserProfileQueryParam, modifyTopicQueryParam } from '../../utils';
 import { mediaCardId } from '../topic-container/topic-container';
 import { useQuery } from '../../hooks/useQuery';
 import { 
@@ -128,6 +128,13 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
         }
     }
 
+    const selectMediaHandler = async (mediaItem: TopicMedia) => {
+        deleteUserProfileQueryParam(history, query);
+        await fetchTopics(mediaItem.topicTitle);
+        modifyTopicQueryParam(query, mediaItem.topicTitle!);
+        setCardQueryParam(history, query, mediaCardId.toLowerCase());
+    }
+
     const userMedia = (mediaState: { media: TopicMedia[], index: number, loading : boolean }, liked: number) => (
         <div style={{ height: '100%', width: '100%' }}>
             <div id="images-body" ref={liked === 1 ? likedImagesBodyRef : imagesBodyRef} className={"images-body"} style={{ borderRadius: '0 0 25px 25px' }}>
@@ -136,7 +143,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                         mediaState.media.map((mediaItem, idx) => {
                             const ImgStats = 
                             <>
-                                <div className="media-topic-title" onClick={() => { closeModal(async () => { query.delete('userProfile'); await setCardQueryParam(history, query, mediaCardId.toLowerCase()); fetchTopics(mediaItem.topicTitle); }); }}><span className="topic-label">Topic:</span>{mediaItem.topicTitle}</div>
+                                <div className="media-topic-title" onClick={() => { closeModal(async () => { selectMediaHandler(mediaItem); }); }}><span className="topic-label">Topic:</span>{mediaItem.topicTitle}</div>
                                 <div className="image-username" >{"@" + mediaItem.username}</div>
                                 {
                                     mediaItem.username === username && <TrashButtonSVG className="image-delete-button" />

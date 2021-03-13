@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Comment } from '../../types';
-import { timeSince, vhToPixels, setCardQueryParam } from '../../utils';
+import { timeSince, vhToPixels, setCardQueryParam, modifyTopicQueryParam, deleteUserProfileQueryParam } from '../../utils';
 import { modalHeightVh } from '../..';
 import { commentsCardId } from '../topic-container/topic-container';
 import { useQuery } from '../../hooks/useQuery';
@@ -114,6 +114,14 @@ const UserComments = (props: UserCommentProps) => {
         setState(prevState => ({ ...prevState, userComments: data }));
     }
 
+    const selectCommentHandler = async (comment: Comment) => {
+        deleteUserProfileQueryParam(history, query);
+        await fetchTopics(comment.topicTitle);
+        modifyTopicQueryParam(query, comment.topicTitle!);
+        setCardQueryParam(history, query, commentsCardId.toLowerCase());
+        showSpecificComment(comment);
+    }
+
     const UserComment = (comment: Comment) => (
         <div id={`comment-${comment.id}`} className={"user-comment-container"} >
             <div className="comment-bubble-container">
@@ -122,7 +130,7 @@ const UserComments = (props: UserCommentProps) => {
             <div className="comment-body">
                 <div 
                     className={"comment-content"}
-                    onClick={() => { closeModal(async () => { query.delete('userProfile'); await setCardQueryParam(history, query, commentsCardId.toLowerCase()); fetchTopics(comment.topicTitle); showSpecificComment(comment); }); }}
+                    onClick={() => { closeModal(async () => { selectCommentHandler(comment); }); }}
                 >
                     <div className="topic-header">{comment.topicTitle}</div>
                     <div className="user-comment">
