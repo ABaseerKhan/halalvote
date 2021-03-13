@@ -16,3 +16,5 @@
 * Run `yarn`
 * Run `yarn deploy:halal` if deploying to halalvote.com
 * Run `yarn deploy:haram` if deploying to haramvote.com
+
+## Test
