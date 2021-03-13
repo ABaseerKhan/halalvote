@@ -214,9 +214,9 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                 "imageId": topicMediaItem.id,
                 "like": !topicMediaItem.userLike
             },
-            additionalHeaders: {
+            additionalHeaders: sessiontoken ? {
                 "sessiontoken": sessiontoken
-            },
+            } : { },
             setCookie: setCookie,
         }, true);
 

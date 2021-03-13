@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { useDebouncedEffect } from '../../hooks/useDebouncedEffect';
 import { CommentMakerComponent } from "./comment-maker";
 import { CommentComponent } from "./comment";
 import { Comment } from '../../types';
@@ -24,13 +23,11 @@ interface CommentsCardComponentProps {
 
 interface CommentsCardState {
     loading: boolean;
-    commentsShowable: boolean;
     pathToHighlightedComment: number[] | undefined;
 };
 
 const initialState = {
     loading: true,
-    commentsShowable: true,
     pathToHighlightedComment: undefined,
 }
 export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
@@ -57,21 +54,15 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const commentMakerRef = useRef<any>(null);
     const commentsContainerRef = useRef<HTMLDivElement>(null);
 
-    useDebouncedEffect(() => {
+    useEffect(() => {
         if (topic?.topicTitle && !commentsState[topic.topicTitle]) {
             state.pathToHighlightedComment = undefined;
+            setState(prevState => ({ ...prevState, loading: true }));
             fetchComments([]);
         } else {
-            setState(prevState => ({ ...prevState, loading: false, commentsShowable: true }));
-        }
-    }, 500, [topic?.topicTitle, sessiontoken]);
-
-    useEffect(() => {
-        if (!state.loading) {
-            setState(prevState => ({ ...prevState, loading: true, commentsShowable: false }));
-            setTimeout(() => setState(prevState => ({ ...prevState, loading: false, commentsShowable: true })), 300);
+            setState(prevState => ({ ...prevState }));
         } // eslint-disable-next-line
-    }, [topic?.topicTitle]);
+    }, [topic?.topicTitle, sessiontoken]);
 
     useEffect(() => {
         if (commentCardRef.current) {
@@ -234,11 +225,11 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     return(
         <div id={commentsCardId} ref={commentCardRef} onClick={ (e) => { highlightComment(undefined) }} className={commentsCardId} style={{ zIndex: fullScreenMode ? 3 : 0 }} >
-                { !state.loading && state.commentsShowable && comments.length === 0 ?
+                { !state.loading && comments.length === 0 ?
                     <div className="no-comments-to-show-text">No arguments to show</div> :
                         <div id={commentsContainerId} ref={commentsContainerRef} className={isMobile ? "comments-container-fs" : "comments-container"} >
                         <div className={"comments-container-padding-div"}>
-                            {state.loading || !state.commentsShowable ? <SkeletonComponent /> :
+                            {state.loading ? <SkeletonComponent /> :
                                 comments.map((comment: Comment, i: number) => {
                                     return <CommentComponent 
                                                 key={comment.id}
