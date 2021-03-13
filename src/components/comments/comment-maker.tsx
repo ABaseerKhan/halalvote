@@ -14,7 +14,7 @@ import { usersAPIConfig } from '../../https-client/config';
 import 'react-quill/dist/quill.snow.css';
 import './comments.css';
 
-const expandedStyles = { width: 'calc(100% - 10px)', height: '4em', right: 0, bottom: '0.5em', borderRadius: '25px', boxShadow: '0 5px 50px 0 rgba(32,33,36,0.28)' };
+const expandedStyles = { width: 'calc(100% - 10px)', height: 'auto', right: 0, bottom: '0.5em', borderRadius: '25px', boxShadow: '0 5px 50px 0 rgba(32,33,36,0.28)' };
 const collapsedStyles = { width: '50px', height: '50px', borderRadius: '50%', right: 15, bottom: 15, boxShadow: '0px 0px 5px 5px rgba(0, 0, 0, 0.5)' };
 
 interface CommentMakerComponentProps {
