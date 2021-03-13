@@ -168,6 +168,7 @@ const modules: any = {
         allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
         mentionDenotationChars: ["@"],
         source: AwesomeDebouncePromise(fetchMentions, 300),
+        defaultMenuOrientation: "top",
     }
 };
 
