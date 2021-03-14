@@ -183,7 +183,9 @@ export const CommentComponent = (props: CommentComponentProps) => {
                             !(comment.comment === "__deleted__" && comment.numReplies > 0) &&
                             <span
                                 className={"delete-button"}
-                                onClick={(e) => { e.preventDefault(); e.stopPropagation();  props.deleteComment(props.path); }}
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); props.deleteComment(props.path); if (viewMoreReplies === 1) {setReplyContainerHeight &&  setReplyContainerHeight(0)} else {setReplyContainerHeight && setReplyContainerHeight(curr => { 
+                                    return curr - (containerHeightReadOnly || 0) 
+                                });};}}
                                 role={"img"}
                                 aria-label="trash"
                             >

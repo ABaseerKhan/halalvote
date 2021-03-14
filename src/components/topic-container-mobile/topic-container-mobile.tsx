@@ -37,6 +37,7 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     const currentTopicMediaContainer = useRef<HTMLDivElement>(null);
     const nextTopicMediaContainer = useRef<HTMLDivElement>(null);
     const [currentTopicIndex, setCurrentTopicIndex] = useState<number>(topicIndex);
+    const [prevCardQuery, setPrevCardQuery] = useState<any>(undefined);
 
     const handleClick = (e: any) => {
         if (
@@ -241,7 +242,8 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     }, [query]);
 
     useEffect(() => {
-        if (query.get('card') === 'arguments') {
+        const cardQuery = query.get('card');
+        if (cardQuery === 'arguments' && cardQuery !== prevCardQuery) {
             const translation = (FSContainerRef.current?.clientHeight || 0) * -0.8;
             const travelledRatio = (translation - (elementStyles.maxTopicCarouselHeightPx * -1)) / (((FSContainerRef.current?.clientHeight || 0) * -1) - (elementStyles.maxTopicCarouselHeightPx * -1));
             FSFooterRef.current!.animate([{
@@ -262,8 +264,8 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                     easing: "ease",
             }).onfinish = () => { topicMediaScaleDivRef.current!.style.transform = `scale(0.25)`; };
         }
-
-    }, [query])
+        setPrevCardQuery(cardQuery); // eslint-disable-next-line
+    }, [query]);
 
     return (
         <div ref={FSContainerRef} className="topic-container-mobile">
