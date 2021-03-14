@@ -167,8 +167,12 @@ export const deleteUserProfileQueryParam = async (history: any, query: URLSearch
     }
 }
 
+export const formatTopicTitle = (topicTitle: string): string => {
+    return topicTitle.replace(/ /g,"_");
+}
+
 export const modifyTopicQueryParam = async (query: URLSearchParams, topicTitle: string) => {
-    const formattedTopicTitle = topicTitle.replace(/ /g,"_");
+    const formattedTopicTitle = formatTopicTitle(topicTitle);
     if (query.has('topic')) {
         query.set('topic', formattedTopicTitle);
       } else {

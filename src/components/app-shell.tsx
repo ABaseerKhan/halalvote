@@ -6,7 +6,7 @@ import { MenuComponent } from './menu/menu';
 import { Topic, Comment, TopicMedia } from '../types';
 import { postData, getData } from '../https-client/client';
 import { topicsAPIConfig } from '../https-client/config';
-import { arrayMove, isMobile, modifyTopicQueryParam, replaceHistory } from "../utils";
+import { arrayMove, formatTopicTitle, isMobile, modifyTopicQueryParam, replaceHistory } from "../utils";
 import { useCookies } from 'react-cookie';
 import { TopicContainerComponent } from './topic-container/topic-container';
 import { CommentsCardComponent } from './comments/comments-card';
@@ -48,6 +48,7 @@ const getAppShell = () => { return document.getElementById(appShellId); }
 const getTitleTag = (): HTMLElement | null => { return document.getElementById("halal-vote-title"); }
 const getDescriptionTag = (): HTMLElement | null => { return document.getElementById("halal-vote-description"); }
 const getKeywordsTag = (): HTMLElement | null => { return document.getElementById("halal-vote-keywords"); }
+const getCanonicalLinkTag = (): HTMLElement | null => { return document.getElementById("halal-vote-canonical-link"); }
 
 type AppShellState = { 
   topicsState: TopicsState; 
@@ -131,16 +132,18 @@ export const AppShellComponent = (props: any) => {
     const titleTag = getTitleTag();
     const descriptionTag = getDescriptionTag();
     const keywordsTag = getKeywordsTag();
+    const canonicalLinkTag = getCanonicalLinkTag();
     const url = document.URL;
 
-    if (titleTag && descriptionTag && keywordsTag) {
+    if (titleTag && descriptionTag && keywordsTag && canonicalLinkTag) {
       const isHalalVoteSite = url.includes("halal") || url.includes("localhost");
       let title = isHalalVoteSite ? "Halal Vote" : "Haram Vote";
       let description = "Your source for everything halal and haram!";
       description += ` ${title} is a platform for muslims to get a community sentiment on whether various topics are viewed as halal or haram.`;
       let keywords = ['halal', 'haram', 'vote', 'arguments', 'analytics', 'media'];
+      let canonicalLink = isHalalVoteSite ? "https://halalvote.com/" : "https:haramvote.com/";
+      
       const topic = state.topicsState.topics[state.topicsState.topicIndex];
-
       if (topic) {
         title += ` - ${topic.topicTitle}`;
         description += ` Is ${topic.topicTitle} ${isHalalVoteSite ? "halal" : "haram"}?`;
@@ -148,11 +151,16 @@ export const AppShellComponent = (props: any) => {
         const haramPercentage = 100 - halalPercentage;
         description += ` ${halalPercentage}% of users think ${topic.topicTitle} is halal and ${haramPercentage}% of users think ${topic.topicTitle} is haram.`;
         keywords = keywords.concat(topic.topicTitle.split(" "));
+        canonicalLink += `?topic=${encodeURIComponent(formatTopicTitle(topic.topicTitle))}`
       }
 
       titleTag.innerText = title;
+      descriptionTag.setAttribute("name", "description");
       descriptionTag.setAttribute("content", description);
+      keywordsTag.setAttribute("name", "keywords");
       keywordsTag.setAttribute("content", keywords.join(", "));
+      canonicalLinkTag.setAttribute("rel",  "canonical");
+      canonicalLinkTag.setAttribute("href", canonicalLink);
     } // eslint-disable-next-line
   }, [query]);
 
