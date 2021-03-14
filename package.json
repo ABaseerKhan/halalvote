@@ -41,7 +41,7 @@
     "build:prod": "cat .env.prod > .env; react-scripts build",
     "deploy:haram": "aws s3 sync build/ s3://haramvote.com --acl public-read",
     "deploy:halal": "aws s3 sync build/ s3://halalvote.com --acl public-read",
-    "deploy": "deploy:haram deploy:halal",
+    "deploy": "yarn deploy:haram; yarn deploy:halal",
     "eject": "react-scripts eject",
     "test": "react-scripts test --env=jsdom"
   },
