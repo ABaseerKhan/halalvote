@@ -46,6 +46,7 @@ const topicCarouselId = "topicCarousel";
 
 const getAppShell = () => { return document.getElementById(appShellId); }
 const getTitleTag = (): HTMLElement | null => { return document.getElementById("halal-vote-title"); }
+const getDescriptionTag = (): HTMLElement | null => { return document.getElementById("halal-vote-description"); }
 
 type AppShellState = { 
   topicsState: TopicsState; 
@@ -127,11 +128,26 @@ export const AppShellComponent = (props: any) => {
 
   useEffect(() => {
     const titleTag = getTitleTag();
+    const descriptionTag = getDescriptionTag();
     const url = document.URL;
-    if (titleTag && query.has("topic")) {
-      const title = (url.includes("halal") || url.includes("localhost")) ? "Halal Vote" : "Haram Vote";
-      const topic = query.get("topic")!.replace(/_/g," ");
-      titleTag.innerText = title.concat(` - ${topic}`);
+
+    if (titleTag && descriptionTag) {
+      const isHalalVoteSite = url.includes("halal") || url.includes("localhost");
+      let title = isHalalVoteSite ? "Halal Vote" : "Haram Vote";
+      let description = "Your source for everything halal and haram!";
+      description += ` ${title} is a platform for muslims to get a community sentiment on whether various topics are viewed as halal or haram.`;
+      const topic = state.topicsState.topics[state.topicsState.topicIndex];
+
+      if (topic) {
+        title += ` - ${topic.topicTitle}`;
+        description += ` Is ${topic.topicTitle} ${isHalalVoteSite ? "halal" : "haram"}?`;
+        const halalPercentage = Math.round(((topic.halalPoints) * 100) / (topic.halalPoints + topic.haramPoints));
+        const haramPercentage = 100 - halalPercentage;
+        description += ` ${halalPercentage}% of users think ${topic.topicTitle} is halal and ${haramPercentage}% of users think ${topic.topicTitle} is haram.`;
+      }
+
+      titleTag.innerText = title;
+      descriptionTag.setAttribute("content", description);
     }
   }, [query]);
 
