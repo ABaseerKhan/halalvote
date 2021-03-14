@@ -128,9 +128,9 @@ export const AppShellComponent = (props: any) => {
   useEffect(() => {
     const titleTag = getTitleTag();
     const url = document.URL;
-    if (titleTag && url.includes("topic")) {
+    if (titleTag && query.has("topic")) {
       const title = (url.includes("halal") || url.includes("localhost")) ? "Halal Vote" : "Haram Vote";
-      const topic = url.match(/^.*topic=([^&]*)/i)![1].replace(/_/g," ");
+      const topic = query.get("topic")!.replace(/_/g," ");
       titleTag.innerText = title.concat(` - ${topic}`);
     }
   }, [query]);
