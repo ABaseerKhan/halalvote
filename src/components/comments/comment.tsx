@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { Comment } from '../../types';
 import { convertUTCDateToLocalDate, timeSince } from '../../utils';
-import { commentsAPIConfig } from '../../https-client/config';
+import { commentsAPIConfig, superUsername } from '../../https-client/config';
 import { ReactComponent as UpSVG } from '../../icons/up-arrow.svg';
 import { ReactComponent as DownSVG } from '../../icons/down-arrow.svg';
 import ClipLoader from "react-spinners/ClipLoader";
@@ -179,7 +179,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                         <span className={"time-stamp"} data-tip={convertUTCDateToLocalDate(comment.timeStamp)} data-for="comment">{timeSince(comment.timeStamp)}</span>
                         <ReactTooltip delayShow={400} effect={"solid"} id="comment"/>
                         {
-                            comment.username === username &&
+                            (comment.username === username || superUsername === username) &&
                             !(comment.comment === "__deleted__" && comment.numReplies > 0) &&
                             <span
                                 className={"delete-button"}

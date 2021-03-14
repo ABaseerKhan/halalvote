@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 import { useQuery } from '../../hooks/useQuery';
-import { topicsAPIConfig, usersAPIConfig } from '../../https-client/config';
+import { topicsAPIConfig, usersAPIConfig, superUsername } from '../../https-client/config';
 import { Topic } from '../../types';
 import { setCardQueryParam, timeSince, deleteUserProfileQueryParam, modifyTopicQueryParam } from '../../utils';
 import { authenticatedGetDataContext, authenticatedPostDataContext } from '../app-shell';
@@ -75,13 +75,15 @@ export const UserTopics = (props: UserTopicsProps) => {
         setState(prevState => ({ ...prevState, userVotedTopics: data }));
     }
 
-    const deleteTopic = async (topicTitle: string) => {
+    const deleteTopic = async (topic: Topic) => {
+        const topicTitle = topic.topicTitle;
+        const topicCreator = topic.username;
         const { status } = await authenticatedPostData({
             baseUrl: topicsAPIConfig.url,
             path: 'delete-topic', 
             data: { 
                 "topicTitle": topicTitle,
-                "username": username,
+                "username": topicCreator,
             },
             additionalHeaders: {
                 "sessiontoken": sessiontoken
@@ -115,10 +117,10 @@ export const UserTopics = (props: UserTopicsProps) => {
                         </div>
                     </div>
                     {
-                        topic.username === username && tab !== Tab.USER_VOTED_TOPICS && (
+                        (topic.username === username || superUsername === username) && tab !== Tab.USER_VOTED_TOPICS && (
                         <span
                             className={"delete-button"}
-                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteTopic(topic.topicTitle); }}
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteTopic(topic); }}
                             role={"img"}
                             aria-label="trash"
                         >

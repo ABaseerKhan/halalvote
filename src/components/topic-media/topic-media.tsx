@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext, useLayoutEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { topicsAPIConfig, usersAPIConfig } from '../../https-client/config';
+import { superUsername, topicsAPIConfig, usersAPIConfig } from '../../https-client/config';
 import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
@@ -190,7 +190,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                 path: 'delete-topic-image',
                 data: {
                     "id": topicMedia[imageIndex].id,
-                    "username": username
+                    "username": topicMedia[imageIndex].username
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken
@@ -232,7 +232,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
     }
 
     const isUserImage = (idx: number) => {
-        return topicMedia.length > imageIndex && topicMedia[idx].username === username;
+        return topicMedia.length > imageIndex && (topicMedia[idx].username === username || superUsername === username);
     }
 
     const onUserClick = (user: string) => (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

@@ -32,3 +32,4 @@ export const usersAPIConfig = config.users;
 export const topicsAPIConfig = config.topics;
 export const commentsAPIConfig = config.comments;
 
+export const superUsername = "OP";

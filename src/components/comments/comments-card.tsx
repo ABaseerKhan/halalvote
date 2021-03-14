@@ -172,7 +172,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             data: { 
                 "topicTitle": topic?.topicTitle,
                 "id": commentToDelete?.id,
-                "username": username,
+                "username": commentToDelete?.username,
                 "commentType": commentToDelete?.commentType,
             },
             additionalHeaders: {

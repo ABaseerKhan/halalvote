@@ -12,7 +12,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
 import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
 import { isVideo, loaderCssOverride } from '../topic-media/topic-media';
-import { usersAPIConfig } from '../../https-client/config';
+import { superUsername, usersAPIConfig } from '../../https-client/config';
 import { HeartLike } from '../heart-like/heart-like';
 import { TabScroll } from '../tab-scroll/tab-scroll';
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
@@ -146,7 +146,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                                 <div className="media-topic-title" onClick={() => { closeModal(async () => { selectMediaHandler(mediaItem); }); }}><span className="topic-label">Topic:</span>{mediaItem.topicTitle}</div>
                                 <div className="image-username" >{"@" + mediaItem.username}</div>
                                 {
-                                    mediaItem.username === username && <TrashButtonSVG className="image-delete-button" />
+                                    (mediaItem.username === username || superUsername === username) && <TrashButtonSVG className="image-delete-button" />
                                 }
                                 <div className="image-likes-container">
                                     <HeartLike liked={!!mediaItem.userLike} numLikes={mediaItem.likes} onClickCallback={() => {}} strokeColor={'white'}/>

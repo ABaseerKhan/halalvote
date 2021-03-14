@@ -1,4 +1,4 @@
-import { usersAPIConfig, topicsAPIConfig, commentsAPIConfig } from './config';
+import { usersAPIConfig, topicsAPIConfig, commentsAPIConfig, superUsername } from './config';
 export interface Request { 
     baseUrl: string, 
     path: string, 
@@ -13,6 +13,10 @@ export interface Response {
     data: any,
 }
 
+const getLoggedInUser = (): string | undefined => {
+    return document.cookie.split('; ').find(row => row.startsWith("username="))?.split('=')[1];
+}
+
 export const postData = async (request: Request): Promise<Response> => {
     const { baseUrl, path, data, additionalHeaders } = request;
 
@@ -23,6 +27,8 @@ export const postData = async (request: Request): Promise<Response> => {
         }
     }
 
+    const loggedInUser = getLoggedInUser();
+
     const response = await fetch(baseUrl + path, {
         method: 'POST',
         mode: 'cors',
@@ -31,6 +37,7 @@ export const postData = async (request: Request): Promise<Response> => {
             ...additionalHeaders,
             'Content-Type': 'application/json',
             'x-api-key': getApiKey(baseUrl),
+            'issuperuser': (loggedInUser && loggedInUser === superUsername)
         },
         body: JSON.stringify(data),
     });
@@ -45,6 +52,7 @@ export const getData = async (request: Request): Promise<Response> => {
         .join('&');
 
     const url = baseUrl + path + ((query && ("?" + query)) || "");
+    const loggedInUser = getLoggedInUser();
     const response = await fetch(url, {
         method: 'GET',
         mode: 'cors',
@@ -53,6 +61,7 @@ export const getData = async (request: Request): Promise<Response> => {
             ...additionalHeaders,
             'Content-Type': 'application/json',
             'x-api-key': getApiKey(baseUrl),
+            'issuperuser': (loggedInUser && loggedInUser === superUsername)
         },
     });
     return { status: response.status, data: await response.json() };
