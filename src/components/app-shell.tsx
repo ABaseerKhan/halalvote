@@ -45,6 +45,7 @@ const appShellId = "app-shell";
 const topicCarouselId = "topicCarousel";
 
 const getAppShell = () => { return document.getElementById(appShellId); }
+const getTitleTag = (): HTMLElement | null => { return document.getElementById("halal-vote-title"); }
 
 type AppShellState = { 
   topicsState: TopicsState; 
@@ -123,6 +124,16 @@ export const AppShellComponent = (props: any) => {
       replaceHistory(history, query);
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.topicsState]);
+
+  useEffect(() => {
+    const titleTag = getTitleTag();
+    const url = document.URL;
+    if (titleTag && url.includes("topic")) {
+      const title = (url.includes("halal") || url.includes("localhost")) ? "Halal Vote" : "Haram Vote";
+      const topic = url.match(/^.*topic=([^&]*)/i)![1].replace(/_/g," ");
+      titleTag.innerText = title.concat(` - ${topic}`);
+    }
+  }, [query]);
 
   const fetchTopics = async (topicTofetch?: string, newIndex?: number) => {
     let body: any = { 
