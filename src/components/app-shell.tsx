@@ -153,7 +153,7 @@ export const AppShellComponent = (props: any) => {
       titleTag.innerText = title;
       descriptionTag.setAttribute("content", description);
       keywordsTag.setAttribute("content", keywords.join(", "));
-    }
+    } // eslint-disable-next-line
   }, [query]);
 
   const fetchTopics = async (topicTofetch?: string, newIndex?: number) => {
