@@ -37,7 +37,7 @@ videoFormats.add('AVI');
 videoFormats.add('FLV');
 videoFormats.add('WEBM');
 videoFormats.add('WMV');
-interface TopicImagesComponentProps {
+export interface TopicImagesComponentProps {
     shown?: boolean,
     topicIndexOverride?: number;
 };

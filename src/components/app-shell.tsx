@@ -39,7 +39,7 @@ enum IncomingDirection {
   NONE
 }
 
-const maxTopicsDataCacheSize = 4;
+const maxTopicsDataCacheSize = 3;
 
 const appShellId = "app-shell";
 const topicCarouselId = "topicCarousel";
@@ -273,7 +273,6 @@ export const AppShellComponent = (props: any) => {
                         isMobile ?
                         <TopicContainerMobileComponent
                           fetchTopics={fetchTopics}
-                          MediaCard={<TopicMediaComponent /> }
                           CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
                           AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
                           TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
