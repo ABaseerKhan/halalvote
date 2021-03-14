@@ -108,7 +108,13 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
             additionalHeaders: { },
         }, true);
         if (status === 200) {
-            setState(prevState => ({ ...prevState, userCreatedMedia: { media: [...prevState.userCreatedMedia.media, ...data], index: newIndex || 0 , loading: false}}));
+            setState(prevState => { 
+                let deDuped = new Map();
+                for (const mediaItem of [...prevState.userCreatedMedia.media, ...data]) {
+                    deDuped.set(mediaItem.id, mediaItem);
+                }
+                return { ...prevState, userCreatedMedia: { media: [...deDuped.values()], index: newIndex || 0 , loading: false}}
+            });
         }
     }
 
@@ -124,7 +130,13 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
             additionalHeaders: { "sessiontoken": sessiontoken },
         }, true);
         if (status === 200) { 
-            setState(prevState => ({ ...prevState, userLikedMedia: { media: [...prevState.userLikedMedia.media, ...data], index: newIndex || 0, loading: false }}));
+            setState(prevState => { 
+                let deDuped = new Map();
+                for (const mediaItem of [...prevState.userLikedMedia.media, ...data]) {
+                    deDuped.set(mediaItem.id, mediaItem);
+                }
+                return { ...prevState, userLikedMedia: { media: [...deDuped.values()], index: newIndex || 0, loading: false }} 
+            });
         }
     }
 
