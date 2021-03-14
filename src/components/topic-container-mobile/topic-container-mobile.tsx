@@ -1,5 +1,5 @@
 import React, { ReactElement, useRef, useEffect, useContext, useState, useLayoutEffect } from 'react';
-import { topicsContext } from '../app-shell';
+import { topicsContext, topicMediaContext } from '../app-shell';
 // styles
 import './topic-container-mobile.css';
 import { elementStyles } from '../..';
@@ -8,21 +8,23 @@ import { useQuery } from '../../hooks/useQuery';
 import { setCardQueryParam } from '../../utils';
 import { useHistory } from 'react-router-dom';
 import { commentsCardId, mediaCardId } from '../topic-container/topic-container';
+import { TopicMediaComponent } from '../topic-media/topic-media';
 
 
 const TOPIC_SWITCHING_DURATION = 300;
 const topicPerspectivePx = 2000;
 var prevHeight = 0;
+let positionsMap = [0,1,2];
+
 interface TopicContainerMobileComponentProps {
     fetchTopics: (topicTofetch?: string | undefined, newIndex?: number | undefined) => Promise<void>;
-    MediaCard: ReactElement,
     CommentsCard: ReactElement,
     AnalyticsCard: ReactElement,
     TopicCarousel: ReactElement,
     TopicNavigator: ReactElement
 };
 export const TopicContainerMobileComponent = (props: TopicContainerMobileComponentProps) => {
-    const { MediaCard, CommentsCard, AnalyticsCard, TopicCarousel, TopicNavigator, fetchTopics } = props;
+    const { CommentsCard, AnalyticsCard, TopicCarousel, TopicNavigator, fetchTopics } = props;
 
     const query = useQuery();
     const history = useHistory();
@@ -33,10 +35,17 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     const { topicsState } = useContext(topicsContext);
     const { topics, topicIndex } = topicsState;
 
+    const { topicMediaState, } = useContext(topicMediaContext);
+
     const topicMediaScaleDivRef = useRef<HTMLDivElement>(null);
+    const prevTopicMediaContainer = useRef<HTMLDivElement>(null);
     const currentTopicMediaContainer = useRef<HTMLDivElement>(null);
     const nextTopicMediaContainer = useRef<HTMLDivElement>(null);
-    const [currentTopicIndex, setCurrentTopicIndex] = useState<number>(topicIndex);
+    const [rotatingMediaStructure, setRotatingMediaStructure] = useState<Array<{ ref: React.RefObject<HTMLDivElement>; staticTopicIndex: number; position: number; style: any; }>>([
+        { ref: prevTopicMediaContainer, staticTopicIndex: Math.max(topicIndex - 1, 0), position: 0, style: getCubeFaceStyle(0) }, 
+        { ref: currentTopicMediaContainer, staticTopicIndex: topicIndex, position: 1, style: getCubeFaceStyle(1) },
+        { ref: nextTopicMediaContainer, staticTopicIndex: 1, position: 2, style: getCubeFaceStyle(2) },
+    ]);
     const [prevCardQuery, setPrevCardQuery] = useState<any>(undefined);
 
     const handleClick = (e: any) => {
@@ -76,27 +85,91 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
     }, []);
 
     useEffect(() => {
-        if (topicIndex !== currentTopicIndex) {
-            const currentTopicMediaContainerElement = currentTopicMediaContainer.current;
-            const nextTopicMediaContainerElement = nextTopicMediaContainer.current;
+        if (topicIndex !== rotatingMediaStructure[positionsMap[1]].staticTopicIndex) {
+            const prevTopicMediaContainerElement = rotatingMediaStructure[positionsMap[0]].ref.current;
+            const currentTopicMediaContainerElement = rotatingMediaStructure[positionsMap[1]].ref.current;
+            const nextTopicMediaContainerElement = rotatingMediaStructure[positionsMap[2]].ref.current;
 
-            if (currentTopicMediaContainerElement && nextTopicMediaContainerElement) {
-                currentTopicMediaContainerElement.animate(
-                {
-                    transform: topicIndex > currentTopicIndex ? `perspective(${topicPerspectivePx}px) rotateY(-89deg) translateZ(100vw)` : `perspective(${topicPerspectivePx}px) rotateY(89deg) translateZ(100vw)`,
-                }, {
-                    duration: TOPIC_SWITCHING_DURATION,
-                    easing: 'linear'
-                });
-                nextTopicMediaContainerElement.animate(
-                {
-                    transform: `perspective(${topicPerspectivePx}px) rotateY(0deg) translateX(0) translateZ(0)`,
-                    easing: 'linear'
-                }, {
-                    duration: TOPIC_SWITCHING_DURATION
-                }).onfinish = () => {
-                    setCurrentTopicIndex(topicIndex);
-                };
+            if (topicIndex > rotatingMediaStructure[positionsMap[1]].staticTopicIndex) {
+                if (currentTopicMediaContainerElement && nextTopicMediaContainerElement) {
+                    currentTopicMediaContainerElement.animate(
+                    {
+                        transform: `perspective(${topicPerspectivePx}px) rotateY(-89deg) translateZ(100vw)`,
+                    }, {
+                        duration: TOPIC_SWITCHING_DURATION,
+                        easing: 'linear',
+                        fill: 'forwards',
+                    });
+                    nextTopicMediaContainerElement.animate(
+                    {
+                        transform: `perspective(${topicPerspectivePx}px) rotateY(0deg) translateX(0) translateZ(0)`,
+                    }, {
+                        duration: TOPIC_SWITCHING_DURATION,
+                        easing: 'linear',
+                        fill: 'forwards',
+                    }).onfinish = () => {
+                        setRotatingMediaStructure(prevState => {
+                            if (prevState[positionsMap[0]].staticTopicIndex !== prevState[positionsMap[1]].staticTopicIndex) {
+                                delete topicMediaState[topicsState.topics[prevState[positionsMap[0]].staticTopicIndex].topicTitle];
+                            }
+                            prevState[0].position = getNewPosition(prevState[0].position, 1);
+                            prevState[0].staticTopicIndex = getStaticTopicIndex(prevState[0].position, topicIndex);
+                            prevState[0].style = getCubeFaceStyle(prevState[0].position);
+
+                            prevState[1].position = getNewPosition(prevState[1].position, 1);
+                            prevState[1].staticTopicIndex = getStaticTopicIndex(prevState[1].position, topicIndex);
+                            prevState[1].style = getCubeFaceStyle(prevState[1].position);
+
+                            prevState[2].position = getNewPosition(prevState[2].position, 1);
+                            prevState[2].staticTopicIndex = getStaticTopicIndex(prevState[2].position, topicIndex);
+                            prevState[2].style = getCubeFaceStyle(prevState[2].position);
+
+                            const temp = prevState.map(i=>i.position);
+                            positionsMap = [temp.indexOf(0),temp.indexOf(1),temp.indexOf(2)];
+                            return [...prevState];
+                        });
+                    };
+                }
+            } else if (topicIndex < rotatingMediaStructure[positionsMap[1]].staticTopicIndex) {
+                if (currentTopicMediaContainerElement && prevTopicMediaContainerElement) {
+                    currentTopicMediaContainerElement.animate(
+                    {
+                        transform: `perspective(${topicPerspectivePx}px) rotateY(89deg) translateZ(100vw)`,
+                    }, {
+                        duration: TOPIC_SWITCHING_DURATION,
+                        easing: 'linear',
+                        fill: 'forwards',
+                    });
+                    prevTopicMediaContainerElement.animate(
+                    {
+                        transform: `perspective(${topicPerspectivePx}px) rotateY(0deg) translateX(0) translateZ(0)`,
+                    }, {
+                        duration: TOPIC_SWITCHING_DURATION,
+                        easing: 'linear',
+                        fill: 'forwards',
+                    }).onfinish = () => {
+                        setRotatingMediaStructure(prevState => {
+                            if (prevState[positionsMap[2]].staticTopicIndex !== prevState[positionsMap[1]].staticTopicIndex) {
+                                delete topicMediaState[topicsState.topics[prevState[positionsMap[2]].staticTopicIndex].topicTitle];
+                            }
+                            prevState[0].position = getNewPosition(prevState[0].position, -1);
+                            prevState[0].staticTopicIndex = getStaticTopicIndex(prevState[0].position, topicIndex);
+                            prevState[0].style = getCubeFaceStyle(prevState[0].position);
+
+                            prevState[1].position = getNewPosition(prevState[1].position, -1);
+                            prevState[1].staticTopicIndex = getStaticTopicIndex(prevState[1].position, topicIndex);
+                            prevState[1].style = getCubeFaceStyle(prevState[1].position);
+
+                            prevState[2].position = getNewPosition(prevState[2].position, -1);
+                            prevState[2].staticTopicIndex = getStaticTopicIndex(prevState[2].position, topicIndex);
+                            prevState[2].style = getCubeFaceStyle(prevState[2].position);
+
+                            const temp = prevState.map(i=>i.position);
+                            positionsMap = [temp.indexOf(0),temp.indexOf(1),temp.indexOf(2)];
+                            return [...prevState];
+                        });
+                    };
+                }
             }
         } // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [topicIndex]);
@@ -267,19 +340,27 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
         setPrevCardQuery(cardQuery); // eslint-disable-next-line
     }, [query]);
 
+    const displayMediaCard = (position: number) => {
+        return (
+            (position === 1) || 
+            ((topicIndex > rotatingMediaStructure[positionsMap[1]].staticTopicIndex) && (position === 2)) ||
+            ((topicIndex < rotatingMediaStructure[positionsMap[1]].staticTopicIndex) && (position === 0))
+        );
+    }
+
     return (
         <div ref={FSContainerRef} className="topic-container-mobile">
             {TopicNavigator}
             <div ref={topicMediaScaleDivRef} className="topic-media-scale-div">
-                <div ref={currentTopicMediaContainer} className="topic-media-container" style={{transform: `perspective(${topicPerspectivePx}px) rotateY(0) translateX(0) translateZ(0)`, transformOrigin: topicIndex > currentTopicIndex ? 'right' : 'left' }}>
-                    {React.cloneElement(MediaCard, {topicIndexOverride: currentTopicIndex})}
-                </div>
-                {
-                    topicIndex !== currentTopicIndex &&
-                    <div ref={nextTopicMediaContainer} className="topic-media-container" style={topicIndex > currentTopicIndex ? {transform: `perspective(${topicPerspectivePx}px) rotateY(89deg) translateZ(100vw)`, transformOrigin: "left"} :  {transform: `perspective(${topicPerspectivePx}px) rotateY(-89deg) translateZ(100vw)`, transformOrigin: "right"}}>
-                        {MediaCard}
-                    </div>
-                }
+                {displayMediaCard(rotatingMediaStructure[0].position) && <div id={'1'} ref={rotatingMediaStructure[0].ref} className="topic-media-container" style={{ transformOrigin: (topicIndex > rotatingMediaStructure[positionsMap[1]].staticTopicIndex) ? 'right' : 'left', ...rotatingMediaStructure[0].style }}>
+                    <TopicMediaComponent topicIndexOverride={rotatingMediaStructure[0].staticTopicIndex} />
+                </div>}
+                {displayMediaCard(rotatingMediaStructure[1].position) && <div id={'2'} ref={rotatingMediaStructure[1].ref} className="topic-media-container" style={{ transformOrigin: (topicIndex > rotatingMediaStructure[positionsMap[1]].staticTopicIndex) ? 'right' : 'left', ...rotatingMediaStructure[1].style }}>
+                    <TopicMediaComponent topicIndexOverride={rotatingMediaStructure[1].staticTopicIndex} />
+                </div>}
+                {displayMediaCard(rotatingMediaStructure[2].position) && <div id={'3'} ref={rotatingMediaStructure[2].ref} className="topic-media-container" style={{ transformOrigin: (topicIndex > rotatingMediaStructure[positionsMap[1]].staticTopicIndex) ? 'right' : 'left', ...rotatingMediaStructure[2].style }}>
+                    <TopicMediaComponent topicIndexOverride={rotatingMediaStructure[2].staticTopicIndex} />
+                </div>}
             </div>
             <div></div>
             <div id="topic-container-footer" ref={FSFooterRef} className={'topic-container-footer'}>
@@ -304,3 +385,35 @@ function getTranslateY(myElement: any) {
     var matrix = new WebKitCSSMatrix(style.transform);
     return matrix.m42;
 }
+
+const getNewPosition = (position: number, iteration: number) => {
+    return customMod((position - iteration), 3);
+};
+
+const getStaticTopicIndex = (position: number, topicIndex: number) => {
+    switch(position) {
+        case 0:
+            return Math.max(topicIndex - 1, 0);
+        case 1:
+            return topicIndex;
+        case 2:
+            return topicIndex + 1;
+        default:
+            return topicIndex;
+    }
+}
+
+const getCubeFaceStyle = (position: number) => {
+    switch(position) {
+        case 0:
+            return { transform: `perspective(${topicPerspectivePx}px) rotateY(-89deg) translateZ(100vw)`, transformOrigin: "right", zIndex: 1 };
+        case 1:
+            return { transform: `perspective(${topicPerspectivePx}px) rotateY(0) translateX(0) translateZ(0)`, zIndex: 2 };
+        case 2:
+            return { transform: `perspective(${topicPerspectivePx}px) rotateY(89deg) translateZ(100vw)`, transformOrigin: "left", zIndex: 1 };
+    }
+};
+
+const customMod = (n: number, m: number) => {
+    return ((n % m) + m) % m;
+};
