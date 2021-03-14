@@ -347,7 +347,7 @@ export const MyUploader = (props: UploaderProps) => {
             additionalHeaders: { },
         }, true);
         fileUrl.current = url+fileName;
-        return { fields, meta: { fileUrl: url+fileName }, url: url };
+        return { fields, meta: { fileUrl: url+fileName, fileName: fileName }, url: url };
     }
     
     // called every time a file's `status` changes
@@ -356,7 +356,7 @@ export const MyUploader = (props: UploaderProps) => {
     }
     
     // receives array of files that are done uploading when submit button is clicked
-    const handleSubmit = async (files: (IFileWithMeta & { meta: { fileUrl: string } })[], allFiles: IFileWithMeta[]) => {
+    const handleSubmit = async (files: (IFileWithMeta & { meta: { fileUrl: string; fileName: string; } })[], allFiles: IFileWithMeta[]) => {
         if (!props.skipDBUpdate) {
             const { status, data } = await authenticatedPostData({
                 baseUrl: topicsAPIConfig.url,
@@ -364,7 +364,7 @@ export const MyUploader = (props: UploaderProps) => {
                 data: {
                     "username": username,
                     "topicTitle": topicTitle,
-                    "image": files[0].meta.fileUrl,
+                    "image": process.env.REACT_APP_HV_MEDIA_CDN_URL+files[0].meta.fileName,
                 },
                 additionalHeaders: {
                     "sessiontoken": sessiontoken
