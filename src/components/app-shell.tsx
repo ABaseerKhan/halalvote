@@ -47,6 +47,7 @@ const topicCarouselId = "topicCarousel";
 const getAppShell = () => { return document.getElementById(appShellId); }
 const getTitleTag = (): HTMLElement | null => { return document.getElementById("halal-vote-title"); }
 const getDescriptionTag = (): HTMLElement | null => { return document.getElementById("halal-vote-description"); }
+const getKeywordsTag = (): HTMLElement | null => { return document.getElementById("halal-vote-keywords"); }
 
 type AppShellState = { 
   topicsState: TopicsState; 
@@ -129,13 +130,15 @@ export const AppShellComponent = (props: any) => {
   useEffect(() => {
     const titleTag = getTitleTag();
     const descriptionTag = getDescriptionTag();
+    const keywordsTag = getKeywordsTag();
     const url = document.URL;
 
-    if (titleTag && descriptionTag) {
+    if (titleTag && descriptionTag && keywordsTag) {
       const isHalalVoteSite = url.includes("halal") || url.includes("localhost");
       let title = isHalalVoteSite ? "Halal Vote" : "Haram Vote";
       let description = "Your source for everything halal and haram!";
       description += ` ${title} is a platform for muslims to get a community sentiment on whether various topics are viewed as halal or haram.`;
+      let keywords = ['halal', 'haram', 'vote', 'arguments', 'analytics', 'media'];
       const topic = state.topicsState.topics[state.topicsState.topicIndex];
 
       if (topic) {
@@ -144,10 +147,12 @@ export const AppShellComponent = (props: any) => {
         const halalPercentage = Math.round(((topic.halalPoints) * 100) / (topic.halalPoints + topic.haramPoints));
         const haramPercentage = 100 - halalPercentage;
         description += ` ${halalPercentage}% of users think ${topic.topicTitle} is halal and ${haramPercentage}% of users think ${topic.topicTitle} is haram.`;
+        keywords = keywords.concat(topic.topicTitle.split(" "));
       }
 
       titleTag.innerText = title;
       descriptionTag.setAttribute("content", description);
+      keywordsTag.setAttribute("content", keywords.join(", "));
     }
   }, [query]);
 
