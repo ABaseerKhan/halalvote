@@ -30,6 +30,8 @@
     scrollbar-width: none;  /* Firefox */
     transform: scale(1);
     transition: all 0.3s ease;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .topic-container-footer {
