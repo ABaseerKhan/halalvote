@@ -178,7 +178,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             additionalHeaders: {
                 "sessiontoken": sessiontoken
             }
-        }, true);
+        }, true).then((status) => {return status});
         
         if (status === 200) {
             if (pathToComment.length === 1) {
@@ -190,6 +190,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
             setState(prevState => ({ ...prevState, pathToHighlightedComment: undefined }));
         }
+        return status;
     }
 
     const highlightComment = (path: number[] | undefined) => {

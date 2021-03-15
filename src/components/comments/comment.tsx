@@ -30,7 +30,7 @@ interface CommentComponentProps {
     pathToHighlightedComment: number[] | undefined,
     highlightComment: (path: number[] | undefined) => void,
     fetchMoreReplies: (pathToParentComment: number[], n?: number, specificCommentId?: number | undefined, depth?: number) => Promise<number>,
-    deleteComment: (path: number[]) => void,
+    deleteComment: (path: number[]) => Promise<number>,
     setReplyContainerHeight?: React.Dispatch<React.SetStateAction<number>>,
     topicIndexOverride?: number;
     level2?: boolean;
@@ -183,9 +183,16 @@ export const CommentComponent = (props: CommentComponentProps) => {
                             !(comment.comment === "__deleted__" && comment.numReplies > 0) &&
                             <span
                                 className={"delete-button"}
-                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); props.deleteComment(props.path); if (viewMoreReplies === 1) {setReplyContainerHeight &&  setReplyContainerHeight(0)} else {setReplyContainerHeight && setReplyContainerHeight(curr => { 
-                                    return curr - (containerHeightReadOnly || 0) 
-                                });};}}
+                                onClick={async (e) => { e.preventDefault();
+                                     e.stopPropagation(); 
+                                     const deleteStatus = await props.deleteComment(props.path);  
+                                     console.log(deleteStatus); 
+                                     if (deleteStatus === 200) {
+                                        if (viewMoreReplies === 1) {setReplyContainerHeight &&  setReplyContainerHeight(0)} else {setReplyContainerHeight && setReplyContainerHeight(curr => { 
+                                            return curr - (containerHeightReadOnly || 0) 
+                                        });};
+                                     }
+                                      }}
                                 role={"img"}
                                 aria-label="trash"
                             >
