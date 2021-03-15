@@ -140,7 +140,7 @@ export const AppShellComponent = (props: any) => {
       let title = isHalalVoteSite ? "Halal Vote" : "Haram Vote";
       let description = "Your source for everything halal and haram!";
       description += ` ${title} is a platform for muslims to get a community sentiment on whether various topics are viewed as halal or haram.`;
-      let keywords = ['halal', 'haram', 'vote', 'arguments', 'analytics', 'media'];
+      let keywords = ['halal', 'haram', 'islam', 'muslim', 'vote', 'arguments', 'analytics', 'memes'];
       let canonicalLink = isHalalVoteSite ? "https://halalvote.com/" : "https://haramvote.com/";
       
       const topic = state.topicsState.topics[state.topicsState.topicIndex];
