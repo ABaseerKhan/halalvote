@@ -38,6 +38,7 @@
   },
   "scripts": {
     "start": "cat .env.dev > .env; react-scripts start",
+    "start:windows": "copy .env.dev .env & react-scripts start",
     "build:prod": "cat .env.prod > .env; react-scripts build",
     "deploy:haram": "aws s3 sync build/ s3://haramvote.com --acl public-read",
     "deploy:halal": "aws s3 sync build/ s3://halalvote.com --acl public-read",
