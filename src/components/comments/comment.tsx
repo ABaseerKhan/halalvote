@@ -185,8 +185,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                                 className={"delete-button"}
                                 onClick={async (e) => { e.preventDefault();
                                      e.stopPropagation(); 
-                                     const deleteStatus = await props.deleteComment(props.path);  
-                                     console.log(deleteStatus); 
+                                     const deleteStatus = await props.deleteComment(props.path);   
                                      if (deleteStatus === 200) {
                                         if (viewMoreReplies === 1) {setReplyContainerHeight &&  setReplyContainerHeight(0)} else {setReplyContainerHeight && setReplyContainerHeight(curr => { 
                                             return curr - (containerHeightReadOnly || 0) 

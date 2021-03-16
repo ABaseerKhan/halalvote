@@ -178,7 +178,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
             additionalHeaders: {
                 "sessiontoken": sessiontoken
             }
-        }, true).then((status) => {return status});
+        }, true)
         
         if (status === 200) {
             if (pathToComment.length === 1) {
