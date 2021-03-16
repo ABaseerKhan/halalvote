@@ -152,10 +152,20 @@ input[type=text]/*, input[type=password]*/ {
   align-items: center;
 }
 
-.delete-button:hover {
-  cursor: pointer;
-  color: transparent;  
-  text-shadow: 0 0 0 red;
+@media only screen and (min-width: 600px) {
+  .delete-button:hover {
+    cursor: pointer;
+    color: transparent;  
+    text-shadow: 0 0 0 red;
+  }  
+}
+
+@media only screen and (max-width: 599px) {
+  .delete-button:active {
+    cursor: pointer;
+    color: transparent;  
+    text-shadow: 0 0 0 red;
+  }  
 }
 
 .back-action {
