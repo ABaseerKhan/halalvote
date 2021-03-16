@@ -2,7 +2,7 @@
 * Install yarn globally
 ## Initial Development Set-up Instructions:
 * `cd` into project root
-* Run `cp .example.env.dev .env.dev`
+* Run `cp .example.env.dev .env.dev` **(For windows, run: 'copy .example.env.dev .env.dev')
 * Manually populate variables in `.env.dev` file
 * Run `yarn`
 * Run `yarn start`
