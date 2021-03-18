@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext, useLayoutEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { superUsername, topicsAPIConfig, usersAPIConfig } from '../../https-client/config';
-import { ReactComponent as AddButtonSVG} from '../../icons/add-button.svg'
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import { ReactComponent as TrashButtonSVG } from '../../icons/trash-icon.svg';
 import { ReactComponent as DownArrowSVG } from "../../icons/down-arrow.svg";
 import { ReactComponent as UpArrowSVG } from "../../icons/up-arrow.svg";
@@ -253,7 +253,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                 <MyUploader submitCallback={addMedia} previewDisplayedCallback={previewDisplayedCallback}/>
             </div>
             {
-                !state.previewDisplayed && topicMedia.length > 0 &&
+                topicMedia.length > 0 &&
                 <div className={"canvas-footer"}>
                     <button className="add-image-back-button" onClick={() => {showAddMedia(false)}}>
                         Cancel
@@ -310,13 +310,13 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                     </div>
                 }
             </div>
-            {topicMedia.length > 0 && <div className={!state.addMediaDisplayed ? "show-add-image-button" : "hide-add-image-button"} onClick={() => {showAddMedia(true)}}>
-                <AddButtonSVG />
+            {topicMedia.length > 0 && <div className={state.previewDisplayed ? "preview-displayed" : "show-add-image-button"} onClick={() => {showAddMedia(true)}}>
+                <MyUploader submitCallback={addMedia} previewDisplayedCallback={previewDisplayedCallback}/>
             </div>}
         </div>
     );
 
-    return <>{state.addMediaDisplayed && fileUploader}{ImageNavigator}</>;
+    return <>{ImageNavigator}</>;
 }
 
 interface UploaderProps {
@@ -385,7 +385,13 @@ export const MyUploader = (props: UploaderProps) => {
     return (
         <Dropzone
             multiple={false}
-            inputContent={'Upload Media'}
+            inputContent={<PhotoCameraIcon style={{ 
+                position: 'absolute',
+                width: '100%',
+                height: '90%',
+                top: '3px',
+                color: 'white' 
+            }}/>}
             getUploadParams={getUploadParams}
             onChangeStatus={handleChangeStatus}
             onSubmit={handleSubmit}

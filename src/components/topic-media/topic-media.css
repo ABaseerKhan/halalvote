@@ -38,6 +38,16 @@
   animation: disappear 0.3s ease-in-out forwards;
 }
 
+.preview-displayed {
+  display: flex;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  bottom: 0px;
+  background: black;
+  /* left: calc(50% - 30px); */
+}
+
 .more-images-below, .more-images-above {
   position: absolute;
   height: 22px;
@@ -289,7 +299,8 @@
 .dzu-dropzone {
   overflow: auto !important;
   border: none !important;
-  height: 100% !important;
+  min-height: unset !important;
+  position: unset !important;
 }
 
 .dzu-submitButtonContainer {
