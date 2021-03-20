@@ -46,9 +46,11 @@ export const UserTopics = (props: UserTopicsProps) => {
         userVotedTopics: [],
     });
 
+    const ownProfile = profileUsername === username || superUsername === username;
+
     useEffect(() => {
-        fetchUserCreatedTopics();
-        fetchUserVotedTopics(); // eslint-disable-next-line
+        ownProfile && fetchUserVotedTopics();
+        fetchUserCreatedTopics(); // eslint-disable-next-line
     }, []);
 
     const fetchUserCreatedTopics = async () => {
@@ -70,7 +72,9 @@ export const UserTopics = (props: UserTopicsProps) => {
             queryParams: {
                 "username": profileUsername,
             },
-            additionalHeaders: { },
+            additionalHeaders: {
+                "sessiontoken": sessiontoken
+            },
         }, true);
         setState(prevState => ({ ...prevState, userVotedTopics: data }));
     }
@@ -103,7 +107,7 @@ export const UserTopics = (props: UserTopicsProps) => {
     }
 
     const userTopic = (topic: Topic, tab: any) => (
-            <li>
+            <li key={`${topic.topicTitle}-${tab}`}>
                 <div className="user-topic-li">
                     <div className="user-topic-container" onClick={() => { closeModal(async () => { selectTopicHandler(topic); }); }}>
                         <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end"}}>
@@ -131,13 +135,16 @@ export const UserTopics = (props: UserTopicsProps) => {
             </li>
     );
 
+    const tabNames = ownProfile ? ["Created Topics", "Voted Topics"] : ["Created Topics"];
+    const sections = ownProfile ? [
+        <div className="topics-section-container">{state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_CREATED_TOPICS))}</div>,
+        <div className="topics-section-container">{state.userVotedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_VOTED_TOPICS))}</div>
+    ] : [<div className="topics-section-container">{state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_CREATED_TOPICS))}</div>];
+
     return (
         <TabScroll
-            tabNames={["Created Topics", "Voted Topics"]}
-            Sections={[
-                <div className="topics-section-container">{state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_CREATED_TOPICS))}</div>,
-                <div className="topics-section-container">{state.userVotedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_VOTED_TOPICS))}</div>
-            ]}
+            tabNames={tabNames}
+            Sections={sections}
         />
     )
 }

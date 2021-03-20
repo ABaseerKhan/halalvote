@@ -123,7 +123,7 @@ const UserComments = (props: UserCommentProps) => {
     }
 
     const UserComment = (comment: Comment) => (
-        <div id={`comment-${comment.id}`} className={"user-comment-container"} >
+        <div key={`comment-${comment.id}`} id={`comment-${comment.id}`} className={"user-comment-container"} >
             <div className="comment-bubble-container">
                 <div className={`comment-bubble-${comment.commentType.toLowerCase()}`}></div>
             </div>

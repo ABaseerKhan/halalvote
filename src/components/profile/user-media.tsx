@@ -51,7 +51,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
     const imagesBodyRef = useRef<HTMLDivElement>(null);
     const likedImagesBodyRef = useRef<HTMLDivElement>(null);
 
-    const ownProfile = profileUsername === username;
+    const ownProfile = profileUsername === username || superUsername === username;
 
     useEffect(() => {
         ownProfile && fetchLikedMedia();

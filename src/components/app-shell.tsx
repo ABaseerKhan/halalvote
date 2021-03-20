@@ -130,37 +130,32 @@ export const AppShellComponent = (props: any) => {
   }, [state.topicsState]);
 
   useEffect(() => {
+    const topic = state.topicsState.topics[state.topicsState.topicIndex];
     const titleTag = getTitleTag();
     const descriptionTag = getDescriptionTag();
     const keywordsTag = getKeywordsTag();
     const canonicalLinkTag = getCanonicalLinkTag();
     const url = document.URL;
 
-    if (titleTag && descriptionTag && keywordsTag && canonicalLinkTag) {
+    if (topic && titleTag && descriptionTag && keywordsTag && canonicalLinkTag) {
       const isHalalVoteSite = url.includes("halal") || url.includes("localhost");
       let title = isHalalVoteSite ? "Halal Vote" : "Haram Vote";
       let description = "Your source for everything halal and haram!";
       description += ` ${title} is a platform for muslims to get a community sentiment on whether various topics are viewed as halal or haram.`;
       let keywords = ['halal', 'haram', 'islam', 'muslim', 'vote', 'arguments', 'analytics', 'memes'];
-      let canonicalLink = isHalalVoteSite ? "https://halalvote.com/" : "https://haramvote.com/";
-      
-      const topic = state.topicsState.topics[state.topicsState.topicIndex];
-      if (topic) {
-        title += ` - ${topic.topicTitle}`;
-        description += ` Is ${topic.topicTitle} ${isHalalVoteSite ? "halal" : "haram"}?`;
-        const halalPercentage = Math.round(((topic.halalPoints) * 100) / (topic.halalPoints + topic.haramPoints));
-        const haramPercentage = 100 - halalPercentage;
-        description += ` ${halalPercentage}% of users think ${topic.topicTitle} is halal and ${haramPercentage}% of users think ${topic.topicTitle} is haram.`;
-        keywords = keywords.concat(topic.topicTitle.split(" "));
-        canonicalLink += `?topic=${encodeURIComponent(formatTopicTitle(topic.topicTitle))}`
-      }
+      let canonicalLink = "https://halalvote.com/";
+
+      title += ` - ${topic.topicTitle}`;
+      description += ` Is ${topic.topicTitle} ${isHalalVoteSite ? "halal" : "haram"}?`;
+      const halalPercentage = Math.round(((topic.halalPoints) * 100) / (topic.halalPoints + topic.haramPoints));
+      const haramPercentage = 100 - halalPercentage;
+      description += ` ${halalPercentage}% of users think ${topic.topicTitle} is halal and ${haramPercentage}% of users think ${topic.topicTitle} is haram.`;
+      keywords = keywords.concat(topic.topicTitle.split(" "));
+      canonicalLink += `?topic=${encodeURIComponent(formatTopicTitle(topic.topicTitle))}`
 
       titleTag.innerText = title;
-      descriptionTag.setAttribute("name", "description");
       descriptionTag.setAttribute("content", description);
-      keywordsTag.setAttribute("name", "keywords");
       keywordsTag.setAttribute("content", keywords.join(", "));
-      canonicalLinkTag.setAttribute("rel",  "canonical");
       canonicalLinkTag.setAttribute("href", canonicalLink);
     } // eslint-disable-next-line
   }, [query]);
