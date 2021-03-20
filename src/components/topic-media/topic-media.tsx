@@ -247,22 +247,6 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
         setState(prevState => ({ ...prevState, previewDisplayed: displayed }));
     }
 
-    const fileUploader = (
-        <div style={{ height: '100%', width: '100%', position: 'absolute', zIndex: 1 }}>
-            <div className={"images-body"} style={{ background: 'black'}}>
-                <MyUploader submitCallback={addMedia} previewDisplayedCallback={previewDisplayedCallback}/>
-            </div>
-            {
-                topicMedia.length > 0 &&
-                <div className={"canvas-footer"}>
-                    <button className="add-image-back-button" onClick={() => {showAddMedia(false)}}>
-                        Cancel
-                    </button>
-                </div>                
-            }
-        </div>
-    );
-
     const ImageNavigator = (
         <div style={{ height: '100%', width: '100%' }}>
             <div id="images-body" ref={imagesBodyRef} className={"images-body"}>
@@ -292,7 +276,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                     :
                     !doneLoading ?
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"}/> :
-                        fileUploader
+                        <div className='no-media-text'>No media to show</div>
                 }
                 {topicMedia.length > (imageIndex + 1) && 
                     <div className={"more-images-below"} style={{ left: 'calc(35% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((imageIndex + 1) * imagesBodyRef.current.clientHeight))) }>
@@ -310,9 +294,9 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                     </div>
                 }
             </div>
-            {topicMedia.length > 0 && <div className={state.previewDisplayed ? "preview-displayed" : "show-add-image-button"} onClick={() => {showAddMedia(true)}}>
+            <div className={state.previewDisplayed ? "preview-displayed" : "show-add-image-button"} onClick={() => {showAddMedia(true)}}>
                 <MyUploader submitCallback={addMedia} previewDisplayedCallback={previewDisplayedCallback}/>
-            </div>}
+            </div>
         </div>
     );
 

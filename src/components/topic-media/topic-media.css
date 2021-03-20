@@ -164,6 +164,15 @@
   z-index: 1;
 }
 
+.no-media-text {
+  top: calc(50% - 0.5em);
+  position: absolute;
+  height: auto;
+  width: 100%;
+  margin: auto;
+  color: var(--dark-mode-secondary-text-color);
+}
+
 .image-delete-button:hover {
   color: red;
 }

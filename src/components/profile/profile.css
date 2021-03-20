@@ -198,10 +198,6 @@
     color: white;
 }
 
-.no-image-text {
-    padding-top: 10vh;
-}
-
 @media only screen and (max-width: 600px) {
     .user-username {
         font-size: 11px !important;

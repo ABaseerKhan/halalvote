@@ -177,7 +177,7 @@ export const UserCreatedMedia = (props: UserCreatedMediaProps) => {
                     :
                     mediaState.loading ?
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={mediaState.loading}/> :
-                        <div className='no-image-text'>No media to show</div>
+                        <div className='no-media-text'>No media to show</div>
                 }
                 {mediaState.media.length > (mediaState.index + 1) && 
                     <div className={"more-images-below"} style={{ left: 'calc(35% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((mediaState.index + 1) * imagesBodyRef.current.clientHeight))) }>
