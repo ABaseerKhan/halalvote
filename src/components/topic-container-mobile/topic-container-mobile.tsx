@@ -113,15 +113,15 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                                 delete topicMediaState[topicsState.topics[prevState[positionsMap[0]].staticTopicIndex].topicTitle];
                             }
                             prevState[0].position = getNewPosition(prevState[0].position, 1);
-                            prevState[0].staticTopicIndex = getStaticTopicIndex(prevState[0].position, topicIndex);
+                            prevState[0].staticTopicIndex = getStaticTopicIndex(prevState[0].position, topicIndex, topics.length);
                             prevState[0].style = getCubeFaceStyle(prevState[0].position);
 
                             prevState[1].position = getNewPosition(prevState[1].position, 1);
-                            prevState[1].staticTopicIndex = getStaticTopicIndex(prevState[1].position, topicIndex);
+                            prevState[1].staticTopicIndex = getStaticTopicIndex(prevState[1].position, topicIndex, topics.length);
                             prevState[1].style = getCubeFaceStyle(prevState[1].position);
 
                             prevState[2].position = getNewPosition(prevState[2].position, 1);
-                            prevState[2].staticTopicIndex = getStaticTopicIndex(prevState[2].position, topicIndex);
+                            prevState[2].staticTopicIndex = getStaticTopicIndex(prevState[2].position, topicIndex, topics.length);
                             prevState[2].style = getCubeFaceStyle(prevState[2].position);
 
                             const temp = prevState.map(i=>i.position);
@@ -153,15 +153,15 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                                 delete topicMediaState[topicsState.topics[prevState[positionsMap[2]].staticTopicIndex].topicTitle];
                             }
                             prevState[0].position = getNewPosition(prevState[0].position, -1);
-                            prevState[0].staticTopicIndex = getStaticTopicIndex(prevState[0].position, topicIndex);
+                            prevState[0].staticTopicIndex = getStaticTopicIndex(prevState[0].position, topicIndex, topics.length);
                             prevState[0].style = getCubeFaceStyle(prevState[0].position);
 
                             prevState[1].position = getNewPosition(prevState[1].position, -1);
-                            prevState[1].staticTopicIndex = getStaticTopicIndex(prevState[1].position, topicIndex);
+                            prevState[1].staticTopicIndex = getStaticTopicIndex(prevState[1].position, topicIndex, topics.length);
                             prevState[1].style = getCubeFaceStyle(prevState[1].position);
 
                             prevState[2].position = getNewPosition(prevState[2].position, -1);
-                            prevState[2].staticTopicIndex = getStaticTopicIndex(prevState[2].position, topicIndex);
+                            prevState[2].staticTopicIndex = getStaticTopicIndex(prevState[2].position, topicIndex, topics.length);
                             prevState[2].style = getCubeFaceStyle(prevState[2].position);
 
                             const temp = prevState.map(i=>i.position);
@@ -390,14 +390,14 @@ const getNewPosition = (position: number, iteration: number) => {
     return customMod((position - iteration), 3);
 };
 
-const getStaticTopicIndex = (position: number, topicIndex: number) => {
+const getStaticTopicIndex = (position: number, topicIndex: number, totalNumOfTopics: number) => {
     switch(position) {
         case 0:
             return Math.max(topicIndex - 1, 0);
         case 1:
             return topicIndex;
         case 2:
-            return topicIndex + 1;
+            return Math.min(topicIndex + 1, totalNumOfTopics - 1);
         default:
             return topicIndex;
     }
