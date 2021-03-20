@@ -15,7 +15,7 @@ export const TopicSkeletonComponent = () => {
     for (let i = 0; i < 10; i++) {
         SkeletonSections.push(
             <section key={i} style={{ margin: '3.5em 20px -1.4em 20px' }}>
-                <Skeleton height={isMobile ? '14px' : 'unset'} width={'75%'} style={{ margin: '5px', maxWidth: '200px' }} duration={.5} />
+                <Skeleton height={isMobile ? '14px' : 'unset'} width={'75%'} style={{ margin: '5px' }} duration={.5} />
                 <Skeleton height={isMobile ? '10px' : 'unset'} count={1} width={'50%'} style={{ margin: '5px' }} duration={.5} />
             </section>
         );
