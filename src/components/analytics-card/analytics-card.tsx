@@ -10,7 +10,7 @@ import { authenticatedGetDataContext } from '../app-shell';
 // styles
 import './analytics-card.css';
 
-enum Interval {
+export enum Interval {
     WEEK,
     MONTH,
     YEAR,
@@ -22,29 +22,26 @@ interface AnalyticsCardComponentProps {
     topicIndexOverride?: number
 };
 
-var myChart: Chart;
-
 export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     const { id } = props;
-    let { topicIndexOverride } = props;
 
     const [displayNumbers, setDisplayNumbers] = useState({ halalNumber: 0, haramNumber: 0});
-    const [interval, setInterval] = useState<Interval>(Interval.ALL);
 
     const { topicsState: { topics, topicIndex } } = useContext(topicsContext);
-    topicIndexOverride = (topicIndexOverride !== undefined) ? topicIndexOverride : topicIndex;
     const { analyticsState, setAnalyticsContext } = useContext(analyticsContext);
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
     
-    const topic = topics?.length ? topics[topicIndexOverride] : undefined;
+    const topic = topics?.length ? topics[topicIndex] : undefined;
 
-    const graph = topic?.topicTitle !== undefined ? analyticsState[topic?.topicTitle]?.graph : undefined;
+    const interval = analyticsState.interval;
+    const graph = topic?.topicTitle !== undefined ? analyticsState.topicAnalyticsMap[topic?.topicTitle]?.graph : undefined;
 
+    const myChart = useRef<Chart|null>(null);
     const chartRef = useRef<any>(null);
 
     useEffect(() => {
-        if (topic?.topicTitle && !analyticsState[topic.topicTitle]) {
-            fetchAnalytics();
+        if (topic?.topicTitle && (analyticsState.topicAnalyticsMap[topic.topicTitle]?.graph?.interval !== interval)) {
+            fetchAnalytics(interval);
         } // eslint-disable-next-line
     }, [topic?.topicTitle]);
 
@@ -55,7 +52,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
         } // eslint-disable-next-line
     }, [graph]);
 
-    const fetchAnalytics = async (newInterval: Interval = Interval.ALL) => {
+    const fetchAnalytics = async (newInterval: Interval) => {
         let intervalOverride = newInterval === Interval.ALL ? "a" : "D";
 
         if (topic?.topicTitle !== undefined) {
@@ -74,12 +71,12 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
             }, true);
             
             const newGraph: AnalyticsGraph = {
-                interval: intervalOverride,
+                interval: newInterval,
                 numIntervals: data.halalCounts?.length || 0,
                 halalCounts: data.halalCounts,
                 haramCounts: data.haramCounts
             }
-            setAnalyticsContext(topic.topicTitle, newGraph);
+            setAnalyticsContext(topic.topicTitle, newGraph, newInterval);
         }
     }
 
@@ -95,14 +92,12 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }, [graph]);
 
     const createGraph = () => {
-        if (myChart) {
-            myChart.destroy();
+        if (myChart.current) {
+            myChart.current.destroy();
         };
         const myChartRef = chartRef.current?.getContext("2d");
         const halalCounts = graph?.halalCounts ? graph.halalCounts : [];
         const haramCounts = graph?.haramCounts ? graph.haramCounts : [];
-        // const maxY = Math.max(...[...halalCounts, ...haramCounts]);
-        // const chartYMax = maxY > 1 ? (Math.ceil(maxY / 5) + maxY) : 2;
 
         Chart.defaults.LineWithLine = Chart.defaults.line;
         Chart.controllers.LineWithLine = Chart.controllers.line.extend({
@@ -134,7 +129,7 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
         }
         });
         
-        myChart = new Chart(myChartRef, {
+        myChart.current = new Chart(myChartRef, {
             type: 'LineWithLine',
             data: {
                 labels: new Array(halalCounts.length).fill(''),
@@ -230,7 +225,6 @@ export const AnalyticsCardComponent = (props: AnalyticsCardComponentProps) => {
     }
 
     const changeInterval = (newInterval: Interval) => {
-        setInterval(newInterval);
         fetchAnalytics(newInterval);
     };
 

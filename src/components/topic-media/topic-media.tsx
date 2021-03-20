@@ -316,7 +316,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
         </div>
     );
 
-    return <>{ImageNavigator}</>;
+    return ImageNavigator;
 }
 
 interface UploaderProps {
@@ -385,12 +385,12 @@ export const MyUploader = (props: UploaderProps) => {
     return (
         <Dropzone
             multiple={false}
-            inputContent={<PhotoCameraIcon style={{ 
+            inputContent={<PhotoCameraIcon key={'photo-camera-icon'} style={{ 
                 position: 'absolute',
                 width: '100%',
                 height: '90%',
                 top: '3px',
-                color: 'white' 
+                color: 'white'
             }}/>}
             getUploadParams={getUploadParams}
             onChangeStatus={handleChangeStatus}

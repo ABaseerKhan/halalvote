@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {TopicCarouselComponent } from './topic-carousel/topic-carousel';
 import { SearchComponent } from './search/search';
-import { AnalyticsCardComponent } from './analytics-card/analytics-card';
+import { AnalyticsCardComponent, Interval } from './analytics-card/analytics-card';
 import { MenuComponent } from './menu/menu';
 import { Topic, Comment, TopicMedia } from '../types';
 import { postData, getData } from '../https-client/client';
@@ -70,7 +70,7 @@ export const AppShellComponent = (props: any) => {
     specificComment: undefined,
     incomingDirection: IncomingDirection.NONE,
     muted: true,
-    analytics: { }
+    analytics: { topicAnalyticsMap: { }, interval: Interval.ALL }
   });
 
   const [cookies] = useCookies(['username', 'sessiontoken']);
@@ -97,9 +97,10 @@ export const AppShellComponent = (props: any) => {
     limitCacheSize(prevState.comments);
     return { ...prevState };
   });
-  const setAnalyticsContext = (topicTitle: string, graph: AnalyticsGraph) => setState(prevState => {
-    prevState.analytics[topicTitle] = { graph: graph, creationTime: Date.now() }
-    limitCacheSize(prevState.analytics);
+  const setAnalyticsContext = (topicTitle: string, graph: AnalyticsGraph, interval: Interval) => setState(prevState => {
+    prevState.analytics.interval = interval;
+    prevState.analytics.topicAnalyticsMap[topicTitle] = { graph: graph, creationTime: Date.now() };
+    limitCacheSize(prevState.analytics.topicAnalyticsMap);
     return { ...prevState };
   });
   const setAuthenticatedPostData = (postData: (request: Request, willRetry: boolean) => void) => {}
@@ -359,14 +360,14 @@ export const commentsContext = React.createContext<{commentsState: CommentsState
 });
 
 export interface AnalyticsGraph {
-  interval: string, 
-  numIntervals: number, 
+  interval: Interval,
+  numIntervals: number,
   halalCounts: number[],
   haramCounts: number[]
 }
-export type AnalyticsState = { [topicTitle: string]: {graph: AnalyticsGraph, creationTime: number} }
-export const analyticsContext = React.createContext<{analyticsState: AnalyticsState; setAnalyticsContext: (topicTitle: string, graph: AnalyticsGraph) => void}>({
-  analyticsState: { },
+export type AnalyticsState = { topicAnalyticsMap: { [topicTitle: string]: {graph: AnalyticsGraph, creationTime: number} }, interval: Interval }
+export const analyticsContext = React.createContext<{analyticsState: AnalyticsState; setAnalyticsContext: (topicTitle: string, graph: AnalyticsGraph, interval: Interval) => void}>({
+  analyticsState: { topicAnalyticsMap: { }, interval: Interval.ALL },
   setAnalyticsContext: () => undefined
 });
 
