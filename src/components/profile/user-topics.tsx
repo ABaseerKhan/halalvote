@@ -11,6 +11,7 @@ import { TabScroll } from '../tab-scroll/tab-scroll';
 import { mediaCardId } from '../topic-container/topic-container';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import { TopicSkeletonComponent } from './topics-skeleton';
 
 // styles
 import './profile.css';
@@ -22,6 +23,7 @@ interface UserTopicsProps {
 interface UserTopicsState {
     userCreatedTopics: Topic[]; 
     userVotedTopics: Topic[];
+    loading: boolean;
 }
 
 enum Tab {
@@ -44,6 +46,7 @@ export const UserTopics = (props: UserTopicsProps) => {
     const [state, setState] = useState<UserTopicsState>({ 
         userCreatedTopics: [], 
         userVotedTopics: [],
+        loading: true,
     });
 
     const ownProfile = profileUsername === username || superUsername === username;
@@ -62,7 +65,7 @@ export const UserTopics = (props: UserTopicsProps) => {
             },
             additionalHeaders: { },
         }, true);
-        setState(prevState => ({ ...prevState, userCreatedTopics: data }));
+        setState(prevState => ({ ...prevState, userCreatedTopics: data, loading: false }));
     }
 
     const fetchUserVotedTopics = async () => {
@@ -76,7 +79,7 @@ export const UserTopics = (props: UserTopicsProps) => {
                 "sessiontoken": sessiontoken
             },
         }, true);
-        setState(prevState => ({ ...prevState, userVotedTopics: data }));
+        setState(prevState => ({ ...prevState, userVotedTopics: data, loading: false }));
     }
 
     const deleteTopic = async (topic: Topic) => {
@@ -142,6 +145,7 @@ export const UserTopics = (props: UserTopicsProps) => {
     ] : [<div className="topics-section-container">{state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_CREATED_TOPICS))}</div>];
 
     return (
+        state.loading ? <TopicSkeletonComponent /> : 
         <TabScroll
             tabNames={tabNames}
             Sections={sections}
