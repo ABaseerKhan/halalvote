@@ -15,6 +15,7 @@ import { UserCreatedMedia } from './user-media';
 import { usersAPIConfig } from '../../https-client/config';
 import { UserTopics } from './user-topics';
 import { HeartLike } from '../heart-like/heart-like';
+import { SkeletonComponent } from "../comments/comments-skeleton";
 
 // styles
 import './profile.css';
@@ -84,6 +85,7 @@ interface UserCommentProps {
 
 interface UserCommentState {
     userComments: Comment[];
+    loading: boolean;
 }
 const UserComments = (props: UserCommentProps) => {
     const { profileUsername, showSpecificComment, fetchTopics } = props;
@@ -96,6 +98,7 @@ const UserComments = (props: UserCommentProps) => {
 
     const [state, setState] = useState<UserCommentState>({
         userComments: [],
+        loading: true,
     });
 
     useEffect(() => {
@@ -111,7 +114,7 @@ const UserComments = (props: UserCommentProps) => {
             },
             additionalHeaders: { },
         }, true);
-        setState(prevState => ({ ...prevState, userComments: data }));
+        setState(prevState => ({ ...prevState, userComments: data, loading: false }));
     }
 
     const selectCommentHandler = async (comment: Comment) => {
@@ -127,10 +130,10 @@ const UserComments = (props: UserCommentProps) => {
             <div className="comment-bubble-container">
                 <div className={`comment-bubble-${comment.commentType.toLowerCase()}`}></div>
             </div>
-            <div className="comment-body">
+            <div className="comment-body"> 
                 <div 
-                    className={"comment-content"}
-                    onClick={() => { closeModal(async () => { selectCommentHandler(comment); }); }}
+                className={"comment-content"}
+                onClick={() => { closeModal(async () => { selectCommentHandler(comment); }); }}
                 >
                     <div className="topic-header">{comment.topicTitle}</div>
                     <div className="user-comment">
@@ -140,7 +143,7 @@ const UserComments = (props: UserCommentProps) => {
                         <span className={"time-stamp"} style={{ color: 'var(--dark-mode-secondary-text-color)' }} >{timeSince(comment.timeStamp)}</span>
                     </div>
                 </div>
-            </div>
+            </div>  
             <div className="user-likes-container">
                 <HeartLike liked={!!comment.userVote} numLikes={comment.upVotes} onClickCallback={() => {}} />
             </div>
@@ -148,10 +151,11 @@ const UserComments = (props: UserCommentProps) => {
     );
 
     return (
-        <div className="comments-section-container">
-            {state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
-                UserComment(comment)
-            ))}
-        </div>
+        state.loading ? <SkeletonComponent /> : 
+            <div className="comments-section-container">
+                {state.userComments?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((comment) => (
+                    UserComment(comment)
+                ))}
+            </div>
     )
 }
