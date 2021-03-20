@@ -270,7 +270,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                     topicMedia.length > 0 ?
                         topicMedia.map((topicImg, idx) => {
                             const ImgStats = 
-                            <>
+                            <div key={`topic-image-${idx}`}>
                                 <div className="image-username" onClick={onUserClick(topicImg.username)}>{"@" + topicImg.username}</div>
                                 {
                                     isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
@@ -278,7 +278,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                                 <div className="image-likes-container">
                                     <HeartLike liked={!!topicImg.userLike} numLikes={topicImg.likes} onClickCallback={updateImageLike} strokeColor={'white'} />
                                 </div>
-                            </>
+                            </div>
                             const Img = (
                                 <div key={idx} className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
                                     {isVideo(topicImg.image) ? <VideoPlayer src={topicImg.image} inView={idx===imageIndex} stylesOverride={{ height: imagesBodyRef.current?.clientHeight, width: imagesBodyRef.current?.clientWidth }}/> : 

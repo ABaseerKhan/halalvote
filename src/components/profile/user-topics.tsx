@@ -107,7 +107,7 @@ export const UserTopics = (props: UserTopicsProps) => {
     }
 
     const userTopic = (topic: Topic, tab: any) => (
-            <li>
+            <li key={`${topic.topicTitle}-${tab}`}>
                 <div className="user-topic-li">
                     <div className="user-topic-container" onClick={() => { closeModal(async () => { selectTopicHandler(topic); }); }}>
                         <div style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end"}}>
