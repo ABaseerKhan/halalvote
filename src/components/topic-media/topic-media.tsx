@@ -382,6 +382,7 @@ export const MyUploader = (props: UploaderProps) => {
             accept="image/*,video/*"
             PreviewComponent={props => {
                 const isImage = props.fileWithMeta.file.type.includes("image");
+                const loadingPercent = Math.round(props.meta.percent);
                 return (
                     <div ref={previewImagesBodyRef} className="image-container" style={{ flexDirection: (props.meta.width || 0) > (props.meta.height || 0) ? 'unset' : 'column' }}>
                         <div className="image-preview-title">{isImage ? "Image" : "Video"} Preview</div>
@@ -390,7 +391,9 @@ export const MyUploader = (props: UploaderProps) => {
                             (isImage ?
                                 <img className='image' style={{margin: "auto"}} alt="Topic" src={fileUrl.current}/> :
                                 <VideoPlayer src={fileUrl.current} inView={true} stylesOverride={{height: previewImagesBodyRef.current?.clientHeight, width: previewImagesBodyRef.current?.clientWidth}}/>) :
-                            <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"}/>
+                            <div style={{ width: '100%', height: '100%', position: 'absolute', display: 'flex', background: 'black', zIndex: 2 }}>
+                                <ProgressBar completed={loadingPercent}/>
+                            </div>
                         }
                         <LeftArrowSVG className='cancel-preview' onClick={() => props.files.forEach((f) => f.remove())}/>
                     </div>
@@ -400,6 +403,42 @@ export const MyUploader = (props: UploaderProps) => {
         />
     )
 }
+
+const ProgressBar = (props: any) => {
+    const { completed } = props;
+  
+    const containerStyles = {
+      height: 20,
+      width: '90%',
+      backgroundColor: "#e0e0de",
+      borderRadius: 50,
+      margin: 'auto'
+    }
+  
+    const fillerStyles = {
+      height: '100%',
+      width: `${completed}%`,
+      backgroundColor: '#00695c',
+      borderRadius: 'inherit',
+      textAlign: 'right',
+      transition: 'width 1s ease-in-out',
+    }
+  
+    const labelStyles = {
+      padding: 5,
+      color: 'white',
+      fontWeight: 'bold'
+    }
+  
+    return (
+      <div style={containerStyles}>
+        <div style={fillerStyles as any}>
+          <span style={labelStyles as any}>{`${completed}%`}</span>
+        </div>
+      </div>
+    );
+  };
+  
 
 export const isVideo = (url: string) => {
     return videoFormats.has(url.split('.').pop()?.toUpperCase());
