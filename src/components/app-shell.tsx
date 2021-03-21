@@ -18,6 +18,7 @@ import { TopicMediaComponent } from './topic-media/topic-media';
 import { TopicContainerMobileComponent } from './topic-container-mobile/topic-container-mobile';
 import { TopicNavigatorComponent } from './topic-navigator/topic-navigator';
 import ReactGA from 'react-ga';
+import { elementStyles } from '../';
 
 
 // type imports
@@ -56,7 +57,7 @@ type AppShellState = {
   topicsState: TopicsState; 
   topicMedia: TopicImagesState,
   comments: CommentsState,
-  specificComment?: Comment, 
+  specificComment?: number, 
   incomingDirection: IncomingDirection,
   muted: boolean,
   analytics: AnalyticsState
@@ -94,8 +95,8 @@ export const AppShellComponent = (props: any) => {
     limitCacheSize(prevState.topicMedia);
     return { ...prevState };
   });
-  const setCommentsContext = (topicTitle: string, comments: Comment[], specificComment: Comment) => setState(prevState => { 
-    prevState.comments[topicTitle] = { comments: comments, specificComment: specificComment, creationTime: Date.now() };
+  const setCommentsContext = (topicTitle: string, comments: Comment[], specificComment?: number) => setState(prevState => { 
+    prevState.comments[topicTitle] = { comments: comments, specificComment: specificComment ? specificComment : prevState.specificComment, creationTime: Date.now() };
     limitCacheSize(prevState.comments);
     return { ...prevState };
   });
@@ -173,9 +174,12 @@ export const AppShellComponent = (props: any) => {
   const changeSliderOffset = () => {
     if (window.innerHeight > (window.outerHeight * .9)) {
       document.documentElement.style.setProperty('--max-topic-carousel-height-px', '160px');
+      elementStyles.maxToolbarHeightPx = 160;
     } else {
       document.documentElement.style.setProperty('--max-topic-carousel-height-px', '135px');
+      elementStyles.maxToolbarHeightPx = 135;
     }
+    setState(prevState => ({ ...prevState }));
   }
 
   const fetchTopics = async (topicTofetch?: string, newIndex?: number) => {
@@ -234,7 +238,7 @@ export const AppShellComponent = (props: any) => {
 
   };
 
-  const showSpecificComment = (comment: Comment) => {
+  const showSpecificComment = (comment: number) => {
     setCommentsContext(topic?.topicTitle!, state.comments[topic?.topicTitle!].comments, comment);
   };
 
@@ -366,8 +370,8 @@ export const topicMediaContext = React.createContext<{topicMediaState: TopicImag
   setTopicMediaContext: (topicTitle, topicMedia, index, doneLoading) => undefined
 });
 
-export type CommentsState = { [topicTitle: string]: { comments: Comment[], specificComment: Comment | undefined, creationTime: number } };
-export const commentsContext = React.createContext<{commentsState: CommentsState; setCommentsContext: (topicTitle: string, comments: Comment[], specificComment: Comment) => void}>({
+export type CommentsState = { [topicTitle: string]: { comments: Comment[], specificComment: number | undefined, creationTime: number } };
+export const commentsContext = React.createContext<{commentsState: CommentsState; setCommentsContext: (topicTitle: string, comments: Comment[], specificComment?: number) => void}>({
   commentsState: { },
   setCommentsContext: (topicTitle, comments, specificComment) => undefined
 });

@@ -173,7 +173,7 @@ const modules: any = {
 };
 
 const formats = [
-    'header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block', 'link', 'mention',
+    'bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block', 'link', 'mention',
 ];
 
 let Link = Quill.import('formats/link');
@@ -192,47 +192,6 @@ class CustomLink extends Link {
     }
 }
 
-const Embed = Quill.import("blots/embed");
-class CustomMentionBlot extends Embed {
-    static create(data:any) {
-        const node = super.create();
-        const denotationChar = document.createElement("span");
-        denotationChar.className = "ql-mention-denotation-char";
-        denotationChar.innerHTML = data.denotationChar;
-        node.appendChild(denotationChar);
-        node.innerHTML += data.value;
-        return CustomMentionBlot.setDataValues(node, data);
-    }
-
-    static setDataValues(element:any, data:any) {
-        const domNode = element;
-        Object.keys(data).forEach(key => {
-        domNode.dataset[key] = data[key];
-        });
-        return domNode;
-    }
-
-    static value(domNode: any) {
-        return domNode.dataset;
-    }
-
-    constructor(domNode: any) {
-        super(domNode);
-
-        // Bind our click handler to the class.
-        this.clickHandler = this.clickHandler.bind(this);
-        domNode.addEventListener('click', this.clickHandler);
-    }
-
-    clickHandler(event: any) {
-    }
-}
-
-CustomMentionBlot.blotName = "mention";
-CustomMentionBlot.tagName = "span";
-CustomMentionBlot.className = "mention";
-
-Quill.register(CustomMentionBlot);
 Quill.register(CustomLink);
 
 function focusAndOpenKeyboard(el: any, timeout: any) {

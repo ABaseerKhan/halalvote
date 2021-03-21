@@ -273,7 +273,7 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                                 duration: 300,
                                 fill: "forwards",
                                 easing: "ease",
-                        }).onfinish = () => { topicMediaScaleDivRef.current!.style.transform = `scale(0.25)`; };
+                        }).onfinish = () => { topicMediaScaleDivRef.current!.style.transform = `scale(${(1 - travelledRatio)})` };
                         break;
                     case 'down':
                         FSFooterRef.current!.animate([{

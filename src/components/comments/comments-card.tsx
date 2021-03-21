@@ -55,16 +55,6 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
     const commentsContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (topic?.topicTitle && !commentsState[topic.topicTitle]) {
-            state.pathToHighlightedComment = undefined;
-            setState(prevState => ({ ...prevState, loading: true }));
-            fetchComments([]);
-        } else {
-            setState(prevState => ({ ...prevState }));
-        } // eslint-disable-next-line
-    }, [topic?.topicTitle, sessiontoken]);
-
-    useEffect(() => {
         if (commentCardRef.current) {
             var touchsurface = commentCardRef.current;
 
@@ -89,7 +79,23 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         }; // eslint-disable-next-line
     }, []);
 
-    const fetchComments = async (pathToParentComment: number[], n?: number, specificCommentId?: number, depth=1) => {
+    useEffect(() => {
+        if (topic?.topicTitle && !commentsState[topic.topicTitle]) {
+            state.pathToHighlightedComment = undefined;
+            setState(prevState => ({ ...prevState, loading: true }));
+            fetchComments([]);
+        } else {
+            setState(prevState => ({ ...prevState }));
+        } // eslint-disable-next-line
+    }, [topic?.topicTitle, sessiontoken]);
+
+    useEffect(() => {
+        if (specificComment) {
+            fetchComments([]);
+        } // eslint-disable-next-line
+    }, [specificComment])
+
+    const fetchComments = async (pathToParentComment: number[], n?: number, depth=1) => {
         const parentComment = getCommentFromPath(comments, pathToParentComment);
         const { data: newComments, status }: { data: Comment[]; status: number } = await authenticatedPostData({
             baseUrl: commentsAPIConfig.url,
@@ -98,19 +104,19 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 "topicTitle": topic?.topicTitle,
                 "username": username,
                 "parentId": parentComment?.id,
-                "singleCommentId": specificCommentId,
+                "singleCommentId": specificComment,
                 "depth": depth,
                 "n": !!n ? n : 50,
-                "excludedCommentIds": parentComment ? parentComment.replies.map((r) => r.id) : comments?.map((r) => r.id),
+                "excludedCommentIds": specificComment ? undefined : parentComment ? (parentComment.replies || []).map((r) => r.id) : comments?.map((r) => r.id),
             },
             additionalHeaders: { },
         }, true);
-        const updatedComments = addCommentsLocally(comments, newComments.map(c => ({ ...c, repliesShown: 0 })), pathToParentComment, true);
-        setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
+        const updatedComments = addCommentsLocally(specificComment ? [] : comments, newComments.map(c => ({ ...c, replies: [], repliesShown: 0 })), pathToParentComment, true);
+        setCommentsContext(topic?.topicTitle!, updatedComments);
         setState(prevState => ({ ...prevState, loading: false }));
 
-        if (specificCommentId) {
-            const pathToSpecificComment = getPathFromId(updatedComments, specificCommentId, []);
+        if (specificComment) {
+            const pathToSpecificComment = getPathFromId(updatedComments, specificComment, []);
             setState(prevState => ({ ...prevState, pathToHighlightedComment: pathToSpecificComment }));
         }
 
@@ -159,7 +165,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         if (highlightedComment) { highlightedComment.repliesShown++; highlightedComment.numReplies++; };
         if (parentOfhighlightedComment) { parentOfhighlightedComment.numReplies++; };
         const updatedComments = addCommentsLocally(commentsCopy, [commentObject], isReply ? parentOfhighlightedComment && state.pathToHighlightedComment?.slice(0,-1) : highlightedComment && state.pathToHighlightedComment, !!isReply);
-        setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
+        setCommentsContext(topic?.topicTitle!, updatedComments);
         setState(prevState => ({ ...prevState }));
         return status;
     }
@@ -187,7 +193,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
             const commentsCopy = comments.map(c => ({...c}));
             const updatedComments = deleteCommentLocally(commentsCopy, pathToComment, !!data?.psuedoDelete);
-            setCommentsContext(topic?.topicTitle!, updatedComments, specificComment!);
+            setCommentsContext(topic?.topicTitle!, updatedComments);
             setState(prevState => ({ ...prevState, pathToHighlightedComment: undefined }));
         }
         return status;

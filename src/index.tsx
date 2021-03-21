@@ -14,10 +14,10 @@ import {
 import './index.css';
 
 export const elementStyles = {
-  toolbarHeightVh: 13,
-  maxToolbarHeightPx: 70,
+  toolbarHeightVh: 11,
+  maxToolbarHeightPx: 50,
   topicCarouselHeightVh: 15,
-  maxTopicCarouselHeightPx: 140
+  maxTopicCarouselHeightPx: 135
 }
 
 export const modalHeightVh = 70;

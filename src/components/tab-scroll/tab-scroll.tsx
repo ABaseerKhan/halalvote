@@ -20,7 +20,6 @@ export const TabScroll = (props: TabScrollProps) => {
     useEffect(() => {
         if (containerRef.current) {
             containerRef.current.onscroll = (e: Event) => {
-                console.log((e?.target as any)?.scrollLeft);
                 if (containerRef.current) {
                     setUnderlineTranslationPx(((containerRef.current.clientWidth / tabNames.length) * ((containerRef.current!.scrollLeft) / containerRef.current!.clientWidth)));
                     clearTimeout(isScrolling);
@@ -47,7 +46,6 @@ export const TabScroll = (props: TabScrollProps) => {
     useEffect(() => {
         tabChangedCallback && tabChangedCallback(tabIndex);
         if (containerRef.current) {
-            console.log('tabIndex changed');
             let scrollPosition: number;
             switch(tabIndex) {
                 case 0:

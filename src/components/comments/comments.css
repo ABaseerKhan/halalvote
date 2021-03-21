@@ -206,6 +206,10 @@
     margin: 0.5em 0 0.5em 0;
 }
 
+.comment a {
+    color: turquoise;
+}
+
 .comment-actions {
     margin-left: 16px;
     margin-bottom: 5px;
@@ -341,6 +345,21 @@
     outline: none;
 }
 
+.ql-snow .ql-tooltip {
+    position: relative;
+    width: 65%;
+    min-width: 340px;
+    top: -20px !important;
+    left: 0 !important;
+    background-color: gray;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    box-shadow: 0px 0px 5px #ddd;
+    color: white;
+    padding: 5px 12px;
+    white-space: nowrap;
+}
+
 .ql-mention-list-container {
     width: 270px;
     /* border: 1px solid #f0f0f0; */
@@ -395,6 +414,10 @@
 
 .ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill {
     fill: var(--dark-mode-secondary-text-color);
+}
+
+.ql-snow a {
+    color: turquoise;
 }
 
 .mention {

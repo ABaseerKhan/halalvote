@@ -26,7 +26,7 @@ interface CommentComponentProps {
     key: number,
     path: number[],
     comment: Comment,
-    specificComment: Comment | undefined,
+    specificComment: number | undefined,
     pathToHighlightedComment: number[] | undefined,
     highlightComment: (path: number[] | undefined) => void,
     fetchMoreReplies: (pathToParentComment: number[], n?: number, specificCommentId?: number | undefined, depth?: number) => Promise<number>,
@@ -80,14 +80,14 @@ export const CommentComponent = (props: CommentComponentProps) => {
         setRepliesHeight(0);
         setTimeout(() => {
             comment!.repliesShown = 0;
-            setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
+            setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments);
         }, 250);
     };
 
     // eslint-disable-next-line
     const showReplies = async () => {
         setState(prevState => ({ ...prevState, fetchingReplies: true }));
-        if((comment.replies.length < comment!.numReplies) && (comment.repliesShown+3 > comment.replies.length)) { 
+        if(((comment.replies?.length || 0) < comment!.numReplies) && (comment.repliesShown+3 > (comment.replies?.length || 0))) { 
             comment!.repliesShown += await props.fetchMoreReplies(props.path, 3);
         } else {
             comment!.repliesShown += 3;
@@ -97,7 +97,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
             ...prevState,
             fetchingReplies: false,
         }));
-        setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
+        setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments);
     };
 
     const upVote = async () => {
@@ -120,7 +120,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
         if (status === 200){
             comment.upVotes = upVotes;
             comment.userVote = userVote;
-            setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments, specificComment!);
+            setCommentsContext(topic?.topicTitle!, commentsState[topic?.topicTitle!].comments);
             // setState(prevState => ({
             //     ...prevState,
             //     comment: { ...prevState.comment, upVotes: upVotes, userVote: userVote },
@@ -202,7 +202,7 @@ export const CommentComponent = (props: CommentComponentProps) => {
                 </div>
                 {<div className="replies" style={{ height: repliesHeight }}>
                     {
-                        comment.replies.map((reply: Comment, i: number) => {
+                        comment.replies?.map((reply: Comment, i: number) => {
                             return <CommentComponent 
                                         key={reply.id}
                                         path={props.path.concat([i])}
