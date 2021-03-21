@@ -39,6 +39,8 @@ enum IncomingDirection {
   NONE
 }
 
+var res: any;
+
 const maxTopicsDataCacheSize = 3;
 
 const appShellId = "app-shell";
@@ -159,6 +161,22 @@ export const AppShellComponent = (props: any) => {
       canonicalLinkTag.setAttribute("href", canonicalLink);
     } // eslint-disable-next-line
   }, [query]);
+
+  useEffect(() => {
+    changeSliderOffset();
+    window.onresize = () => {
+      if (res){clearTimeout(res)};
+      res = setTimeout(changeSliderOffset,100);
+    }
+  }, [])
+
+  const changeSliderOffset = () => {
+    if (window.innerHeight > (window.outerHeight * .9)) {
+      document.documentElement.style.setProperty('--max-topic-carousel-height-px', '160px');
+    } else {
+      document.documentElement.style.setProperty('--max-topic-carousel-height-px', '135px');
+    }
+  }
 
   const fetchTopics = async (topicTofetch?: string, newIndex?: number) => {
     let body: any = { 
