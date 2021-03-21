@@ -247,22 +247,6 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
         setState(prevState => ({ ...prevState, previewDisplayed: displayed }));
     }
 
-    const fileUploader = (
-        <div style={{ height: '100%', width: '100%', position: 'absolute', zIndex: 1 }}>
-            <div className={"images-body"} style={{ background: 'black'}}>
-                <MyUploader submitCallback={addMedia} previewDisplayedCallback={previewDisplayedCallback}/>
-            </div>
-            {
-                topicMedia.length > 0 &&
-                <div className={"canvas-footer"}>
-                    <button className="add-image-back-button" onClick={() => {showAddMedia(false)}}>
-                        Cancel
-                    </button>
-                </div>                
-            }
-        </div>
-    );
-
     const ImageNavigator = (
         <div style={{ height: '100%', width: '100%' }}>
             <div id="images-body" ref={imagesBodyRef} className={"images-body"}>
@@ -270,7 +254,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                     topicMedia.length > 0 ?
                         topicMedia.map((topicImg, idx) => {
                             const ImgStats = 
-                            <>
+                            <div key={`topic-image-${idx}`}>
                                 <div className="image-username" onClick={onUserClick(topicImg.username)}>{"@" + topicImg.username}</div>
                                 {
                                     isUserImage(idx) && <TrashButtonSVG className="image-delete-button" onClick={deleteImage(idx)}/>
@@ -278,7 +262,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                                 <div className="image-likes-container">
                                     <HeartLike liked={!!topicImg.userLike} numLikes={topicImg.likes} onClickCallback={updateImageLike} strokeColor={'white'} />
                                 </div>
-                            </>
+                            </div>
                             const Img = (
                                 <div key={idx} className="image-container" style={{ flexDirection: (topicImg?.width || 0) > (topicImg?.height || 0) ? 'unset' : 'column' }}>
                                     {isVideo(topicImg.image) ? <VideoPlayer src={topicImg.image} inView={idx===imageIndex} stylesOverride={{ height: imagesBodyRef.current?.clientHeight, width: imagesBodyRef.current?.clientWidth }}/> : 
@@ -292,7 +276,7 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                     :
                     !doneLoading ?
                         <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"}/> :
-                        fileUploader
+                        <div className='no-media-text'>No media to show</div>
                 }
                 {topicMedia.length > (imageIndex + 1) && 
                     <div className={"more-images-below"} style={{ left: 'calc(35% - 16px)' }} onClick={() => imagesBodyRef.current?.scroll(0, (((imageIndex + 1) * imagesBodyRef.current.clientHeight))) }>
@@ -310,13 +294,13 @@ export const TopicMediaComponent = (props: TopicImagesComponentProps) => {
                     </div>
                 }
             </div>
-            {topicMedia.length > 0 && <div className={state.previewDisplayed ? "preview-displayed" : "show-add-image-button"} onClick={() => {showAddMedia(true)}}>
+            <div className={state.previewDisplayed ? "preview-displayed" : "show-add-image-button"} onClick={() => {showAddMedia(true)}}>
                 <MyUploader submitCallback={addMedia} previewDisplayedCallback={previewDisplayedCallback}/>
-            </div>}
+            </div>
         </div>
     );
 
-    return <>{ImageNavigator}</>;
+    return ImageNavigator;
 }
 
 interface UploaderProps {
@@ -385,12 +369,12 @@ export const MyUploader = (props: UploaderProps) => {
     return (
         <Dropzone
             multiple={false}
-            inputContent={<PhotoCameraIcon style={{ 
+            inputContent={<PhotoCameraIcon key={'photo-camera-icon'} style={{ 
                 position: 'absolute',
                 width: '100%',
                 height: '90%',
                 top: '3px',
-                color: 'white' 
+                color: 'white'
             }}/>}
             getUploadParams={getUploadParams}
             onChangeStatus={handleChangeStatus}
@@ -398,6 +382,7 @@ export const MyUploader = (props: UploaderProps) => {
             accept="image/*,video/*"
             PreviewComponent={props => {
                 const isImage = props.fileWithMeta.file.type.includes("image");
+                const loadingPercent = Math.round(props.meta.percent);
                 return (
                     <div ref={previewImagesBodyRef} className="image-container" style={{ flexDirection: (props.meta.width || 0) > (props.meta.height || 0) ? 'unset' : 'column' }}>
                         <div className="image-preview-title">{isImage ? "Image" : "Video"} Preview</div>
@@ -406,7 +391,9 @@ export const MyUploader = (props: UploaderProps) => {
                             (isImage ?
                                 <img className='image' style={{margin: "auto"}} alt="Topic" src={fileUrl.current}/> :
                                 <VideoPlayer src={fileUrl.current} inView={true} stylesOverride={{height: previewImagesBodyRef.current?.clientHeight, width: previewImagesBodyRef.current?.clientWidth}}/>) :
-                            <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"}/>
+                            <div style={{ width: '100%', height: '100%', position: 'absolute', display: 'flex', background: 'black', zIndex: 1 }}>
+                                <ProgressBar completed={loadingPercent}/>
+                            </div>
                         }
                         <LeftArrowSVG className='cancel-preview' onClick={() => props.files.forEach((f) => f.remove())}/>
                     </div>
@@ -416,6 +403,42 @@ export const MyUploader = (props: UploaderProps) => {
         />
     )
 }
+
+const ProgressBar = (props: any) => {
+    const { completed } = props;
+  
+    const containerStyles = {
+      height: 20,
+      width: '90%',
+      backgroundColor: "#e0e0de",
+      borderRadius: 50,
+      margin: 'auto'
+    }
+  
+    const fillerStyles = {
+      height: '100%',
+      width: `${completed}%`,
+      backgroundColor: '#00695c',
+      borderRadius: 'inherit',
+      textAlign: 'right',
+      transition: 'width 1s ease-in-out',
+    }
+  
+    const labelStyles = {
+      padding: 5,
+      color: 'white',
+      fontWeight: 'bold'
+    }
+  
+    return (
+      <div style={containerStyles}>
+        <div style={fillerStyles as any}>
+          <span style={labelStyles as any}>{`${completed}%`}</span>
+        </div>
+      </div>
+    );
+  };
+  
 
 export const isVideo = (url: string) => {
     return videoFormats.has(url.split('.').pop()?.toUpperCase());

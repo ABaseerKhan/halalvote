@@ -68,7 +68,7 @@ export const TabScroll = (props: TabScrollProps) => {
                 <div className={"tabs-container"}>
                     {tabNames.map((tab, idx) => {
                         return (
-                            <span onClick={() => setTabIndex(idx)} className={((idx === 0) ? underlineTranslationPx <= 42 : underlineTranslationPx > 42) ? "tab-selected" : "tab-unselected"}>{tab}</span>
+                            <span key={`${tab}-${idx}`} onClick={() => setTabIndex(idx)} className={((idx === 0) ? underlineTranslationPx <= 42 : underlineTranslationPx > 42) ? "tab-selected" : "tab-unselected"}>{tab}</span>
                         )
                     })}
                 </div>
@@ -76,7 +76,7 @@ export const TabScroll = (props: TabScrollProps) => {
             </>
             {Sections.map((section, idx) => {
                 return (
-                    <div className={"tabs-scroll-section"} style={{ transform: `translate(${idx * 100}%, 0)`, ...(sectionFillsContainer ? { height: '100%', marginTop: 0 } : { }) }}>
+                    <div key={`section-${idx}`} className={"tabs-scroll-section"} style={{ transform: `translate(${idx * 100}%, 0)`, ...(sectionFillsContainer ? { height: '100%', marginTop: 0 } : { }) }}>
                         {section}
                     </div>
                 )

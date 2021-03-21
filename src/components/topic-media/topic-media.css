@@ -45,6 +45,7 @@
   width: 100%;
   bottom: 0px;
   background: black;
+  z-index: 1;
   /* left: calc(50% - 30px); */
 }
 
@@ -164,6 +165,15 @@
   z-index: 1;
 }
 
+.no-media-text {
+  top: calc(50% - 0.5em);
+  position: absolute;
+  height: auto;
+  width: 100%;
+  margin: auto;
+  color: var(--dark-mode-secondary-text-color);
+}
+
 .image-delete-button:hover {
   color: red;
 }
@@ -249,9 +259,10 @@
   border-radius: 10px;
   padding: 5px;
   color: white;
-  width: fit-content;
+  width: 100%;
+  text-align: center;
   font-size: 1.5vh;
-  left: calc(50% - 7vh);
+  z-index: 2;
 }
 
 .add-image-back-button:hover {
