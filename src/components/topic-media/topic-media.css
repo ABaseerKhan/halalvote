@@ -335,7 +335,7 @@
   padding: 8px;
   z-index: 2;
   color: white;
-  background-color: #ffffff25;
+  background: rgba(0,0,0,0.4);
 }
 
 .cancel-preview:hover {
