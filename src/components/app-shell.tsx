@@ -18,8 +18,6 @@ import { TopicMediaComponent } from './topic-media/topic-media';
 import { TopicContainerMobileComponent } from './topic-container-mobile/topic-container-mobile';
 import { TopicNavigatorComponent } from './topic-navigator/topic-navigator';
 import ReactGA from 'react-ga';
-import { elementStyles } from '../';
-
 
 // type imports
 import { Response } from '../https-client/client';
@@ -39,8 +37,6 @@ enum IncomingDirection {
   RIGHT,
   NONE
 }
-
-var res: any;
 
 const maxTopicsDataCacheSize = 3;
 
@@ -163,24 +159,24 @@ export const AppShellComponent = (props: any) => {
     } // eslint-disable-next-line
   }, [query]);
 
-  useEffect(() => {
-    changeSliderOffset();
-    window.onresize = () => {
-      if (res){clearTimeout(res)};
-      res = setTimeout(changeSliderOffset,100);
-    }
-  }, [])
+  // useEffect(() => {
+  //   changeSliderOffset();
+  //   window.onresize = () => {
+  //     if (res){clearTimeout(res)};
+  //     res = setTimeout(changeSliderOffset,100);
+  //   }
+  // }, [])
 
-  const changeSliderOffset = () => {
-    if (window.innerHeight > (window.outerHeight * .9)) {
-      document.documentElement.style.setProperty('--max-topic-carousel-height-px', '160px');
-      elementStyles.maxToolbarHeightPx = 160;
-    } else {
-      document.documentElement.style.setProperty('--max-topic-carousel-height-px', '135px');
-      elementStyles.maxToolbarHeightPx = 135;
-    }
-    setState(prevState => ({ ...prevState }));
-  }
+  // const changeSliderOffset = () => {
+  //   if (window.innerHeight > (window.outerHeight * .9)) {
+  //     document.documentElement.style.setProperty('--max-topic-carousel-height-px', '160px');
+  //     elementStyles.maxToolbarHeightPx = 160;
+  //   } else {
+  //     document.documentElement.style.setProperty('--max-topic-carousel-height-px', '135px');
+  //     elementStyles.maxToolbarHeightPx = 135;
+  //   }
+  //   setState(prevState => ({ ...prevState }));
+  // }
 
   const fetchTopics = async (topicTofetch?: string, newIndex?: number) => {
     let body: any = { 
