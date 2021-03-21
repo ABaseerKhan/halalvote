@@ -395,7 +395,8 @@ export const MyUploader = (props: UploaderProps) => {
                                 <ProgressBar completed={loadingPercent}/>
                             </div>
                         }
-                        <LeftArrowSVG className='cancel-preview' onClick={() => props.files.forEach((f) => f.remove())}/>
+                        <LeftArrowSVG className='cancel-preview' strokeWidth={'5px'} onClick={() => props.files.forEach((f) => f.remove())}/>
+                        <LeftArrowSVG className='cancel-preview' style={{ top: 'unset', bottom: '20px' }} onClick={() => props.files.forEach((f) => f.remove())}/>
                     </div>
                 )
             }}
