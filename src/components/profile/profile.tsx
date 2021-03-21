@@ -7,7 +7,7 @@ import { useQuery } from '../../hooks/useQuery';
 import { 
     useHistory,
 } from "react-router-dom";
-import { authenticatedGetDataContext } from '../app-shell';
+import { authenticatedGetDataContext, commentsContext } from '../app-shell';
 import CommentIcon from '@material-ui/icons/Comment';
 import ImageIcon from '@material-ui/icons/Image';
 import AssignmentIcon from '@material-ui/icons/Assignment';
@@ -31,7 +31,6 @@ enum Tab {
 interface ProfileComponentProps {
     username: string,
     fetchTopics: (topicTofetch?: string) => Promise<void>;
-    showSpecificComment: any;
 };
 interface State {
     selectedTab: Tab | undefined;
@@ -71,7 +70,7 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
 
             <div className="profile-body">
                 {state.selectedTab===Tab.CREATEDTOPICS && <UserTopics profileUsername={props.username} fetchTopics={props.fetchTopics} />}
-                {state.selectedTab===Tab.ARGUMENTS && <UserComments profileUsername={props.username} showSpecificComment={props.showSpecificComment} fetchTopics={props.fetchTopics} />}
+                {state.selectedTab===Tab.ARGUMENTS && <UserComments profileUsername={props.username} fetchTopics={props.fetchTopics} />}
                 {state.selectedTab===Tab.CREATEDMEDIA && <UserCreatedMedia profileUsername={props.username} fetchTopics={props.fetchTopics} />}
             </div>
         </div>
@@ -79,7 +78,6 @@ export const ProfileComponent = (props: ProfileComponentProps) => {
 }
 interface UserCommentProps {
     profileUsername: string,
-    showSpecificComment: any,
     fetchTopics: (topicTofetch?: string) => Promise<void>,
 }
 
@@ -88,10 +86,11 @@ interface UserCommentState {
     loading: boolean;
 }
 const UserComments = (props: UserCommentProps) => {
-    const { profileUsername, showSpecificComment, fetchTopics } = props;
+    const { profileUsername, fetchTopics } = props;
 
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
     const { closeModal } = useContext(closeModalContext);
+    const { setCommentsContext } = useContext(commentsContext);
 
     const query = useQuery();
     const history = useHistory();
@@ -122,7 +121,7 @@ const UserComments = (props: UserCommentProps) => {
         await fetchTopics(comment.topicTitle);
         modifyTopicQueryParam(query, comment.topicTitle!);
         setCardQueryParam(history, query, commentsCardId.toLowerCase());
-        showSpecificComment(comment);
+        setCommentsContext(comment.topicTitle!, [], comment);
     }
 
     const UserComment = (comment: Comment) => (

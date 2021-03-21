@@ -234,12 +234,6 @@ export const AppShellComponent = (props: any) => {
 
   };
 
-  const showSpecificComment = (comment: Comment) => {
-    setCommentsContext(topic?.topicTitle!, state.comments[topic?.topicTitle!].comments, comment);
-  };
-
-  const topic = state.topicsState.topics.length > 0 ? state.topicsState.topics[state.topicsState.topicIndex] : undefined;
-
   const handle401 = async ({ data, additionalHeaders }: any) => {
     document.cookie = "username= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
     document.cookie = "sessiontoken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
@@ -315,7 +309,7 @@ export const AppShellComponent = (props: any) => {
                       }
                       </div>
                       <div className="fixed-content">
-                        <MenuComponent fetchTopics={searchTopic} showSpecificComment={showSpecificComment} />
+                        <MenuComponent fetchTopics={searchTopic} />
                       </div>
                     </div>
                   </analyticsContext.Provider>

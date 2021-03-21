@@ -17,12 +17,11 @@ interface ModalComponentProps {
     removeModal: any,
     modalType: ModalType;
     accountUsername?: string;
-    showSpecificComment?: any;
     fetchTopics?: any;
     onLogin?: any;
 };
 export const ModalComponent = (props: ModalComponentProps) => {
-    const { removeModal, modalType, accountUsername, fetchTopics, showSpecificComment } = props;
+    const { removeModal, modalType, accountUsername, fetchTopics } = props;
 
     const isMobile = useMedia(
         // Media queries
@@ -98,7 +97,7 @@ export const ModalComponent = (props: ModalComponentProps) => {
                         modalType === ModalType.ADD_TOPIC ?
                             <AddTopicComponent fetchTopics={fetchTopics} /> :
                         modalType === ModalType.PROFILE ?
-                            <ProfileComponent username={accountUsername!} fetchTopics={fetchTopics} showSpecificComment={showSpecificComment} /> :
+                            <ProfileComponent username={accountUsername!} fetchTopics={fetchTopics} /> :
                         modalType === ModalType.ACCOUNT &&
                             <AccountComponent />
                     }

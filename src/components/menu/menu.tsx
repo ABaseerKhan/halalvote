@@ -21,7 +21,6 @@ const menuButtonInteriorId = "menu-button-interior";
 
 interface MenuComponentProps {
     fetchTopics: any,
-    showSpecificComment?: any,
 };
 
 interface MenuComponentState {
@@ -420,7 +419,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 state.modalItemSelected ===  ModalType.ADD_TOPIC ?
                     <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_TOPIC} fetchTopics={fetchTopics}/></Portal> :
                 state.modalItemSelected === ModalType.PROFILE ?
-                    <Portal><ModalComponent removeModal={() => updateUrl(ModalType.PROFILE, undefined)} modalType={ModalType.PROFILE} fetchTopics={fetchTopics} showSpecificComment={props.showSpecificComment} accountUsername={userProfile}/></Portal> :
+                    <Portal><ModalComponent removeModal={() => updateUrl(ModalType.PROFILE, undefined)} modalType={ModalType.PROFILE} fetchTopics={fetchTopics} accountUsername={userProfile}/></Portal> :
                 state.modalItemSelected ===  ModalType.ACCOUNT &&
                     <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT}/></Portal>
             }
