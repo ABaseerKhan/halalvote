@@ -41,7 +41,7 @@
     "start:windows": "copy .env.dev .env & react-scripts start",
     "build:prod": "cat .env.prod > .env; react-scripts build",
     "postBuild:prod": "find ./build/ -type f -exec gzip -9 {} \\; -exec mv {}.gz {} \\;",
-    "deploy:haram": "aws s3 sync build/ s3://haramvote.com --acl public-read",
+    "deploy:haram": "aws s3 sync build/ s3://haramvote.com --acl public-read --delete",
     "deploy:halal": "yarn postBuild:prod; aws s3 sync build/ s3://halalvote.com --content-encoding gzip --acl public-read --delete",
     "deploy": "yarn deploy:haram; yarn deploy:halal",
     "eject": "react-scripts eject",
