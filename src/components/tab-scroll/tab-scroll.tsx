@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import './tab-scroll.css';
 
@@ -20,6 +20,7 @@ export const TabScroll = (props: TabScrollProps) => {
     useEffect(() => {
         if (containerRef.current) {
             containerRef.current.onscroll = (e: Event) => {
+                console.log((e?.target as any)?.scrollLeft);
                 if (containerRef.current) {
                     setUnderlineTranslationPx(((containerRef.current.clientWidth / tabNames.length) * ((containerRef.current!.scrollLeft) / containerRef.current!.clientWidth)));
                     clearTimeout(isScrolling);
@@ -43,9 +44,10 @@ export const TabScroll = (props: TabScrollProps) => {
       } // eslint-disable-next-line
     }, [tabNames]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         tabChangedCallback && tabChangedCallback(tabIndex);
         if (containerRef.current) {
+            console.log('tabIndex changed');
             let scrollPosition: number;
             switch(tabIndex) {
                 case 0:
@@ -57,7 +59,7 @@ export const TabScroll = (props: TabScrollProps) => {
                 default:
                     scrollPosition = 0;
             }
-            containerRef.current.scrollLeft = scrollPosition;
+            if (Math.abs(containerRef.current.scrollLeft - scrollPosition) > 20) containerRef.current.scrollLeft = scrollPosition;
             setUnderlineTranslationPx(((containerRef.current.clientWidth / 2) * ((containerRef.current!.scrollLeft) / containerRef.current!.clientWidth)));
         };
     }, [tabIndex, tabChangedCallback]);
