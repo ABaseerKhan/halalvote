@@ -39,6 +39,8 @@ enum IncomingDirection {
   NONE
 }
 
+var res: any;
+
 const maxTopicsDataCacheSize = 3;
 
 const appShellId = "app-shell";
@@ -160,6 +162,25 @@ export const AppShellComponent = (props: any) => {
     } // eslint-disable-next-line
   }, [query]);
 
+  useEffect(() => {
+    window.onresize = () => {
+      if (res){clearTimeout(res)};
+      res = setTimeout(changeSliderOffset,100);
+    }
+  }, [])
+
+  useEffect(() => {
+    changeSliderOffset();
+  })
+
+  const changeSliderOffset = () => {
+    if (window.innerHeight > (window.outerHeight * .9)) {
+      document.documentElement.style.setProperty('--max-topic-carousel-height-px', '160px');
+    } else {
+      document.documentElement.style.setProperty('--max-topic-carousel-height-px', '135px');
+    }
+  }
+
   const fetchTopics = async (topicTofetch?: string, newIndex?: number) => {
     let body: any = { 
       "topicTitles": topicTofetch ? [topicTofetch] : undefined, 
@@ -203,7 +224,7 @@ export const AppShellComponent = (props: any) => {
 
   const iterateTopic = (iteration: number) => () => {
     const incomingDirection = iteration === 0 ? IncomingDirection.NONE : iteration > 0 ? IncomingDirection.RIGHT : IncomingDirection.LEFT;
-
+    
     setState((prevState: AppShellState) => ({ ...prevState, incomingDirection: incomingDirection, muted: true }));
 
     if (((state.topicsState.topicIndex + iteration) < state.topicsState.topics.length) && ((state.topicsState.topicIndex + iteration) >= 0)) {
