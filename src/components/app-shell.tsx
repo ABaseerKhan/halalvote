@@ -163,15 +163,12 @@ export const AppShellComponent = (props: any) => {
   }, [query]);
 
   useEffect(() => {
+    changeSliderOffset();
     window.onresize = () => {
       if (res){clearTimeout(res)};
       res = setTimeout(changeSliderOffset,100);
     }
   }, [])
-
-  useEffect(() => {
-    changeSliderOffset();
-  })
 
   const changeSliderOffset = () => {
     if (window.innerHeight > (window.outerHeight * .9)) {
@@ -224,7 +221,7 @@ export const AppShellComponent = (props: any) => {
 
   const iterateTopic = (iteration: number) => () => {
     const incomingDirection = iteration === 0 ? IncomingDirection.NONE : iteration > 0 ? IncomingDirection.RIGHT : IncomingDirection.LEFT;
-    
+
     setState((prevState: AppShellState) => ({ ...prevState, incomingDirection: incomingDirection, muted: true }));
 
     if (((state.topicsState.topicIndex + iteration) < state.topicsState.topics.length) && ((state.topicsState.topicIndex + iteration) >= 0)) {
