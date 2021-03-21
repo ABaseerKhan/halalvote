@@ -261,7 +261,7 @@
   width: 100%;
   text-align: center;
   font-size: 1.5vh;
-  z-index: 2;
+  z-index: 4;
 }
 
 .add-image-back-button:hover {

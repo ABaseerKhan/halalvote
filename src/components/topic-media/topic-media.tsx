@@ -391,7 +391,7 @@ export const MyUploader = (props: UploaderProps) => {
                             (isImage ?
                                 <img className='image' style={{margin: "auto"}} alt="Topic" src={fileUrl.current}/> :
                                 <VideoPlayer src={fileUrl.current} inView={true} stylesOverride={{height: previewImagesBodyRef.current?.clientHeight, width: previewImagesBodyRef.current?.clientWidth}}/>) :
-                            <div style={{ width: '100%', height: '100%', position: 'absolute', display: 'flex', background: 'black', zIndex: 1 }}>
+                            <div style={{ width: '100%', height: '100%', position: 'absolute', display: 'flex', background: 'black', zIndex: 3 }}>
                                 <ProgressBar completed={loadingPercent}/>
                             </div>
                         }
