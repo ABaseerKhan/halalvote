@@ -51,7 +51,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
     const [isForgotPasswordPageButtonDisabled, setIsForgotPasswordPageButtonDisabled] = useState<boolean>();
     const [isResetPasswordPageButtonDisabled, setIsResetPasswordPageButtonDisabled] = useState<boolean>();
 
-    const [loginUsernameInput, setLoginUsernameInput] = useState<string>("");
+    const [loginUsernameOrEmailInput, setloginUsernameOrEmailInput] = useState<string>("");
     const [loginPasswordInput, setLoginPasswordInput] = useState<string>("");
     const [loginErrorMessage, setLoginErrorMessage] = useState<string>("");
 
@@ -147,8 +147,8 @@ export const LoginComponent = (props: LoginComponentProps) => {
     }, [loginScreenType]);
 
     useEffect(() => {
-        setIsLoginButtonDisabled(loginUsernameInput === "" || loginPasswordInput === ""); // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loginUsernameInput, loginPasswordInput]);
+        setIsLoginButtonDisabled(loginUsernameOrEmailInput === "" || loginPasswordInput === ""); // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loginUsernameOrEmailInput, loginPasswordInput]);
 
     useEffect(() => {
         setIsRegisterButtonDisabled(!validRegisterEmail() || !registerEmailInputAvailable || registerUsernameInput === "" || !registerUsernameInputAvailable || !validRegisterPassword() || !registerPasswordsMatch()); // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -319,7 +319,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 baseUrl: usersAPIConfig.url,
                 path: 'login',
                 data: {
-                    "username": loginUsernameInput,
+                    "username": loginUsernameOrEmailInput,
                     "password": loginPasswordInput,
                 },
                 additionalHeaders: { }
@@ -549,7 +549,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     <div className="logo">
                         <p><span id="h">H</span><span id="v">V</span></p>
                     </div>
-                    <input id="username-input" className="form-input" placeholder="Username" value={loginUsernameInput} onChange={e => setLoginUsernameInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
+                    <input id="username-input" className="form-input" placeholder="Username or Email" value={loginUsernameOrEmailInput} onChange={e => setloginUsernameOrEmailInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                     <input id="password-input" className="form-input" type="password" placeholder="Password" value={loginPasswordInput} onChange={e => setLoginPasswordInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                     {
                         loginErrorMessage && <div className="login-error-message">{loginErrorMessage}</div>
