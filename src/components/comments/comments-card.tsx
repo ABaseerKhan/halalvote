@@ -91,7 +91,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
 
     useEffect(() => {
         if (specificComment) {
-            fetchComments([]);
+            fetchComments([], undefined, specificComment.depth);
         } // eslint-disable-next-line
     }, [specificComment])
 
@@ -104,7 +104,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
                 "topicTitle": topic?.topicTitle,
                 "username": username,
                 "parentId": parentComment?.id,
-                "singleCommentId": specificComment,
+                "singleCommentId": specificComment?.id,
                 "depth": depth,
                 "n": !!n ? n : 50,
                 "excludedCommentIds": specificComment ? undefined : parentComment ? (parentComment.replies || []).map((r) => r.id) : comments?.map((r) => r.id),
@@ -116,7 +116,7 @@ export const CommentsCardComponent = (props: CommentsCardComponentProps) => {
         setState(prevState => ({ ...prevState, loading: false }));
 
         if (specificComment) {
-            const pathToSpecificComment = getPathFromId(updatedComments, specificComment, []);
+            const pathToSpecificComment = getPathFromId(updatedComments, specificComment.id, []);
             setState(prevState => ({ ...prevState, pathToHighlightedComment: pathToSpecificComment }));
         }
 

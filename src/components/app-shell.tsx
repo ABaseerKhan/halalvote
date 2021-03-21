@@ -53,7 +53,7 @@ type AppShellState = {
   topicsState: TopicsState; 
   topicMedia: TopicImagesState,
   comments: CommentsState,
-  specificComment?: number, 
+  specificComment?: Comment,
   incomingDirection: IncomingDirection,
   muted: boolean,
   analytics: AnalyticsState
@@ -91,7 +91,7 @@ export const AppShellComponent = (props: any) => {
     limitCacheSize(prevState.topicMedia);
     return { ...prevState };
   });
-  const setCommentsContext = (topicTitle: string, comments: Comment[], specificComment?: number) => setState(prevState => { 
+  const setCommentsContext = (topicTitle: string, comments: Comment[], specificComment?: Comment) => setState(prevState => { 
     prevState.comments[topicTitle] = { comments: comments, specificComment: specificComment ? specificComment : prevState.specificComment, creationTime: Date.now() };
     limitCacheSize(prevState.comments);
     return { ...prevState };
@@ -234,7 +234,7 @@ export const AppShellComponent = (props: any) => {
 
   };
 
-  const showSpecificComment = (comment: number) => {
+  const showSpecificComment = (comment: Comment) => {
     setCommentsContext(topic?.topicTitle!, state.comments[topic?.topicTitle!].comments, comment);
   };
 
@@ -366,8 +366,8 @@ export const topicMediaContext = React.createContext<{topicMediaState: TopicImag
   setTopicMediaContext: (topicTitle, topicMedia, index, doneLoading) => undefined
 });
 
-export type CommentsState = { [topicTitle: string]: { comments: Comment[], specificComment: number | undefined, creationTime: number } };
-export const commentsContext = React.createContext<{commentsState: CommentsState; setCommentsContext: (topicTitle: string, comments: Comment[], specificComment?: number) => void}>({
+export type CommentsState = { [topicTitle: string]: { comments: Comment[], specificComment: Comment | undefined, creationTime: number } };
+export const commentsContext = React.createContext<{commentsState: CommentsState; setCommentsContext: (topicTitle: string, comments: Comment[], specificComment?: Comment) => void}>({
   commentsState: { },
   setCommentsContext: (topicTitle, comments, specificComment) => undefined
 });

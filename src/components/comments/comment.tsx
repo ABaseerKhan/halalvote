@@ -26,7 +26,7 @@ interface CommentComponentProps {
     key: number,
     path: number[],
     comment: Comment,
-    specificComment: number | undefined,
+    specificComment: Comment | undefined,
     pathToHighlightedComment: number[] | undefined,
     highlightComment: (path: number[] | undefined) => void,
     fetchMoreReplies: (pathToParentComment: number[], n?: number, specificCommentId?: number | undefined, depth?: number) => Promise<number>,

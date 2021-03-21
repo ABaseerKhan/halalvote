@@ -122,7 +122,7 @@ const UserComments = (props: UserCommentProps) => {
         await fetchTopics(comment.topicTitle);
         modifyTopicQueryParam(query, comment.topicTitle!);
         setCardQueryParam(history, query, commentsCardId.toLowerCase());
-        showSpecificComment(comment.id);
+        showSpecificComment(comment);
     }
 
     const UserComment = (comment: Comment) => (
