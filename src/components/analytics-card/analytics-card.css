@@ -12,6 +12,12 @@
   touch-action: none;
 }
 
+@media only screen and (max-height: 600px) {
+  .canvas-container {
+    width: 90%;
+  }
+}
+
 .chart {
   max-width: 100% !important;
   margin: auto;

@@ -96,6 +96,12 @@
     color: var(--gray);
 }
 
+@media only screen and (max-width: 350px) {
+    .topic-votes-container {
+        display: block;
+    }
+}
+
 .topic-vote-text-left, .topic-vote-text-right {
     position: absolute;
     display: flex;
