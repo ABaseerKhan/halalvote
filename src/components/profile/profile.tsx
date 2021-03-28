@@ -107,7 +107,7 @@ const UserComments = (props: UserCommentProps) => {
     const fetchUserComments = async () => {
         const { data }: { data: Comment[]} = await authenticatedGetData({ 
             baseUrl: usersAPIConfig.url,
-            path: 'user-comments', 
+            path: 'user-comments',
             queryParams: {
                 "username": profileUsername,
             },
@@ -120,6 +120,7 @@ const UserComments = (props: UserCommentProps) => {
         deleteUserProfileQueryParam(history, query);
         await fetchTopics(comment.topicTitle);
         modifyTopicQueryParam(query, comment.topicTitle!);
+        console.log(`query: ${query.toString()}`);
         setCardQueryParam(history, query, commentsCardId.toLowerCase());
         setCommentsContext(comment.topicTitle!, [], comment);
     }

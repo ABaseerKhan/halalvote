@@ -197,6 +197,10 @@ export const AppShellComponent = (props: any) => {
     }
 
     if(topicTofetch) {
+      if (data.length === 0) {
+        alert(`Topic "${topicTitle}" not found`);
+        fetchTopics();
+      }
       const indexOfTopicToFetch = state.topicsState.topics.findIndex(i => i.topicTitle === topicTofetch);
       if (indexOfTopicToFetch >= 0) {
         state.topicsState.topicIndex = arrayMove(state.topicsState.topics, indexOfTopicToFetch, state.topicsState.topicIndex); // move topic to current index if needed (for search)

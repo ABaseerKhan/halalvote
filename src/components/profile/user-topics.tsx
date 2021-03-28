@@ -5,7 +5,7 @@ import { useQuery } from '../../hooks/useQuery';
 import { topicsAPIConfig, usersAPIConfig, superUsername } from '../../https-client/config';
 import { Topic } from '../../types';
 import { setCardQueryParam, timeSince, deleteUserProfileQueryParam, modifyTopicQueryParam } from '../../utils';
-import { authenticatedGetDataContext, authenticatedPostDataContext } from '../app-shell';
+import { authenticatedGetDataContext, authenticatedPostDataContext, topicsContext } from '../app-shell';
 import { closeModalContext } from '../modal/modal';
 import { TabScroll } from '../tab-scroll/tab-scroll';
 import { mediaCardId } from '../topic-container/topic-container';
@@ -42,6 +42,7 @@ export const UserTopics = (props: UserTopicsProps) => {
     const { authenticatedGetData } = useContext(authenticatedGetDataContext);
     const { authenticatedPostData } = useContext(authenticatedPostDataContext);
     const { closeModal } = useContext(closeModalContext);
+    const { topicsState: { topics, topicIndex }, setTopicsContext } = useContext(topicsContext);
 
     const [state, setState] = useState<UserTopicsState>({ 
         userCreatedTopics: [], 
@@ -98,7 +99,9 @@ export const UserTopics = (props: UserTopicsProps) => {
         }, true);
 
         if (status === 200) {
-            setState(prevState => ({ ...prevState, userCreatedTopics: prevState.userCreatedTopics?.filter((topic) => topic.topicTitle !== topicTitle), userVotedTopics: prevState.userVotedTopics?.filter((topic) => topic.topicTitle !== topicTitle) }))
+            setState(prevState => ({ ...prevState, userCreatedTopics: prevState.userCreatedTopics?.filter((topic) => topic.topicTitle !== topicTitle), userVotedTopics: prevState.userVotedTopics?.filter((topic) => topic.topicTitle !== topicTitle) }));
+            const newTopics = topics.filter(topic => topic.topicTitle !== topicTitle);
+            setTopicsContext(newTopics, (topicIndex && topicIndex-1) || 0);
         }
     }
 
@@ -140,9 +143,9 @@ export const UserTopics = (props: UserTopicsProps) => {
 
     const tabNames = ownProfile ? ["Created Topics", "Voted Topics"] : ["Created Topics"];
     const sections = ownProfile ? [
-        <div className="topics-section-container">{state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_CREATED_TOPICS))}</div>,
-        <div className="topics-section-container">{state.userVotedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_VOTED_TOPICS))}</div>
-    ] : [<div className="topics-section-container">{state.userCreatedTopics?.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_CREATED_TOPICS))}</div>];
+        <div className="topics-section-container">{state.userCreatedTopics && state.userCreatedTopics.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_CREATED_TOPICS))}</div>,
+        <div className="topics-section-container">{state.userVotedTopics && state.userVotedTopics.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_VOTED_TOPICS))}</div>
+    ] : [<div className="topics-section-container">{state.userCreatedTopics && state.userCreatedTopics.sort((a, b) => { return (new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime())}).map((topic) => userTopic(topic, Tab.USER_CREATED_TOPICS))}</div>];
 
     return (
         state.loading ? <TopicSkeletonComponent /> : 
