@@ -17,6 +17,10 @@ const getLoggedInUser = (): string | undefined => {
     return document.cookie.split('; ').find(row => row.startsWith("username="))?.split('=')[1];
 }
 
+const getSessionToken = (): string | undefined => {
+    return document.cookie.split('; ').find(row => row.startsWith("sessiontoken="))?.split('=')[1];
+}
+
 export const postData = async (request: Request): Promise<Response> => {
     const { baseUrl, path, data, additionalHeaders } = request;
 
@@ -28,6 +32,13 @@ export const postData = async (request: Request): Promise<Response> => {
     }
 
     const loggedInUser = getLoggedInUser();
+    const userSessionToken = getSessionToken();
+
+    let refreshSessionTokenHeaders: any = {}
+    if (loggedInUser && userSessionToken) {
+        refreshSessionTokenHeaders.refreshusername = loggedInUser;
+        refreshSessionTokenHeaders.refreshsessiontoken = userSessionToken;
+    }
 
     const response = await fetch(baseUrl + path, {
         method: 'POST',
@@ -35,6 +46,7 @@ export const postData = async (request: Request): Promise<Response> => {
         cache: 'no-cache',
         headers: {
             ...additionalHeaders,
+            ...refreshSessionTokenHeaders,
             'Content-Type': 'application/json',
             'x-api-key': getApiKey(baseUrl),
             'issuperuser': (loggedInUser && loggedInUser === superUsername)
@@ -53,12 +65,21 @@ export const getData = async (request: Request): Promise<Response> => {
 
     const url = baseUrl + path + ((query && ("?" + query)) || "");
     const loggedInUser = getLoggedInUser();
+    const userSessionToken = getSessionToken();
+
+    let refreshSessionTokenHeaders: any = {}
+    if (loggedInUser && userSessionToken) {
+        refreshSessionTokenHeaders.refreshusername = loggedInUser;
+        refreshSessionTokenHeaders.refreshsessiontoken = userSessionToken;
+    }
+
     const response = await fetch(url, {
         method: 'GET',
         mode: 'cors',
         cache: 'no-cache',
         headers: {
             ...additionalHeaders,
+            ...refreshSessionTokenHeaders,
             'Content-Type': 'application/json',
             'x-api-key': getApiKey(baseUrl),
             'issuperuser': (loggedInUser && loggedInUser === superUsername)
