@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { TopicVotesComponent } from './topic-votes';
 import { topicsContext } from '../app-shell';
 
@@ -25,7 +25,7 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
         false
     );
 
-    const topicTitleRefs = useRef<any>([]);
+    const topicTitleRefs = useRef<HTMLDivElement[]>([]);
 
     const { topicsState: { topics, topicIndex }, setTopicsContext } = useContext(topicsContext);
     const topicTitles = topics.map((topic) => topic.topicTitle);
@@ -37,6 +37,28 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
     const userVote = topic?.vote;
 
     const topicTitleAndVotingSwitch = "topic-title-and-voting-switch";
+
+    useEffect(() => {
+        if (topicTitleRefs.current?.length && topicTitleRefs.current[topicIndex]) {
+            setTimeout(() => {
+                var time = 1;
+                var interval = setInterval(function() {
+                    if (time <= 50) { 
+                        topicTitleRefs.current[topicIndex].scrollLeft = time;
+                        time++;
+                    }
+                    else if (time > 50 && time <= 100) {
+                        topicTitleRefs.current[topicIndex].scrollLeft = 50 - (time - 50);
+                        time++;
+                    }
+                    else { 
+                        clearInterval(interval);
+                    }
+                }, 10);
+
+            }, 150);
+        }
+    }, [topicIndex])
 
     return (
         <div id={id} className='topic-carousel-mobile'>
@@ -82,8 +104,9 @@ export const TopicCarouselComponent = (props: TopicCarouselComponentProps) => {
 
                                 return <div 
                                     key={`title-${idx}`} 
-                                    ref={(el) => topicTitleRefs.current.push(el)}
-                                    className={className} style={{ transform: `translate(${translationVW}vw, 0)` }}
+                                    ref={(el) => { el && (topicTitleRefs.current[idx] = el); }}
+                                    className={className} 
+                                    style={{ transform: `translate(${translationVW}vw, 0)` }}
                                     onTouchStart={(e) => {e.stopPropagation()}}
                                     onTouchMove={(e) => {e.stopPropagation()}}
                                     onTouchEnd={(e) => {e.stopPropagation()}}

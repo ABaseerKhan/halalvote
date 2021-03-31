@@ -58,7 +58,6 @@
     color: var(--dark-mode-text-color);
     overflow-x: auto;
     white-space: nowrap;
-    scroll-behavior: smooth;
     overflow-y: hidden;
     transition: all 0.3s ease;
     padding: 0 1vw;
