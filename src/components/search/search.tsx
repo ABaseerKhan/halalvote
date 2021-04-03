@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { getData } from '../../https-client/client';
 import { topicsAPIConfig } from '../../https-client/config';
 import { useDebouncedSearch } from '../../hooks/useDebouncedSearch';
 import { ReactComponent as SearchSVG } from '../../icons/search.svg';
+import { useCookies } from 'react-cookie';
+import { authenticatedPostDataContext } from '../app-shell';
 
 // styles
 import './search.css';
@@ -12,13 +14,20 @@ interface SearchComponentProps {
 };
 
 export const SearchComponent = (props: SearchComponentProps) => {
+    const { onSuggestionClick } = props;
+
     const { inputText, setInputText, searchResults } = useTopicsSearch();
     const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
     const [autoCompleteIndex, setAutoCompleteIndex] = useState<number>(0);
     const searchPageRef = useRef<HTMLDivElement>(null);
 
+    const { authenticatedPostData } = useContext(authenticatedPostDataContext);
+
+    const [cookies, setCookie] = useCookies(['username', 'sessiontoken']);
+    const { username, sessiontoken } = cookies;
+
     useEffect(() => {
-        if (searchResults?.result?.data && searchResults?.result?.data.length) {
+        if (searchResults?.result?.data) {
             setAutoCompleteOpen(true);
         } else {
             setAutoCompleteOpen(false);
@@ -32,6 +41,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
         }
         // outside click 
         if (searchPageRef.current) {
+            setInputText("");
             searchPageRef.current.style.transform = `translate(0, -10.5em)`;
         }
     };
@@ -39,7 +49,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
         document.addEventListener("mousedown", handleClick);
         return () => {
             document.removeEventListener("mousedown", handleClick);
-        };
+        }; // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
@@ -82,6 +92,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
                 }
                 switch(swipedir) {
                     case 'up':
+                        setInputText("");
                         searchPageRef.current!.style.transform = `translate(0, -10.5em)`;
                         break;
                 };
@@ -101,13 +112,13 @@ export const SearchComponent = (props: SearchComponentProps) => {
 
 
     const onClickSuggestion = (topicTitle: string) => () => {
-        props.onSuggestionClick(topicTitle);
+        onSuggestionClick(topicTitle);
         setInputText("");
         searchPageRef.current!.style.transform = `translate(0, -10.5em)`;
     };
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (!(searchResults?.result?.data || searchResults?.result?.data?.length)) return;
+        if (!searchResults?.result?.data) return;
         
         // arrow up/down button should select next/previous list element
         if (e.keyCode === 38) {
@@ -115,15 +126,41 @@ export const SearchComponent = (props: SearchComponentProps) => {
             if (autoCompleteIndex > 0) setAutoCompleteIndex(prevIndex => (prevIndex - 1));
         } else if (e.keyCode === 40) {
             e.preventDefault();
-            if (autoCompleteIndex === -1) setAutoCompleteIndex(0);
-            else if (autoCompleteIndex < searchResults?.result?.data?.length - 1) {
+            if (autoCompleteIndex !== -1 && searchResults?.result?.data?.length && autoCompleteIndex < searchResults?.result?.data?.length - 1) {
                 setAutoCompleteIndex( prevIndex => (prevIndex + 1));
+            } else {
+                setAutoCompleteIndex(0);
             }
         } 
         // enter key should execute topicClick
         else if (e.keyCode === 13) {
-            if (searchResults.result.data && searchResults.result.data.length) {
-                onClickSuggestion(searchResults.result.data[autoCompleteIndex][0])();
+            if (searchResults.result.data) {
+                if (searchResults.result.data.length) onClickSuggestion(searchResults.result.data[autoCompleteIndex][0])();
+                else addTopic();
+            }
+        }
+    }
+
+    const addTopic = async () => {
+        if (inputText) {
+            const body: any = {
+                "username": username,
+                "topicTitle": inputText
+            };
+            const { status, data } = await authenticatedPostData({
+                baseUrl: topicsAPIConfig.url,
+                path: 'add-topic',
+                data: body,
+                additionalHeaders: {
+                    "sessiontoken": sessiontoken
+                },
+                setCookie: setCookie
+            }, true);
+
+            if (status === 200 && inputText === data) {
+                onSuggestionClick(inputText);
+                setInputText("");
+                searchPageRef.current!.style.transform = `translate(0, -10.5em)`;
             }
         }
     }
@@ -145,19 +182,28 @@ export const SearchComponent = (props: SearchComponentProps) => {
                     onKeyDown={onKeyDown}
                 />
                 <div className={"autocomplete"}>
-                    {searchResults.result && searchResults.result.data && !!searchResults.result.data.length && (
+                    {
+                        (searchResults.result && searchResults.result.data && !!searchResults.result.data.length) ?
+                            <ul className={"autocomplete-list"}>
+                                {
+                                    searchResults.result.data.map((topicTitle: [string], index: number) => (
+                                        <li className={index===autoCompleteIndex ? "autocomplete-list-item-highlighted" : "autocomplete-list-item"} key={topicTitle[0]} onMouseOver={() => {setAutoCompleteIndex(index)}}>
+                                            <div onClick={onClickSuggestion(topicTitle[0])} className={"suggestions-inner-container"}>
+                                                <div className={"option"}>{topicTitle[0]}</div>
+                                            </div>
+                                        </li>
+                                    ))
+                                }
+                            </ul> :
+                        (searchResults.result && searchResults.result.data && searchResults.result.data.length === 0) &&
                         <ul className={"autocomplete-list"}>
-                            {
-                                searchResults.result.data.map((topicTitle: [string], index: number) => (
-                                    <li className={index===autoCompleteIndex ? "autocomplete-list-item-highlighted" : "autocomplete-list-item"} key={topicTitle[0]} onMouseOver={() => {setAutoCompleteIndex(index)}}>
-                                        <div onClick={onClickSuggestion(topicTitle[0])} className={"suggestions-inner-container"}>
-                                            <div className={"option"}>{topicTitle[0]}</div>
-                                        </div>
-                                    </li>
-                                ))
-                            }
+                            <li className={autoCompleteIndex === 0 ? "autocomplete-list-item-highlighted" : "autocomplete-list-item"} onMouseOver={() => {setAutoCompleteIndex(0)}}>
+                                <div onClick={addTopic} className={"suggestions-inner-container"}>
+                                    <div className={"option"}><span className={"add-topic-option-text"}>Add Topic:</span><span className={"add-topic-option-topic-text"}>{inputText}</span></div>
+                                </div>
+                            </li>
                         </ul>
-                    )}
+                    }
                 </div>
             </div>
         </div>

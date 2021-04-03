@@ -95,6 +95,7 @@
     min-width: 0;
     padding: 0;
     transition: all .2s ease-in-out;
+    cursor: pointer;
 }
 
 .autocomplete-list-item-highlighted {
@@ -113,10 +114,20 @@
 .option {
     display: flex;
     flex: auto;
-    flex-direction: column;
+    flex-direction: row;
     min-width: 0;
     padding: 6px 0;
-    cursor: default;
+    cursor: pointer;
+}
+
+.add-topic-option-text {
+    max-width: max-content;
+    color: var(--link-color)
+}
+
+.add-topic-option-topic-text {
+    max-width: max-content;
+    margin-left: 0.5rem;
 }
 
 .search-icon-container {
