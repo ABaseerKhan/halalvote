@@ -19,7 +19,7 @@
     border-radius: 50%;
     border: 2px solid green;
     background: var(--dark-mode-middleground);
-    left: 26px;
+    right: 36px;
     top: 26px;
     z-index: 2;
 }

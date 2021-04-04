@@ -549,7 +549,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                     <div className="logo">
                         <p><span id="h">H</span><span id="v">V</span></p>
                     </div>
-                    <input id="username-input" className="form-input" placeholder="Username or Email" value={loginUsernameOrEmailInput} onChange={e => setloginUsernameOrEmailInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
+                    <input id="username-input" className="form-input" placeholder="Username or email" value={loginUsernameOrEmailInput} onChange={e => setloginUsernameOrEmailInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                     <input id="password-input" className="form-input" type="password" placeholder="Password" value={loginPasswordInput} onChange={e => setLoginPasswordInput(e.target.value)} onKeyPress={(event: any) => handleLoginKeyPress(event)}/>
                     {
                         loginErrorMessage && <div className="login-error-message">{loginErrorMessage}</div>

@@ -30,6 +30,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
     const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
     const [autoCompleteIndex, setAutoCompleteIndex] = useState<number>(0);
     const searchPageRef = useRef<HTMLDivElement>(null);
+    const searchPullDownRef = useRef<HTMLDivElement>(null);
 
     const { authenticatedPostData } = useContext(authenticatedPostDataContext);
 
@@ -45,7 +46,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
     }, [searchResults]);
 
     const handleClick = (e: any) => {
-        if (searchPageRef.current && searchPageRef.current.contains(e.target)) {
+        if ((searchPageRef.current && searchPageRef.current.contains(e.target)) || (searchPullDownRef.current && searchPullDownRef.current.contains(e.target))) {
           // inside click
             return;
         }
@@ -177,9 +178,11 @@ export const SearchComponent = (props: SearchComponentProps) => {
 
     const SearchPulldown = (
         <div 
+            ref={searchPullDownRef}
             className={"search-pulldown"} 
-            onClick={() => { 
+            onClick={(e) => { 
                 if (searchPageRef.current) {
+                    console.log(searchPageRef.current.style.transform);
                     if (searchPageRef.current.style.transform === 'translate(0px, 0px)') {
                         searchPageRef.current!.style.transform = `translate(0, -10.5em)`;
                     } else {
@@ -194,49 +197,49 @@ export const SearchComponent = (props: SearchComponentProps) => {
 
     return (
         <>
-        <div id="search-page" ref={searchPageRef} className='search-page'>
-            <div className={"search-bar"}>
-                <span className="search-header">
-                    <span className="search-header-haram">H</span>
-                    <span className="search-header-halal">V</span>
-                </span>
-                <div className="search-icon-container">
-                    <SearchSVG width='18px'/>
-                </div>
-                <input 
-                    className={autoCompleteOpen ? "search-bar-input-autocomplete-open" : "search-bar-input"} 
-                    type="text" value={inputText} 
-                    onChange={e => setInputText(e.target.value)} 
-                    onKeyDown={onKeyDown}
-                />
-                <div className={"autocomplete"}>
-                    {
-                        (searchResults.result && searchResults.result.data && !!searchResults.result.data.length) ?
+            <div id="search-page" ref={searchPageRef} className='search-page'>
+                <div className={"search-bar"}>
+                    <span className="search-header">
+                        <span className="search-header-haram">H</span>
+                        <span className="search-header-halal">V</span>
+                    </span>
+                    <div className="search-icon-container">
+                        <SearchSVG width='18px'/>
+                    </div>
+                    <input 
+                        className={autoCompleteOpen ? "search-bar-input-autocomplete-open" : "search-bar-input"} 
+                        type="text" value={inputText} 
+                        onChange={e => setInputText(e.target.value)} 
+                        onKeyDown={onKeyDown}
+                    />
+                    <div className={"autocomplete"}>
+                        {
+                            (searchResults.result && searchResults.result.data && !!searchResults.result.data.length) ?
+                                <ul className={"autocomplete-list"}>
+                                    {
+                                        searchResults.result.data.map((topicTitle: [string], index: number) => (
+                                            <li className={index===autoCompleteIndex ? "autocomplete-list-item-highlighted" : "autocomplete-list-item"} key={topicTitle[0]} onMouseOver={() => {setAutoCompleteIndex(index)}}>
+                                                <div onClick={onClickSuggestion(topicTitle[0])} className={"suggestions-inner-container"}>
+                                                    <div className={"option"}>{topicTitle[0]}</div>
+                                                </div>
+                                            </li>
+                                        ))
+                                    }
+                                </ul> :
+                            (searchResults.result && searchResults.result.data && searchResults.result.data.length === 0) &&
                             <ul className={"autocomplete-list"}>
-                                {
-                                    searchResults.result.data.map((topicTitle: [string], index: number) => (
-                                        <li className={index===autoCompleteIndex ? "autocomplete-list-item-highlighted" : "autocomplete-list-item"} key={topicTitle[0]} onMouseOver={() => {setAutoCompleteIndex(index)}}>
-                                            <div onClick={onClickSuggestion(topicTitle[0])} className={"suggestions-inner-container"}>
-                                                <div className={"option"}>{topicTitle[0]}</div>
-                                            </div>
-                                        </li>
-                                    ))
-                                }
-                            </ul> :
-                        (searchResults.result && searchResults.result.data && searchResults.result.data.length === 0) &&
-                        <ul className={"autocomplete-list"}>
-                            <li className={autoCompleteIndex === 0 ? "autocomplete-list-item-highlighted" : "autocomplete-list-item"} onMouseOver={() => {setAutoCompleteIndex(0)}}>
-                                <div onClick={addTopic} className={"suggestions-inner-container"}>
-                                    <div className={"option"}><span className={"add-topic-option-text"}>Add Topic:</span><span className={"add-topic-option-topic-text"}>{inputText}</span></div>
-                                </div>
-                            </li>
-                        </ul>
-                    }
+                                <li className={autoCompleteIndex === 0 ? "autocomplete-list-item-highlighted" : "autocomplete-list-item"} onMouseOver={() => {setAutoCompleteIndex(0)}}>
+                                    <div onClick={addTopic} className={"suggestions-inner-container"}>
+                                        <div className={"option"}><span className={"add-topic-option-text"}>Add Topic:</span><span className={"add-topic-option-topic-text"}>{inputText}</span></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        }
+                    </div>
                 </div>
+                {isMobile && SearchPulldown}
             </div>
-            {isMobile && SearchPulldown}
-        </div>
-        {!isMobile && SearchPulldown}
+            {!isMobile && SearchPulldown}
         </>
     );
 }

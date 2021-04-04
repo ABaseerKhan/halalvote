@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {TopicCarouselComponent } from './topic-carousel/topic-carousel';
 import { SearchComponent } from './search/search';
 import { AnalyticsCardComponent, Interval } from './analytics-card/analytics-card';
-import { MenuComponent } from './menu/menu';
 import { Topic, Comment, TopicMedia } from '../types';
 import { postData, getData } from '../https-client/client';
 import { topicsAPIConfig } from '../https-client/config';
@@ -24,6 +23,7 @@ import { Response } from '../https-client/client';
 
 // style imports
 import './app-shell.css';
+import { BurgerMenuComponent } from './burger-menu/burger-menu';
 
 // initialize google analytics in prod
 if (window.location.hostname.includes('halalvote.com')) {
@@ -293,6 +293,7 @@ export const AppShellComponent = (props: any) => {
                   <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
                     <div id={appShellId} className={appShellId} style={{ overflowY: isMobile ? 'hidden' : 'scroll' }} >
                       <SearchComponent onSuggestionClick={searchTopic} />
+                      <BurgerMenuComponent fetchTopics={fetchTopics} />
                       <div className="topic-content">
                       {
                         isMobile ?
@@ -311,9 +312,6 @@ export const AppShellComponent = (props: any) => {
                           TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
                         />
                       }
-                      </div>
-                      <div className="fixed-content">
-                        <MenuComponent fetchTopics={searchTopic} />
                       </div>
                     </div>
                   </analyticsContext.Provider>
