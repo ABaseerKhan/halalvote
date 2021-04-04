@@ -371,8 +371,8 @@
 
 .mute-button {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: calc(50% - 18.5px);
+  right: calc(50% - 18.5px);
   height: 30px;
   width: 30px;
   background: rgba(0,0,0,0.4);

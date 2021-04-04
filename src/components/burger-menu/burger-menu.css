@@ -11,18 +11,18 @@
   position: fixed;
   width: 2em;
   height: 1.5em;
-  left: 36px;
-  top: 36px;
+  left: 1.5em;
+  top: 1.5em;
 }
 
 /* Color/shape of burger icon bars */
 .bm-burger-bars {
-  background: var(--dark-mode-text-color);
+  background: white;
 }
 
 /* Color/shape of burger icon bars on hover*/
 .bm-burger-bars-hover {
-  background: white;
+  background: var(--dark-mode-text-color);
 }
 
 /* Position and sizing of clickable cross button */
@@ -48,7 +48,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
 
 /* General sidebar styles */
 .bm-menu {
-    background: var(--light-neutral-color);
+    background: var(--site-background-color);
     padding: 2.5em 0 0;
     font-size: 1.15em;
 }

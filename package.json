@@ -5,7 +5,6 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "4.11.2",
-    "@types/react-burger-menu": "^2.8.0",
     "awesome-debounce-promise": "^2.1.0",
     "browser-image-compression": "^1.0.12",
     "chart.js": "^2.9.4",
@@ -22,7 +21,6 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-spinners": "^0.9.0",
-    "react-textarea-autosize": "^8.2.0",
     "react-tooltip": "^4.2.7",
     "typescript": "^3.8.3",
     "use-constant": "^1.0.0",
@@ -36,7 +34,8 @@
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.6",
     "@types/react-router-dom": "^5.1.6",
-    "@types/uuid": "^8.3.0"
+    "@types/uuid": "^8.3.0",
+    "@types/react-burger-menu": "^2.8.0"
   },
   "scripts": {
     "start": "cat .env.dev > .env; react-scripts start",

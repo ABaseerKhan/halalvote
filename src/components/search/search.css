@@ -14,14 +14,12 @@
 .search-pulldown {
     position: fixed;
     display: flex;
-    height: 50px;
-    width: 50px;
+    height: 2.5em;
+    width: 2.5em;
     border-radius: 50%;
-    border: 2px solid green;
-    background: var(--dark-mode-middleground);
-    right: 36px;
-    top: 26px;
-    z-index: 2;
+    left: 5em;
+    top: 1em;
+    z-index: 4;
 }
 
 .search-pulldown:hover {
@@ -30,12 +28,10 @@
 
 @media only screen and (max-width: 600px) {
     .search-pulldown {
-        position: absolute !important;
-        left: calc(50% - 26px) !important;
-        bottom: -45px !important;
-        top: unset !important;
-        z-index: 0 !important;
+        left: unset !important;
+        right: 1.5em !important;
     }
+
     .search-page {
         width: 100% !important;
         left: unset !important

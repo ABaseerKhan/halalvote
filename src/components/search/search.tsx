@@ -6,7 +6,6 @@ import { ReactComponent as SearchSVG } from '../../icons/search.svg';
 import SearchIcon from '@material-ui/icons/Search';
 import { useCookies } from 'react-cookie';
 import { authenticatedPostDataContext } from '../app-shell';
-import { useMedia } from '../../hooks/useMedia';
 
 // styles
 import './search.css';
@@ -17,14 +16,6 @@ interface SearchComponentProps {
 
 export const SearchComponent = (props: SearchComponentProps) => {
     const { onSuggestionClick } = props;
-
-    const isMobile = useMedia(
-        // Media queries
-        ['(max-width: 600px)'],
-        [true],
-        // default value
-        false
-    );
 
     const { inputText, setInputText, searchResults } = useTopicsSearch();
     const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
@@ -190,7 +181,7 @@ export const SearchComponent = (props: SearchComponentProps) => {
                 }
             }}
         >
-            <SearchIcon style={{ margin: 'auto', color: 'white', height: '40px', width: '40px' }}/>
+            <SearchIcon style={{ margin: 'auto', color: 'white', height: '1.5em', width: '1.5em' }}/>
         </div>
     );
 
@@ -236,9 +227,8 @@ export const SearchComponent = (props: SearchComponentProps) => {
                         }
                     </div>
                 </div>
-                {isMobile && SearchPulldown}
             </div>
-            {!isMobile && SearchPulldown}
+            {SearchPulldown}
         </>
     );
 }

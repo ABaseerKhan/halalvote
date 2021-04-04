@@ -1,7 +1,6 @@
 import React, { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { ClipLoader } from 'react-spinners';
 import { ReactComponent as PlayButtonSVG } from "../../icons/play-button.svg";
-import { ReactComponent as MuteButtonSVG } from "../../icons/mute-button.svg";
 import { ReactComponent as UnMuteButtonSVG } from "../../icons/unmute-button.svg";
 import { loaderCssOverride } from './topic-media';
 
@@ -41,6 +40,7 @@ export const _VideoPlayer = ({ src, inView, stylesOverride }: VideoPlayerProps, 
                 setState(prevState => ({ ...prevState, isPlaying: false }));
                 videoRef.current.pause();
             }
+            setMuted(false);
         }
     };
 
@@ -71,13 +71,6 @@ export const _VideoPlayer = ({ src, inView, stylesOverride }: VideoPlayerProps, 
         }
     };
 
-    const mute = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-        e.stopPropagation();
-        if (videoRef.current) {
-            setMuted(true);
-        }
-    }
-
     return (
         <div className="video-container" onClick={togglePlayback} >
             <video 
@@ -96,7 +89,7 @@ export const _VideoPlayer = ({ src, inView, stylesOverride }: VideoPlayerProps, 
             </video>
             {state.loading && <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/>}
             {state.isPlaying===false && <PlayButtonSVG className="play-button"/>}
-            {muted ? <UnMuteButtonSVG onClick={unMute} className="mute-button"/> : <MuteButtonSVG onClick={mute} className="mute-button"/>}
+            {muted && !state.loading && <UnMuteButtonSVG onClick={unMute} className="mute-button"/>}
         </div>
     )
 }
