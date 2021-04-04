@@ -148,15 +148,6 @@ export const MenuComponent = (props: MenuComponentProps) => {
         return username && username !== "";
     }
 
-    const setSearchDisplayed = () => { 
-        closeMenu({...state, menuLocation: MenuLocation.NONE}, () => { 
-            const searchRef = document.getElementById('search-page');
-            if (searchRef) {
-                searchRef.style.transform = 'translate(0, 0)';
-            }
-        });
-    }
-
     const setLoginDisplayed = (loginDisplayed: boolean) => {
         closeMenu({...state, menuLocation: MenuLocation.NONE}, () => {
             if (loginDisplayed) {
@@ -426,7 +417,6 @@ export const MenuComponent = (props: MenuComponentProps) => {
             {
                 state.menuLocation !== MenuLocation.NONE && 
                     <ul className="menu-items-list" style={{padding: state.menuLocation === MenuLocation.UPPER_LEFT || state.menuLocation === MenuLocation.UPPER_RIGHT ? `${menuHeight / 3}px 0 ${menuHeight}px 0` : `${menuHeight}px 0 ${menuHeight / 3}px 0`}}>
-                        <li className="menu-item" style={listItemStyles} onClick={setSearchDisplayed}>Search</li>
                         <li className="menu-item" style={listItemStyles} onClick={() => {setAddTopicDisplayed(true)}}>Add Topic</li>
                         {usernameExists() && 
                         <li 

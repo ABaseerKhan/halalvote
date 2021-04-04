@@ -3,8 +3,10 @@ import { getData } from '../../https-client/client';
 import { topicsAPIConfig } from '../../https-client/config';
 import { useDebouncedSearch } from '../../hooks/useDebouncedSearch';
 import { ReactComponent as SearchSVG } from '../../icons/search.svg';
+import SearchIcon from '@material-ui/icons/Search';
 import { useCookies } from 'react-cookie';
 import { authenticatedPostDataContext } from '../app-shell';
+import { useMedia } from '../../hooks/useMedia';
 
 // styles
 import './search.css';
@@ -15,6 +17,14 @@ interface SearchComponentProps {
 
 export const SearchComponent = (props: SearchComponentProps) => {
     const { onSuggestionClick } = props;
+
+    const isMobile = useMedia(
+        // Media queries
+        ['(max-width: 600px)'],
+        [true],
+        // default value
+        false
+    );
 
     const { inputText, setInputText, searchResults } = useTopicsSearch();
     const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
@@ -165,7 +175,25 @@ export const SearchComponent = (props: SearchComponentProps) => {
         }
     }
 
+    const SearchPulldown = (
+        <div 
+            className={"search-pulldown"} 
+            onClick={() => { 
+                if (searchPageRef.current) {
+                    if (searchPageRef.current.style.transform === 'translate(0px, 0px)') {
+                        searchPageRef.current!.style.transform = `translate(0, -10.5em)`;
+                    } else {
+                        searchPageRef.current.style.transform = 'translate(0, 0)';
+                    }
+                }
+            }}
+        >
+            <SearchIcon style={{ margin: 'auto', color: 'white', height: '40px', width: '40px' }}/>
+        </div>
+    );
+
     return (
+        <>
         <div id="search-page" ref={searchPageRef} className='search-page'>
             <div className={"search-bar"}>
                 <span className="search-header">
@@ -206,7 +234,10 @@ export const SearchComponent = (props: SearchComponentProps) => {
                     }
                 </div>
             </div>
+            {isMobile && SearchPulldown}
         </div>
+        {!isMobile && SearchPulldown}
+        </>
     );
 }
 

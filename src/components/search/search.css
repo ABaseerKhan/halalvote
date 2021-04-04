@@ -11,7 +11,31 @@
     border-radius: 0 0 25px 25px;
 }
 
+.search-pulldown {
+    position: fixed;
+    display: flex;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 2px solid green;
+    background: var(--dark-mode-middleground);
+    left: 26px;
+    top: 26px;
+    z-index: 2;
+}
+
+.search-pulldown:hover {
+    cursor: pointer;
+}
+
 @media only screen and (max-width: 600px) {
+    .search-pulldown {
+        position: absolute !important;
+        left: calc(50% - 26px) !important;
+        bottom: -45px !important;
+        top: unset !important;
+        z-index: 0 !important;
+    }
     .search-page {
         width: 100% !important;
         left: unset !important
@@ -32,6 +56,7 @@
     margin: auto;
     width: 50vw;
     max-width: 500px;
+    z-index: 1;
 }
 
 .search-header {
