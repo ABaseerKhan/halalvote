@@ -64,7 +64,8 @@ export enum ModalType {
     LOGIN,
     ADD_TOPIC,
     PROFILE,
-    ACCOUNT
+    ACCOUNT,
+    CONTACT
 }
 
 export enum MenuLocation {

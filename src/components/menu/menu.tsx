@@ -98,7 +98,9 @@ export const MenuComponent = (props: MenuComponentProps) => {
             state.modalItemSelected !== ModalType.LOGIN && setState({...state, modalItemSelected: ModalType.LOGIN});
         } else if (query.has('userProfile')) {
             state.modalItemSelected !== ModalType.PROFILE && setState({...state, modalItemSelected: ModalType.PROFILE});
-        } else if (state.modalItemSelected === ModalType.LOGIN || state.modalItemSelected === ModalType.PROFILE) {
+        } else if (query.has('contactUs')) {
+            state.modalItemSelected !== ModalType.CONTACT && setState({...state, modalItemSelected: ModalType.CONTACT});
+        } else if (state.modalItemSelected === ModalType.LOGIN || state.modalItemSelected === ModalType.PROFILE || state.modalItemSelected === ModalType.CONTACT) {
             setState({...state, modalItemSelected: undefined});
         } // eslint-disable-next-line
     }, [history, query]);
@@ -134,6 +136,19 @@ export const MenuComponent = (props: MenuComponentProps) => {
                 } else {
                     if (query.has('userProfile')) {
                         query.delete('userProfile');
+                    }
+                }
+                break;
+            case ModalType.CONTACT:
+                if (additionalQuery) {
+                    if (query.has('contactUs')) {
+                        query.set('contactUs', additionalQuery);
+                    } else {
+                        query.append('contactUs', additionalQuery);
+                    };
+                } else {
+                    if (query.has('contactUs')) {
+                        query.delete('contactUs');
                     }
                 }
                 break;
@@ -411,6 +426,8 @@ export const MenuComponent = (props: MenuComponentProps) => {
                     <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_TOPIC} fetchTopics={fetchTopics}/></Portal> :
                 state.modalItemSelected === ModalType.PROFILE ?
                     <Portal><ModalComponent removeModal={() => updateUrl(ModalType.PROFILE, undefined)} modalType={ModalType.PROFILE} fetchTopics={fetchTopics} accountUsername={userProfile}/></Portal> :
+                state.modalItemSelected === ModalType.CONTACT ?
+                    <Portal><ModalComponent removeModal={() => updateUrl(ModalType.CONTACT, undefined)} modalType={ModalType.CONTACT}/></Portal> :
                 state.modalItemSelected ===  ModalType.ACCOUNT &&
                     <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT}/></Portal>
             }
@@ -427,6 +444,7 @@ export const MenuComponent = (props: MenuComponentProps) => {
                                 Profile
                         </li>}
                         {usernameExists() && <li className="menu-item" style={listItemStyles} onClick={() => setAccountDisplayed(true)}>Account</li>}
+                        <li className="menu-item" style={listItemStyles} onClick={() => closeMenu({...state, menuLocation: MenuLocation.NONE}, () => { updateUrl(ModalType.CONTACT, "shown"); })}>Contact Us</li>
                         <li className="menu-item" style={listItemStyles} onClick={login}>
                             { usernameExists() ? "Logout" : "Login" }
                         </li>

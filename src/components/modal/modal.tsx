@@ -7,6 +7,7 @@ import { ProfileComponent } from '../profile/profile';
 import { vhToPixels, vwToPixelsWithMax } from "../../utils";
 import { modalHeightVh, modalMaxWidth, modalWidthVw } from '../..';
 import { AccountComponent } from '../account/account';
+import { ContactComponent } from "../contact/contact";
 
 // type imports
 
@@ -98,6 +99,8 @@ export const ModalComponent = (props: ModalComponentProps) => {
                             <AddTopicComponent fetchTopics={fetchTopics} /> :
                         modalType === ModalType.PROFILE ?
                             <ProfileComponent username={accountUsername!} fetchTopics={fetchTopics} /> :
+                        modalType === ModalType.CONTACT ?
+                            <ContactComponent /> :
                         modalType === ModalType.ACCOUNT &&
                             <AccountComponent />
                     }
