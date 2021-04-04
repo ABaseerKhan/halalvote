@@ -42,7 +42,9 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
             state.modalItemSelected !== ModalType.LOGIN && setState({...state, modalItemSelected: ModalType.LOGIN});
         } else if (query.has('userProfile')) {
             state.modalItemSelected !== ModalType.PROFILE && setState({...state, modalItemSelected: ModalType.PROFILE});
-        } else if (state.modalItemSelected === ModalType.LOGIN || state.modalItemSelected === ModalType.PROFILE) {
+        } else if (query.has('contactUs')) {
+            state.modalItemSelected !== ModalType.CONTACT && setState({...state, modalItemSelected: ModalType.CONTACT});
+        } else if (state.modalItemSelected === ModalType.LOGIN || state.modalItemSelected === ModalType.PROFILE || state.modalItemSelected === ModalType.CONTACT) {
             setState({...state, modalItemSelected: undefined});
         } // eslint-disable-next-line
     }, [history, query]);
@@ -78,6 +80,19 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
                 } else {
                     if (query.has('userProfile')) {
                         query.delete('userProfile');
+                    }
+                }
+                break;
+            case ModalType.CONTACT:
+                if (additionalQuery) {
+                    if (query.has('contactUs')) {
+                        query.set('contactUs', additionalQuery);
+                    } else {
+                        query.append('contactUs', additionalQuery);
+                    };
+                } else {
+                    if (query.has('contactUs')) {
+                        query.delete('contactUs');
                     }
                 }
                 break;
@@ -126,6 +141,7 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
                 isOpen={menuOpenState}
                 onStateChange={(newState) => setMenuOpenState(newState.isOpen)}
             >
+                <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.CONTACT, "shown"); }}>Contact us</li>
                 <li onClick={() => { setMenuOpenState(false); setAddTopicDisplayed(true); }}>Add topic</li>
                 {usernameExists() && <li className="menu-item" onClick={() => { setMenuOpenState(false); setAccountDisplayed(true); }}>Account</li>}
                 <li className="menu-item" onClick={login}>{ usernameExists() ? "Logout" : "Login" }</li>
@@ -138,8 +154,10 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
                     <Portal><ModalComponent removeModal={() => setAddTopicDisplayed(false)} modalType={ModalType.ADD_TOPIC} fetchTopics={fetchTopics}/></Portal> :
                 state.modalItemSelected === ModalType.PROFILE ?
                     <Portal><ModalComponent removeModal={() => updateUrl(ModalType.PROFILE, undefined)} modalType={ModalType.PROFILE} fetchTopics={fetchTopics} accountUsername={userProfile}/></Portal> :
-                state.modalItemSelected ===  ModalType.ACCOUNT &&
-                    <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT}/></Portal>
+                state.modalItemSelected ===  ModalType.ACCOUNT ?
+                    <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT}/></Portal> :
+                state.modalItemSelected === ModalType.CONTACT &&
+                    <Portal><ModalComponent removeModal={() => updateUrl(ModalType.CONTACT, undefined)} modalType={ModalType.CONTACT}/></Portal>
             }
         </>
     );
