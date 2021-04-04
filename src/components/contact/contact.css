@@ -1,0 +1,15 @@
+.contact-container {
+  text-align: center;
+  padding: 5px;
+  color: var(--dark-mode-text-color);
+  font-size: large;
+}
+
+.contact-container h4 {
+  padding: 5px;
+}
+
+.contact-container a {
+  color: var(--dark-mode-text-color);
+  font-weight: bold;
+}
