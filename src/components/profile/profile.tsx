@@ -120,7 +120,6 @@ const UserComments = (props: UserCommentProps) => {
         deleteUserProfileQueryParam(history, query);
         await fetchTopics(comment.topicTitle);
         modifyTopicQueryParam(query, comment.topicTitle!);
-        console.log(`query: ${query.toString()}`);
         setCardQueryParam(history, query, commentsCardId.toLowerCase());
         setCommentsContext(comment.topicTitle!, [], comment);
     }

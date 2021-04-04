@@ -182,7 +182,6 @@ export const SearchComponent = (props: SearchComponentProps) => {
             className={"search-pulldown"} 
             onClick={(e) => { 
                 if (searchPageRef.current) {
-                    console.log(searchPageRef.current.style.transform);
                     if (searchPageRef.current.style.transform === 'translate(0px, 0px)') {
                         searchPageRef.current!.style.transform = `translate(0, -10.5em)`;
                     } else {
