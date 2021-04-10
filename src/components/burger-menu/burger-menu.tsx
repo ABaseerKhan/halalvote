@@ -7,6 +7,12 @@ import { Portal } from '../../index';
 import { useHistory,} from "react-router-dom";
 import { useQuery } from '../../hooks/useQuery';
 import { isMobile, replaceHistory } from '../../utils';
+import HomeIcon from '@material-ui/icons/Home';
+import AddIcon from '@material-ui/icons/Add';
+import ContactMailIcon from '@material-ui/icons/ContactMail';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import InputIcon from '@material-ui/icons/Input';
 
 // type imports
 import { ModalType } from '../../types';
@@ -145,11 +151,11 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
                 isOpen={menuOpenState}
                 onStateChange={(newState) => setMenuOpenState(newState.isOpen)}
             >
-                <li className="menu-item" onClick={goHome}>Home</li>
-                <li onClick={() => { setMenuOpenState(false); setAddTopicDisplayed(true); }}>Add topic</li>
-                {usernameExists() && <li className="menu-item" onClick={() => { setMenuOpenState(false); setAccountDisplayed(true); }}>Account</li>}
-                <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.CONTACT, "shown"); }}>Contact us</li>
-                <li className="menu-item" onClick={login}>{ usernameExists() ? "Logout" : "Login" }</li>
+                <li className="menu-item" onClick={goHome}><HomeIcon style={{marginRight: "10px"}}/> Home</li>
+                <li className="menu-item" onClick={() => { setMenuOpenState(false); setAddTopicDisplayed(true); }}><AddIcon style={{marginRight: "10px"}}/> Add topic</li>
+                {usernameExists() && <li className="menu-item" onClick={() => { setMenuOpenState(false); setAccountDisplayed(true); }}><AccountBoxIcon style={{marginRight: "10px"}}/> Account</li>}
+                <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.CONTACT, "shown"); }}><ContactMailIcon style={{marginRight: "10px"}}/> Contact us</li>
+                <li className="menu-item" onClick={login}>{ usernameExists() ? <ExitToAppIcon style={{marginRight: "10px"}}/> : <InputIcon style={{marginRight: "10px"}}/> }  { usernameExists() ? "Logout" : "Login" }</li>
                 {usernameExists() && <div className={"username-tile"} onClick={() => { setMenuOpenState(false); updateUrl(ModalType.PROFILE, username); }}>{username}</div>}
             </Menu>
             {
