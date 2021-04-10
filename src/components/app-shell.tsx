@@ -56,6 +56,7 @@ type AppShellState = {
   specificComment?: Comment,
   incomingDirection: IncomingDirection,
   muted: boolean,
+  tutorialShown: boolean,
   analytics: AnalyticsState
 };
 export const AppShellComponent = (props: any) => {
@@ -69,6 +70,7 @@ export const AppShellComponent = (props: any) => {
     specificComment: undefined,
     incomingDirection: IncomingDirection.NONE,
     muted: true,
+    tutorialShown: false,
     analytics: { topicAnalyticsMap: { }, interval: Interval.ALL }
   });
 
@@ -82,6 +84,7 @@ export const AppShellComponent = (props: any) => {
   topicTitle = topicTitle?.replace(/_/g, ' ').replace(/%2F/g, '/');
 
   // context-setters (they also serve as application cache)
+  const setTutorialContext = (shown: boolean) => { setState(prevState => ({ ...prevState, tutorialShown: shown })); };
   const setMutedContext = (mute: boolean) => { setState(prevState => ({ ...prevState, muted: mute })); };
   const setTopicsContext = (topics: Topic[], index: number) => {
     setState(prevState => ({ ...prevState, topicsState: { topics: topics, topicIndex: index }}));
@@ -286,39 +289,41 @@ export const AppShellComponent = (props: any) => {
   return (
     <authenticatedPostDataContext.Provider value={{authenticatedPostData: authenticatedPostData, setAuthenticatedPostData: setAuthenticatedPostData}}>
         <authenticatedGetDataContext.Provider value={{authenticatedGetData: authenticatedGetData, setAuthenticatedGetData: setAuthenticatedGetData}}>
-          <muteContext.Provider value={{ muted: state.muted, setMuted: setMutedContext }}>
-            <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
-              <topicMediaContext.Provider value={{ topicMediaState: state.topicMedia, setTopicMediaContext: setTopicMediaContext }}>
-                <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
-                  <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
-                    <div id={appShellId} className={appShellId} style={{ overflowY: isMobile ? 'hidden' : 'scroll' }} >
-                      <SearchComponent onSuggestionClick={searchTopic} />
-                      <BurgerMenuComponent fetchTopics={fetchTopics} />
-                      <div className="topic-content">
-                      {
-                        isMobile ?
-                        <TopicContainerMobileComponent
-                          fetchTopics={fetchTopics}
-                          CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                          AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                          TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
-                          TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
-                        /> :
-                        <TopicContainerComponent
-                          mediaCard={<TopicMediaComponent /> }
-                          commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
-                          analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
-                          TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
-                          TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
-                        />
-                      }
+          <tutorialContext.Provider value={{ tutorialShown: state.tutorialShown, setTutorialContext: setTutorialContext}} >
+            <muteContext.Provider value={{ muted: state.muted, setMuted: setMutedContext }}>
+              <topicsContext.Provider value={{ topicsState: state.topicsState, setTopicsContext: setTopicsContext }}>
+                <topicMediaContext.Provider value={{ topicMediaState: state.topicMedia, setTopicMediaContext: setTopicMediaContext }}>
+                  <commentsContext.Provider value={{ commentsState: state.comments, setCommentsContext: setCommentsContext }}>
+                    <analyticsContext.Provider value={{ analyticsState: state.analytics, setAnalyticsContext: setAnalyticsContext }}>
+                      <div id={appShellId} className={appShellId} style={{ overflowY: isMobile ? 'hidden' : 'scroll' }} >
+                        <SearchComponent onSuggestionClick={searchTopic} />
+                        <BurgerMenuComponent fetchTopics={fetchTopics} />
+                        <div className="topic-content">
+                        {
+                          isMobile ?
+                          <TopicContainerMobileComponent
+                            fetchTopics={fetchTopics}
+                            CommentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                            AnalyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                            TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
+                            TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
+                          /> :
+                          <TopicContainerComponent
+                            mediaCard={<TopicMediaComponent /> }
+                            commentsCard={<CommentsCardComponent refreshTopic={fetchTopics} switchCards={() => {}}/>} 
+                            analyticsCard={<AnalyticsCardComponent id={"analytics"}/>}
+                            TopicCarousel={<TopicCarouselComponent id={topicCarouselId} fetchTopics={fetchTopics} />}
+                            TopicNavigator={<TopicNavigatorComponent iterateTopic={iterateTopic}/>}
+                          />
+                        }
+                        </div>
                       </div>
-                    </div>
-                  </analyticsContext.Provider>
-                </commentsContext.Provider>
-              </topicMediaContext.Provider>
-            </topicsContext.Provider>
-          </muteContext.Provider>
+                    </analyticsContext.Provider>
+                  </commentsContext.Provider>
+                </topicMediaContext.Provider>
+              </topicsContext.Provider>
+            </muteContext.Provider>
+          </tutorialContext.Provider>
         </authenticatedGetDataContext.Provider>
       </authenticatedPostDataContext.Provider>
   )
@@ -348,6 +353,11 @@ export const fullScreenContext = React.createContext<{fullScreenMode: boolean; s
 export const muteContext = React.createContext<{muted: boolean; setMuted: (mute: boolean) => void}>({
   muted: true,
   setMuted: (mute) => undefined
+});
+
+export const tutorialContext = React.createContext<{ tutorialShown: boolean; setTutorialContext: (shown: boolean) => void }>({
+  tutorialShown: false,
+  setTutorialContext: (shown) => undefined
 });
 
 export type TopicsState = { topics: Topic[]; topicIndex: number };
