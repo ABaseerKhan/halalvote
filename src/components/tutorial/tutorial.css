@@ -1,0 +1,31 @@
+.next-topic-tutorial-container {
+    position: absolute;
+    height: 5em;
+    width: 8em;
+    display: grid;
+    right: calc(50% - 4em);
+    top: calc(75% - 25px);
+    z-index: 5;
+    background: rgba(0,0,0,0.4);
+    border-radius: 12.5%;
+}
+
+.swipe-icon {
+    margin-left: auto;
+    height: 3.25em; 
+    width: 3.25em;
+    stroke: white;
+    animation: move-right 0.75s ease both;
+}
+
+@keyframes move-right {
+    to {
+        transform: translate(calc((-8em + 3.25em) / 2), 0em);
+    }
+}
+
+.next-topic-streak {
+    text-align: center;
+    color: white;
+    line-height: 1em;
+}

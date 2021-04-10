@@ -1,14 +1,16 @@
 import React, { ReactElement, useRef, useEffect, useContext, useState, useLayoutEffect } from 'react';
 import { topicsContext, topicMediaContext } from '../app-shell';
-// styles
-import './topic-container-mobile.css';
-import { elementStyles } from '../..';
 import { TabScroll } from '../tab-scroll/tab-scroll';
 import { useQuery } from '../../hooks/useQuery';
 import { setCardQueryParam } from '../../utils';
 import { useHistory } from 'react-router-dom';
 import { commentsCardId, mediaCardId } from '../topic-container/topic-container';
 import { TopicMediaComponent } from '../topic-media/topic-media';
+
+// styles
+import './topic-container-mobile.css';
+import { elementStyles } from '../..';
+import { TutorialComponent } from '../tutorial/tutorial';
 
 
 const TOPIC_SWITCHING_DURATION = 300;
@@ -356,6 +358,7 @@ export const TopicContainerMobileComponent = (props: TopicContainerMobileCompone
                 {displayMediaCard(rotatingMediaStructure[2].position) && <div id={'3'} ref={rotatingMediaStructure[2].ref} className="topic-media-container" style={{ transformOrigin: (topicIndex > rotatingMediaStructure[positionsMap[1]].staticTopicIndex) ? 'right' : 'left', ...rotatingMediaStructure[2].style }}>
                     <TopicMediaComponent topicIndexOverride={rotatingMediaStructure[2].staticTopicIndex} />
                 </div>}
+                <TutorialComponent />
             </div>
             <div></div>
             <div id="topic-container-footer" ref={FSFooterRef} className={'topic-container-footer'}>

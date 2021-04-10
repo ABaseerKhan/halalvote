@@ -29,7 +29,7 @@
 @media only screen and (max-width: 600px) {
     .search-pulldown {
         left: unset !important;
-        right: 1.5em !important;
+        right: 1em !important;
     }
 
     .search-page {
