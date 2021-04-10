@@ -66,7 +66,6 @@ export enum ModalType {
     PROFILE,
     ACCOUNT,
     CONTACT,
-    HOME
 }
 
 export enum MenuLocation {
