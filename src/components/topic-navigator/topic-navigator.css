@@ -23,7 +23,7 @@
     height: 200px;
     background: transparent;
     border: none;
-    color: var(--dark-mode-secondary-text-color);
+    color: white;
     outline: none;
     text-align: center;
 }

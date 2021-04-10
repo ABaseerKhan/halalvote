@@ -136,19 +136,19 @@ export const TopicNavigatorComponent = (props: TopicNavigatorComponentProps) => 
             {
                 !isMobile ?
                 topicIndex > 0 && <button id={leftCarouselButtonId} onClick={iterateTopic(-1)} className='carousel-button-left carousel-button-computer'>
-                    <ChevronLeftSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>
+                    <ChevronLeftSVG color={'white'} transform={"translate(0 0)"}/>
                 </button> :
                 <div id={leftTopicNavigatorDisplayId} className={leftTopicNavigatorDisplayId}>
-                    <ChevronLeftSVG color={'var(--neutral-color)'} style={{position: "absolute", right: 15, top: "calc(50% - 15px)"}}/>
+                    <ChevronLeftSVG color={'white'} style={{position: "absolute", right: 15, top: "calc(50% - 15px)"}}/>
                 </div>
             }
             {
                 !isMobile ?
                 topicIndex + 1 < topicTitles.length && <button id={rightCarouselButtonId} onClick={iterateTopic(1)} className='carousel-button-right carousel-button-computer'>
-                    <ChevronRightSVG color={'var(--neutral-color)'} transform={"translate(0 0)"}/>
+                    <ChevronRightSVG color={'white'} transform={"translate(0 0)"}/>
                 </button> :
                 <div id={rightTopicNavigatorDisplayId} className={rightTopicNavigatorDisplayId}>
-                    <ChevronRightSVG color={'var(--neutral-color)'} style={{position: "absolute", left: 15, top: "calc(50% - 15px)"}}/>
+                    <ChevronRightSVG color={'white'} style={{position: "absolute", left: 15, top: "calc(50% - 15px)"}}/>
                 </div>
             }
         </div>
