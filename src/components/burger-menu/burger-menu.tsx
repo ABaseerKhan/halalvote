@@ -4,9 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ModalComponent } from '../modal/modal';
 import { useCookies } from 'react-cookie';
 import { Portal } from '../../index';
-import { 
-    useHistory,
-} from "react-router-dom";
+import { useHistory,} from "react-router-dom";
 import { useQuery } from '../../hooks/useQuery';
 import { isMobile, replaceHistory } from '../../utils';
 
@@ -103,6 +101,12 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
         replaceHistory(history, query);
     }, [history, query]);
 
+    const goHome = () => {
+        history.replace('/');
+        history.go(0);
+        setMenuOpenState(false);
+    }
+
     const usernameExists = () => {
         return username && username !== "";
     }
@@ -141,9 +145,10 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
                 isOpen={menuOpenState}
                 onStateChange={(newState) => setMenuOpenState(newState.isOpen)}
             >
-                <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.CONTACT, "shown"); }}>Contact us</li>
+                <li className="menu-item" onClick={goHome}>Home</li>
                 <li onClick={() => { setMenuOpenState(false); setAddTopicDisplayed(true); }}>Add topic</li>
                 {usernameExists() && <li className="menu-item" onClick={() => { setMenuOpenState(false); setAccountDisplayed(true); }}>Account</li>}
+                <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.CONTACT, "shown"); }}>Contact us</li>
                 <li className="menu-item" onClick={login}>{ usernameExists() ? "Logout" : "Login" }</li>
                 {usernameExists() && <div className={"username-tile"} onClick={() => { setMenuOpenState(false); updateUrl(ModalType.PROFILE, username); }}>{username}</div>}
             </Menu>
