@@ -141,9 +141,9 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
                 isOpen={menuOpenState}
                 onStateChange={(newState) => setMenuOpenState(newState.isOpen)}
             >
-                <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.CONTACT, "shown"); }}>Contact us</li>
                 <li onClick={() => { setMenuOpenState(false); setAddTopicDisplayed(true); }}>Add topic</li>
                 {usernameExists() && <li className="menu-item" onClick={() => { setMenuOpenState(false); setAccountDisplayed(true); }}>Account</li>}
+                <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.CONTACT, "shown"); }}>Contact us</li>
                 <li className="menu-item" onClick={login}>{ usernameExists() ? "Logout" : "Login" }</li>
                 {usernameExists() && <div className={"username-tile"} onClick={() => { setMenuOpenState(false); updateUrl(ModalType.PROFILE, username); }}>{username}</div>}
             </Menu>
