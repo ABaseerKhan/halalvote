@@ -13,6 +13,7 @@ import ContactMailIcon from '@material-ui/icons/ContactMail';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import InputIcon from '@material-ui/icons/Input';
+import PersonIcon from '@material-ui/icons/Person';
 
 // type imports
 import { ModalType } from '../../types';
@@ -156,7 +157,7 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
                 {usernameExists() && <li className="menu-item" onClick={() => { setMenuOpenState(false); setAccountDisplayed(true); }}><AccountBoxIcon style={{marginRight: "10px"}}/> Account</li>}
                 <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.CONTACT, "shown"); }}><ContactMailIcon style={{marginRight: "10px"}}/> Contact us</li>
                 <li className="menu-item" onClick={login}>{ usernameExists() ? <ExitToAppIcon style={{marginRight: "10px"}}/> : <InputIcon style={{marginRight: "10px"}}/> }  { usernameExists() ? "Logout" : "Login" }</li>
-                {usernameExists() && <div className={"username-tile"} onClick={() => { setMenuOpenState(false); updateUrl(ModalType.PROFILE, username); }}>{username}</div>}
+                {usernameExists() && <div className={"username-tile"} onClick={() => { setMenuOpenState(false); updateUrl(ModalType.PROFILE, username); }}><PersonIcon style={{marginRight: "10px"}}/> {username}</div>}
             </Menu>
             {
                 state.modalItemSelected ===  ModalType.LOGIN ?

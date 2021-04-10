@@ -98,4 +98,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
 .username-tile {
     position: absolute;
     bottom: 0;
+    display: flex !important;
+    align-items: center;
+    padding-left: 10%;
 }
