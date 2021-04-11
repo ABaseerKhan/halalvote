@@ -109,11 +109,12 @@ export const AppShellComponent = (props: any) => {
   const setAuthenticatedGetData = (getData: (request: Request, willRetry: boolean) => void) => {}
 
   useEffect(() => {
-    if (sessiontoken !== undefined) {
-      fetchTopicsByManyTopicTitles(state.topicsState.topics.map(topic => topic.topicTitle));
-    } else {
+    const topicsTitles = state.topicsState.topics.map(topic => topic.topicTitle);
+    if (!topicsTitles.length) {
       fetchTopics((topicTitle) || undefined);
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
+    } else {
+      fetchTopicsByManyTopicTitles(topicsTitles);
+    }
   }, [sessiontoken]);
 
   useEffect(() => {
