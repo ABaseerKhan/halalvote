@@ -112,7 +112,6 @@ export const AppShellComponent = (props: any) => {
     if (sessiontoken !== undefined) {
       fetchTopicsByManyTopicTitles(state.topicsState.topics.map(topic => topic.topicTitle));
     } else {
-      console.log('sessiontoken useEffect');
       fetchTopics((topicTitle) || undefined);
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessiontoken]);
