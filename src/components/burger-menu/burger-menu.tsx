@@ -49,7 +49,9 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
             state.modalItemSelected !== ModalType.PROFILE && setState({...state, modalItemSelected: ModalType.PROFILE});
         } else if (query.has('contactUs')) {
             state.modalItemSelected !== ModalType.CONTACT && setState({...state, modalItemSelected: ModalType.CONTACT});
-        } else if (state.modalItemSelected === ModalType.LOGIN || state.modalItemSelected === ModalType.PROFILE || state.modalItemSelected === ModalType.CONTACT) {
+        } else if (query.has('about')) {
+            state.modalItemSelected !== ModalType.ABOUT && setState({...state, modalItemSelected: ModalType.ABOUT});
+        } else if (state.modalItemSelected === ModalType.LOGIN || state.modalItemSelected === ModalType.PROFILE || state.modalItemSelected === ModalType.CONTACT || state.modalItemSelected === ModalType.ABOUT) {
             setState({...state, modalItemSelected: undefined});
         } // eslint-disable-next-line
     }, [history, query]);
@@ -98,6 +100,19 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
                 } else {
                     if (query.has('contactUs')) {
                         query.delete('contactUs');
+                    }
+                }
+                break;
+            case ModalType.ABOUT:
+                if (additionalQuery) {
+                    if (query.has('about')) {
+                        query.set('about', additionalQuery);
+                    } else {
+                        query.append('about', additionalQuery);
+                    }
+                } else {
+                    if (query.has('about')) {
+                        query.delete('about');
                     }
                 }
                 break;
@@ -156,6 +171,7 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
                 <li className="menu-item" onClick={() => { setMenuOpenState(false); setAddTopicDisplayed(true); }}><AddIcon style={{marginRight: "10px"}}/> Add topic</li>
                 {usernameExists() && <li className="menu-item" onClick={() => { setMenuOpenState(false); setAccountDisplayed(true); }}><AccountBoxIcon style={{marginRight: "10px"}}/> Account</li>}
                 <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.CONTACT, "shown"); }}><ContactMailIcon style={{marginRight: "10px"}}/> Contact us</li>
+                <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.ABOUT, "shown"); }}>About</li>
                 <li className="menu-item" onClick={login}>{ usernameExists() ? <ExitToAppIcon style={{marginRight: "10px"}}/> : <InputIcon style={{marginRight: "10px"}}/> }  { usernameExists() ? "Logout" : "Login" }</li>
                 {usernameExists() && <div className={"username-tile"} onClick={() => { setMenuOpenState(false); updateUrl(ModalType.PROFILE, username); }}><PersonIcon style={{marginRight: "10px"}}/> {username}</div>}
             </Menu>
@@ -168,8 +184,10 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
                     <Portal><ModalComponent removeModal={() => updateUrl(ModalType.PROFILE, undefined)} modalType={ModalType.PROFILE} fetchTopics={fetchTopics} accountUsername={userProfile}/></Portal> :
                 state.modalItemSelected ===  ModalType.ACCOUNT ?
                     <Portal><ModalComponent removeModal={() => setAccountDisplayed(false)} modalType={ModalType.ACCOUNT}/></Portal> :
-                state.modalItemSelected === ModalType.CONTACT &&
-                    <Portal><ModalComponent removeModal={() => updateUrl(ModalType.CONTACT, undefined)} modalType={ModalType.CONTACT}/></Portal>
+                state.modalItemSelected === ModalType.CONTACT ?
+                    <Portal><ModalComponent removeModal={() => updateUrl(ModalType.CONTACT, undefined)} modalType={ModalType.CONTACT}/></Portal> :
+                state.modalItemSelected === ModalType.ABOUT &&
+                    <Portal><ModalComponent removeModal={() => updateUrl(ModalType.ABOUT, undefined)} modalType={ModalType.ABOUT}/></Portal>
             }
         </>
     );

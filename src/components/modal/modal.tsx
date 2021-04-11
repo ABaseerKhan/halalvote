@@ -13,6 +13,7 @@ import { ContactComponent } from "../contact/contact";
 
 // styles
 import './modal.css';
+import { AboutComponent } from '../about/about';
 
 interface ModalComponentProps {
     removeModal: any,
@@ -101,8 +102,10 @@ export const ModalComponent = (props: ModalComponentProps) => {
                             <ProfileComponent username={accountUsername!} fetchTopics={fetchTopics} /> :
                         modalType === ModalType.CONTACT ?
                             <ContactComponent /> :
-                        modalType === ModalType.ACCOUNT &&
-                            <AccountComponent />
+                        modalType === ModalType.ACCOUNT ?
+                            <AccountComponent /> :
+                        modalType === ModalType.ABOUT &&
+                            <AboutComponent />
                     }
                 </div>
             </closeModalContext.Provider>
