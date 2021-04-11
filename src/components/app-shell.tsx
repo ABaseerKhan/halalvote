@@ -114,7 +114,7 @@ export const AppShellComponent = (props: any) => {
       fetchTopics((topicTitle) || undefined);
     } else {
       fetchTopicsByManyTopicTitles(topicsTitles);
-    }
+    } // eslint-disable-next-line
   }, [sessiontoken]);
 
   useEffect(() => {

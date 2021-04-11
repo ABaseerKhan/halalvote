@@ -75,6 +75,7 @@ export const _VideoPlayer = ({ src, inView, stylesOverride }: VideoPlayerProps, 
         <div className="video-container" onClick={togglePlayback} >
             <video 
                 key={src}
+                id={'video-el'}
                 loop 
                 ref={videoRef}
                 className="video-player" 
@@ -89,9 +90,17 @@ export const _VideoPlayer = ({ src, inView, stylesOverride }: VideoPlayerProps, 
             </video>
             {state.loading && <ClipLoader css={loaderCssOverride} size={50} color={"var(--light-neutral-color)"} loading={state.loading}/>}
             {state.isPlaying===false && <PlayButtonSVG className="play-button"/>}
-            {muted && !state.loading && <UnMuteButtonSVG onClick={unMute} className="mute-button"/>}
+            {muted && !state.loading && hasAudio(videoRef?.current) && <UnMuteButtonSVG onClick={unMute} className="mute-button"/>}
         </div>
     )
+}
+
+const hasAudio = (video: any) => {
+    if (video) {
+        return video.mozHasAudio ||
+        Boolean(video.webkitAudioDecodedByteCount) ||
+        Boolean(video.audioTracks && video.audioTracks.length);
+    }
 }
 
 export const VideoPlayer = forwardRef(_VideoPlayer);
