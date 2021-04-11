@@ -109,12 +109,12 @@ export const AppShellComponent = (props: any) => {
   const setAuthenticatedGetData = (getData: (request: Request, willRetry: boolean) => void) => {}
 
   useEffect(() => {
-    const indexOfTopicToFetch = state.topicsState.topics.findIndex(i => i.topicTitle === cookies.topicTitle);
-    if (indexOfTopicToFetch >= 0) {
-      state.topicsState.topics = [state.topicsState.topics[indexOfTopicToFetch]];
-      state.topicsState.topicIndex = 0;
-    }
-    fetchTopics((topicTitle) || undefined); // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (sessiontoken !== undefined) {
+      fetchTopicsByManyTopicTitles(state.topicsState.topics.map(topic => topic.topicTitle));
+    } else {
+      console.log('sessiontoken useEffect');
+      fetchTopics((topicTitle) || undefined);
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessiontoken]);
 
   useEffect(() => {
@@ -215,6 +215,34 @@ export const AppShellComponent = (props: any) => {
     } else {
       setTopicsContext([...state.topicsState.topics, ...data], newIndex!==undefined ? newIndex : state.topicsState.topicIndex);
     }
+  }
+
+  const fetchTopicsByManyTopicTitles = async (topicsToFetch: string[]) => {
+    let body: any = { 
+      "topicTitles": topicsToFetch,
+    };
+    let additionalHeaders = {};
+
+    if (username && sessiontoken && username !== "") {
+      body = { ...body, "username": username };
+      additionalHeaders = { ...additionalHeaders, "sessiontoken": sessiontoken };
+    }
+
+    const { status, data }: { status: number, data: Topic[] } = await authenticatedPostData({ baseUrl: topicsAPIConfig.url, path: 'get-topics', data: body, additionalHeaders: additionalHeaders, }, true);
+    if (status !== 200) {
+      return;
+    };
+
+    let newIndex = state.topicsState.topicIndex;
+    const newTopics = state.topicsState.topics.map((oldTopic, index) => { 
+      const foundTopic = data.find((newTopic) => { return oldTopic.topicTitle === newTopic.topicTitle });
+      if (foundTopic === undefined && (index <= state.topicsState.topicIndex) && index) {
+        newIndex--;
+      };
+      return foundTopic;
+    });
+    const filteredNewTopics = newTopics.filter(newTopic => newTopic);
+    setState(prevState => ({ ...prevState, topicsState: { ...prevState.topicsState, topics: filteredNewTopics as Topic[], topicIndex: newIndex } }));
   }
 
   const searchTopic = async (topicTofetch?: string) => {
