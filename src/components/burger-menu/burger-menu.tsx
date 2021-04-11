@@ -12,6 +12,7 @@ import AddIcon from '@material-ui/icons/Add';
 import ContactMailIcon from '@material-ui/icons/ContactMail';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import InfoIcon from '@material-ui/icons/Info';
 import InputIcon from '@material-ui/icons/Input';
 import PersonIcon from '@material-ui/icons/Person';
 
@@ -171,7 +172,7 @@ export const BurgerMenuComponent = (props: BurgerMenuComponentProps) => {
                 <li className="menu-item" onClick={() => { setMenuOpenState(false); setAddTopicDisplayed(true); }}><AddIcon style={{marginRight: "10px"}}/> Add topic</li>
                 {usernameExists() && <li className="menu-item" onClick={() => { setMenuOpenState(false); setAccountDisplayed(true); }}><AccountBoxIcon style={{marginRight: "10px"}}/> Account</li>}
                 <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.CONTACT, "shown"); }}><ContactMailIcon style={{marginRight: "10px"}}/> Contact us</li>
-                <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.ABOUT, "shown"); }}>About</li>
+                <li className="menu-item" onClick={() => { setMenuOpenState(false); updateUrl(ModalType.ABOUT, "shown"); }}><InfoIcon style={{marginRight: "10px"}} /> About</li>
                 <li className="menu-item" onClick={login}>{ usernameExists() ? <ExitToAppIcon style={{marginRight: "10px"}}/> : <InputIcon style={{marginRight: "10px"}}/> }  { usernameExists() ? "Logout" : "Login" }</li>
                 {usernameExists() && <div className={"username-tile"} onClick={() => { setMenuOpenState(false); updateUrl(ModalType.PROFILE, username); }}><PersonIcon style={{marginRight: "10px"}}/> {username}</div>}
             </Menu>
