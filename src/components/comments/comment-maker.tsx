@@ -92,6 +92,7 @@ const _CommentMakerComponent = (props: CommentMakerComponentProps, ref: any) => 
                     commentMakerCardRef.current.style.height = `4em`;
                 }
                 setValue('')
+                collapse();
             }
         }
     };
