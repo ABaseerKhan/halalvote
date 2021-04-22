@@ -13,7 +13,7 @@ export const TutorialComponent = () => {
             setTimeout(() => {
               setTutorialContext(false);
             }, 1000);
-          }, 500); // eslint-disable-next-line
+          }, 1000); // eslint-disable-next-line
     }, []);
 
     return (
