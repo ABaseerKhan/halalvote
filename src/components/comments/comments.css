@@ -340,8 +340,8 @@
   border-style: none;
   cursor: pointer;
   color: var(--halal-compliment-color);
-  height: 100%;
-  margin: auto 0 auto 0;
+  height: 10%;
+  margin: auto 0 2% 0;
 }
 
 .comment-maker-button:hover {
