@@ -1,0 +1,16 @@
+.data-policy-container {
+    text-align: center;
+    padding: 2em;
+    color: var(--dark-mode-text-color);
+    overflow: auto;
+    height:95%;
+  }
+  
+  .data-policy-container h4 {
+    padding: 5px;
+  }
+  
+  .data-policy-container a {
+    color: var(--dark-mode-text-color);
+    font-weight: bold;
+  }

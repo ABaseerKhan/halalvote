@@ -8,6 +8,7 @@ import { vhToPixels, vwToPixelsWithMax } from "../../utils";
 import { modalHeightVh, modalMaxWidth, modalWidthVw } from '../..';
 import { AccountComponent } from '../account/account';
 import { ContactComponent } from "../contact/contact";
+import { DataPolicyComponent } from "../data-policy/data-policy";
 
 // type imports
 
@@ -62,7 +63,6 @@ export const ModalComponent = (props: ModalComponentProps) => {
                 duration: 100,
                 fill: "forwards"
             }).onfinish = () => {
-                modal.style.overflow = "visible";
                 modal.style.height = height;
                 modal.style.width = width;
             };
@@ -102,10 +102,12 @@ export const ModalComponent = (props: ModalComponentProps) => {
                             <ProfileComponent username={accountUsername!} fetchTopics={fetchTopics} /> :
                         modalType === ModalType.CONTACT ?
                             <ContactComponent /> :
-                        modalType === ModalType.ACCOUNT ?
-                            <AccountComponent /> :
-                        modalType === ModalType.ABOUT &&
-                            <AboutComponent />
+                        modalType === ModalType.ABOUT ?
+                            <AboutComponent /> :
+                        modalType === ModalType.DATA_POLICY ?
+                            <DataPolicyComponent /> :
+                        modalType === ModalType.ACCOUNT &&
+                            <AccountComponent />
                     }
                 </div>
             </closeModalContext.Provider>

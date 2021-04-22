@@ -518,8 +518,7 @@ export const LoginComponent = (props: LoginComponentProps) => {
                 loginScreenType === LoginScreenType.REGISTER_COMPLETE ?
                 <div className="login-body">
                     <div className="login-section-text">Successfully created account for Halal Vote!</div>
-                    <div className="login-section-text">Check your email to activate your account.</div>
-                    <div className="login-section-text">Click <span className="login-link" onClick={() => setLoginScreenType(LoginScreenType.LOGIN)}>here</span> to login.</div>
+                    <div className="login-section-text">Check your email to activate your account. <br/><br/>If you don't see it in your inbox, it might be in the spam or promotions folder</div>
                 </div> :
                 loginScreenType === LoginScreenType.ACTIVATION_COMPLETE ?
                 <div className="login-body">
